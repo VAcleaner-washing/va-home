@@ -973,3 +973,43 @@ body.menu-open {
   color: var(--color-gold);
   border-color: var(--color-gold);
 }
+
+/* Product card actions: keep the details and add-to-cart buttons inside the card */
+.product-card__actions > .btn-secondary {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  padding-inline: 0.85rem;
+}
+
+.product-card__actions > .btn-primary[data-add-to-cart] {
+  flex: 0 0 52px;
+  width: 52px;
+  min-width: 52px;
+  padding: 0;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+@media (max-width: 640px) {
+  .product-card__actions {
+    gap: 6px;
+    padding-inline: 10px;
+    padding-bottom: 12px;
+  }
+
+  .product-card__actions > .btn-secondary {
+    min-height: 42px;
+    padding-inline: 0.45rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.055em;
+  }
+
+  .product-card__actions > .btn-primary[data-add-to-cart] {
+    flex-basis: 42px;
+    width: 42px;
+    min-width: 42px;
+    min-height: 42px;
+    font-size: 1.2rem;
+  }
+}
