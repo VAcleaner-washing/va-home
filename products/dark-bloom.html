@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dark Bloom — Noir Collection — VA HOME</title>
+<meta name="description" content="Dark Bloom — Темна квіткова композиція з молекулярною глибиною. VA HOME, Noir Collection, 100 мл.">
+<link rel="canonical" href="https://vahome.com.ua/products/dark-bloom.html">
+<meta property="og:type" content="product">
+<meta property="og:title" content="Dark Bloom — VA HOME">
+<meta property="og:url" content="https://vahome.com.ua/products/dark-bloom.html">
+<meta property="og:description" content="Темна квіткова композиція з молекулярною глибиною.">
+<link rel="icon" href="../favicon/favicon.ico" sizes="any">
+<link rel="icon" href="../favicon/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../favicon/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/reset.css">
+<link rel="stylesheet" href="../css/global.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/product.css">
+<link rel="stylesheet" href="../css/responsive.css">
+
+<script>const PRODUCT_ID = "dark-bloom";</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Dark Bloom",
+  "brand": { "@type": "Brand", "name": "VA HOME" },
+  "description": "Темна квіткова композиція з молекулярною глибиною.",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "UAH",
+    "price": "1199",
+    "url": "https://vahome.com.ua/products/dark-bloom.html"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Головна", "item": "https://vahome.com.ua/index.html" },
+    { "@type": "ListItem", "position": 2, "name": "Noir Collection", "item": "https://vahome.com.ua/collections.html#noir" },
+    { "@type": "ListItem", "position": 3, "name": "Dark Bloom", "item": "https://vahome.com.ua/products/dark-bloom.html" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div id="site-header" data-root="../" data-active="catalog"></div>
+
+<main id="main-content">
+
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Хлібні крихти">
+      <a href="../index.html">Головна</a>
+      <span class="breadcrumbs__sep">/</span>
+      <a href="../collections.html#noir" id="breadcrumbCollection">Noir Collection</a>
+      <span class="breadcrumbs__sep">/</span>
+      <span aria-current="page" id="breadcrumbName">Dark Bloom</span>
+    </nav>
+  </div>
+
+  <!-- ============ PRODUCT HERO ============ -->
+  <section class="section section--tight">
+    <div class="container">
+      <div class="product-hero">
+
+        <div class="product-hero__media placeholder-media" id="productMedia">
+          <div class="product-hero__badges" id="productBadges"></div>
+          Фото: Dark Bloom
+        </div>
+
+        <div class="product-hero__info">
+          <p class="product-hero__collection" id="productCollectionLabel">Noir Collection</p>
+          <h1 class="product-hero__name" id="productName">Dark Bloom</h1>
+          <p class="product-hero__desc" id="productDesc"></p>
+
+          <div class="product-hero__meta">
+            <span id="productVolume"></span>
+            <strong id="productPrice"></strong>
+          </div>
+
+          <div class="product-purchase-row">
+            <div class="qty-stepper">
+              <button type="button" id="qtyMinus" aria-label="Зменшити кількість">−</button>
+              <input type="text" id="qtyInput" value="1" inputmode="numeric" aria-label="Кількість">
+              <button type="button" id="qtyPlus" aria-label="Збільшити кількість">+</button>
+            </div>
+            <button type="button" class="btn btn-primary" id="addToCartBtn">Додати в кошик</button>
+          </div>
+
+          <!-- ---- Ароматичний профіль ---- -->
+          <div class="product-detail-section">
+            <h2 class="product-detail-section__title">Ароматичний профіль</h2>
+            <div class="tag-pills" id="profileTags"></div>
+          </div>
+
+          <!-- ---- Ноти (прихована секція, якщо notes === null) ---- -->
+          <div class="product-detail-section" id="notesSection">
+            <h2 class="product-detail-section__title">Ноти</h2>
+            <p><strong>Верхні:</strong> <span data-notes="top"></span></p>
+            <p><strong>Серце:</strong> <span data-notes="heart"></span></p>
+            <p><strong>База:</strong> <span data-notes="base"></span></p>
+          </div>
+
+          <!-- ---- Візуальні шкали (прихована секція, якщо scales === null) ---- -->
+          <div class="product-detail-section" id="scalesSection">
+            <h2 class="product-detail-section__title">Візуальні шкали</h2>
+            <div class="scent-scale" id="scalesTrack"></div>
+          </div>
+
+          <!-- ---- Для якої кімнати ---- -->
+          <div class="product-detail-section">
+            <h2 class="product-detail-section__title">Для якої кімнати</h2>
+            <div class="tag-pills" id="roomTags"></div>
+          </div>
+
+          <!-- ---- Яку атмосферу створює ---- -->
+          <div class="product-detail-section">
+            <h2 class="product-detail-section__title">Яку атмосферу створює</h2>
+            <div class="tag-pills" id="moodTags"></div>
+          </div>
+
+          <!-- ---- Інтенсивність (прихована секція, якщо scales.intensity === null) ---- -->
+          <div class="product-detail-section" id="intensitySection">
+            <h2 class="product-detail-section__title">Інтенсивність</h2>
+            <p id="intensityValue"></p>
+          </div>
+
+          <!-- ---- Як користуватися (загальні, не вигадані рекомендації) ---- -->
+          <div class="product-detail-section">
+            <h2 class="product-detail-section__title">Як користуватися</h2>
+            <p>Розпакуйте флакон, вставте палички та дайте аромату розкритися у просторі. Кількість паличок і швидкість дифузії можна регулювати залежно від бажаної інтенсивності.</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ СХОЖІ АРОМАТИ ============ -->
+  <section class="section product-detail-section" style="border-top:none;">
+    <div class="container">
+      <h2>Схожі аромати</h2>
+      <div class="divider"></div>
+      <div class="similar-grid" id="similarGrid"></div>
+    </div>
+  </section>
+
+  <!--
+    ВІДГУКИ: реальних відгуків для цього аромату поки немає.
+    Розкоментуйте та заповніть, коли зʼявляться реальні тексти.
+
+  <section class="section">
+    <div class="container">
+      <h2>Відгуки</h2>
+      <blockquote class="testimonial">
+        <p>"..."</p>
+        <cite>Ім'я</cite>
+      </blockquote>
+    </div>
+  </section>
+  -->
+
+</main>
+
+<div id="site-footer" data-root="../"></div>
+
+<script src="../js/config.js"></script>
+<script src="../data/products-data.js"></script>
+<script src="../js/products.js"></script>
+<script src="../js/product.js" defer></script>
+<script src="../js/cart.js" defer></script>
+<script src="../js/main.js" defer></script>
+</body>
+</html>

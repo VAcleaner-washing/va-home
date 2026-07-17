@@ -1,0 +1,100 @@
+/* ==========================================================================
+   VA HOME — Responsive fine-tuning
+   Page-level layout rules already carry their own breakpoints inline
+   (see home.css, catalog.css, product.css, cart.css). This file collects
+   cross-page fixes found during the Stage 10 device/browser audit
+   (320–1440px sweep, Safari-specific fixes, safe-area insets, etc.).
+   ========================================================================== */
+
+/* ---- iOS Safari: remove the gray tap-highlight flash on links/buttons ---- */
+a, button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---- Safari (incl. older iOS): sticky needs the -webkit- prefix too ---- */
+.site-header,
+.catalog-filters,
+.product-hero__info,
+.cart-summary {
+  position: -webkit-sticky;
+}
+
+/* ---- Safari: backdrop-filter needs the -webkit- prefix ---- */
+.site-header.is-scrolled,
+.site-header.is-solid {
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ---- Safe-area support: header and mobile menu respect the notch/Dynamic Island ---- */
+/* ---- Safe-area support: header and mobile menu respect the notch/Dynamic Island ----
+   Extends the header-offset compensation in global.css: on notch devices the
+   fixed header needs extra height for the inset, and #main-content's
+   compensating padding needs to grow by the same amount to match. */
+.site-header {
+  height: calc(var(--header-height-mobile) + env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+}
+
+#main-content {
+  padding-top: calc(var(--header-height-mobile) + env(safe-area-inset-top));
+}
+
+body.home-page #main-content {
+  padding-top: 0;
+}
+
+@media (min-width: 1024px) {
+  .site-header {
+    height: calc(var(--header-height) + env(safe-area-inset-top));
+  }
+  #main-content {
+    padding-top: calc(var(--header-height) + env(safe-area-inset-top));
+  }
+  body.home-page #main-content {
+    padding-top: 0;
+  }
+}
+
+.mobile-menu {
+  padding-top: calc(var(--space-3) + env(safe-area-inset-top));
+  padding-bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
+  padding-left: calc(var(--container-pad) + env(safe-area-inset-left));
+  padding-right: calc(var(--container-pad) + env(safe-area-inset-right));
+}
+
+/* ---- Safari: native select styling reset so our custom look renders consistently ---- */
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B88A4B' stroke-width='1.6'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.9em center;
+  background-size: 16px;
+  padding-right: 2.4em;
+}
+
+/* ---- Prevent long single words (e.g. long aroma names) from overflowing narrow screens ---- */
+h1, h2, h3, .product-card__name, .cart-item__name {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* ---- Guarantee no horizontal scroll on very narrow devices (320px) ---- */
+@media (max-width: 360px) {
+  .container {
+    padding-inline: 1rem;
+  }
+  .hero-slide__title {
+    font-size: clamp(2rem, 8vw, 2.6rem);
+  }
+}
+
+/* ---- Respect reduced motion for the hero slider and image zoom (belt-and-braces alongside variables.css/reset.css) ---- */
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide {
+    transition: none;
+  }
+  .media-zoom:hover img {
+    transform: none;
+  }
+}

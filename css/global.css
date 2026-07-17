@@ -1,0 +1,308 @@
+/* ==========================================================================
+   VA HOME — Global
+   ========================================================================== */
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+
+/* ---- Fixed header compensation ----
+   Внутрішні сторінки починаються нижче за фіксовану шапку.
+   На головній hero навмисно залишається під прозорою шапкою. */
+#main-content {
+  padding-top: var(--header-height-mobile);
+}
+
+body.home-page #main-content {
+  padding-top: 0;
+}
+
+@media (min-width: 1024px) {
+  #main-content {
+    padding-top: var(--header-height);
+  }
+
+  body.home-page #main-content {
+    padding-top: 0;
+  }
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: var(--lh-tight);
+  letter-spacing: 0.005em;
+}
+
+h1 { font-size: var(--fs-h1); }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
+
+p {
+  max-width: 56ch;
+}
+
+p.lead {
+  font-size: var(--fs-lead);
+  color: var(--text-secondary);
+  max-width: 46ch;
+}
+
+/* ---- Layout primitives ---- */
+.container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+.section {
+  padding-block: var(--space-7);
+}
+
+.section--tight {
+  padding-block: var(--space-6);
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding-block: var(--space-6);
+  }
+  .section--tight {
+    padding-block: var(--space-5);
+  }
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.section-head h2 {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+}
+
+/* ---- Eyebrow label ---- */
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-gold);
+  margin-bottom: var(--space-2);
+}
+
+/* ---- Links with arrow ---- */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: var(--fs-small);
+  letter-spacing: var(--ls-caption);
+  text-transform: uppercase;
+  color: var(--text-gold);
+  transition: gap var(--duration-fast) var(--ease-standard);
+}
+
+.link-arrow:hover,
+.link-arrow:focus-visible {
+  gap: 0.65em;
+}
+
+.link-arrow svg {
+  width: 1em;
+  height: 1em;
+}
+
+/* ---- Buttons ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: 48px;
+  padding: 0.9em 1.9em;
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  letter-spacing: var(--ls-button);
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  transition: background-color var(--duration-fast) var(--ease-standard),
+              border-color var(--duration-fast) var(--ease-standard),
+              color var(--duration-fast) var(--ease-standard),
+              transform var(--duration-fast) var(--ease-standard);
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: var(--color-gold);
+  color: var(--text-on-contrast);
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background: var(--color-dark-gold);
+  color: var(--color-ivory);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border-color: rgba(233, 223, 208, 0.4);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus-visible {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.btn-dark {
+  background: var(--color-charcoal);
+  color: var(--text-primary);
+  border-color: var(--border-hairline);
+}
+
+.btn-dark:hover,
+.btn-dark:focus-visible {
+  border-color: var(--border-hairline-strong);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+/* ---- Focus visibility ---- */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* ---- Skip link ---- */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: var(--space-2);
+  background: var(--color-gold);
+  color: var(--text-on-contrast);
+  padding: 0.75em 1.25em;
+  z-index: 1000;
+  border-radius: var(--radius-sm);
+  transition: top var(--duration-fast) var(--ease-standard);
+}
+
+.skip-link:focus {
+  top: var(--space-2);
+}
+
+/* ---- Utility ---- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.text-muted { color: var(--text-secondary); }
+.text-gold { color: var(--text-gold); }
+
+.divider {
+  width: 48px;
+  height: 1px;
+  background: var(--border-hairline-strong);
+  border: none;
+  margin-block: var(--space-3);
+}
+
+img {
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+/* ---- Fade-up reveal ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--duration-slow) var(--ease-standard),
+              transform var(--duration-slow) var(--ease-standard);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---- Image zoom-on-hover container ---- */
+.media-zoom {
+  overflow: hidden;
+}
+
+.media-zoom img {
+  transition: transform var(--duration-slow) var(--ease-standard);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media-zoom:hover img {
+  transform: scale(1.02);
+}
+
+/* ---- Fill image: for containers with their own defined size (aspect-ratio, inset:0, or grid stretch) ---- */
+.fill-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---- Placeholder media block (until real photography is added) ---- */
+.placeholder-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, var(--color-charcoal), var(--color-walnut));
+  color: var(--text-secondary);
+  font-size: var(--fs-caption);
+  letter-spacing: var(--ls-caption);
+  text-transform: uppercase;
+  text-align: center;
+  border: 1px dashed var(--border-hairline);
+  width: 100%;
+  height: 100%;
+}
