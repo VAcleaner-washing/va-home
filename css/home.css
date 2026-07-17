@@ -5,7 +5,7 @@
 /* ---- Hero ---- */
 .hero {
   position: relative;
-  min-height: 100dvh;
+  min-height: 100svh;
   overflow: hidden;
   background: var(--color-black);
 }
@@ -88,7 +88,7 @@
   .hero-slide {
     position: relative;
     grid-template-columns: 1fr;
-    min-height: 100dvh;
+    min-height: 100svh;
     display: flex;
     align-items: flex-end;
   }
@@ -119,28 +119,141 @@
 /* ---- Collections grid ---- */
 .collections-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-3);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 1.8vw, 28px);
 }
 
-@media (max-width: 900px) {
-  .collections-grid {
-    grid-auto-flow: column;
-    grid-auto-columns: 72%;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding-bottom: var(--space-2);
-    margin-inline: calc(var(--container-pad) * -1);
-    padding-inline: var(--container-pad);
+/* On the homepage collection cards are editorial tiles: image first, text below. */
+.collections-grid .collection-card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  aspect-ratio: auto;
+  min-width: 0;
+  overflow: visible;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.collections-grid .collection-card__media {
+  position: relative;
+  inset: auto;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-charcoal);
+}
+
+.collections-grid .collection-card__media::after {
+  background: linear-gradient(180deg, rgba(8,8,7,0.02), rgba(8,8,7,0.18));
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+.collections-grid .collection-card__media img {
+  transition: transform 700ms var(--ease-standard);
+}
+
+.collections-grid .collection-card__body {
+  position: relative;
+  height: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "title arrow"
+    "price arrow";
+  align-items: center;
+  column-gap: 12px;
+  padding: 14px 2px 0;
+}
+
+.collections-grid .collection-card__eyebrow {
+  grid-area: title;
+  margin: 0 0 5px;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(16px, 1.35vw, 21px);
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.collections-grid .collection-card__price {
+  grid-area: price;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--fs-small);
+}
+
+.collection-card__arrow {
+  grid-area: arrow;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border-hairline);
+  border-radius: 50%;
+  color: var(--color-gold);
+  transition: transform var(--duration-fast) var(--ease-standard),
+              border-color var(--duration-fast) var(--ease-standard),
+              background-color var(--duration-fast) var(--ease-standard);
+}
+
+.collection-card__arrow svg {
+  width: 17px;
+  height: 17px;
+}
+
+@media (hover: hover) {
+  .collections-grid .collection-card:hover .collection-card__media img {
+    transform: scale(1.035);
   }
-  .collections-grid > * {
-    scroll-snap-align: start;
+
+  .collections-grid .collection-card:hover .collection-card__media::after {
+    opacity: 0.55;
+  }
+
+  .collections-grid .collection-card:hover .collection-card__arrow {
+    transform: translateX(3px);
+    border-color: var(--color-gold);
+    background: rgba(184, 135, 70, 0.08);
   }
 }
 
-@media (min-width: 480px) and (max-width: 900px) {
+@media (max-width: 767px) {
   .collections-grid {
-    grid-auto-columns: 46%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 12px;
+    overflow: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+    padding-bottom: 0;
+  }
+
+  .collections-grid .collection-card__media {
+    aspect-ratio: 4 / 5;
+  }
+
+  .collections-grid .collection-card__body {
+    padding-top: 10px;
+    column-gap: 7px;
+  }
+
+  .collections-grid .collection-card__eyebrow {
+    font-size: clamp(14px, 4vw, 17px);
+  }
+
+  .collections-grid .collection-card__price {
+    font-size: 12px;
+  }
+
+  .collection-card__arrow {
+    width: 28px;
+    height: 28px;
+  }
+
+  .collection-card__arrow svg {
+    width: 14px;
+    height: 14px;
   }
 }
 

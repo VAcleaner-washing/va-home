@@ -12,7 +12,6 @@ a, button {
 }
 
 /* ---- Safari (incl. older iOS): sticky needs the -webkit- prefix too ---- */
-.site-header,
 .catalog-filters,
 .product-hero__info,
 .cart-summary {
@@ -97,4 +96,118 @@ h1, h2, h3, .product-card__name, .cart-item__name {
   .media-zoom:hover img {
     transform: none;
   }
+}
+
+/* ========================================================================== 
+   Stage 10.1 — responsive release fixes
+   ========================================================================== */
+
+/* The header must remain fixed. A previous Safari fallback changed it to
+   sticky because responsive.css loads after components.css. */
+.site-header {
+  position: fixed;
+}
+
+/* Keep the closed off-canvas menu completely outside the visual/accessibility
+   layer. Translating a full-height panel alone can leave its footer peeking
+   into the top edge on iOS Safari. */
+.mobile-menu {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate3d(0, -100%, 0);
+  transition: transform var(--duration-base) var(--ease-standard),
+              opacity var(--duration-fast) var(--ease-standard),
+              visibility 0s linear var(--duration-base);
+}
+
+.mobile-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 0s;
+}
+
+/* Every hero slide must occupy the complete hero viewport. The former active
+   slide was position:relative with an absolutely positioned image, so its
+   height collapsed to the text block and left a large black area below. */
+.hero {
+  height: 100svh;
+  min-height: 620px;
+}
+
+.hero-slide,
+.hero-slide.is-active {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    height: 100svh;
+    min-height: 600px;
+  }
+
+  .hero-slide,
+  .hero-slide.is-active {
+    position: absolute;
+    min-height: 100%;
+  }
+
+  .hero-slide__content {
+    padding-bottom: max(var(--space-7), calc(5.5rem + env(safe-area-inset-bottom)));
+  }
+
+  .hero-nav {
+    bottom: max(var(--space-3), calc(1rem + env(safe-area-inset-bottom)));
+  }
+}
+
+/* More stable cart composition on phones. */
+@media (max-width: 600px) {
+  .cart-item {
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: var(--space-2);
+    align-items: start;
+  }
+
+  .cart-item__media {
+    width: 72px;
+  }
+
+  .cart-item__controls {
+    gap: var(--space-1);
+  }
+
+  .quantity-control {
+    max-width: 180px;
+  }
+
+  .cart-item__price-col {
+    grid-column: 2;
+    text-align: left;
+    margin-top: 0;
+  }
+
+  .cart-summary {
+    position: static;
+    top: auto;
+  }
+}
+
+/* iOS autofill should preserve the dark VA HOME form style. */
+.form-field input:-webkit-autofill,
+.form-field input:-webkit-autofill:hover,
+.form-field input:-webkit-autofill:focus,
+.form-field textarea:-webkit-autofill,
+.form-field select:-webkit-autofill {
+  -webkit-text-fill-color: var(--text-primary);
+  -webkit-box-shadow: 0 0 0 1000px var(--bg-elevated) inset;
+  box-shadow: 0 0 0 1000px var(--bg-elevated) inset;
+  caret-color: var(--text-primary);
+  transition: background-color 9999s ease-out 0s;
 }
