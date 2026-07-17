@@ -168,6 +168,12 @@
     if (emptyState) emptyState.hidden = true;
     if (filledState) filledState.hidden = false;
 
+    const upsell = document.getElementById("cartDiscoveryUpsell");
+    if (upsell) {
+      const hasDiscovery = items.some((item) => item.id.startsWith("discovery-"));
+      upsell.hidden = hasDiscovery;
+    }
+
     itemsList.innerHTML = items
       .map((item) => {
         const media = item.image
@@ -239,7 +245,7 @@
   // ---- Checkout form ----
   function validateCheckoutForm(form) {
     let valid = true;
-    const requiredFields = ["customerName", "customerPhone", "customerCity", "deliveryMethod"];
+    const requiredFields = ["customerName", "customerPhone", "customerCity", "deliveryMethod", "deliveryDetails"];
     requiredFields.forEach((name) => {
       const field = form.elements[name];
       if (!field) return;
@@ -249,6 +255,16 @@
       field.setAttribute("aria-invalid", isEmpty ? "true" : "false");
       if (isEmpty) valid = false;
     });
+    const consent = form.elements.checkoutConsent;
+    const consentError = document.getElementById("err-checkoutConsent");
+    if (consent && !consent.checked) {
+      valid = false;
+      consent.setAttribute("aria-invalid", "true");
+      if (consentError) consentError.style.display = "block";
+    } else if (consent) {
+      consent.setAttribute("aria-invalid", "false");
+      if (consentError) consentError.style.display = "none";
+    }
     return valid;
   }
 
@@ -270,6 +286,7 @@
     lines.push(`Телефон: ${form.elements.customerPhone.value.trim()}`);
     lines.push(`Місто: ${form.elements.customerCity.value.trim()}`);
     lines.push(`Спосіб доставки: ${form.elements.deliveryMethod.value}`);
+    lines.push(`Відділення / поштомат Нової пошти: ${form.elements.deliveryDetails.value.trim()}`);
     const comment = form.elements.customerComment ? form.elements.customerComment.value.trim() : "";
     if (comment) lines.push(`Коментар: ${comment}`);
     return lines.join("\n");

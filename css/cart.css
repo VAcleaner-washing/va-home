@@ -193,3 +193,19 @@
   color: var(--text-secondary);
   margin-top: var(--space-2);
 }
+
+
+/* Checkout legal consent */
+.checkout-consent {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 10px;
+  align-items: start;
+  margin: var(--space-3) 0 var(--space-2);
+  font-size: var(--fs-caption);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+.checkout-consent input { margin-top: 3px; accent-color: var(--color-gold); }
+.checkout-consent a { color: var(--color-gold); text-decoration: underline; text-underline-offset: 3px; }
+.checkout-consent-error { display: none; margin-top: calc(var(--space-2) * -1); }

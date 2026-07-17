@@ -50,10 +50,9 @@
       <a class="skip-link" href="#main-content">Перейти до контенту</a>
       <header class="site-header" id="siteHeaderEl">
         <div class="container site-header__inner">
-          <a href="${root}index.html" class="site-logo">VA<span>HOME</span></a>
+          <a href="${root}" class="site-logo">VA<span>HOME</span></a>
           <nav class="main-nav" aria-label="Основна навігація">${navLinks}</nav>
           <div class="header-actions">
-            <button class="icon-btn" type="button" aria-label="Пошук" id="searchToggle">${iconSearch()}</button>
             <a class="icon-btn cart-btn" href="${root}cart.html" aria-label="Кошик">
               ${iconBag()}
               <span class="cart-count" id="cartCount" data-count="0">0</span>
@@ -68,7 +67,7 @@
 
       <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu__top">
-          <a href="${root}index.html" class="site-logo">VA<span>HOME</span></a>
+          <a href="${root}" class="site-logo">VA<span>HOME</span></a>
           <button class="icon-btn" type="button" aria-label="Закрити меню" id="mobileMenuClose">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
           </button>
@@ -223,7 +222,7 @@
     const hero = document.querySelector("[data-hero-slider]");
     if (!hero) return;
     const slides = Array.from(hero.querySelectorAll(".hero-slide"));
-    const dotsContainer = hero.querySelector("[data-hero-dots]");
+    const dotsContainers = Array.from(hero.querySelectorAll("[data-hero-dots]"));
     if (!slides.length) return;
 
     let current = slides.findIndex((s) => s.classList.contains("is-active"));
@@ -232,15 +231,18 @@
     const AUTO_DELAY = 7000;
 
     function renderDots() {
-      if (!dotsContainer) return;
-      dotsContainer.innerHTML = slides
+      if (!dotsContainers.length) return;
+      const html = slides
         .map(
           (_, i) =>
             `<button type="button" aria-current="${i === current}" aria-label="Слайд ${i + 1}">${String(i + 1).padStart(2, "0")}</button>`
         )
         .join("");
-      dotsContainer.querySelectorAll("button").forEach((btn, i) => {
-        btn.addEventListener("click", () => goTo(i, true));
+      dotsContainers.forEach((container) => {
+        container.innerHTML = html;
+        container.querySelectorAll("button").forEach((btn, i) => {
+          btn.addEventListener("click", () => goTo(i, true));
+        });
       });
     }
 

@@ -161,10 +161,6 @@ h1, h2, h3, .product-card__name, .cart-item__name {
   .hero-slide__content {
     padding-bottom: max(var(--space-7), calc(5.5rem + env(safe-area-inset-bottom)));
   }
-
-  .hero-nav {
-    bottom: max(var(--space-3), calc(1rem + env(safe-area-inset-bottom)));
-  }
 }
 
 /* More stable cart composition on phones. */

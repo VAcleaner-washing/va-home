@@ -7,6 +7,9 @@
 <meta name="description" content="The Archive — Стримана, «бібліотечна» композиція з темним характером. VA HOME, Noir Collection, 100 мл.">
 <link rel="canonical" href="https://vahome.com.ua/products/the-archive.html">
 <meta property="og:type" content="product">
+<meta property="og:image" content="https://vahome.com.ua/images/products/the-archive.webp">
+<meta property="og:image:alt" content="Аромадифузор VA HOME">
+<meta name="twitter:card" content="summary_large_image">
 <meta property="og:title" content="The Archive — VA HOME">
 <meta property="og:url" content="https://vahome.com.ua/products/the-archive.html">
 <meta property="og:description" content="Стримана, «бібліотечна» композиція з темним характером.">
@@ -14,11 +17,9 @@
 <link rel="icon" href="../favicon/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../favicon/apple-touch-icon.png">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/fonts.css">
 <link rel="stylesheet" href="../css/reset.css">
 <link rel="stylesheet" href="../css/global.css">
 <link rel="stylesheet" href="../css/components.css">
@@ -31,12 +32,16 @@
 {
   "@context": "https://schema.org",
   "@type": "Product",
+  "image": ["https://vahome.com.ua/images/products/the-archive.webp"],
+  "sku": "VA-THE-ARCHIVE-100",
   "name": "The Archive",
   "brand": { "@type": "Brand", "name": "VA HOME" },
   "description": "Стримана, «бібліотечна» композиція з темним характером.",
   "offers": {
     "@type": "Offer",
     "priceCurrency": "UAH",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition",
     "price": "1199",
     "url": "https://vahome.com.ua/products/the-archive.html"
   }
@@ -47,7 +52,7 @@
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Головна", "item": "https://vahome.com.ua/index.html" },
+    { "@type": "ListItem", "position": 1, "name": "Головна", "item": "https://vahome.com.ua/" },
     { "@type": "ListItem", "position": 2, "name": "Noir Collection", "item": "https://vahome.com.ua/collections.html#noir" },
     { "@type": "ListItem", "position": 3, "name": "The Archive", "item": "https://vahome.com.ua/products/the-archive.html" }
   ]
@@ -75,19 +80,19 @@
     <div class="container">
       <div class="product-hero">
 
-        <div class="product-hero__media placeholder-media" id="productMedia">
+        <div class="product-hero__media" id="productMedia">
           <div class="product-hero__badges" id="productBadges"></div>
-          Фото: The Archive
+          <img src="../images/products/the-archive.webp" alt="The Archive — аромадифузор VA HOME" loading="eager" width="600" height="750" onerror="this.parentElement.classList.add('placeholder-media');this.remove();">
         </div>
 
         <div class="product-hero__info">
           <p class="product-hero__collection" id="productCollectionLabel">Noir Collection</p>
           <h1 class="product-hero__name" id="productName">The Archive</h1>
-          <p class="product-hero__desc" id="productDesc"></p>
+          <p class="product-hero__desc" id="productDesc">Сухий копал і кедр з атмосферою приватної бібліотеки.</p>
 
           <div class="product-hero__meta">
-            <span id="productVolume"></span>
-            <strong id="productPrice"></strong>
+            <span id="productVolume">100 мл</span>
+            <strong id="productPrice">1199 грн</strong>
           </div>
 
           <div class="product-purchase-row">
@@ -102,45 +107,83 @@
           <!-- ---- Ароматичний профіль ---- -->
           <div class="product-detail-section">
             <h2 class="product-detail-section__title">Ароматичний профіль</h2>
-            <div class="tag-pills" id="profileTags"></div>
+            <div class="tag-pills" id="profileTags">
+            <span class="tag-pill">Деревні</span>
+            <span class="tag-pill">Молекулярні</span>
+          </div>
           </div>
 
-          <!-- ---- Ноти (прихована секція, якщо notes === null) ---- -->
           <div class="product-detail-section" id="notesSection">
             <h2 class="product-detail-section__title">Ноти</h2>
-            <p><strong>Верхні:</strong> <span data-notes="top"></span></p>
-            <p><strong>Серце:</strong> <span data-notes="heart"></span></p>
-            <p><strong>База:</strong> <span data-notes="base"></span></p>
+            <p><strong>Верхні:</strong> Бергамот, Лимон</p>
+            <p><strong>Серце:</strong> Копал, Геліотроп, Дубовий мох, Камфора</p>
+            <p><strong>База:</strong> Пачулі, Боби тонка, Амбра, Бензоїн, Кедр</p>
           </div>
 
-          <!-- ---- Візуальні шкали (прихована секція, якщо scales === null) ---- -->
           <div class="product-detail-section" id="scalesSection">
             <h2 class="product-detail-section__title">Візуальні шкали</h2>
-            <div class="scent-scale" id="scalesTrack"></div>
+            <div class="scent-scale">
+              <div class="scent-scale__row">
+                <span>Свіжість</span>
+                <div class="scent-scale__track">
+                  <div class="scent-scale__fill" style="width:40%"></div>
+                </div>
+              </div>
+              <div class="scent-scale__row">
+                <span>Солодкість</span>
+                <div class="scent-scale__track">
+                  <div class="scent-scale__fill" style="width:20%"></div>
+                </div>
+              </div>
+              <div class="scent-scale__row">
+                <span>Деревність</span>
+                <div class="scent-scale__track">
+                  <div class="scent-scale__fill" style="width:100%"></div>
+                </div>
+              </div>
+              <div class="scent-scale__row">
+                <span>Чистота</span>
+                <div class="scent-scale__track">
+                  <div class="scent-scale__fill" style="width:40%"></div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- ---- Для якої кімнати ---- -->
           <div class="product-detail-section">
             <h2 class="product-detail-section__title">Для якої кімнати</h2>
-            <div class="tag-pills" id="roomTags"></div>
+            <div class="tag-pills" id="roomTags">
+            <span class="tag-pill">Кабінет</span>
+            <span class="tag-pill">Вітальня</span>
+          </div>
           </div>
 
           <!-- ---- Яку атмосферу створює ---- -->
           <div class="product-detail-section">
             <h2 class="product-detail-section__title">Яку атмосферу створює</h2>
-            <div class="tag-pills" id="moodTags"></div>
+            <div class="tag-pills" id="moodTags">
+            <span class="tag-pill">Готельна атмосфера</span>
+          </div>
           </div>
 
-          <!-- ---- Інтенсивність (прихована секція, якщо scales.intensity === null) ---- -->
           <div class="product-detail-section" id="intensitySection">
             <h2 class="product-detail-section__title">Інтенсивність</h2>
-            <p id="intensityValue"></p>
+            <p>7 / 10</p>
           </div>
 
-          <!-- ---- Як користуватися (загальні, не вигадані рекомендації) ---- -->
+          <!-- ---- Використання та комплектація ---- -->
           <div class="product-detail-section">
-            <h2 class="product-detail-section__title">Як користуватися</h2>
-            <p>Розпакуйте флакон, вставте палички та дайте аромату розкритися у просторі. Кількість паличок і швидкість дифузії можна регулювати залежно від бажаної інтенсивності.</p>
+            <h2 class="product-detail-section__title">Комплектація та використання</h2>
+            <p><strong>У комплекті:</strong> флакон аромадифузора 100 мл і 4 чорні палички.</p>
+            <p><strong>Рекомендована площа:</strong> до 25 м². Фактична інтенсивність залежить від температури, вентиляції та розташування дифузора.</p>
+            <p><strong>Орієнтовна тривалість:</strong> 8–12 тижнів. У теплому приміщенні або при активному русі повітря ароматична рідина може випаровуватися швидше.</p>
+            <p><strong>Як користуватися:</strong> вставте палички у флакон і дайте аромату 24–48 годин, щоб повністю розкритися. Для рівномірнішої дифузії перевертайте палички приблизно раз на 7–10 днів. Якщо аромат здається надто інтенсивним, використовуйте менше паличок.</p>
+          </div>
+
+          <div class="product-detail-section">
+            <h2 class="product-detail-section__title">Безпечне використання</h2>
+            <p>Не ковтати. Уникайте контакту рідини зі шкірою, очима, меблями та текстилем. Тримайте подалі від дітей, домашніх тварин, відкритого вогню й джерел тепла. Розміщуйте флакон вертикально на стійкій поверхні.</p>
           </div>
 
         </div>
@@ -153,7 +196,45 @@
     <div class="container">
       <h2>Схожі аромати</h2>
       <div class="divider"></div>
-      <div class="similar-grid" id="similarGrid"></div>
+      <div class="similar-grid" id="similarGrid">
+        <article class="product-card">
+          <a href="old-money.html" class="product-card__media media-zoom" aria-label="Old Money">
+            
+            <img src="../images/products/old-money.webp" alt="Old Money — аромадифузор VA HOME" loading="lazy" width="480" height="600" onerror="this.closest('.product-card__media').classList.add('placeholder-media');this.remove();">
+          </a>
+          <div class="product-card__body">
+            <span class="product-card__collection">Premium Collection</span>
+            <a href="old-money.html"><h3 class="product-card__name">Old Money</h3></a>
+            <p class="product-card__desc">Суха шкіра, тютюн і амбра з характером дорогого кабінету.</p>
+            <div class="product-card__meta">
+              <span>100 мл</span>
+              <span class="product-card__price">999 грн</span>
+            </div>
+          </div>
+          <div class="product-card__actions">
+            <a href="old-money.html" class="btn btn-secondary btn-block">Детальніше</a>
+            <button type="button" class="btn btn-primary product-card__cart-btn" data-add-to-cart="old-money" aria-label="Додати Old Money у кошик"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 8.5h11l-.9 10.2a1.5 1.5 0 0 1-1.5 1.3H8.9a1.5 1.5 0 0 1-1.5-1.3L6.5 8.5z"/><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5"/></svg></button>
+          </div>
+        </article>
+        <article class="product-card">
+          <a href="moss-and-shadow.html" class="product-card__media media-zoom" aria-label="Moss & Shadow">
+            <div class="product-card__badges"><span class="badge badge--new">Новинка</span></div>
+            <img src="../images/products/moss-and-shadow.webp" alt="Moss & Shadow — аромадифузор VA HOME" loading="lazy" width="480" height="600" onerror="this.closest('.product-card__media').classList.add('placeholder-media');this.remove();">
+          </a>
+          <div class="product-card__body">
+            <span class="product-card__collection">Noir Collection</span>
+            <a href="moss-and-shadow.html"><h3 class="product-card__name">Moss & Shadow</h3></a>
+            <p class="product-card__desc">Дубовий мох, шавлія й амбра після дощу в лісі.</p>
+            <div class="product-card__meta">
+              <span>100 мл</span>
+              <span class="product-card__price">1199 грн</span>
+            </div>
+          </div>
+          <div class="product-card__actions">
+            <a href="moss-and-shadow.html" class="btn btn-secondary btn-block">Детальніше</a>
+            <button type="button" class="btn btn-primary product-card__cart-btn" data-add-to-cart="moss-and-shadow" aria-label="Додати Moss & Shadow у кошик"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 8.5h11l-.9 10.2a1.5 1.5 0 0 1-1.5 1.3H8.9a1.5 1.5 0 0 1-1.5-1.3L6.5 8.5z"/><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5"/></svg></button>
+          </div>
+        </article></div>
     </div>
   </section>
 
