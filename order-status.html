@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Статус замовлення — VA HOME</title>
+<meta name="description" content="Перевірте статус замовлення VA HOME за номером замовлення та останніми цифрами телефону.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://vahome.com.ua/order-status.html">
+<link rel="icon" href="favicon/favicon.ico" sizes="any">
+<link rel="stylesheet" href="css/variables.css"><link rel="stylesheet" href="css/fonts.css"><link rel="stylesheet" href="css/reset.css"><link rel="stylesheet" href="css/global.css"><link rel="stylesheet" href="css/components.css"><link rel="stylesheet" href="css/order-status.css"><link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+<div id="site-header" data-root="" data-active=""></div>
+<main id="main-content">
+<section class="section order-track">
+  <div class="container order-track__container">
+    <p class="eyebrow">VA HOME</p>
+    <h1>Статус замовлення</h1>
+    <p class="order-track__lead">Введіть номер замовлення та останні 4 цифри телефону, вказаного під час оформлення.</p>
+    <form id="orderTrackForm" class="order-track__form">
+      <label>Номер замовлення<input name="orderNumber" type="text" placeholder="VA-260718-9613" autocomplete="off" required></label>
+      <label>Останні 4 цифри телефону<input name="phoneLast4" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="4562" required></label>
+      <button class="btn btn-primary" type="submit">Перевірити статус</button>
+    </form>
+    <p id="orderTrackMessage" class="order-track__message" role="status"></p>
+    <section id="orderTrackResult" class="order-track__result" hidden></section>
+  </div>
+</section>
+</main>
+<div id="site-footer" data-root=""></div>
+<script src="js/config.js"></script><script src="js/supabase-api.js"></script><script src="js/order-status.js" defer></script><script src="js/main.js" defer></script>
+</body>
+</html>
