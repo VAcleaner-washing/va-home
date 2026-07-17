@@ -1,0 +1,24 @@
+VA HOME v5 — Етап 1 (ядро e-commerce)
+
+ЩО ВЖЕ Є
+- /admin/ — захищена адмін-панель через Supabase Auth
+- замовлення, пошук, фільтри, статистика
+- статуси: Нове / Очікує оплату / Оплачено / Відправлено / Виконано / Скасовано
+- статус оплати, ТТН, внутрішня примітка
+- модерація відгуків
+- /order-status.html — перевірка статусу за номером замовлення + останні 4 цифри телефону
+- автоматичний лист клієнту після зміни статусу
+
+ЗАПУСК
+1. Supabase → SQL Editor → New query.
+2. Вставити весь файл SUPABASE_MIGRATION_V5_FINAL.sql та натиснути Run.
+3. Supabase → Edge Functions → створити send-status-email.
+4. Вставити код із supabase/functions/send-status-email/index.ts та Deploy.
+5. Переконатися, що секрет RESEND_API_KEY уже є в Edge Functions → Secrets.
+6. Завантажити весь вміст цієї папки в корінь GitHub-репозиторію із заміною файлів.
+7. Відкрити https://vahome.com.ua/admin/ і ввійти під vahome.aroma@gmail.com.
+
+ВАЖЛИВО
+- Пароль адміністратора не зберігається у файлах сайту.
+- Service role та Resend API key не можна додавати в GitHub.
+- Адмін-доступ визначається таблицею public.admin_users і RLS.
