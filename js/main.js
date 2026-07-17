@@ -106,6 +106,7 @@
               <li><a href="${root}delivery.html">Доставка й оплата</a></li>
               <li><a href="${root}offer.html">Публічна оферта</a></li>
               <li><a href="${root}privacy.html">Політика конфіденційності</a></li>
+              <li><a href="${root}order-status.html">Статус замовлення</a></li>
               <li><a href="${root}contacts.html">Контакти</a></li>
             </ul>
           </div>

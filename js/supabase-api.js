@@ -55,6 +55,14 @@
     });
   }
 
+
+  function getPublicOrderStatus(orderNumber, phoneLast4) {
+    return request("rpc/get_public_order_status", {
+      method: "POST",
+      body: JSON.stringify({ p_order_number: orderNumber, p_phone_last4: phoneLast4 })
+    });
+  }
+
   function submitOrder(payload) {
     return request("orders", {
       method: "POST",
@@ -84,5 +92,5 @@
     return response.json();
   }
 
-  window.VAHomeSupabase = { configured, getApprovedReviews, getApprovedRatings, submitReview, submitOrder, notifyOrder };
+  window.VAHomeSupabase = { configured, getApprovedReviews, getApprovedRatings, submitReview, getPublicOrderStatus, submitOrder, notifyOrder };
 })();

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VA HOME Admin</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="../favicon/favicon.ico" sizes="any">
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/fonts.css">
+<link rel="stylesheet" href="../css/reset.css">
+<link rel="stylesheet" href="../css/global.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+<main class="admin-shell">
+  <header class="admin-topbar">
+    <a href="../index.html" class="site-logo">VA<span>HOME</span></a>
+    <div class="admin-topbar__actions">
+      <span id="adminIdentity" class="admin-identity"></span>
+      <button id="logoutBtn" class="btn btn-secondary btn-small" type="button" hidden>Вийти</button>
+    </div>
+  </header>
+
+  <section id="loginView" class="admin-login">
+    <div class="admin-login__card">
+      <p class="eyebrow">VA HOME</p>
+      <h1>Панель керування</h1>
+      <p class="text-muted">Вхід лише для адміністратора магазину.</p>
+      <form id="loginForm" class="admin-form">
+        <label>Email<input name="email" type="email" autocomplete="username" required value="vahome.aroma@gmail.com"></label>
+        <label>Пароль<input name="password" type="password" autocomplete="current-password" required></label>
+        <button class="btn btn-primary btn-block" type="submit">Увійти</button>
+        <p id="loginMessage" class="admin-message" role="status"></p>
+      </form>
+    </div>
+  </section>
+
+  <section id="dashboardView" hidden>
+    <div class="admin-heading">
+      <div><p class="eyebrow">VA HOME</p><h1>Керування магазином</h1></div>
+      <button id="refreshBtn" class="btn btn-secondary btn-small" type="button">Оновити</button>
+    </div>
+
+    <nav class="admin-tabs" aria-label="Розділи адмін-панелі">
+      <button class="is-active" data-tab="orders" type="button">Замовлення <span id="ordersBadge"></span></button>
+      <button data-tab="reviews" type="button">Відгуки <span id="reviewsBadge"></span></button>
+    </nav>
+
+    <section id="ordersTab" class="admin-tab-panel">
+      <div class="admin-toolbar">
+        <input id="orderSearch" type="search" placeholder="Номер, ім'я, телефон, email…">
+        <select id="orderStatusFilter">
+          <option value="">Усі статуси</option>
+          <option value="new">Нове</option>
+          <option value="awaiting_payment">Очікує оплату</option>
+          <option value="paid">Оплачено</option>
+          <option value="shipped">Відправлено</option>
+          <option value="completed">Виконано</option>
+          <option value="cancelled">Скасовано</option>
+        </select>
+      </div>
+      <div id="ordersStats" class="admin-stats"></div>
+      <div id="ordersList" class="admin-list"></div>
+      <p id="ordersEmpty" class="admin-empty" hidden>Замовлень не знайдено.</p>
+    </section>
+
+    <section id="reviewsTab" class="admin-tab-panel" hidden>
+      <div class="admin-toolbar">
+        <input id="reviewSearch" type="search" placeholder="Аромат, ім'я або текст…">
+        <select id="reviewStatusFilter">
+          <option value="pending">Очікують перевірки</option>
+          <option value="approved">Схвалені</option>
+          <option value="rejected">Відхилені</option>
+          <option value="">Усі</option>
+        </select>
+      </div>
+      <div id="reviewsAdminList" class="admin-list"></div>
+      <p id="reviewsAdminEmpty" class="admin-empty" hidden>Відгуків не знайдено.</p>
+    </section>
+  </section>
+</main>
+
+<dialog id="orderDialog" class="admin-dialog">
+  <form method="dialog"><button class="admin-dialog__close" aria-label="Закрити">×</button></form>
+  <div id="orderDialogContent"></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>
