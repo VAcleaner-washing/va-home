@@ -94,6 +94,12 @@
             </div>
 
             <div class="form-field">
+              <label for="customerEmail">Email для підтвердження *</label>
+              <input type="email" id="customerEmail" name="customerEmail" autocomplete="email" required aria-describedby="err-customerEmail" placeholder="name@example.com">
+              <p class="form-error" id="err-customerEmail">Вкажіть коректну електронну адресу.</p>
+            </div>
+
+            <div class="form-field">
               <label for="customerCity">Місто *</label>
               <input type="text" id="customerCity" name="customerCity" autocomplete="address-level2" required aria-describedby="err-customerCity">
               <p class="form-error" id="err-customerCity">Вкажіть, будь ласка, місто.</p>
@@ -127,12 +133,11 @@
             <p class="form-error checkout-consent-error" id="err-checkoutConsent">Підтвердьте згоду для оформлення замовлення.</p>
 
             <div class="checkout-actions">
-              <button type="button" class="btn btn-primary btn-block" id="sendTelegramBtn">Оформити замовлення</button>
-              <button type="button" class="btn btn-secondary btn-block" id="copyOrderBtn">Скопіювати текст замовлення</button>
+              <button type="submit" class="btn btn-primary btn-block" id="placeOrderBtn">Оформити замовлення</button>
             </div>
-            <p class="checkout-note">Після натискання відкриється Telegram із готовим текстом замовлення. Перевірте його та натисніть «Надіслати».</p>
+            <p class="checkout-status" id="checkoutStatus" role="status" aria-live="polite"></p>
+            <p class="checkout-note">Після оформлення ви побачите номер замовлення та реквізити для оплати. Підтвердження також надійде на вказаний email після підключення поштових сповіщень.</p>
             <p class="checkout-note">Відправка протягом 1–2 робочих днів. Доставка безкоштовна для замовлень від 2000 грн.</p>
-            <p class="checkout-note">Онлайн-оплата поки не підключена — доступний спосіб оплати менеджер підтвердить разом із замовленням.</p>
             <p class="checkout-note">Менеджер відповідає щодня з 09:00 до 19:00.</p>
             <p class="checkout-note">Питання щодо замовлення: <a href="tel:+380953919569" class="text-gold">+38 (095) 391-9569</a> або <a href="https://instagram.com/va_home.aroma" target="_blank" rel="noopener" class="text-gold">Instagram</a>.</p>
           </form>
@@ -147,9 +152,11 @@
 <div id="site-footer" data-root=""></div>
 
 <script src="js/config.js"></script>
+<script src="js/supabase-api.js"></script>
 <script src="data/products-data.js"></script>
 <script src="js/products.js"></script>
 <script src="js/cart.js" defer></script>
+<script src="js/ratings.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>
 </html>

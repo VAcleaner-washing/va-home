@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Замовлення прийнято — VA HOME</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://vahome.com.ua/thank-you.html">
+<link rel="icon" href="favicon/favicon.ico" sizes="any">
+<link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon/apple-touch-icon.png">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/thank-you.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+<div id="site-header" data-root="" data-active=""></div>
+<main id="main-content">
+  <section class="section order-success">
+    <div class="container order-success__container">
+      <p class="eyebrow">VA HOME</p>
+      <h1>Дякуємо за замовлення</h1>
+      <p class="order-success__lead">Ми отримали ваше замовлення. Збережіть номер — він знадобиться у призначенні платежу.</p>
+
+      <div class="order-success__number">
+        <span>Номер замовлення</span>
+        <strong id="orderNumber">—</strong>
+      </div>
+
+      <div class="order-success__grid">
+        <section class="order-panel">
+          <h2>Ваше замовлення</h2>
+          <div id="orderItems" class="order-lines"></div>
+          <div class="order-total"><span>До оплати</span><strong id="orderTotal">—</strong></div>
+        </section>
+
+        <section class="order-panel payment-panel">
+          <h2>Реквізити для оплати</h2>
+          <dl class="payment-details">
+            <div><dt>Отримувач</dt><dd id="paymentRecipient"></dd></div>
+            <div><dt>IBAN</dt><dd id="paymentIban"></dd></div>
+            <div><dt>Призначення</dt><dd id="paymentPurpose"></dd></div>
+          </dl>
+          <button class="btn btn-primary btn-block" type="button" id="copyPaymentBtn">Скопіювати реквізити</button>
+          <p class="copy-status" id="copyStatus" role="status" aria-live="polite"></p>
+        </section>
+      </div>
+
+      <div class="order-success__note">
+        <p>Після надходження оплати ми підтвердимо замовлення. Відправка Новою поштою — протягом 1–2 робочих днів.</p>
+        <p>Питання щодо замовлення: <a href="tel:+380953919569">+38 (095) 391-9569</a> або <a href="mailto:vahome.aroma@gmail.com">vahome.aroma@gmail.com</a>.</p>
+      </div>
+      <a href="catalog.html" class="btn btn-secondary">Повернутися до каталогу</a>
+    </div>
+  </section>
+</main>
+<div id="site-footer" data-root=""></div>
+<script src="js/config.js"></script>
+<script src="js/thank-you.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>
