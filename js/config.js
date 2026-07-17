@@ -23,13 +23,24 @@ const SITE_CONFIG = {
 
   contacts: {
     phone: "+38 (095) 391-9569",
-    email: null,
+    email: "vahome.aroma@gmail.com",
     address: null
   },
 
-  legalEntity: "ФОП Невідома А.С.",
+  legalEntity: "ФОП Невідома Анна Сергіївна",
 
-  cartStorageKey: "vahome_cart_v1"
+  payment: {
+    iban: "UA523220010000026006370119233",
+    recipient: "ФОП Невідома Анна Сергіївна",
+    taxId: "3314215243"
+  },
+
+  cartStorageKey: "vahome_cart_v1",
+
+  supabase: {
+    url: "https://yweluzclearwrazdkahu.supabase.co",
+    publishableKey: "sb_publishable_-UdAKDf5jzIP6N9rBp927g_VhyJKeog"
+  }
 };
 
 window.SITE_CONFIG = SITE_CONFIG;

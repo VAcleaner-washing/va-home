@@ -65,7 +65,7 @@
       .join("");
 
     return `
-      <article class="product-card">
+      <article class="product-card" data-product-id="${product.id}">
         <a href="${root}${href}" class="product-card__media media-zoom" aria-label="${product.name}">
           ${badges ? `<div class="product-card__badges">${badges}</div>` : ""}
           ${mediaMarkup}
@@ -74,6 +74,7 @@
           <span class="product-card__collection">${collection ? collection.name : ""}</span>
           <a href="${root}${href}"><h3 class="product-card__name">${product.name}</h3></a>
           <p class="product-card__desc">${product.shortDescription}</p>
+          <div class="product-card__rating" data-product-rating aria-label="Рейтинг товару">Без відгуків</div>
           <div class="product-card__meta">
             <span>${volume || ""}</span>
             ${
@@ -101,6 +102,7 @@
     container.innerHTML = products
       .map((p) => renderProductCard(p, root, opts))
       .join("");
+    document.dispatchEvent(new CustomEvent("vahome:products-rendered"));
   }
 
   window.VAHomeProducts = {

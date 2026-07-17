@@ -1036,3 +1036,5 @@ body.menu-open {
     font-size: 1.2rem;
   }
 }
+
+.product-card{position:relative}.product-card__rating{min-height:1.1rem;margin-top:.55rem;font-size:.72rem;color:var(--color-text-muted,#746f68);letter-spacing:.02em}.product-card__rating.has-rating{color:#8c6b30}

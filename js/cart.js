@@ -245,15 +245,16 @@
   // ---- Checkout form ----
   function validateCheckoutForm(form) {
     let valid = true;
-    const requiredFields = ["customerName", "customerPhone", "customerCity", "deliveryMethod", "deliveryDetails"];
+    const requiredFields = ["customerName", "customerPhone", "customerEmail", "customerCity", "deliveryMethod", "deliveryDetails"];
     requiredFields.forEach((name) => {
       const field = form.elements[name];
       if (!field) return;
       const wrap = field.closest(".form-field");
-      const isEmpty = !field.value || !field.value.trim();
-      if (wrap) wrap.classList.toggle("has-error", isEmpty);
-      field.setAttribute("aria-invalid", isEmpty ? "true" : "false");
-      if (isEmpty) valid = false;
+      let invalid = !field.value || !field.value.trim();
+      if (name === "customerEmail" && !invalid) invalid = !/^\S+@\S+\.\S+$/.test(field.value.trim());
+      if (wrap) wrap.classList.toggle("has-error", invalid);
+      field.setAttribute("aria-invalid", invalid ? "true" : "false");
+      if (invalid) valid = false;
     });
     const consent = form.elements.checkoutConsent;
     const consentError = document.getElementById("err-checkoutConsent");
@@ -268,88 +269,101 @@
     return valid;
   }
 
-  function buildOrderText(form) {
+  function createOrderNumber() {
+    const now = new Date();
+    const date = `${String(now.getFullYear()).slice(-2)}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+    const suffix = String(Math.floor(1000 + Math.random() * 9000));
+    return `VA-${date}-${suffix}`;
+  }
+
+  function buildOrderPayload(form) {
     const items = getItems();
-    const total = getTotal();
-    const lines = [];
-    lines.push("Нове замовлення VA HOME");
-    lines.push("");
-    lines.push("Товари:");
-    items.forEach((item, i) => {
-      lines.push(`${i + 1}. ${item.name} — ${item.quantity} шт. × ${formatUAH(item.price || 0)} = ${formatUAH(item.lineTotal)}`);
-    });
-    lines.push("");
-    lines.push(`Загальна сума: ${formatUAH(total)}`);
-    lines.push("");
-    lines.push("Клієнт:");
-    lines.push(`Ім'я: ${form.elements.customerName.value.trim()}`);
-    lines.push(`Телефон: ${form.elements.customerPhone.value.trim()}`);
-    lines.push(`Місто: ${form.elements.customerCity.value.trim()}`);
-    lines.push(`Спосіб доставки: ${form.elements.deliveryMethod.value}`);
-    lines.push(`Відділення / поштомат Нової пошти: ${form.elements.deliveryDetails.value.trim()}`);
-    const comment = form.elements.customerComment ? form.elements.customerComment.value.trim() : "";
-    if (comment) lines.push(`Коментар: ${comment}`);
-    return lines.join("\n");
+    return {
+      client_order_id: createOrderNumber(),
+      customer_name: form.elements.customerName.value.trim(),
+      customer_phone: form.elements.customerPhone.value.trim(),
+      customer_email: form.elements.customerEmail.value.trim().toLowerCase(),
+      customer_city: form.elements.customerCity.value.trim(),
+      delivery_method: form.elements.deliveryMethod.value,
+      delivery_details: form.elements.deliveryDetails.value.trim(),
+      customer_comment: form.elements.customerComment ? form.elements.customerComment.value.trim() || null : null,
+      items: items.map((item) => ({ id: item.id, name: item.name, quantity: item.quantity, unit_price: item.price, line_total: item.lineTotal })),
+      total_amount: getTotal(),
+      status: "new",
+      source: "website"
+    };
+  }
+
+  function setCheckoutState(button, status, message, isError) {
+    if (button) {
+      button.disabled = status === "loading";
+      button.textContent = status === "loading" ? "Оформлюємо…" : "Оформити замовлення";
+    }
+    const statusEl = document.getElementById("checkoutStatus");
+    if (statusEl) {
+      statusEl.textContent = message || "";
+      statusEl.classList.toggle("is-error", Boolean(isError));
+    }
+  }
+
+  async function placeOrder(form, button) {
+    if (!getItems().length) {
+      if (window.VAHome) window.VAHome.showToast("Кошик порожній");
+      return;
+    }
+    if (!validateCheckoutForm(form)) {
+      if (window.VAHome) window.VAHome.showToast("Заповніть обов'язкові поля");
+      return;
+    }
+    if (!window.VAHomeSupabase || !window.VAHomeSupabase.configured()) {
+      setCheckoutState(button, "idle", "Не вдалося підключитися до системи замовлень. Спробуйте трохи пізніше.", true);
+      return;
+    }
+
+    const payload = buildOrderPayload(form);
+    setCheckoutState(button, "loading", "Зберігаємо ваше замовлення…", false);
+
+    try {
+      await window.VAHomeSupabase.submitOrder(payload);
+
+      const confirmation = {
+        orderNumber: payload.client_order_id,
+        customerName: payload.customer_name,
+        customerEmail: payload.customer_email,
+        items: payload.items,
+        total: payload.total_amount,
+        createdAt: new Date().toISOString()
+      };
+      sessionStorage.setItem("vahome_last_order", JSON.stringify(confirmation));
+
+      // Email is intentionally non-blocking: the order remains accepted even if
+      // the optional Resend/Supabase Edge Function is not deployed yet.
+      if (window.VAHomeSupabase.notifyOrder) {
+        window.VAHomeSupabase.notifyOrder(payload).catch((error) => console.warn("Order email is not active yet", error));
+      }
+
+      clear();
+      window.location.href = "thank-you.html";
+    } catch (error) {
+      console.error("Order creation failed", error);
+      setCheckoutState(button, "idle", "Замовлення не збережено. Перевірте з'єднання та повторіть спробу.", true);
+    }
   }
 
   function initCheckoutForm() {
     const form = document.getElementById("checkoutForm");
     if (!form) return;
+    const button = document.getElementById("placeOrderBtn");
 
-    const telegramBtn = document.getElementById("sendTelegramBtn");
-    const copyBtn = document.getElementById("copyOrderBtn");
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      placeOrder(form, button);
+    });
 
-    if (telegramBtn) {
-      telegramBtn.addEventListener("click", () => {
-        if (!getItems().length) {
-          if (window.VAHome) window.VAHome.showToast("Кошик порожній");
-          return;
-        }
-        if (!validateCheckoutForm(form)) {
-          if (window.VAHome) window.VAHome.showToast("Заповніть обов'язкові поля");
-          return;
-        }
-        const text = buildOrderText(form);
-        const cfg = window.SITE_CONFIG || {};
-        if (cfg.telegram && cfg.telegram.username) {
-          const url = `https://t.me/${cfg.telegram.username.replace("@", "")}?text=${encodeURIComponent(text)}`;
-          window.open(url, "_blank", "noopener");
-        } else if (window.VAHome) {
-          window.VAHome.showToast("Telegram ще не підключено — скопіюйте текст замовлення");
-        }
-      });
-    }
-
-    if (copyBtn) {
-      copyBtn.addEventListener("click", async () => {
-        if (!getItems().length) {
-          if (window.VAHome) window.VAHome.showToast("Кошик порожній");
-          return;
-        }
-        if (!validateCheckoutForm(form)) {
-          if (window.VAHome) window.VAHome.showToast("Заповніть обов'язкові поля");
-          return;
-        }
-        const text = buildOrderText(form);
-        try {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            await navigator.clipboard.writeText(text);
-          } else {
-            const textarea = document.createElement("textarea");
-            textarea.value = text;
-            textarea.style.position = "fixed";
-            textarea.style.opacity = "0";
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand("copy");
-            document.body.removeChild(textarea);
-          }
-          if (window.VAHome) window.VAHome.showToast("Текст замовлення скопійовано");
-        } catch (e) {
-          if (window.VAHome) window.VAHome.showToast("Не вдалося скопіювати текст");
-        }
-      });
-    }
+    form.addEventListener("input", (event) => {
+      const field = event.target.closest(".form-field input, .form-field select, .form-field textarea");
+      if (field && field.closest(".form-field")) field.closest(".form-field").classList.remove("has-error");
+    });
   }
 
   document.addEventListener("DOMContentLoaded", () => {

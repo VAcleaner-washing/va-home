@@ -89,6 +89,7 @@
           <p class="product-hero__collection" id="productCollectionLabel">Signature Collection</p>
           <h1 class="product-hero__name" id="productName">Evening Ritual</h1>
           <p class="product-hero__desc" id="productDesc">Темні квіти й кашемірова глибина для вечірньої атмосфери.</p>
+          <div class="product-rating-compact" id="productRatingCompact" aria-live="polite"><span aria-hidden="true">★★★★★</span> Завантажуємо рейтинг…</div>
 
           <div class="product-hero__meta">
             <span id="productVolume">100 мл</span>
@@ -237,28 +238,69 @@
     </div>
   </section>
 
-  <!--
-    ВІДГУКИ: реальних відгуків для цього аромату поки немає.
-    Розкоментуйте та заповніть, коли зʼявляться реальні тексти.
-
-  <section class="section">
+  <!-- ============ REAL REVIEWS ============ -->
+  <section class="section reviews-section" id="reviews">
     <div class="container">
-      <h2>Відгуки</h2>
-      <blockquote class="testimonial">
-        <p>"..."</p>
-        <cite>Ім'я</cite>
-      </blockquote>
+      <div class="section-heading">
+        <p class="eyebrow">Досвід покупців</p>
+        <h2>Відгуки про аромат</h2>
+      </div>
+      <div class="reviews-layout">
+        <aside class="reviews-summary" aria-label="Загальний рейтинг">
+          <div class="reviews-summary__score" id="reviewsAverage">—</div>
+          <div class="reviews-summary__stars" aria-hidden="true">★★★★★</div>
+          <p class="reviews-summary__count" id="reviewsCount">Завантажуємо…</p>
+          <div class="reviews-breakdown" id="reviewsBreakdown"></div>
+        </aside>
+        <div class="reviews-content">
+          <p class="reviews-loading" id="reviewsLoading">Завантажуємо відгуки…</p>
+          <p class="reviews-empty" id="reviewsEmpty" hidden>Для цього аромату ще немає відгуків. Ваш може бути першим.</p>
+          <div class="reviews-list" id="reviewsList"></div>
+
+          <div class="review-form-wrap" id="reviewForm">
+            <h3>Залишити відгук</h3>
+            <p class="review-form__intro">Поділіться чесним враженням. Відгук з’явиться після перевірки.</p>
+            <form class="review-form" novalidate>
+              <div>
+                <label for="reviewName">Ім’я</label>
+                <input id="reviewName" name="customerName" type="text" minlength="2" maxlength="50" autocomplete="name" required>
+              </div>
+              <fieldset>
+                <legend>Оцінка</legend>
+                <div class="star-picker" aria-label="Оберіть оцінку">
+                  <input id="star5" name="rating" type="radio" value="5"><label for="star5" aria-label="5 зірок">★</label>
+                  <input id="star4" name="rating" type="radio" value="4"><label for="star4" aria-label="4 зірки">★</label>
+                  <input id="star3" name="rating" type="radio" value="3"><label for="star3" aria-label="3 зірки">★</label>
+                  <input id="star2" name="rating" type="radio" value="2"><label for="star2" aria-label="2 зірки">★</label>
+                  <input id="star1" name="rating" type="radio" value="1"><label for="star1" aria-label="1 зірка">★</label>
+                </div>
+              </fieldset>
+              <div>
+                <label for="reviewText">Ваше враження</label>
+                <textarea id="reviewText" name="reviewText" minlength="10" maxlength="1000" required></textarea>
+                <div class="review-form__counter" id="reviewCharCount">0/1000</div>
+              </div>
+              <div class="review-honeypot" aria-hidden="true"><label>Website<input name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+              <p class="review-form__message" id="reviewFormMessage" hidden aria-live="polite"></p>
+              <button class="btn btn-primary" type="submit">Надіслати відгук</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
-  -->
+
 
 </main>
 
 <div id="site-footer" data-root="../"></div>
 
 <script src="../js/config.js"></script>
+<script src="../js/supabase-api.js"></script>
 <script src="../data/products-data.js"></script>
 <script src="../js/products.js"></script>
+<script src="../js/ratings.js" defer></script>
+<script src="../js/reviews.js" defer></script>
 <script src="../js/product.js" defer></script>
 <script src="../js/cart.js" defer></script>
 <script src="../js/main.js" defer></script>

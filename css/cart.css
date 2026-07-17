@@ -209,3 +209,7 @@
 .checkout-consent input { margin-top: 3px; accent-color: var(--color-gold); }
 .checkout-consent a { color: var(--color-gold); text-decoration: underline; text-underline-offset: 3px; }
 .checkout-consent-error { display: none; margin-top: calc(var(--space-2) * -1); }
+
+.checkout-status { min-height: 1.4em; margin-top: var(--space-2); font-size: var(--fs-small); color: var(--text-secondary); }
+.checkout-status.is-error { color: #d98066; }
+#placeOrderBtn:disabled { opacity: .68; cursor: wait; }

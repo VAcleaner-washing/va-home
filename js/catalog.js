@@ -94,6 +94,7 @@
     if (loadMoreWrap) {
       loadMoreWrap.hidden = state.visibleCount >= filtered.length;
     }
+    document.dispatchEvent(new CustomEvent("vahome:products-rendered"));
   }
 
   function pluralizeAromas(n) {
