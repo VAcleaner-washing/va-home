@@ -11,11 +11,9 @@
 <link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon/apple-touch-icon.png">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/reset.css">
 <link rel="stylesheet" href="css/global.css">
 <link rel="stylesheet" href="css/components.css">
@@ -66,9 +64,16 @@
               <span>Разом</span>
               <span id="cartTotal">0 грн</span>
             </div>
-            <p class="cart-summary__note">Вартість доставки уточнюється при оформленні замовлення.</p>
+            <p class="cart-summary__note">Доставка Новою поштою — за тарифами перевізника. Безкоштовно для замовлень від 2000 грн.</p>
           </aside>
 
+        </div>
+
+        <!-- Апсейл Discovery Set: показується лише якщо в кошику ще немає жодного варіанту набору -->
+        <div class="discovery-variant-card" id="cartDiscoveryUpsell" style="margin-bottom: var(--space-4);" hidden>
+          <p style="font-weight:700; margin-bottom: 0.3em;">Ще не впевнені у виборі?</p>
+          <p class="text-muted" style="margin-bottom: var(--space-2);">Спробуйте Discovery Set — 6 ароматів за 150 грн, щоб протестувати композиції вдома.</p>
+          <a href="discovery-set.html" class="btn btn-secondary">Переглянути Discovery Set</a>
         </div>
 
         <!-- ============ CHECKOUT FORM ============ -->
@@ -97,12 +102,16 @@
             <div class="form-field">
               <label for="deliveryMethod">Спосіб доставки *</label>
               <select id="deliveryMethod" name="deliveryMethod" required aria-describedby="err-deliveryMethod">
-                <option value="">Оберіть спосіб доставки</option>
-                <option value="Нова пошта">Нова пошта</option>
-                <option value="Укрпошта">Укрпошта</option>
-                <option value="Самовивіз">Самовивіз</option>
+                <option value="Нова пошта" selected>Нова пошта</option>
               </select>
               <p class="form-error" id="err-deliveryMethod">Оберіть спосіб доставки.</p>
+            </div>
+
+
+            <div class="form-field">
+              <label for="deliveryDetails">Відділення або поштомат Нової пошти *</label>
+              <input type="text" id="deliveryDetails" name="deliveryDetails" autocomplete="street-address" required aria-describedby="err-deliveryDetails" placeholder="Наприклад: відділення №12 або поштомат №1234">
+              <p class="form-error" id="err-deliveryDetails">Вкажіть відділення або поштомат Нової пошти.</p>
             </div>
 
             <div class="form-field">
@@ -110,11 +119,22 @@
               <textarea id="customerComment" name="customerComment" placeholder="Необов'язково"></textarea>
             </div>
 
+
+            <label class="checkout-consent" for="checkoutConsent">
+              <input type="checkbox" id="checkoutConsent" name="checkoutConsent" required>
+              <span>Оформлюючи замовлення, я погоджуюся з <a href="offer.html" target="_blank" rel="noopener">Публічною офертою</a> та <a href="privacy.html" target="_blank" rel="noopener">Політикою конфіденційності</a>.</span>
+            </label>
+            <p class="form-error checkout-consent-error" id="err-checkoutConsent">Підтвердьте згоду для оформлення замовлення.</p>
+
             <div class="checkout-actions">
-              <button type="button" class="btn btn-primary btn-block" id="sendTelegramBtn">Надіслати в Telegram</button>
+              <button type="button" class="btn btn-primary btn-block" id="sendTelegramBtn">Оформити замовлення</button>
               <button type="button" class="btn btn-secondary btn-block" id="copyOrderBtn">Скопіювати текст замовлення</button>
             </div>
-            <p class="checkout-note">Онлайн-оплата поки не підключена — оплата узгоджується після підтвердження замовлення.</p>
+            <p class="checkout-note">Після натискання відкриється Telegram із готовим текстом замовлення. Перевірте його та натисніть «Надіслати».</p>
+            <p class="checkout-note">Відправка протягом 1–2 робочих днів. Доставка безкоштовна для замовлень від 2000 грн.</p>
+            <p class="checkout-note">Онлайн-оплата поки не підключена — доступний спосіб оплати менеджер підтвердить разом із замовленням.</p>
+            <p class="checkout-note">Менеджер відповідає щодня з 09:00 до 19:00.</p>
+            <p class="checkout-note">Питання щодо замовлення: <a href="tel:+380953919569" class="text-gold">+38 (095) 391-9569</a> або <a href="https://instagram.com/va_home.aroma" target="_blank" rel="noopener" class="text-gold">Instagram</a>.</p>
           </form>
         </div>
       </div>

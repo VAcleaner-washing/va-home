@@ -10,11 +10,9 @@
 <link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="favicon/apple-touch-icon.png">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/reset.css">
 <link rel="stylesheet" href="css/global.css">
 <link rel="stylesheet" href="css/components.css">
@@ -26,7 +24,7 @@
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Головна", "item": "https://vahome.com.ua/index.html" },
+    { "@type": "ListItem", "position": 1, "name": "Головна", "item": "https://vahome.com.ua/" },
     { "@type": "ListItem", "position": 2, "name": "Доставка і оплата", "item": "https://vahome.com.ua/delivery.html" }
   ]
 }
@@ -52,31 +50,35 @@
 
       <div class="product-detail-section" style="border-top:none; padding-top: var(--space-3);">
         <h2 class="product-detail-section__title" style="font-size:1.3rem;">Доставка</h2>
-        <p>Замовлення відправляються способом, який ви обираєте під час оформлення:</p>
+        <p>Відправляємо замовлення Новою поштою протягом 1–2 робочих днів після підтвердження.</p>
         <ul style="margin: var(--space-2) 0 var(--space-2) 1.2em; color: var(--text-secondary);">
-          <li>Нова пошта</li>
-          <li>Укрпошта</li>
-          <li>Самовивіз</li>
+          <li>до відділення або поштомату Нової пошти;</li>
+          <li>доставка оплачується покупцем за тарифами перевізника;</li>
+          <li>для замовлень від 2000 грн доставка безкоштовна.</li>
         </ul>
-        <!-- TODO: точна вартість і строки доставки для кожного способу — додати, коли будуть узгоджені -->
-        <p class="text-muted">Вартість і орієнтовний строк доставки уточнюються менеджером після оформлення замовлення.</p>
+        <p class="text-muted">Точний строк прибуття залежить від маршруту та роботи перевізника.</p>
       </div>
 
       <div class="product-detail-section">
         <h2 class="product-detail-section__title" style="font-size:1.3rem;">Оплата</h2>
-        <!-- TODO: конкретні способи оплати (картка, накладений платіж тощо) — додати, коли будуть підключені -->
-        <p>Спосіб і момент оплати узгоджуються індивідуально під час підтвердження замовлення. Онлайн-оплата на сайті поки не підключена.</p>
+        <p>Онлайн-оплата на сайті поки не підключена. Доступний спосіб оплати менеджер підтверджує разом із замовленням у Telegram або Instagram.</p>
       </div>
 
       <div class="product-detail-section">
         <h2 class="product-detail-section__title" style="font-size:1.3rem;">Повернення та обмін</h2>
-        <!-- TODO: умови повернення/обміну — додати, коли будуть визначені -->
-        <p>Умови повернення та обміну уточнюються індивідуально. Звертайтесь у Instagram <a href="https://instagram.com/va_home.aroma" target="_blank" rel="noopener" class="text-gold">@va_home.aroma</a> з питаннями щодо конкретного замовлення.</p>
+        <p>Повернення та обмін здійснюються відповідно до законодавства України.</p>
+        <ul style="margin: var(--space-2) 0 var(--space-2) 1.2em; color: var(--text-secondary);">
+          <li>товар неналежної якості або пошкоджений під час доставки підлягає заміні чи поверненню коштів;</li>
+          <li>збережіть товар, упаковку та документи, що підтверджують покупку;</li>
+          <li>повідомте нас про проблему якомога швидше після отримання та додайте фото або відео;</li>
+          <li>товар належної якості повертається або обмінюється у випадках і строки, передбачені законодавством, за умови збереження товарного вигляду та відсутності слідів використання.</li>
+        </ul>
+        <p class="text-muted">Для звернення напишіть у Instagram <a href="https://instagram.com/va_home.aroma" target="_blank" rel="noopener" class="text-gold">@va_home.aroma</a>.</p>
       </div>
 
       <div class="product-detail-section">
         <h2 class="product-detail-section__title" style="font-size:1.3rem;">Питання щодо замовлення</h2>
-        <p>Найшвидший спосіб зв'язатися — написати в Instagram Direct.</p>
+        <p>Менеджер відповідає щодня з 09:00 до 19:00. Найшвидший спосіб зв'язатися — написати в Instagram Direct.</p>
         <a href="contacts.html" class="btn btn-secondary">Контакти</a>
       </div>
     </div>
