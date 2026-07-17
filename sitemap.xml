@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url><loc>https://vahome.com.ua/index.html</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://vahome.com.ua/catalog.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://vahome.com.ua/collections.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vahome.com.ua/discovery-set.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vahome.com.ua/scent-guide.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://vahome.com.ua/about.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://vahome.com.ua/delivery.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://vahome.com.ua/contacts.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+
+  <url><loc>https://vahome.com.ua/products/signature-relax.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/forbidden-fruit.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/doux-moment.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/wild-berry-way.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/hotel-spring.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/evening-ritual.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/velvet-spa.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/pure-zen.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/hotel-luxe.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/old-money.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/linstinct.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/mineral-salt.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/pure-imagination.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/silk-molecule.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/the-archive.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/silent-temple.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/moss-and-shadow.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vahome.com.ua/products/dark-bloom.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+</urlset>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Кошик — VA HOME</title>
+<meta name="description" content="Ваш кошик VA HOME — перевірте товари та оформіть замовлення.">
+<link rel="canonical" href="https://vahome.com.ua/cart.html">
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon/favicon.ico" sizes="any">
+<link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/cart.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<div id="site-header" data-root="" data-active=""></div>
+
+<main id="main-content">
+
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Хлібні крихти">
+      <a href="index.html">Головна</a>
+      <span class="breadcrumbs__sep">/</span>
+      <span aria-current="page">Кошик</span>
+    </nav>
+  </div>
+
+  <section class="section section--tight">
+    <div class="container">
+      <h1 class="reveal">Кошик</h1>
+
+      <!-- ============ EMPTY STATE ============ -->
+      <div class="cart-empty" id="cartEmptyState" hidden>
+        <p>Ваш кошик поки порожній. Перегляньте каталог або пройдіть гід ароматів, щоб знайти свою композицію.</p>
+        <div style="display:flex; gap: var(--space-2); justify-content:center; flex-wrap:wrap;">
+          <a href="catalog.html" class="btn btn-primary">Перейти в каталог</a>
+          <a href="scent-guide.html" class="btn btn-secondary">Пройти гід ароматів</a>
+        </div>
+      </div>
+
+      <!-- ============ FILLED STATE ============ -->
+      <div id="cartFilledState" hidden>
+        <div class="cart-layout">
+
+          <div>
+            <div class="cart-items" id="cartItemsList" aria-live="polite"></div>
+          </div>
+
+          <aside class="cart-summary">
+            <div class="cart-summary__row">
+              <span>Товари</span>
+              <span id="cartSubtotal">0 грн</span>
+            </div>
+            <div class="cart-summary__total">
+              <span>Разом</span>
+              <span id="cartTotal">0 грн</span>
+            </div>
+            <p class="cart-summary__note">Вартість доставки уточнюється при оформленні замовлення.</p>
+          </aside>
+
+        </div>
+
+        <!-- ============ CHECKOUT FORM ============ -->
+        <div class="checkout-form">
+          <h2>Оформлення замовлення</h2>
+          <form id="checkoutForm" novalidate>
+
+            <div class="form-field">
+              <label for="customerName">Ім'я *</label>
+              <input type="text" id="customerName" name="customerName" autocomplete="name" required aria-describedby="err-customerName">
+              <p class="form-error" id="err-customerName">Вкажіть, будь ласка, ваше ім'я.</p>
+            </div>
+
+            <div class="form-field">
+              <label for="customerPhone">Номер телефону *</label>
+              <input type="tel" id="customerPhone" name="customerPhone" autocomplete="tel" required aria-describedby="err-customerPhone">
+              <p class="form-error" id="err-customerPhone">Вкажіть, будь ласка, номер телефону.</p>
+            </div>
+
+            <div class="form-field">
+              <label for="customerCity">Місто *</label>
+              <input type="text" id="customerCity" name="customerCity" autocomplete="address-level2" required aria-describedby="err-customerCity">
+              <p class="form-error" id="err-customerCity">Вкажіть, будь ласка, місто.</p>
+            </div>
+
+            <div class="form-field">
+              <label for="deliveryMethod">Спосіб доставки *</label>
+              <select id="deliveryMethod" name="deliveryMethod" required aria-describedby="err-deliveryMethod">
+                <option value="">Оберіть спосіб доставки</option>
+                <option value="Нова пошта">Нова пошта</option>
+                <option value="Укрпошта">Укрпошта</option>
+                <option value="Самовивіз">Самовивіз</option>
+              </select>
+              <p class="form-error" id="err-deliveryMethod">Оберіть спосіб доставки.</p>
+            </div>
+
+            <div class="form-field">
+              <label for="customerComment">Коментар до замовлення</label>
+              <textarea id="customerComment" name="customerComment" placeholder="Необов'язково"></textarea>
+            </div>
+
+            <div class="checkout-actions">
+              <button type="button" class="btn btn-primary btn-block" id="sendTelegramBtn">Надіслати в Telegram</button>
+              <button type="button" class="btn btn-secondary btn-block" id="copyOrderBtn">Скопіювати текст замовлення</button>
+            </div>
+            <p class="checkout-note">Онлайн-оплата поки не підключена — оплата узгоджується після підтвердження замовлення.</p>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<div id="site-footer" data-root=""></div>
+
+<script src="js/config.js"></script>
+<script src="data/products-data.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>

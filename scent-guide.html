@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Гід ароматів — VA HOME</title>
+<meta name="description" content="Пройдіть короткий гід ароматів VA HOME і отримайте 3 персональні рекомендації композицій для вашого простору та настрою.">
+<link rel="canonical" href="https://vahome.com.ua/scent-guide.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Гід ароматів — VA HOME">
+<meta property="og:url" content="https://vahome.com.ua/scent-guide.html">
+<meta property="og:description" content="Короткий гід допоможе обрати аромат VA HOME під ваш простір і настрій.">
+<link rel="icon" href="favicon/favicon.ico" sizes="any">
+<link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Головна", "item": "https://vahome.com.ua/index.html" },
+    { "@type": "ListItem", "position": 2, "name": "Гід ароматів", "item": "https://vahome.com.ua/scent-guide.html" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div id="site-header" data-root="" data-active="guide"></div>
+
+<main id="main-content">
+
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Хлібні крихти">
+      <a href="index.html">Головна</a>
+      <span class="breadcrumbs__sep">/</span>
+      <span aria-current="page">Гід ароматів</span>
+    </nav>
+  </div>
+
+  <section class="section">
+    <div class="container" style="max-width: 760px;">
+
+      <h1 class="reveal">Знайдіть свій аромат</h1>
+      <p class="lead reveal" style="margin-bottom: var(--space-5);">
+        Відповідайте на кілька запитань — і ми покажемо композиції, які найкраще
+        відповідають вашому простору та настрою.
+      </p>
+
+      <div class="guide-progress">
+        <span id="guideStepLabel">Крок 1 з 5</span>
+        <div class="guide-progress__track">
+          <div class="guide-progress__fill" id="guideProgressFill" style="width:20%"></div>
+        </div>
+      </div>
+
+      <form id="scentGuideForm">
+
+        <div class="guide-step is-active" data-step="1" data-question="atmosphere">
+          <h2 class="guide-step__question">Яку атмосферу ви хочете створити?</h2>
+          <div class="guide-options">
+            <button type="button" class="guide-option" data-value="calm">Чистота й спокій</button>
+            <button type="button" class="guide-option" data-value="hotel">Дорогий готель</button>
+            <button type="button" class="guide-option" data-value="warm-evening">Теплий вечір</button>
+            <button type="button" class="guide-option" data-value="fresh">Прохолодна свіжість</button>
+            <button type="button" class="guide-option" data-value="woody">Дерево й камінь</button>
+            <button type="button" class="guide-option" data-value="warm-sweet">Мʼяка фруктова композиція</button>
+          </div>
+        </div>
+
+        <div class="guide-step" data-step="2" data-question="room">
+          <h2 class="guide-step__question">Для якої кімнати обираєте аромат?</h2>
+          <div class="guide-options">
+            <button type="button" class="guide-option" data-value="living-room">Вітальня</button>
+            <button type="button" class="guide-option" data-value="bedroom">Спальня</button>
+            <button type="button" class="guide-option" data-value="bathroom">Ванна</button>
+            <button type="button" class="guide-option" data-value="hallway">Передпокій</button>
+            <button type="button" class="guide-option" data-value="office">Кабінет</button>
+            <button type="button" class="guide-option" data-value="kitchen">Кухня</button>
+          </div>
+        </div>
+
+        <div class="guide-step" data-step="3" data-question="composition">
+          <h2 class="guide-step__question">Які композиції вам ближчі?</h2>
+          <div class="guide-options">
+            <button type="button" class="guide-option" data-value="fresh">Свіжі</button>
+            <button type="button" class="guide-option" data-value="woody">Деревні</button>
+            <button type="button" class="guide-option" data-value="warm-sweet">Теплі або солодкі</button>
+            <button type="button" class="guide-option" data-value="clean">Чисті</button>
+          </div>
+        </div>
+
+        <div class="guide-step" data-step="4" data-question="intensity">
+          <h2 class="guide-step__question">Яка інтенсивність комфортна?</h2>
+          <div class="guide-options">
+            <button type="button" class="guide-option" data-value="light">Легка й ненавʼязлива</button>
+            <button type="button" class="guide-option" data-value="moderate">Помірна</button>
+            <button type="button" class="guide-option" data-value="rich">Насичена й виразна</button>
+          </div>
+        </div>
+
+        <div class="guide-step" data-step="5" data-question="space">
+          <h2 class="guide-step__question">Який характер простору вам подобається?</h2>
+          <div class="guide-options">
+            <button type="button" class="guide-option" data-value="entry">Світлий і мінімалістичний</button>
+            <button type="button" class="guide-option" data-value="signature">Теплий і затишний</button>
+            <button type="button" class="guide-option" data-value="premium">Архітектурний і впевнений</button>
+            <button type="button" class="guide-option" data-value="noir">Стриманий і темний</button>
+          </div>
+        </div>
+
+        <div class="guide-nav">
+          <button type="button" class="btn btn-secondary" id="guideBack" disabled>Назад</button>
+          <button type="button" class="btn btn-secondary" id="guideRestart" hidden>Почати заново</button>
+        </div>
+      </form>
+
+      <div class="guide-results" id="guideResults">
+        <h2>Ваші рекомендації</h2>
+        <p class="text-muted" style="margin-bottom: var(--space-4);">На основі ваших відповідей ми обрали 3 композиції.</p>
+        <div class="guide-results__grid" id="guideResultsGrid"></div>
+        <div style="margin-top: var(--space-5);">
+          <button type="button" class="btn btn-secondary" id="guideRestart2">Пройти ще раз</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<div id="site-footer" data-root=""></div>
+
+<script src="js/config.js"></script>
+<script src="data/products-data.js"></script>
+<script src="js/products.js"></script>
+<script src="js/scent-guide.js" defer></script>
+<script src="js/cart.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>

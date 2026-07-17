@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Каталог ароматів — VA HOME</title>
+<meta name="description" content="Повний каталог аромадифузорів VA HOME: Entry, Signature, Premium та Noir колекції. Фільтруйте за характером, колекцією, кімнатою та настроєм.">
+<link rel="canonical" href="https://vahome.com.ua/catalog.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Каталог ароматів — VA HOME">
+<meta property="og:url" content="https://vahome.com.ua/catalog.html">
+<meta property="og:description" content="Повний каталог аромадифузорів VA HOME: Entry, Signature, Premium та Noir колекції.">
+<link rel="icon" href="favicon/favicon.ico" sizes="any">
+<link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/catalog.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Головна", "item": "https://vahome.com.ua/index.html" },
+    { "@type": "ListItem", "position": 2, "name": "Каталог", "item": "https://vahome.com.ua/catalog.html" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div id="site-header" data-root="" data-active="catalog"></div>
+
+<main id="main-content">
+
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Хлібні крихти">
+      <a href="index.html">Головна</a>
+      <span class="breadcrumbs__sep">/</span>
+      <span aria-current="page">Каталог</span>
+    </nav>
+  </div>
+
+  <section class="section section--tight">
+    <div class="container">
+      <h1 class="reveal">Каталог ароматів</h1>
+      <p class="lead catalog-intro reveal">
+        Усі композиції VA HOME в одному місці. Фільтруйте за характером, колекцією,
+        кімнатою чи настроєм чи скористайтесь гідом ароматів, якщо не знаєте, з чого почати.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+
+      <button
+        class="btn btn-secondary catalog-filters-toggle"
+        type="button"
+        id="filtersToggle"
+        aria-controls="catalogFilters"
+        aria-expanded="false"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+        Фільтри
+      </button>
+
+      <div class="catalog-layout">
+
+        <aside class="catalog-filters" id="catalogFilters" aria-label="Фільтри каталогу">
+          <div class="catalog-filters__scrim" id="filtersScrim"></div>
+          <div class="catalog-filters__panel">
+            <div class="catalog-filters__header">
+              <h2 style="font-size:1.1rem;">Фільтри</h2>
+              <button class="icon-btn" type="button" id="filtersClose" aria-label="Закрити фільтри">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+              </button>
+            </div>
+
+            <div class="filter-group">
+              <p class="filter-group__title">Колекція</p>
+              <div class="filter-chips" id="collectionChips">
+                <button class="filter-chip is-active" data-value="all">Усі</button>
+                <button class="filter-chip" data-value="entry">Entry</button>
+                <button class="filter-chip" data-value="signature">Signature</button>
+                <button class="filter-chip" data-value="premium">Premium</button>
+                <button class="filter-chip" data-value="noir">Noir</button>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <p class="filter-group__title">Характер</p>
+              <div class="filter-chips" id="characterChips">
+                <button class="filter-chip is-active" data-value="all">Усі</button>
+                <button class="filter-chip" data-value="fresh">Свіжі</button>
+                <button class="filter-chip" data-value="woody">Деревні</button>
+                <button class="filter-chip" data-value="clean">Чисті</button>
+                <button class="filter-chip" data-value="fruity">Фруктові</button>
+                <button class="filter-chip" data-value="spa">Спа</button>
+                <button class="filter-chip" data-value="hotel">Готельні</button>
+                <button class="filter-chip" data-value="warm">Теплі</button>
+                <button class="filter-chip" data-value="evening">Вечірні</button>
+                <button class="filter-chip" data-value="molecular">Молекулярні</button>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <label class="filter-group__title" for="roomSelect">Кімната</label>
+              <select class="filter-select" id="roomSelect">
+                <option value="all">Усі кімнати</option>
+                <option value="living-room">Вітальня</option>
+                <option value="bedroom">Спальня</option>
+                <option value="bathroom">Ванна</option>
+                <option value="hallway">Передпокій</option>
+                <option value="office">Кабінет</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label class="filter-group__title" for="moodSelect">Настрій</label>
+              <select class="filter-select" id="moodSelect">
+                <option value="all">Усі настрої</option>
+                <option value="calm">Чистота й спокій</option>
+                <option value="warm-evening">Теплий вечір</option>
+                <option value="hotel">Готельна атмосфера</option>
+                <option value="warm-sweet">М'яка фруктова композиція</option>
+              </select>
+            </div>
+
+            <!--
+              Фільтр за інтенсивністю додамо, коли шкала intensity
+              буде заповнена реальними значеннями в products-data.js
+              (наразі це поле = null для всіх ароматів).
+            -->
+
+            <button class="filter-reset" type="button" id="catalogReset">Скинути всі фільтри</button>
+            <button class="btn btn-primary btn-block catalog-filters__apply" type="button" id="filtersApply">Показати результати</button>
+          </div>
+        </aside>
+
+        <div class="catalog-results">
+          <div class="catalog-toolbar">
+            <p class="catalog-toolbar__count" id="catalogCount">18 ароматів</p>
+            <div class="catalog-sort">
+              <label for="catalogSort" class="text-muted">Сортування:</label>
+              <select class="filter-select" id="catalogSort" style="width:auto;">
+                <option value="recommended">Рекомендовані</option>
+                <option value="price-asc">Від дешевших</option>
+                <option value="price-desc">Від дорожчих</option>
+                <option value="new">Новинки</option>
+                <!-- "Популярні" додамо, коли зʼявляться реальні дані popularity -->
+              </select>
+            </div>
+          </div>
+
+          <div class="catalog-grid" id="catalogGrid" aria-live="polite"></div>
+
+          <p class="catalog-empty" id="catalogEmpty" hidden>
+            Ароматів за цим фільтром поки немає. Спробуйте змінити параметри
+            або <button type="button" class="filter-reset" id="catalogResetInline">скинути фільтри</button>.
+          </p>
+
+          <div class="catalog-load-more" id="loadMoreWrap">
+            <button class="btn btn-secondary" type="button" id="loadMoreBtn">Показати ще</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div id="site-footer" data-root=""></div>
+
+<script src="js/config.js"></script>
+<script src="data/products-data.js"></script>
+<script src="js/products.js"></script>
+<script src="js/catalog.js" defer></script>
+<script src="js/cart.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>
