@@ -123,6 +123,7 @@
                 <option value="nova_poshta" selected>Нова пошта</option>
               </select>
               <p class="form-error" id="err-deliveryMethod">Оберіть спосіб доставки.</p>
+              <p class="form-hint">Вартість доставки сплачує отримувач за чинними тарифами Нової пошти.</p>
             </div>
 
 
@@ -139,6 +140,7 @@
                 <option value="cash_on_delivery">Оплата при отриманні</option>
               </select>
               <p class="form-error" id="err-paymentMethod">Оберіть спосіб оплати.</p>
+              <p class="form-hint" id="paymentMethodHint">Для оплати при отриманні Нова пошта додатково стягує комісію за переказ коштів за своїми чинними тарифами.</p>
             </div>
 
             <div class="form-field">
@@ -158,11 +160,12 @@
                 <p class="form-error checkout-consent-error" id="err-checkoutConsent">Підтвердьте згоду для оформлення замовлення.</p>
                 <div class="checkout-reassurance" aria-label="Умови оформлення">
                   <p><strong>Відправка:</strong> протягом 1–2 робочих днів.</p>
+                  <p><strong>Доставка:</strong> сплачується отримувачем за тарифами Нової пошти.</p>
                   <p><strong>Підтримка:</strong> щодня 09:00–19:00 · <a href="tel:+380953919569">+38 (095) 391-9569</a></p>
                 </div>
               </div>
               <div class="checkout-actions">
-                <button type="submit" class="btn btn-primary btn-block" id="placeOrderBtn">Підтвердити замовлення</button>
+                <button type="submit" class="btn btn-primary btn-block" id="placeOrderBtn">Оформити замовлення</button>
                 <p class="checkout-secure-note">Дані передаються через захищене з’єднання</p>
               </div>
             </div>
