@@ -34,13 +34,20 @@ function cors(req: Request) {
   return {
     "Access-Control-Allow-Origin": originAllowed(origin) ? origin : "https://vahome.com.ua",
     "Vary": "Origin",
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-request-id",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
   };
 }
 
 function json(req: Request, body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), { status, headers: { ...cors(req), "Content-Type": "application/json" } });
+  const requestId = req.headers.get("x-request-id") || crypto.randomUUID();
+  const responseBody = body && typeof body === "object" && "error" in body
+    ? { ...(body as Record<string, unknown>), request_id: requestId }
+    : body;
+  return new Response(JSON.stringify(responseBody), {
+    status,
+    headers: { ...cors(req), "Content-Type": "application/json", "X-Request-ID": requestId },
+  });
 }
 
 function text(value: unknown, max: number) {
@@ -96,6 +103,7 @@ async function validateNovaPoshtaSelection(cityRef: string, warehouseRef: string
 }
 
 Deno.serve(async req => {
+  const requestId = req.headers.get("x-request-id") || crypto.randomUUID();
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors(req) });
   if (req.method !== "POST") return json(req, { error: "Method not allowed" }, 405);
   const origin = req.headers.get("origin");
@@ -103,6 +111,7 @@ Deno.serve(async req => {
 
   try {
     const body = await req.json();
+    const checkoutRequestId = text(body.checkout_request_id, 80);
     const name = text(body.customer_name, 100);
     let phone = text(body.customer_phone, 30).replace(/[\s()\-]/g, "");
     if (/^0\d{9}$/.test(phone)) phone = `+38${phone}`;
@@ -148,12 +157,35 @@ Deno.serve(async req => {
     if (total <= 0) return json(req, { error: "INVALID_TOTAL" }, 400);
 
     const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    if (checkoutRequestId) {
+      const { data: existing, error: existingError } = await supabase
+        .from("orders")
+        .select("client_order_id,customer_name,customer_email,payment_method,items,total_amount,confirmation_email_status")
+        .eq("checkout_request_id", checkoutRequestId)
+        .maybeSingle();
+      if (existingError) throw existingError;
+      if (existing) {
+        return json(req, {
+          order: {
+            client_order_id: existing.client_order_id,
+            customer_name: existing.customer_name,
+            customer_email: existing.customer_email,
+            payment_method: existing.payment_method,
+            items: existing.items,
+            total_amount: existing.total_amount,
+          },
+          email_status: existing.confirmation_email_status || "pending",
+          duplicate_prevented: true,
+        }, 200);
+      }
+    }
     let order: Record<string, unknown> | null = null;
     for (let attempt = 0; attempt < 3 && !order; attempt++) {
       const stamp = new Date().toISOString().slice(2, 10).replaceAll("-", "");
       const suffix = crypto.randomUUID().replaceAll("-", "").slice(0, 6).toUpperCase();
       const payload = {
         client_order_id: `VA-${stamp}-${suffix}`,
+        checkout_request_id: checkoutRequestId || null,
         customer_name: name, customer_phone: phone, customer_email: email,
         customer_city: city, delivery_method: "Нова пошта", delivery_details: deliveryDetails,
         nova_poshta_city_ref: novaPoshtaCityRef,
@@ -188,7 +220,11 @@ Deno.serve(async req => {
     await supabase.from("orders").update({ confirmation_email_status: emailStatus }).eq("id", order.id);
     return json(req, { order: { client_order_id: order.client_order_id, customer_name: name, customer_email: email, payment_method: paymentMethod, items, total_amount: total }, email_status: emailStatus }, 201);
   } catch (error) {
-    console.error(error);
+    console.error("create-order failed", {
+      requestId,
+      message: error instanceof Error ? error.message : String(error),
+      code: error && typeof error === "object" && "code" in error ? String((error as { code?: unknown }).code || "") : "",
+    });
     const validationErrors = new Set(["INVALID_ITEM", "INVALID_DISCOVERY_SELECTION"]);
     const serviceErrors = new Set(["NOVA_POSHTA_NOT_CONFIGURED", "NOVA_POSHTA_UNAVAILABLE"]);
     const message = error instanceof Error ? error.message : "";
