@@ -10,14 +10,19 @@
     new: "Нове", pending: "Очікує підтвердження", paid: "Оплачено",
     shipped: "Відправлено", completed: "Виконано", cancelled: "Скасовано"
   };
-  const sb = window.supabase.createClient(
-    SITE_CONFIG.supabase.url,
-    SITE_CONFIG.supabase.publishableKey,
-    { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }
-  );
-
+  const REQUEST_TIMEOUT_MS = 12000;
+  let sb = null;
   let mode = "login";
   let user = null;
+  let dashboardPromise = null;
+
+  function withTimeout(promise, code) {
+    let timer;
+    const timeout = new Promise((_, reject) => {
+      timer = setTimeout(() => reject(new Error(code || "REQUEST_TIMEOUT")), REQUEST_TIMEOUT_MS);
+    });
+    return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+  }
 
   function product(id) { return typeof getProduct === "function" ? getProduct(id) : null; }
   function price(item) { return typeof getProductPrice === "function" ? getProductPrice(item) : 0; }
@@ -34,7 +39,7 @@
     $("#accountAuth").hidden = false;
     $("#accountDashboard").hidden = true;
   }
-  async function showDashboard(currentUser) {
+  async function renderDashboard(currentUser) {
     user = currentUser;
     finishLoading();
     $("#accountAuth").hidden = true;
@@ -43,7 +48,12 @@
     if (currentUser.email_confirmed_at) {
       try { await sb.rpc("claim_customer_orders"); } catch (_) { /* Current orders still load. */ }
     }
-    await Promise.all([loadOrders(), loadWishlist()]);
+    await Promise.allSettled([loadOrders(), loadWishlist()]);
+  }
+  function showDashboard(currentUser) {
+    if (dashboardPromise && user?.id === currentUser.id) return dashboardPromise;
+    dashboardPromise = renderDashboard(currentUser).finally(() => { dashboardPromise = null; });
+    return dashboardPromise;
   }
 
   function orderItems(items) {
@@ -56,9 +66,15 @@
   async function loadOrders() {
     const list = $("#accountOrdersList");
     list.innerHTML = '<p class="account-loading-inline">Завантажуємо замовлення…</p>';
-    const { data, error } = await sb.from("orders")
-      .select("client_order_id,created_at,status,total_amount,tracking_number,items,payment_method")
-      .order("created_at", { ascending: false });
+    let data, error;
+    try {
+      ({ data, error } = await withTimeout(sb.from("orders")
+        .select("client_order_id,created_at,status,total_amount,tracking_number,items,payment_method")
+        .order("created_at", { ascending: false }), "ORDERS_TIMEOUT"));
+    } catch (_) {
+      list.innerHTML = '<p class="account-message">Сервер довго не відповідає. Оновіть сторінку або спробуйте трохи пізніше.</p>';
+      return;
+    }
     if (error) {
       list.innerHTML = '<p class="account-message">Не вдалося завантажити замовлення. Оновіть сторінку.</p>';
       return;
@@ -84,7 +100,13 @@
   async function loadWishlist() {
     const list = $("#accountWishlistList");
     list.innerHTML = '<p class="account-loading-inline">Завантажуємо список бажань…</p>';
-    const { data, error } = await sb.from("wishlists").select("product_slug,created_at").order("created_at", { ascending: false });
+    let data, error;
+    try {
+      ({ data, error } = await withTimeout(sb.from("wishlists").select("product_slug,created_at").order("created_at", { ascending: false }), "WISHLIST_TIMEOUT"));
+    } catch (_) {
+      list.innerHTML = '<p class="account-message">Список бажань не відповідає. Спробуйте оновити сторінку.</p>';
+      return;
+    }
     if (error) {
       list.innerHTML = '<p class="account-message">Не вдалося завантажити список бажань.</p>';
       return;
@@ -103,7 +125,10 @@
       button.disabled = true;
       const { error: removeError } = await sb.from("wishlists").delete().eq("product_slug", button.dataset.wishRemove);
       if (removeError) $("#wishlistMessage").textContent = "Не вдалося видалити аромат.";
-      else await loadWishlist();
+      else {
+        document.dispatchEvent(new CustomEvent("vahome:wishlist-changed", { detail: { productSlug: button.dataset.wishRemove, saved: false } }));
+        await loadWishlist();
+      }
     }));
   }
 
@@ -117,7 +142,10 @@
       const { error } = await sb.from("wishlists").upsert({ user_id: user.id, product_slug: $("#wishlistProduct").value }, { onConflict: "user_id,product_slug" });
       setBusy(button, false, "");
       $("#wishlistMessage").textContent = error ? "Не вдалося додати аромат." : "Аромат збережено у списку бажань.";
-      if (!error) await loadWishlist();
+      if (!error) {
+        document.dispatchEvent(new CustomEvent("vahome:wishlist-changed", { detail: { productSlug: $("#wishlistProduct").value, saved: true } }));
+        await loadWishlist();
+      }
     });
 
     $("#accountForm").addEventListener("submit", async (event) => {
@@ -126,9 +154,15 @@
       setBusy(button, true, mode === "login" ? "Входимо…" : "Створюємо…");
       const email = event.currentTarget.email.value.trim().toLowerCase();
       const password = event.currentTarget.password.value;
-      const result = mode === "login"
-        ? await sb.auth.signInWithPassword({ email, password })
-        : await sb.auth.signUp({ email, password, options: { emailRedirectTo: `${SITE_CONFIG.siteUrl}/account.html` } });
+      let result;
+      try {
+        result = await withTimeout(mode === "login"
+          ? sb.auth.signInWithPassword({ email, password })
+          : sb.auth.signUp({ email, password, options: { emailRedirectTo: `${SITE_CONFIG.siteUrl}/account.html` } }), "AUTH_TIMEOUT");
+      } catch (_) {
+        setBusy(button, false, "");
+        return message("Сервер входу довго не відповідає. Перевірте інтернет і спробуйте ще раз.");
+      }
       setBusy(button, false, "");
       if (result.error) return message(mode === "login" ? "Email або пароль не підходить." : "Не вдалося створити кабінет. Можливо, email уже зареєстрований.");
       if (mode === "signup" && !result.data.session) return message("Перевірте email і підтвердьте реєстрацію.");
@@ -139,7 +173,9 @@
       const email = $("#accountForm").elements.email.value.trim().toLowerCase();
       if (!email) return message("Спочатку введіть email.");
       message("Надсилаємо посилання…");
-      const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: `${SITE_CONFIG.siteUrl}/account.html` });
+      let error;
+      try { ({ error } = await withTimeout(sb.auth.resetPasswordForEmail(email, { redirectTo: `${SITE_CONFIG.siteUrl}/account.html` }), "RESET_TIMEOUT")); }
+      catch (_) { return message("Сервер не відповідає. Спробуйте трохи пізніше."); }
       message(error ? "Не вдалося надіслати лист. Спробуйте пізніше." : "Посилання для відновлення пароля надіслано на email.");
     });
 
@@ -147,7 +183,9 @@
       event.preventDefault();
       const output = $("#accountRecoveryMessage");
       output.textContent = "Зберігаємо…";
-      const { error } = await sb.auth.updateUser({ password: event.currentTarget.newPassword.value });
+      let error;
+      try { ({ error } = await withTimeout(sb.auth.updateUser({ password: event.currentTarget.newPassword.value }), "RECOVERY_TIMEOUT")); }
+      catch (_) { output.textContent = "Сервер не відповідає. Спробуйте ще раз."; return; }
       output.textContent = error ? "Не вдалося змінити пароль." : "Пароль змінено.";
       if (!error) setTimeout(() => location.replace("account.html"), 700);
     });
@@ -161,7 +199,13 @@
       $("#accountResetPassword").hidden = mode !== "login";
       message("");
     }));
-    $("#accountLogout").addEventListener("click", async () => { await sb.auth.signOut(); user = null; showAuth(); });
+    $("#accountLogout").addEventListener("click", async () => {
+      setBusy($("#accountLogout"), true, "Виходимо…");
+      try { await withTimeout(sb.auth.signOut(), "LOGOUT_TIMEOUT"); } catch (_) {}
+      user = null;
+      setBusy($("#accountLogout"), false, "");
+      showAuth();
+    });
     document.querySelectorAll("[data-account-tab]").forEach((button) => button.addEventListener("click", () => {
       document.querySelectorAll("[data-account-tab]").forEach((item) => item.classList.toggle("is-active", item === button));
       $("#accountOrders").hidden = button.dataset.accountTab !== "orders";
@@ -170,6 +214,18 @@
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
+    if (!window.supabase?.createClient) {
+      finishLoading();
+      $("#accountAuth").hidden = false;
+      message("Не вдалося завантажити захищений вхід. Оновіть сторінку або перевірте блокувальник скриптів.");
+      $("#accountSubmit").disabled = true;
+      return;
+    }
+    sb = window.supabase.createClient(
+      SITE_CONFIG.supabase.url,
+      SITE_CONFIG.supabase.publishableKey,
+      { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }
+    );
     bind();
     sb.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") {
@@ -178,10 +234,16 @@
         $("#accountForm").hidden = true;
         $("#accountRecoveryForm").hidden = false;
         $("#accountDashboard").hidden = true;
-      } else if (event === "SIGNED_OUT") showAuth();
-      else if (event === "SIGNED_IN" && session?.user && !user) showDashboard(session.user);
+      } else if (event === "SIGNED_OUT") { user = null; showAuth(); }
+      else if (event === "SIGNED_IN" && session?.user && user?.id !== session.user.id) setTimeout(() => showDashboard(session.user), 0);
     });
-    const { data, error } = await sb.auth.getSession();
+    let data, error;
+    try { ({ data, error } = await withTimeout(sb.auth.getSession(), "SESSION_TIMEOUT")); }
+    catch (_) {
+      showAuth();
+      message("Не вдалося перевірити сесію. Ви можете спробувати увійти ще раз.");
+      return;
+    }
     if (error) return showAuth();
     if ((location.hash || "").includes("type=recovery")) return;
     data.session?.user ? await showDashboard(data.session.user) : showAuth();

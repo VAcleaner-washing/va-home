@@ -5,16 +5,16 @@
   let saved = new Set();
 
   function session() {
-    for (let index = 0; index < localStorage.length; index += 1) {
-      const key = localStorage.key(index) || "";
-      if (!/^sb-.*-auth-token$/.test(key)) continue;
-      try {
+    try {
+      for (let index = 0; index < localStorage.length; index += 1) {
+        const key = localStorage.key(index) || "";
+        if (!/^sb-.*-auth-token$/.test(key)) continue;
         const value = JSON.parse(localStorage.getItem(key));
         const accessToken = value?.access_token || value?.currentSession?.access_token;
         const userId = value?.user?.id || value?.currentSession?.user?.id;
         if (accessToken && userId) return { accessToken, userId };
-      } catch (_) { /* Ignore malformed browser storage. */ }
-    }
+      }
+    } catch (_) { /* Private storage or malformed auth data. */ }
     return null;
   }
   function headers(token, extra) {
@@ -99,6 +99,12 @@
     toggle(button.dataset.wishlist, button);
   });
   document.addEventListener("vahome:products-rendered", decorate);
+  document.addEventListener("vahome:wishlist-changed", (event) => {
+    const detail = event.detail || {};
+    if (!detail.productSlug) return;
+    if (detail.saved) saved.add(detail.productSlug); else saved.delete(detail.productSlug);
+    updateButtons();
+  });
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", load);
   else load();
 })();
