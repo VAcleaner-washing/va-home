@@ -802,8 +802,16 @@ body.menu-open {
 
 .collection-editorial__price {
   font-size: 1.1rem;
-  margin-bottom: var(--space-3);
+  margin-top: 0.9rem;
+  margin-bottom: 1.75rem;
   color: var(--text-primary);
+}
+
+@media (max-width: 640px) {
+  .collection-editorial__price {
+    margin-top: 0.75rem;
+    margin-bottom: 1.35rem;
+  }
 }
 
 .aroma-list {
