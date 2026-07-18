@@ -19,5 +19,5 @@
 .order-success__note { max-width: 860px; margin: 0 auto var(--space-4); color: var(--text-secondary); font-size: var(--fs-small); text-align: center; }
 .order-success__note p + p { margin-top: .5rem; }
 .order-success__note a { color: var(--color-gold); }
-#codPanel { max-width: 620px; margin: 0 auto var(--space-4); text-align: center; }
+#codPanel { text-align: left; }
 @media (max-width: 760px) { .order-success__grid { grid-template-columns: 1fr; } .order-panel { padding: var(--space-3); } }
