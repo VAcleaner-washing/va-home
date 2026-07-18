@@ -1142,15 +1142,3 @@ body.menu-open {
 }
 .product-card__rating.has-rating{color:#8c6b30}
 .product-card__rating + .product-card__meta{margin-top:0}
-
-@media (max-width: 430px) {
-  .catalog-grid .product-card__media { aspect-ratio: 4 / 5; }
-  .catalog-grid .product-card__body { min-height: 250px; }
-  .catalog-grid .product-card__actions {
-    display: grid;
-    grid-template-columns: minmax(0, .9fr) minmax(0, 1.25fr);
-  }
-  .catalog-grid .product-card__actions > .btn { min-width: 0; width: 100%; }
-  .catalog-grid .product-card__cart-btn { gap: .45rem; }
-  .catalog-grid .product-card__cart-btn:not(:has(span))::before { content: "До кошика"; }
-}

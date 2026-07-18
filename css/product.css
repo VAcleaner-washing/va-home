@@ -85,9 +85,6 @@
 .product-purchase-support strong{font-size:.75rem;color:var(--text-primary)}
 .product-purchase-support span{font-size:.68rem;line-height:1.45;color:var(--text-secondary)}
 .product-purchase-support>a{grid-column:1/-1;width:max-content;color:var(--text-gold);font-size:.7rem;text-decoration:underline;text-underline-offset:3px}
-.product-buy-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem;margin-top:1rem}
-.product-buy-facts span{display:grid;gap:.18rem;padding:.72rem .78rem;border:1px solid var(--border-hairline);color:var(--text-secondary);font-size:.66rem;line-height:1.35}
-.product-buy-facts strong{color:var(--text-primary);font-size:.75rem}
 .product-discovery-link{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;padding:.85rem 1rem;border:1px solid var(--border-hairline);color:var(--text-secondary);font-size:.75rem}
 .product-discovery-link strong{color:var(--text-gold);font-weight:600}
 .product-mobile-buy{display:none}
@@ -228,9 +225,7 @@
 }
 
 @media(max-width:760px){
-  body.product-buybar-visible{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
-  .product-buy-facts{grid-template-columns:1fr 1fr}
-  .product-buy-facts span:last-child{grid-column:1/-1}
+  body{padding-bottom:76px}
   .product-purchase-support{grid-template-columns:1fr;gap:.7rem}
   .product-purchase-support>a{grid-column:auto}
   .product-discovery-link{align-items:flex-start;flex-direction:column;gap:.3rem}
@@ -239,7 +234,7 @@
   .product-mobile-buy>div{display:grid;min-width:0}
   .product-mobile-buy span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-secondary);font-size:.68rem}
   .product-mobile-buy strong{font-size:.86rem}
-  .product-mobile-buy button{min-height:44px;padding:0 1.1rem;background:var(--color-gold);color:var(--text-on-contrast);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+  .product-mobile-buy button{min-height:44px;padding:0 1.2rem;background:var(--color-gold);color:var(--text-on-contrast);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
 }
 
 
