@@ -72,6 +72,43 @@
     });
   }
 
+  function addCurrentProductToCart() {
+    if (typeof PRODUCT_ID === "undefined" || !window.Cart) return;
+    const qtyInput = document.getElementById("qtyInput");
+    window.Cart.add(PRODUCT_ID, qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1);
+    window.Cart.refreshCountBadge?.();
+    const product = typeof getProduct === "function" ? getProduct(PRODUCT_ID) : null;
+    window.VAHome?.showToast(`${product?.name || "Аромат"} додано в кошик`);
+  }
+
+  function initPurchaseSupport() {
+    const primaryButton = document.getElementById("addToCartBtn");
+    const info = document.querySelector(".product-hero__info");
+    if (!primaryButton || !info) return;
+
+    const reassurance = document.createElement("div");
+    reassurance.className = "product-purchase-support";
+    reassurance.innerHTML = `<div><strong>В наявності</strong><span>Відправка 1–2 робочі дні</span></div><div><strong>Нова пошта</strong><span>Безкоштовно від 2000 грн</span></div><div><strong>Зручна оплата</strong><span>На рахунок або при отриманні</span></div><a href="../delivery.html#returns">Умови доставки й повернення</a>`;
+    primaryButton.closest(".product-purchase-row")?.insertAdjacentElement("afterend", reassurance);
+
+    const discovery = document.createElement("a");
+    discovery.className = "product-discovery-link";
+    discovery.href = "../discovery-set.html";
+    discovery.innerHTML = `<span>Не впевнені у виборі?</span><strong>Спробувати Discovery Set →</strong>`;
+    reassurance.insertAdjacentElement("afterend", discovery);
+
+    const sticky = document.createElement("div");
+    sticky.className = "product-mobile-buy";
+    const product = typeof getProduct === "function" && typeof PRODUCT_ID !== "undefined" ? getProduct(PRODUCT_ID) : null;
+    const price = product && typeof getProductPrice === "function" ? getProductPrice(product) : 0;
+    sticky.innerHTML = `<div><span>${product?.name || "VA HOME"}</span><strong>${Number(price).toLocaleString("uk-UA")} грн</strong></div><button type="button">У кошик</button>`;
+    sticky.querySelector("button").addEventListener("click", addCurrentProductToCart);
+    document.body.appendChild(sticky);
+
+    const observer = new IntersectionObserver(([entry]) => sticky.classList.toggle("is-visible", !entry.isIntersecting), { threshold: .15 });
+    observer.observe(primaryButton);
+  }
+
   function initProductExperience() {
     if (typeof PRODUCT_ID === "undefined" || typeof getProduct !== "function") return;
     const product = getProduct(PRODUCT_ID);
@@ -179,6 +216,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     initQtyStepper();
     initAddToCart();
+    initPurchaseSupport();
     initProductExperience();
     initCompactDetails();
   });

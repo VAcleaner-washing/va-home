@@ -194,6 +194,21 @@
   margin-top: var(--space-2);
 }
 
+.checkout-reassurance {
+  display: grid;
+  gap: .55rem;
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  font-size: var(--fs-caption);
+  line-height: 1.6;
+}
+.checkout-reassurance strong { color: var(--text-primary); }
+.checkout-reassurance a { color: var(--color-gold); }
+
 
 /* Checkout legal consent */
 .checkout-consent {

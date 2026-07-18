@@ -252,6 +252,10 @@
       const wrap = field.closest(".form-field");
       let invalid = !field.value || !field.value.trim();
       if (name === "customerEmail" && !invalid) invalid = !/^\S+@\S+\.\S+$/.test(field.value.trim());
+      if (name === "customerPhone" && !invalid) {
+        const phone = field.value.replace(/[^\d+]/g, "");
+        invalid = !/^(?:\+?38)?0\d{9}$/.test(phone);
+      }
       if (wrap) wrap.classList.toggle("has-error", invalid);
       field.setAttribute("aria-invalid", invalid ? "true" : "false");
       if (invalid) valid = false;
@@ -269,17 +273,9 @@
     return valid;
   }
 
-  function createOrderNumber() {
-    const now = new Date();
-    const date = `${String(now.getFullYear()).slice(-2)}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
-    const suffix = String(Math.floor(1000 + Math.random() * 9000));
-    return `VA-${date}-${suffix}`;
-  }
-
   function buildOrderPayload(form) {
     const items = getItems();
     return {
-      client_order_id: createOrderNumber(),
       customer_name: form.elements.customerName.value.trim(),
       customer_phone: form.elements.customerPhone.value.trim(),
       customer_email: form.elements.customerEmail.value.trim().toLowerCase(),
@@ -288,10 +284,7 @@
       delivery_details: form.elements.deliveryDetails.value.trim(),
       payment_method: form.elements.paymentMethod.value,
       customer_comment: form.elements.customerComment ? form.elements.customerComment.value.trim() || null : null,
-      items: items.map((item) => ({ id: item.id, name: item.name, quantity: item.quantity, unit_price: item.price, line_total: item.lineTotal })),
-      total_amount: getTotal(),
-      status: "new",
-      source: "website"
+      items: items.map((item) => ({ id: item.id, quantity: item.quantity }))
     };
   }
 
@@ -325,24 +318,20 @@
     setCheckoutState(button, "loading", "Зберігаємо ваше замовлення…", false);
 
     try {
-      await window.VAHomeSupabase.submitOrder(payload);
+      const result = await window.VAHomeSupabase.submitOrder(payload);
+      const order = result.order;
 
       const confirmation = {
-        orderNumber: payload.client_order_id,
-        customerName: payload.customer_name,
-        customerEmail: payload.customer_email,
-        paymentMethod: payload.payment_method,
-        items: payload.items,
-        total: payload.total_amount,
+        orderNumber: order.client_order_id,
+        customerName: order.customer_name,
+        customerEmail: order.customer_email,
+        paymentMethod: order.payment_method,
+        items: order.items,
+        total: order.total_amount,
+        emailStatus: result.email_status,
         createdAt: new Date().toISOString()
       };
       sessionStorage.setItem("vahome_last_order", JSON.stringify(confirmation));
-
-      // Email is intentionally non-blocking: the order remains accepted even if
-      // the optional Resend/Supabase Edge Function is not deployed yet.
-      if (window.VAHomeSupabase.notifyOrder) {
-        window.VAHomeSupabase.notifyOrder(payload).catch((error) => console.warn("Order email is not active yet", error));
-      }
 
       clear();
       window.location.href = "thank-you.html";

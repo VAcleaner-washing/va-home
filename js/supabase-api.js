@@ -63,17 +63,9 @@
     });
   }
 
-  function submitOrder(payload) {
-    return request("orders", {
-      method: "POST",
-      headers: { Prefer: "return=minimal" },
-      body: JSON.stringify(payload)
-    });
-  }
-
-  async function notifyOrder(payload) {
+  async function submitOrder(payload) {
     if (!configured()) throw new Error("Supabase is not configured");
-    const response = await fetch(`${cfg.url}/functions/v1/send-order-email`, {
+    const response = await fetch(`${cfg.url}/functions/v1/create-order`, {
       method: "POST",
       headers: {
         apikey: cfg.publishableKey,
@@ -82,15 +74,14 @@
       },
       body: JSON.stringify(payload)
     });
+    const data = await response.json().catch(() => ({}));
     if (!response.ok) {
-      let details = "";
-      try { details = await response.text(); } catch (_) {}
-      const error = new Error(`Email notification failed (${response.status})`);
-      error.details = details;
+      const error = new Error(data.error || `Order creation failed (${response.status})`);
+      error.status = response.status;
       throw error;
     }
-    return response.json();
+    return data;
   }
 
-  window.VAHomeSupabase = { configured, getApprovedReviews, getApprovedRatings, submitReview, getPublicOrderStatus, submitOrder, notifyOrder };
+  window.VAHomeSupabase = { configured, getApprovedReviews, getApprovedRatings, submitReview, getPublicOrderStatus, submitOrder };
 })();

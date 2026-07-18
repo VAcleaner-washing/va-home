@@ -1,6 +1,8 @@
 .account-page{min-height:75vh;padding:clamp(70px,10vw,130px) 0}
 .account-auth{display:grid;grid-template-columns:1fr minmax(320px,460px);gap:clamp(40px,8vw,110px);align-items:center;max-width:1050px;margin:auto}
 .account-auth[hidden],#accountDashboard[hidden]{display:none!important}
+.account-form[hidden]{display:none!important}
+.account-reset{justify-self:start;color:var(--text-gold);font-size:var(--fs-caption);text-decoration:underline;text-underline-offset:3px}
 .account-auth h1,.account-head h1{font-family:var(--font-display);font-size:clamp(42px,7vw,76px);font-weight:500}
 .account-auth>div>p:last-child,.account-head p{color:var(--text-secondary);max-width:520px}
 .account-form{display:grid;gap:17px;padding:32px;background:var(--bg-elevated);border:1px solid var(--border-hairline)}

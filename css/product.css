@@ -80,6 +80,15 @@
   padding-top: var(--space-2);
 }
 
+.product-purchase-support{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;margin:1rem 0 1.1rem;padding:1rem 0;border-top:1px solid var(--border-hairline);border-bottom:1px solid var(--border-hairline)}
+.product-purchase-support div{display:grid;gap:.2rem}
+.product-purchase-support strong{font-size:.75rem;color:var(--text-primary)}
+.product-purchase-support span{font-size:.68rem;line-height:1.45;color:var(--text-secondary)}
+.product-purchase-support>a{grid-column:1/-1;width:max-content;color:var(--text-gold);font-size:.7rem;text-decoration:underline;text-underline-offset:3px}
+.product-discovery-link{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;padding:.85rem 1rem;border:1px solid var(--border-hairline);color:var(--text-secondary);font-size:.75rem}
+.product-discovery-link strong{color:var(--text-gold);font-weight:600}
+.product-mobile-buy{display:none}
+
 
 @media (min-width: 901px) {
   .product-hero__media {
@@ -197,6 +206,19 @@
 @media (max-width: 900px) {
   .product-hero__media { height: auto; aspect-ratio: 4 / 5; }
   .product-accordion__item summary { padding-block: 1rem; }
+}
+
+@media(max-width:760px){
+  body{padding-bottom:76px}
+  .product-purchase-support{grid-template-columns:1fr;gap:.7rem}
+  .product-purchase-support>a{grid-column:auto}
+  .product-discovery-link{align-items:flex-start;flex-direction:column;gap:.3rem}
+  .product-mobile-buy{position:fixed;z-index:calc(var(--z-header) + 1);left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem max(1rem,env(safe-area-inset-right)) calc(.75rem + env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left));border-top:1px solid var(--border-hairline-strong);background:rgba(8,7,6,.96);backdrop-filter:blur(14px);transform:translateY(110%);transition:transform .22s var(--ease-standard)}
+  .product-mobile-buy.is-visible{transform:translateY(0)}
+  .product-mobile-buy>div{display:grid;min-width:0}
+  .product-mobile-buy span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-secondary);font-size:.68rem}
+  .product-mobile-buy strong{font-size:.86rem}
+  .product-mobile-buy button{min-height:44px;padding:0 1.2rem;background:var(--color-gold);color:var(--text-on-contrast);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
 }
 
 

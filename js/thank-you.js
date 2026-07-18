@@ -28,6 +28,9 @@
         return `<div class="order-line"><span>${item.name} × ${item.quantity}</span><span>${formatUAH(item.line_total)}</span></div>`;
       }).join("");
       document.getElementById("orderTotal").textContent = formatUAH(order.total);
+      if (order.emailStatus === "failed") {
+        document.getElementById("orderSuccessLead").textContent = "Замовлення успішно збережено. Підтверджувальний лист може надійти із затримкою — збережіть номер замовлення.";
+      }
     }
     const isCod = Boolean(order && order.paymentMethod === "cash_on_delivery");
     if (order) {
