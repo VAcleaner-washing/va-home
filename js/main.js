@@ -102,27 +102,28 @@
             </ul>
           </div>
           <div class="footer-col">
-            <h3 class="footer-col__title">Інформація</h3>
+            <h3 class="footer-col__title">Покупцям</h3>
             <ul>
-              <li><a href="${root}about.html">Про VA HOME</a></li>
               <li><a href="${root}delivery.html">Доставка й оплата</a></li>
               <li><a href="${root}offer.html">Публічна оферта</a></li>
               <li><a href="${root}privacy.html">Політика конфіденційності</a></li>
               <li><a href="${root}order-status.html">Статус замовлення</a></li>
               <li><a href="${root}account.html">Мій кабінет</a></li>
-              <li><a href="${root}contacts.html">Контакти</a></li>
             </ul>
           </div>
           <div class="footer-col">
-            <h3 class="footer-col__title">Соціальні мережі</h3>
+            <h3 class="footer-col__title">Контакти</h3>
             <ul>
+              <li><a href="${root}about.html">Про VA HOME</a></li>
+              <li><a href="${root}contacts.html">Усі контакти</a></li>
+              <li><a href="tel:+380953919569">+38 (095) 391-9569</a></li>
+              <li><a href="mailto:vahome.aroma@gmail.com">vahome.aroma@gmail.com</a></li>
               <li><a href="https://instagram.com/va_home.aroma" target="_blank" rel="noopener">Instagram</a></li>
-              <!-- Telegram link: add once username is provided in js/config.js -->
             </ul>
           </div>
         </div>
         <div class="container footer-bottom">
-          <span>&copy; <span id="footerYear">${year}</span> VA HOME · ФОП Невідома А.С.</span>
+          <span>&copy; <span id="footerYear">${year}</span> VA HOME · ФОП Невідома Анна Сергіївна · РНОКПП 3314215243</span>
           <span>Створено в Україні</span>
         </div>
       </footer>

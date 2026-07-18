@@ -694,6 +694,7 @@ body.menu-open {
   font-size: var(--fs-caption);
   color: var(--text-secondary);
 }
+.footer-bottom>span:first-child{max-width:72ch}.footer-col a[href^="mailto:"]{overflow-wrap:anywhere}
 
 @media (max-width: 640px) {
   .footer-bottom {
