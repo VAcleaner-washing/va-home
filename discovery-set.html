@@ -69,13 +69,15 @@
         <div class="discovery-variant-card">
           <span class="discovery-variant-card__count">6 ароматів</span>
           <span class="discovery-variant-card__price">150 грн</span>
-          <p class="text-muted">Компактний набір, щоб визначити свій загальний напрямок — свіжий, теплий чи молекулярний.</p>
+          <p class="text-muted">Оберіть будь-які 6 ароматів із колекції VA HOME. У кошик набір додасться лише після повного вибору.</p>
+          <button type="button" class="discovery-picker-open" id="openDiscoveryPicker">Обрати 6 ароматів <span id="discoverySelectedCount">0/6</span></button>
+          <div id="discoverySelectedPreview" class="discovery-selected-preview" aria-live="polite">Ще нічого не обрано</div>
           <button
             type="button"
             class="btn btn-primary btn-block"
-            data-add-to-cart="discovery-6"
-            data-add-to-cart-label="Discovery Set — 6 ароматів"
-          >Додати в кошик — 150 грн</button>
+            id="addDiscovery6"
+            disabled
+          >Спочатку оберіть 6 ароматів</button>
         </div>
         <div class="discovery-variant-card">
           <span class="discovery-variant-card__count">17 ароматів</span>
@@ -91,6 +93,21 @@
       </div>
     </div>
   </section>
+
+  <dialog class="discovery-picker" id="discoveryPicker" aria-labelledby="discoveryPickerTitle">
+    <form method="dialog" class="discovery-picker__panel">
+      <div class="discovery-picker__head">
+        <div><p class="eyebrow">Discovery Set</p><h2 id="discoveryPickerTitle">Оберіть 6 ароматів</h2><p>Вибрано <strong id="pickerCount">0 з 6</strong></p></div>
+        <button class="discovery-picker__close" value="cancel" aria-label="Закрити">×</button>
+      </div>
+      <div class="discovery-picker__list" id="discoveryPickerList"></div>
+      <p class="discovery-picker__error" id="discoveryPickerError" role="status"></p>
+      <div class="discovery-picker__actions">
+        <button type="button" class="btn btn-secondary" id="clearDiscoverySelection">Очистити</button>
+        <button type="button" class="btn btn-primary" id="confirmDiscoverySelection" disabled>Підтвердити вибір</button>
+      </div>
+    </form>
+  </dialog>
 
   <!-- ============ ІНФОРМАЦІЙНІ БЛОКИ ============ -->
   <section class="section" aria-label="Про Discovery Set">
@@ -210,6 +227,7 @@
 <script src="data/products-data.js"></script>
 <script src="js/products.js"></script>
 <script src="js/cart.js" defer></script>
+<script src="js/discovery-set.js" defer></script>
 <script src="js/ratings.js" defer></script>
 <script src="js/main.js" defer></script>
 </body>
