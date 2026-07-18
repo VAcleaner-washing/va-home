@@ -107,9 +107,13 @@
               <p class="form-error" id="err-customerEmail">Вкажіть коректну електронну адресу.</p>
             </div>
 
-            <div class="form-field">
+            <div class="form-field np-combobox">
               <label for="customerCity">Місто *</label>
-              <input type="text" id="customerCity" name="customerCity" autocomplete="address-level2" required aria-describedby="err-customerCity">
+              <input type="text" id="customerCity" name="customerCity" autocomplete="off" required aria-describedby="npCityHint err-customerCity" aria-autocomplete="list" aria-controls="npCitySuggestions" aria-expanded="false" role="combobox" placeholder="Почніть вводити назву міста">
+              <input type="hidden" id="novaPoshtaCityRef" name="novaPoshtaCityRef">
+              <input type="hidden" id="novaPoshtaSettlementRef" name="novaPoshtaSettlementRef">
+              <div class="np-suggestions" id="npCitySuggestions" role="listbox" aria-label="Знайдені населені пункти" hidden></div>
+              <p class="form-hint" id="npCityHint">Оберіть населений пункт зі списку Нової пошти.</p>
               <p class="form-error" id="err-customerCity">Вкажіть, будь ласка, місто.</p>
             </div>
 
@@ -127,9 +131,12 @@
             </div>
 
 
-            <div class="form-field">
+            <div class="form-field np-combobox">
               <label for="deliveryDetails">Відділення або поштомат Нової пошти *</label>
-              <input type="text" id="deliveryDetails" name="deliveryDetails" autocomplete="street-address" required aria-describedby="err-deliveryDetails" placeholder="Наприклад: відділення №12 або поштомат №1234">
+              <input type="text" id="deliveryDetails" name="deliveryDetails" autocomplete="off" required aria-describedby="npWarehouseHint err-deliveryDetails" aria-autocomplete="list" aria-controls="npWarehouseSuggestions" aria-expanded="false" role="combobox" placeholder="Спочатку оберіть місто">
+              <input type="hidden" id="novaPoshtaWarehouseRef" name="novaPoshtaWarehouseRef">
+              <div class="np-suggestions" id="npWarehouseSuggestions" role="listbox" aria-label="Знайдені відділення та поштомати" hidden></div>
+              <p class="form-hint" id="npWarehouseHint">Після вибору міста введіть номер або адресу відділення.</p>
               <p class="form-error" id="err-deliveryDetails">Вкажіть відділення або поштомат Нової пошти.</p>
             </div>
 
