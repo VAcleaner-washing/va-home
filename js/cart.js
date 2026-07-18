@@ -303,6 +303,20 @@
     }
   }
 
+  function orderErrorMessage(error) {
+    const code = String(error && error.message || "");
+    const messages = {
+      INVALID_CONTACTS: "Перевірте ім’я, номер телефону та email.",
+      INVALID_DELIVERY: "Перевірте місто, відділення або поштомат Нової пошти.",
+      INVALID_PAYMENT: "Оберіть доступний спосіб оплати.",
+      INVALID_ITEMS: "У кошику є некоректний товар. Оновіть кошик і повторіть спробу.",
+      INVALID_ITEM: "Один із товарів більше недоступний. Оновіть кошик і повторіть спробу.",
+      INVALID_DISCOVERY_SELECTION: "Для Discovery Set потрібно обрати рівно 6 різних ароматів.",
+      ORDER_CREATION_FAILED: "Система тимчасово не змогла зберегти замовлення. Повторіть спробу трохи пізніше."
+    };
+    return messages[code] || "Замовлення не збережено. Перевірте з’єднання та повторіть спробу.";
+  }
+
   async function placeOrder(form, button) {
     const currentItems = getItems();
     if (!currentItems.length) {
@@ -347,7 +361,7 @@
       window.location.href = "thank-you.html";
     } catch (error) {
       console.error("Order creation failed", error);
-      setCheckoutState(button, "idle", "Замовлення не збережено. Перевірте з'єднання та повторіть спробу.", true);
+      setCheckoutState(button, "idle", orderErrorMessage(error), true);
     }
   }
 

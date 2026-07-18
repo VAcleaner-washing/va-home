@@ -24,7 +24,7 @@ const SITE_CONFIG = {
   contacts: {
     phone: "+38 (095) 391-9569",
     email: "vahome.aroma@gmail.com",
-    address: null
+    address: "м. Полтава, вул. Європейська, 146"
   },
 
   legalEntity: "ФОП Невідома Анна Сергіївна",

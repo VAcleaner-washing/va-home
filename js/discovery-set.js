@@ -4,9 +4,7 @@
   let selected=[];
   const $=s=>document.querySelector(s);
   function productName(id){const p=typeof getProduct==="function"?getProduct(id):null;return p?p.name:id}
-  function render(){
-    const pickerList=$("#discoveryPickerList");
-    const savedScrollTop=pickerList?pickerList.scrollTop:0;
+  function updateSummary(){
     const count=selected.length;
     $("#pickerCount").textContent=`${count} з ${MAX}`;
     $("#discoverySelectedCount").textContent=`${count}/${MAX}`;
@@ -14,10 +12,17 @@
     $("#addDiscovery6").disabled=count!==MAX;
     $("#addDiscovery6").textContent=count===MAX?"Додати в кошик — 150 грн":"Спочатку оберіть 6 ароматів";
     $("#discoverySelectedPreview").textContent=count?selected.map(productName).join(" · "):"Ще нічого не обрано";
-    document.querySelectorAll("[data-discovery-choice]").forEach(choice=>{const isSelected=selected.includes(choice.dataset.discoveryChoice);choice.classList.toggle("is-selected",isSelected);choice.setAttribute("aria-checked",String(isSelected))});
-    if(pickerList)pickerList.scrollTop=savedScrollTop;
-    const picker=$("#discoveryPicker");
-    if(picker)picker.scrollTop=0;
+  }
+  function updateChoice(choice){
+    const isSelected=selected.includes(choice.dataset.discoveryChoice);
+    choice.classList.toggle("is-selected",isSelected);
+    choice.setAttribute("aria-checked",String(isSelected));
+  }
+  function clearSelection(){
+    selected=[];
+    document.querySelectorAll("[data-discovery-choice]").forEach(updateChoice);
+    $("#discoveryPickerError").textContent="";
+    updateSummary();
   }
   document.addEventListener("DOMContentLoaded",()=>{
     if(!Array.isArray(window.PRODUCTS)&&typeof PRODUCTS==="undefined")return;
@@ -31,11 +36,10 @@
     };
     picker.addEventListener("close",()=>document.documentElement.classList.remove("has-open-discovery-picker"));
     $("#openDiscoveryPicker").addEventListener("click",openPicker);
-    $("#discoveryPickerList").addEventListener("mousedown",e=>{if(e.target.closest("[data-discovery-choice]"))e.preventDefault()});
-    $("#discoveryPickerList").addEventListener("click",e=>{const choice=e.target.closest("[data-discovery-choice]");if(!choice)return;const id=choice.dataset.discoveryChoice;const listScrollTop=$("#discoveryPickerList").scrollTop;if(!selected.includes(id)){if(selected.length>=MAX){$("#discoveryPickerError").textContent="Вже обрано 6 ароматів. Зніміть один вибір, щоб додати інший.";return}selected.push(id)}else selected=selected.filter(x=>x!==id);$("#discoveryPickerError").textContent="";render();$("#discoveryPickerList").scrollTop=listScrollTop;picker.scrollTop=0});
-    $("#clearDiscoverySelection").addEventListener("click",()=>{selected=[];render()});
+    $("#discoveryPickerList").addEventListener("click",e=>{const choice=e.target.closest("[data-discovery-choice]");if(!choice)return;const id=choice.dataset.discoveryChoice;if(!selected.includes(id)){if(selected.length>=MAX){$("#discoveryPickerError").textContent="Вже обрано 6 ароматів. Зніміть один вибір, щоб додати інший.";return}selected.push(id)}else selected=selected.filter(x=>x!==id);$("#discoveryPickerError").textContent="";updateChoice(choice);updateSummary()});
+    $("#clearDiscoverySelection").addEventListener("click",clearSelection);
     $("#confirmDiscoverySelection").addEventListener("click",()=>{if(selected.length!==MAX)return;picker.close();$("#addDiscovery6").focus()});
     $("#addDiscovery6").addEventListener("click",()=>{if(selected.length!==MAX){openPicker();return}window.Cart.add("discovery-6",1,{selections:[...selected]});window.Cart.refreshCountBadge?.();window.VAHome?.showToast("Discovery Set із 6 ароматів додано в кошик")});
-    render();
+    updateSummary();
   });
 })();
