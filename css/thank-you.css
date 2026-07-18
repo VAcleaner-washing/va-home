@@ -19,6 +19,7 @@
 .payment-details dd { max-width: 100%; overflow-wrap: anywhere; text-align: center; }
 .copy-status { min-height: 1.4em; margin-top: .7rem; font-size: var(--fs-caption); color: var(--text-secondary); text-align: center; }
 .order-success__note { max-width: 860px; margin: 0 auto var(--space-4); color: var(--text-secondary); font-size: var(--fs-small); text-align: center; }
+.order-success__note p { width: 100%; max-width: none; margin-inline: auto; text-align: center; }
 .order-success__note p + p { margin-top: .5rem; }
 .order-success__note a { color: var(--color-gold); }
 #codPanel { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }

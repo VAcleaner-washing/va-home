@@ -13,7 +13,6 @@ a, button {
 
 /* ---- Safari (incl. older iOS): sticky needs the -webkit- prefix too ---- */
 /* catalog-filters is intentionally excluded: on mobile it is a fixed modal sheet. */
-.product-hero__info,
 .cart-summary {
   position: -webkit-sticky;
 }
