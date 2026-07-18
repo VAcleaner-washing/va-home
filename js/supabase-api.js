@@ -106,5 +106,25 @@
     return data;
   }
 
-  window.VAHomeSupabase = { configured, getApprovedReviews, getApprovedRatings, submitReview, getPublicOrderStatus, submitOrder };
+  async function novaPoshtaLookup(payload) {
+    if (!configured()) throw new Error("Supabase is not configured");
+    const response = await fetch(`${cfg.url}/functions/v1/nova-poshta-locations`, {
+      method: "POST",
+      headers: {
+        apikey: cfg.publishableKey,
+        Authorization: `Bearer ${cfg.publishableKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error(data.error || `Nova Poshta lookup failed (${response.status})`);
+      error.status = response.status;
+      throw error;
+    }
+    return Array.isArray(data.items) ? data.items : [];
+  }
+
+  window.VAHomeSupabase = { configured, getApprovedReviews, getApprovedRatings, submitReview, getPublicOrderStatus, submitOrder, novaPoshtaLookup };
 })();

@@ -216,6 +216,7 @@
 .checkout-reassurance strong { color: var(--text-primary); }
 .checkout-reassurance a { color: var(--color-gold); }
 .form-hint{margin-top:.55rem;color:var(--text-secondary);font-size:var(--fs-caption);line-height:1.55}
+.np-combobox{position:relative}.np-combobox input[disabled]{cursor:not-allowed;opacity:.58}.np-suggestions{position:absolute;z-index:30;top:calc(100% - 1.25rem);left:0;right:0;max-height:280px;overflow-y:auto;border:1px solid var(--color-gold);background:#0d0c0a;box-shadow:0 18px 42px rgba(0,0,0,.55);scrollbar-color:#76592f #17140f;scrollbar-width:thin}.np-suggestion{display:block;width:100%;padding:13px 15px;border:0;border-bottom:1px solid var(--border-hairline);background:transparent;color:var(--text-primary);font:inherit;text-align:left;line-height:1.35;cursor:pointer}.np-suggestion:last-child{border-bottom:0}.np-suggestion:hover,.np-suggestion:focus,.np-suggestion.is-active{outline:0;background:#1a1610;color:var(--color-gold)}.np-suggestion small{display:block;margin-top:4px;color:var(--text-secondary);font-size:var(--fs-caption)}.np-suggestions__state{padding:14px 15px;color:var(--text-secondary);font-size:var(--fs-caption)}.np-combobox.is-loading::after{content:"";position:absolute;right:16px;top:43px;width:16px;height:16px;border:2px solid rgba(197,147,74,.28);border-top-color:var(--color-gold);border-radius:50%;animation:np-spin .7s linear infinite}@keyframes np-spin{to{transform:rotate(360deg)}}
 
 
 /* Checkout legal consent */

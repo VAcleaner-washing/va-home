@@ -64,6 +64,37 @@ async function sendEmail(apiKey: string, payload: Record<string, unknown>) {
   if (!response.ok) throw new Error(await response.text());
 }
 
+async function validateNovaPoshtaSelection(cityRef: string, warehouseRef: string) {
+  const apiKey = Deno.env.get("NOVA_POSHTA_API_KEY");
+  if (!apiKey) throw new Error("NOVA_POSHTA_NOT_CONFIGURED");
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 8000);
+  try {
+    const response = await fetch("https://api.novaposhta.ua/v2.0/json/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        apiKey,
+        modelName: "Address",
+        calledMethod: "getWarehouses",
+        methodProperties: { Ref: warehouseRef, CityRef: cityRef, Limit: 1, Page: 1, Language: "UA" },
+      }),
+      signal: controller.signal,
+    });
+    if (!response.ok) throw new Error("NOVA_POSHTA_UNAVAILABLE");
+    const payload = await response.json();
+    if (!payload?.success) throw new Error("NOVA_POSHTA_UNAVAILABLE");
+    return Array.isArray(payload.data) && payload.data.some((item: Record<string, unknown>) =>
+      text(item.Ref, 80) === warehouseRef && text(item.CityRef, 80) === cityRef
+    );
+  } catch (error) {
+    console.error("Nova Poshta validation failed", error);
+    throw new Error("NOVA_POSHTA_UNAVAILABLE");
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 Deno.serve(async req => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors(req) });
   if (req.method !== "POST") return json(req, { error: "Method not allowed" }, 405);
@@ -78,6 +109,9 @@ Deno.serve(async req => {
     if (/^380\d{9}$/.test(phone)) phone = `+${phone}`;
     const email = text(body.customer_email, 160).toLowerCase();
     const city = text(body.customer_city, 120);
+    const novaPoshtaCityRef = text(body.nova_poshta_city_ref, 80) || null;
+    const novaPoshtaSettlementRef = text(body.nova_poshta_settlement_ref, 80) || null;
+    const novaPoshtaWarehouseRef = text(body.nova_poshta_warehouse_ref, 80) || null;
     const deliveryMethod = text(body.delivery_method, 40);
     const deliveryDetails = text(body.delivery_details, 200);
     const paymentMethod = text(body.payment_method, 30);
@@ -88,6 +122,11 @@ Deno.serve(async req => {
       return json(req, { error: "INVALID_CONTACTS" }, 400);
     }
     if (!city || !deliveryDetails || deliveryMethod !== "nova_poshta") return json(req, { error: "INVALID_DELIVERY" }, 400);
+    if (Boolean(novaPoshtaCityRef) !== Boolean(novaPoshtaWarehouseRef)) return json(req, { error: "INVALID_DELIVERY" }, 400);
+    if (novaPoshtaCityRef && novaPoshtaWarehouseRef) {
+      const validDelivery = await validateNovaPoshtaSelection(novaPoshtaCityRef, novaPoshtaWarehouseRef);
+      if (!validDelivery) return json(req, { error: "INVALID_DELIVERY" }, 400);
+    }
     if (!["bank_transfer", "cash_on_delivery"].includes(paymentMethod)) return json(req, { error: "INVALID_PAYMENT" }, 400);
     if (rawItems.length < 1 || rawItems.length > 30) return json(req, { error: "INVALID_ITEMS" }, 400);
 
@@ -117,6 +156,9 @@ Deno.serve(async req => {
         client_order_id: `VA-${stamp}-${suffix}`,
         customer_name: name, customer_phone: phone, customer_email: email,
         customer_city: city, delivery_method: "Нова пошта", delivery_details: deliveryDetails,
+        nova_poshta_city_ref: novaPoshtaCityRef,
+        nova_poshta_settlement_ref: novaPoshtaSettlementRef,
+        nova_poshta_warehouse_ref: novaPoshtaWarehouseRef,
         payment_method: paymentMethod, customer_comment: comment,
         items, total_amount: total, status: "new", payment_status: "unpaid", source: "website",
       };
@@ -148,7 +190,9 @@ Deno.serve(async req => {
   } catch (error) {
     console.error(error);
     const validationErrors = new Set(["INVALID_ITEM", "INVALID_DISCOVERY_SELECTION"]);
-    const code = error instanceof Error && validationErrors.has(error.message) ? error.message : "ORDER_CREATION_FAILED";
-    return json(req, { error: code }, code === "ORDER_CREATION_FAILED" ? 500 : 400);
+    const serviceErrors = new Set(["NOVA_POSHTA_NOT_CONFIGURED", "NOVA_POSHTA_UNAVAILABLE"]);
+    const message = error instanceof Error ? error.message : "";
+    const code = validationErrors.has(message) ? message : serviceErrors.has(message) ? "DELIVERY_VALIDATION_UNAVAILABLE" : "ORDER_CREATION_FAILED";
+    return json(req, { error: code }, code === "DELIVERY_VALIDATION_UNAVAILABLE" ? 503 : code === "ORDER_CREATION_FAILED" ? 500 : 400);
   }
 });
