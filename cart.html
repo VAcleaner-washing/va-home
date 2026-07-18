@@ -78,8 +78,16 @@
 
         <!-- ============ CHECKOUT FORM ============ -->
         <div class="checkout-form">
-          <h2>Оформлення замовлення</h2>
+          <div class="checkout-form__head">
+            <p class="eyebrow">Фінальний крок</p>
+            <h2>Оформлення замовлення</h2>
+            <p>Заповніть контактні дані та оберіть зручний спосіб оплати.</p>
+          </div>
           <form id="checkoutForm" novalidate>
+
+            <div class="checkout-fields-grid">
+              <fieldset class="checkout-fieldset">
+                <legend>Контактні дані</legend>
 
             <div class="form-field">
               <label for="customerName">Ім'я *</label>
@@ -104,6 +112,10 @@
               <input type="text" id="customerCity" name="customerCity" autocomplete="address-level2" required aria-describedby="err-customerCity">
               <p class="form-error" id="err-customerCity">Вкажіть, будь ласка, місто.</p>
             </div>
+
+              </fieldset>
+              <fieldset class="checkout-fieldset">
+                <legend>Доставка й оплата</legend>
 
             <div class="form-field">
               <label for="deliveryMethod">Спосіб доставки *</label>
@@ -134,22 +146,27 @@
               <textarea id="customerComment" name="customerComment" placeholder="Необов'язково"></textarea>
             </div>
 
+              </fieldset>
+            </div>
 
-            <label class="checkout-consent" for="checkoutConsent">
-              <input type="checkbox" id="checkoutConsent" name="checkoutConsent" required>
-              <span>Оформлюючи замовлення, я погоджуюся з <a href="offer.html" target="_blank" rel="noopener">Публічною офертою</a> та <a href="privacy.html" target="_blank" rel="noopener">Політикою конфіденційності</a>.</span>
-            </label>
-            <p class="form-error checkout-consent-error" id="err-checkoutConsent">Підтвердьте згоду для оформлення замовлення.</p>
-
-            <div class="checkout-actions">
-              <button type="submit" class="btn btn-primary btn-block" id="placeOrderBtn">Оформити замовлення</button>
+            <div class="checkout-submit-panel">
+              <div>
+                <label class="checkout-consent" for="checkoutConsent">
+                  <input type="checkbox" id="checkoutConsent" name="checkoutConsent" required>
+                  <span>Оформлюючи замовлення, я погоджуюся з <a href="offer.html" target="_blank" rel="noopener">Публічною офертою</a> та <a href="privacy.html" target="_blank" rel="noopener">Політикою конфіденційності</a>.</span>
+                </label>
+                <p class="form-error checkout-consent-error" id="err-checkoutConsent">Підтвердьте згоду для оформлення замовлення.</p>
+                <div class="checkout-reassurance" aria-label="Умови оформлення">
+                  <p><strong>Відправка:</strong> протягом 1–2 робочих днів.</p>
+                  <p><strong>Підтримка:</strong> щодня 09:00–19:00 · <a href="tel:+380953919569">+38 (095) 391-9569</a></p>
+                </div>
+              </div>
+              <div class="checkout-actions">
+                <button type="submit" class="btn btn-primary btn-block" id="placeOrderBtn">Підтвердити замовлення</button>
+                <p class="checkout-secure-note">Дані передаються через захищене з’єднання</p>
+              </div>
             </div>
             <p class="checkout-status" id="checkoutStatus" role="status" aria-live="polite"></p>
-            <div class="checkout-reassurance" aria-label="Умови оформлення">
-              <p><strong>Оплата:</strong> реквізити надійдуть після оформлення або сплатіть при отриманні.</p>
-              <p><strong>Відправка:</strong> протягом 1–2 робочих днів. Безкоштовна доставка від 2000 грн.</p>
-              <p><strong>Підтримка:</strong> щодня 09:00–19:00 · <a href="tel:+380953919569">+38 (095) 391-9569</a> · <a href="https://instagram.com/va_home.aroma" target="_blank" rel="noopener">Instagram</a></p>
-            </div>
           </form>
         </div>
       </div>
