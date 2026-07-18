@@ -121,6 +121,15 @@
             </div>
 
             <div class="form-field">
+              <label for="paymentMethod">Спосіб оплати *</label>
+              <select id="paymentMethod" name="paymentMethod" required aria-describedby="err-paymentMethod">
+                <option value="bank_transfer" selected>Оплата на рахунок</option>
+                <option value="cash_on_delivery">Оплата при отриманні</option>
+              </select>
+              <p class="form-error" id="err-paymentMethod">Оберіть спосіб оплати.</p>
+            </div>
+
+            <div class="form-field">
               <label for="customerComment">Коментар до замовлення</label>
               <textarea id="customerComment" name="customerComment" placeholder="Необов'язково"></textarea>
             </div>
@@ -136,7 +145,7 @@
               <button type="submit" class="btn btn-primary btn-block" id="placeOrderBtn">Оформити замовлення</button>
             </div>
             <p class="checkout-status" id="checkoutStatus" role="status" aria-live="polite"></p>
-            <p class="checkout-note">Після оформлення ви побачите номер замовлення та реквізити для оплати. Підтвердження з деталями замовлення та реквізитами надійде на вказаний email.</p>
+            <p class="checkout-note">Для оплати на рахунок реквізити з’являться після оформлення та надійдуть на email. При оплаті у відділенні ви сплачуєте замовлення під час отримання.</p>
             <p class="checkout-note">Відправка протягом 1–2 робочих днів. Доставка безкоштовна для замовлень від 2000 грн.</p>
             <p class="checkout-note">Менеджер відповідає щодня з 09:00 до 19:00.</p>
             <p class="checkout-note">Питання щодо замовлення: <a href="tel:+380953919569" class="text-gold">+38 (095) 391-9569</a> або <a href="https://instagram.com/va_home.aroma" target="_blank" rel="noopener" class="text-gold">Instagram</a>.</p>

@@ -53,6 +53,7 @@
           <a href="${root}" class="site-logo">VA<span>HOME</span></a>
           <nav class="main-nav" aria-label="Основна навігація">${navLinks}</nav>
           <div class="header-actions">
+            <a class="icon-btn" href="${root}account.html" aria-label="Особистий кабінет"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg></a>
             <a class="icon-btn cart-btn" href="${root}cart.html" aria-label="Кошик">
               ${iconBag()}
               <span class="cart-count" id="cartCount" data-count="0">0</span>
@@ -74,6 +75,7 @@
         </div>
         <nav class="mobile-menu__nav" aria-label="Мобільна навігація">${mobileLinks}</nav>
         <div class="mobile-menu__footer">
+          <a href="${root}account.html">Мій кабінет</a>
           <a href="https://instagram.com/va_home.aroma" target="_blank" rel="noopener">Instagram</a>
           <a href="${root}contacts.html">Контакти</a>
         </div>
@@ -107,6 +109,7 @@
               <li><a href="${root}offer.html">Публічна оферта</a></li>
               <li><a href="${root}privacy.html">Політика конфіденційності</a></li>
               <li><a href="${root}order-status.html">Статус замовлення</a></li>
+              <li><a href="${root}account.html">Мій кабінет</a></li>
               <li><a href="${root}contacts.html">Контакти</a></li>
             </ul>
           </div>

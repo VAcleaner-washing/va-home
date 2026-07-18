@@ -1,0 +1,31 @@
+VA HOME v5 COMPLETE — запуск
+================================
+
+1. Завантажте весь вміст архіву в корінь GitHub-репозиторію сайту.
+
+2. У Supabase → SQL Editor виконайте по черзі:
+   1) SUPABASE_MIGRATION_V5_FINAL.sql
+   2) SUPABASE_MIGRATION_V5_CUSTOMER.sql
+
+3. Створіть адміністратора в Supabase Authentication → Users, якщо його ще немає.
+   Потім додайте його в admin_users командою з кінця SUPABASE_MIGRATION_V5_FINAL.sql.
+
+4. Для email у Supabase Edge Functions мають бути розгорнуті:
+   - send-order-email
+   - send-status-email
+
+   Secrets:
+   - RESEND_API_KEY
+   - SUPABASE_URL
+   - SUPABASE_ANON_KEY
+   - SUPABASE_SERVICE_ROLE_KEY
+
+5. Перевірка після публікації:
+   - /admin/ — вхід, статистика, графік, пошук, статуси, ТТН, примітки, відгуки;
+   - /account.html — реєстрація, історія, wishlist, повторне замовлення;
+   - /order-status.html — статус за номером замовлення та останніми 4 цифрами телефону;
+   - оформити тестове замовлення й перевірити обидва email;
+   - окремо перевірити оплату на рахунок та оплату при отриманні;
+   - змінити тестовому замовленню статус на «Оплачено» та «Відправлено».
+
+Важливо: service role key не додається у js/config.js. Він зберігається лише у Secrets Edge Functions.

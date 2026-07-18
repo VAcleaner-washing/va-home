@@ -24,7 +24,7 @@
     <div class="container order-success__container">
       <p class="eyebrow">VA HOME</p>
       <h1>Дякуємо за замовлення</h1>
-      <p class="order-success__lead">Ми отримали ваше замовлення. Збережіть номер — він знадобиться у призначенні платежу.</p>
+      <p class="order-success__lead" id="orderSuccessLead">Ми отримали ваше замовлення. Збережіть його номер.</p>
 
       <div class="order-success__number">
         <span>Номер замовлення</span>
@@ -38,7 +38,7 @@
           <div class="order-total"><span>До оплати</span><strong id="orderTotal">—</strong></div>
         </section>
 
-        <section class="order-panel payment-panel">
+        <section class="order-panel payment-panel" id="paymentPanel">
           <h2>Реквізити для оплати</h2>
           <dl class="payment-details">
             <div><dt>Отримувач</dt><dd id="paymentRecipient"></dd></div>
@@ -50,8 +50,13 @@
         </section>
       </div>
 
+      <section class="order-panel payment-panel" id="codPanel" hidden>
+        <h2>Оплата при отриманні</h2>
+        <p class="text-muted">Ви сплатите замовлення у відділенні або поштоматі Нової пошти під час отримання.</p>
+      </section>
+
       <div class="order-success__note">
-        <p>Після надходження оплати ми підтвердимо замовлення. Відправка Новою поштою — протягом 1–2 робочих днів.</p>
+        <p id="paymentNote">Після надходження оплати ми підтвердимо замовлення. Відправка Новою поштою — протягом 1–2 робочих днів.</p>
         <p>Питання щодо замовлення: <a href="tel:+380953919569">+38 (095) 391-9569</a> або <a href="mailto:vahome.aroma@gmail.com">vahome.aroma@gmail.com</a>.</p>
       </div>
       <a href="catalog.html" class="btn btn-secondary">Повернутися до каталогу</a>

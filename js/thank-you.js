@@ -25,6 +25,13 @@
       }).join("");
       document.getElementById("orderTotal").textContent = formatUAH(order.total);
     }
+    const isCod = Boolean(order && order.paymentMethod === "cash_on_delivery");
+    document.getElementById("paymentPanel").hidden = isCod;
+    document.getElementById("codPanel").hidden = !isCod;
+    if (isCod) {
+      document.getElementById("orderSuccessLead").textContent = "Ми отримали ваше замовлення з оплатою при отриманні. Збережіть його номер.";
+      document.getElementById("paymentNote").textContent = "Замовлення буде відправлено Новою поштою протягом 1–2 робочих днів. Оплата — під час отримання.";
+    }
     const cfg = window.SITE_CONFIG || {};
     const payment = cfg.payment || {};
     const number = order ? order.orderNumber : "номер замовлення";

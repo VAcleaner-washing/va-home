@@ -245,7 +245,7 @@
   // ---- Checkout form ----
   function validateCheckoutForm(form) {
     let valid = true;
-    const requiredFields = ["customerName", "customerPhone", "customerEmail", "customerCity", "deliveryMethod", "deliveryDetails"];
+    const requiredFields = ["customerName", "customerPhone", "customerEmail", "customerCity", "deliveryMethod", "deliveryDetails", "paymentMethod"];
     requiredFields.forEach((name) => {
       const field = form.elements[name];
       if (!field) return;
@@ -286,6 +286,7 @@
       customer_city: form.elements.customerCity.value.trim(),
       delivery_method: form.elements.deliveryMethod.value,
       delivery_details: form.elements.deliveryDetails.value.trim(),
+      payment_method: form.elements.paymentMethod.value,
       customer_comment: form.elements.customerComment ? form.elements.customerComment.value.trim() || null : null,
       items: items.map((item) => ({ id: item.id, name: item.name, quantity: item.quantity, unit_price: item.price, line_total: item.lineTotal })),
       total_amount: getTotal(),
@@ -330,6 +331,7 @@
         orderNumber: payload.client_order_id,
         customerName: payload.customer_name,
         customerEmail: payload.customer_email,
+        paymentMethod: payload.payment_method,
         items: payload.items,
         total: payload.total_amount,
         createdAt: new Date().toISOString()

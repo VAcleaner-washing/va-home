@@ -49,6 +49,11 @@
     </nav>
 
     <section id="ordersTab" class="admin-tab-panel">
+      <div id="periodStats" class="admin-period-stats"></div>
+      <section class="admin-chart-card" aria-labelledby="salesChartTitle">
+        <div class="admin-chart-card__head"><div><p class="eyebrow">Аналітика</p><h2 id="salesChartTitle">Продажі за 30 днів</h2></div><strong id="chartTotal"></strong></div>
+        <div id="salesChart" class="admin-chart" role="img" aria-label="Графік продажів за останні 30 днів"></div>
+      </section>
       <div class="admin-toolbar">
         <input id="orderSearch" type="search" placeholder="Номер, ім'я, телефон, email…">
         <select id="orderStatusFilter">
