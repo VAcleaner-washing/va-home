@@ -150,6 +150,8 @@
   flex-wrap: wrap;
 }
 
+.product-wishlist{display:inline-flex;align-items:center;gap:9px;margin-top:-4px;margin-bottom:var(--space-3);padding:8px 0;color:var(--text-secondary);font-size:.82rem;border-bottom:1px solid transparent}.product-wishlist:hover,.product-wishlist.is-active{color:var(--color-gold);border-color:var(--color-gold)}.product-wishlist:disabled{opacity:.55}
+
 
 /* ---- Product detail sections ---- */
 .product-detail-section {

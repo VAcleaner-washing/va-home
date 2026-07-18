@@ -366,5 +366,11 @@
     if (window.Cart && typeof window.Cart.refreshCountBadge === "function") {
       window.Cart.refreshCountBadge();
     }
+    if (window.SITE_CONFIG && typeof PRODUCTS !== "undefined" && !document.querySelector('script[data-vahome-wishlist]')) {
+      const script = document.createElement("script");
+      script.src = `${document.querySelector("#site-header")?.dataset.root || ""}js/wishlist.js`;
+      script.dataset.vahomeWishlist = "true";
+      document.body.appendChild(script);
+    }
   });
 })();

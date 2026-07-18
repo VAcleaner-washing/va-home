@@ -331,9 +331,12 @@ body.menu-open {
 
 .product-card__media {
   position: relative;
+  position: relative;
   aspect-ratio: 4 / 5;
   background: var(--color-walnut);
 }
+
+.product-card__wishlist{position:absolute;right:12px;bottom:12px;z-index:3;display:grid;place-items:center;width:44px;height:44px;border:1px solid rgba(229,217,201,.45);border-radius:50%;background:rgba(7,7,7,.72);color:var(--text-primary);backdrop-filter:blur(7px);transition:border-color .2s,color .2s,background .2s}.product-card__wishlist:hover,.product-card__wishlist.is-active{border-color:var(--color-gold);color:var(--color-gold);background:rgba(7,7,7,.9)}.product-card__wishlist span:empty{display:none}
 
 .product-card__badges {
   position: absolute;

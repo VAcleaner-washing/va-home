@@ -57,7 +57,7 @@
         <p class="review-card__text">${escapeHTML(row.review_text)}</p>
         <div class="review-card__author">
           <strong>${escapeHTML(row.customer_name)}</strong>
-          ${row.verified_purchase ? '<span class="verified-badge">Підтверджена покупка</span>' : ""}
+          ${row.verified_purchase ? '<span class="verified-badge">Перевірена покупка</span>' : ""}
         </div>
       </article>`).join("");
   }
@@ -122,14 +122,14 @@
       submit.disabled = true;
       submit.textContent = "Надсилаємо…";
       try {
-        await window.VAHomeSupabase.submitReview({ product_slug: PRODUCT_ID, customer_name: name, rating, review_text: text });
+        const result = await window.VAHomeSupabase.submitReview({ product_slug: PRODUCT_ID, customer_name: name, rating, review_text: text });
         localStorage.setItem(cooldownKey, String(Date.now()));
         form.reset();
         if (counter) counter.textContent = `0/${MAX_TEXT}`;
-        setMessage("Дякуємо! Відгук отримано й з’явиться на сайті після перевірки.", "success");
+        setMessage(result?.verified_purchase ? "Дякуємо! Покупку підтверджено автоматично. Відгук з’явиться після модерації." : "Дякуємо! Відгук отримано й з’явиться на сайті після перевірки.", "success");
       } catch (error) {
         console.warn("Review submit failed", error);
-        setMessage("Не вдалося надіслати відгук. Перевірте інтернет і спробуйте ще раз.", "error");
+        setMessage(error?.status === 429 ? "Забагато спроб. Зачекайте кілька хвилин." : "Не вдалося надіслати відгук. Перевірте інтернет і спробуйте ще раз.", "error");
       } finally {
         submit.disabled = false;
         submit.textContent = "Надіслати відгук";

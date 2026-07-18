@@ -1,11 +1,189 @@
-(function(){"use strict";const cfg=window.SITE_CONFIG.supabase;const sb=window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true}});const $=s=>document.querySelector(s);const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));const money=v=>`${Number(v||0).toLocaleString("uk-UA")} грн`;const labels={new:"Нове",awaiting_payment:"Очікує оплату",paid:"Оплачено",shipped:"Відправлено",completed:"Виконано",cancelled:"Скасовано"};let mode="login",user=null;
-function message(text){$("#accountMessage").textContent=text||""}function product(id){return typeof getProduct==="function"?getProduct(id):null}function price(p){return typeof getProductPrice==="function"?getProductPrice(p):0}
-function showAuth(){$("#accountAuth").hidden=false;$("#accountDashboard").hidden=true;$("#accountMessage").textContent=""}async function showDashboard(u){user=u;$("#accountAuth").hidden=true;$("#accountMessage").textContent="";$("#accountDashboard").hidden=false;$("#accountEmail").textContent=u.email;window.scrollTo({top:0,behavior:"auto"});await Promise.all([loadOrders(),loadWishlist()])}
-async function loadOrders(){
-await sb.rpc("claim_customer_orders");
-const {data,error}=await sb.from("orders").select("client_order_id,created_at,status,total_amount,tracking_number,items,payment_method").order("created_at",{ascending:false});if(error){$("#accountOrdersList").innerHTML=`<p class="account-message">Не вдалося завантажити замовлення.</p>`;return}const rows=data||[];$("#accountOrdersEmpty").hidden=!!rows.length;$("#accountOrdersList").innerHTML=rows.map(o=>`<article class="account-order"><div class="account-order__top"><div><h2>${esc(o.client_order_id)}</h2><small>${new Date(o.created_at).toLocaleDateString("uk-UA")}</small></div><div><span>${esc(labels[o.status]||o.status)}</span><strong> · ${money(o.total_amount)}</strong></div></div><p><strong>Оплата:</strong> ${o.payment_method==="cash_on_delivery"?"при отриманні":"на рахунок"}</p><div class="account-order__items">${(Array.isArray(o.items)?o.items:[]).map(i=>`<div class="account-order__item"><span>${esc(i.name)} × ${esc(i.quantity)}${Array.isArray(i.selections)&&i.selections.length?`<small>Обрано: ${i.selections.map(esc).join(" · ")}</small>`:""}</span><strong>${money(i.line_total)}</strong></div>`).join("")}</div>${o.tracking_number?`<p>ТТН: <strong>${esc(o.tracking_number)}</strong></p>`:""}<div class="account-order__actions"><button class="btn btn-primary btn-small" data-repeat='${esc(JSON.stringify(o.items||[]))}'>Повторити замовлення</button></div></article>`).join("");document.querySelectorAll("[data-repeat]").forEach(b=>b.addEventListener("click",()=>{JSON.parse(b.dataset.repeat).forEach(i=>window.Cart&&window.Cart.add(i.id,Number(i.quantity)||1,{selections:Array.isArray(i.selection_ids)?i.selection_ids:[]}));window.VAHome&&window.VAHome.showToast("Товари додано в кошик")}))}
-async function loadWishlist(){const {data,error}=await sb.from("wishlists").select("product_slug,created_at").order("created_at",{ascending:false});const rows=error?[]:(data||[]);$("#accountWishlistEmpty").hidden=!!rows.length;$("#accountWishlistList").innerHTML=rows.map(r=>{const p=product(r.product_slug);if(!p)return"";return `<article class="wishlist-card"><a href="products/${esc(p.id)}.html"><img src="${esc(p.images.main)}" alt="${esc(p.name)}"></a><div class="wishlist-card__body"><h2>${esc(p.name)}</h2><p>${money(price(p))}</p><div class="wishlist-card__actions"><button class="btn btn-primary btn-small" data-wish-cart="${esc(p.id)}">У кошик</button><button class="btn btn-secondary btn-small" data-wish-remove="${esc(p.id)}">Видалити</button></div></div></article>`}).join("");document.querySelectorAll("[data-wish-cart]").forEach(b=>b.addEventListener("click",()=>{window.Cart.add(b.dataset.wishCart,1);window.VAHome&&window.VAHome.showToast("Додано в кошик")}));document.querySelectorAll("[data-wish-remove]").forEach(b=>b.addEventListener("click",async()=>{await sb.from("wishlists").delete().eq("product_slug",b.dataset.wishRemove);loadWishlist()}))}
-function bind(){
-$("#wishlistProduct").innerHTML=PRODUCTS.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("");$("#wishlistAddForm").addEventListener("submit",async e=>{e.preventDefault();const slug=$("#wishlistProduct").value;const {error}=await sb.from("wishlists").upsert({product_slug:slug},{onConflict:"user_id,product_slug"});if(!error)loadWishlist()});
-$("#accountForm").addEventListener("submit",async e=>{e.preventDefault();message(mode==="login"?"Входимо…":"Створюємо кабінет…");const email=e.target.email.value.trim().toLowerCase(),password=e.target.password.value;const result=mode==="login"?await sb.auth.signInWithPassword({email,password}):await sb.auth.signUp({email,password});if(result.error)return message("Не вдалося виконати вхід. Перевірте email і пароль.");if(mode==="signup"&&!result.data.session)return message("Перевірте email і підтвердьте реєстрацію.");showDashboard(result.data.user)});$("#accountResetPassword").addEventListener("click",async()=>{const email=$("#accountForm").elements.email.value.trim().toLowerCase();if(!email)return message("Спочатку введіть email.");message("Надсилаємо посилання…");const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:"https://vahome.com.ua/account.html"});message(error?"Не вдалося надіслати лист. Спробуйте пізніше.":"Посилання для відновлення пароля надіслано на email.")});$("#accountRecoveryForm").addEventListener("submit",async e=>{e.preventDefault();const password=e.target.newPassword.value;$("#accountRecoveryMessage").textContent="Зберігаємо…";const {error}=await sb.auth.updateUser({password});$("#accountRecoveryMessage").textContent=error?"Не вдалося змінити пароль.":"Пароль змінено. Тепер можна користуватися кабінетом.";if(!error)setTimeout(()=>location.replace("account.html"),900)});document.querySelectorAll("[data-auth-mode]").forEach(b=>b.addEventListener("click",()=>{mode=b.dataset.authMode;document.querySelectorAll("[data-auth-mode]").forEach(x=>x.classList.toggle("is-active",x===b));$("#accountSubmit").textContent=mode==="login"?"Увійти":"Створити кабінет";$("#accountResetPassword").hidden=mode!=="login";message("")}));$("#accountLogout").addEventListener("click",async()=>{await sb.auth.signOut();user=null;showAuth()});document.querySelectorAll("[data-account-tab]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-account-tab]").forEach(x=>x.classList.toggle("is-active",x===b));$("#accountOrders").hidden=b.dataset.accountTab!=="orders";$("#accountWishlist").hidden=b.dataset.accountTab!=="wishlist"}))}
-document.addEventListener("DOMContentLoaded",async()=>{bind();sb.auth.onAuthStateChange((event)=>{if(event==="PASSWORD_RECOVERY"){$("#accountForm").hidden=true;$("#accountRecoveryForm").hidden=false;$("#accountDashboard").hidden=true}});const hash=location.hash||"";if(hash.includes("type=recovery")){$("#accountForm").hidden=true;$("#accountRecoveryForm").hidden=false;$("#accountDashboard").hidden=true;return}const {data:{session}}=await sb.auth.getSession();session?showDashboard(session.user):showAuth()})})();
+(function () {
+  "use strict";
+
+  const $ = (selector) => document.querySelector(selector);
+  const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[char]);
+  const money = (value) => `${Number(value || 0).toLocaleString("uk-UA")} грн`;
+  const labels = {
+    new: "Нове", pending: "Очікує підтвердження", paid: "Оплачено",
+    shipped: "Відправлено", completed: "Виконано", cancelled: "Скасовано"
+  };
+  const sb = window.supabase.createClient(
+    SITE_CONFIG.supabase.url,
+    SITE_CONFIG.supabase.publishableKey,
+    { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }
+  );
+
+  let mode = "login";
+  let user = null;
+
+  function product(id) { return typeof getProduct === "function" ? getProduct(id) : null; }
+  function price(item) { return typeof getProductPrice === "function" ? getProductPrice(item) : 0; }
+  function message(text) { $("#accountMessage").textContent = text || ""; }
+  function setBusy(button, busy, busyText) {
+    if (!button) return;
+    if (!button.dataset.label) button.dataset.label = button.textContent;
+    button.disabled = busy;
+    button.textContent = busy ? busyText : button.dataset.label;
+  }
+  function finishLoading() { $("#accountLoading").hidden = true; }
+  function showAuth() {
+    finishLoading();
+    $("#accountAuth").hidden = false;
+    $("#accountDashboard").hidden = true;
+  }
+  async function showDashboard(currentUser) {
+    user = currentUser;
+    finishLoading();
+    $("#accountAuth").hidden = true;
+    $("#accountDashboard").hidden = false;
+    $("#accountEmail").textContent = currentUser.email || "";
+    if (currentUser.email_confirmed_at) {
+      try { await sb.rpc("claim_customer_orders"); } catch (_) { /* Current orders still load. */ }
+    }
+    await Promise.all([loadOrders(), loadWishlist()]);
+  }
+
+  function orderItems(items) {
+    return (Array.isArray(items) ? items : []).map((item) => {
+      const chosen = Array.isArray(item.selections) ? item.selections : [];
+      return `<div class="account-order__item"><span>${esc(item.name)} × ${esc(item.quantity)}${chosen.length ? `<small>Обрано: ${chosen.map(esc).join(" · ")}</small>` : ""}</span><strong>${money(item.line_total)}</strong></div>`;
+    }).join("");
+  }
+
+  async function loadOrders() {
+    const list = $("#accountOrdersList");
+    list.innerHTML = '<p class="account-loading-inline">Завантажуємо замовлення…</p>';
+    const { data, error } = await sb.from("orders")
+      .select("client_order_id,created_at,status,total_amount,tracking_number,items,payment_method")
+      .order("created_at", { ascending: false });
+    if (error) {
+      list.innerHTML = '<p class="account-message">Не вдалося завантажити замовлення. Оновіть сторінку.</p>';
+      return;
+    }
+    const rows = data || [];
+    $("#accountOrdersEmpty").hidden = rows.length > 0;
+    list.innerHTML = rows.map((order) => `<article class="account-order">
+      <div class="account-order__top"><div><h2>${esc(order.client_order_id)}</h2><small>${new Date(order.created_at).toLocaleDateString("uk-UA")}</small></div>
+      <div class="account-order__summary"><span class="order-status order-status--${esc(order.status)}">${esc(labels[order.status] || order.status)}</span><strong>${money(order.total_amount)}</strong></div></div>
+      <p class="account-order__payment"><strong>Оплата:</strong> ${order.payment_method === "cash_on_delivery" ? "при отриманні" : "на рахунок"}</p>
+      <div class="account-order__items">${orderItems(order.items)}</div>
+      ${order.tracking_number ? `<p class="account-order__tracking">ТТН: <strong>${esc(order.tracking_number)}</strong></p>` : ""}
+      <div class="account-order__actions"><button class="btn btn-secondary btn-small" data-repeat='${esc(JSON.stringify(order.items || []))}'>Повторити замовлення</button></div>
+    </article>`).join("");
+    document.querySelectorAll("[data-repeat]").forEach((button) => button.addEventListener("click", () => {
+      try {
+        JSON.parse(button.dataset.repeat).forEach((item) => window.Cart?.add(item.id, Number(item.quantity) || 1, { selections: Array.isArray(item.selection_ids) ? item.selection_ids : [] }));
+        window.VAHome?.showToast("Товари додано в кошик");
+      } catch (_) { window.VAHome?.showToast("Не вдалося повторити замовлення"); }
+    }));
+  }
+
+  async function loadWishlist() {
+    const list = $("#accountWishlistList");
+    list.innerHTML = '<p class="account-loading-inline">Завантажуємо список бажань…</p>';
+    const { data, error } = await sb.from("wishlists").select("product_slug,created_at").order("created_at", { ascending: false });
+    if (error) {
+      list.innerHTML = '<p class="account-message">Не вдалося завантажити список бажань.</p>';
+      return;
+    }
+    const rows = (data || []).filter((row) => product(row.product_slug));
+    $("#accountWishlistEmpty").hidden = rows.length > 0;
+    list.innerHTML = rows.map((row) => {
+      const item = product(row.product_slug);
+      return `<article class="wishlist-card"><a href="products/${esc(item.id)}.html"><img src="${esc(item.images.main)}" alt="${esc(item.name)} — аромадифузор VA HOME" width="480" height="600" loading="lazy" decoding="async"></a><div class="wishlist-card__body"><h2>${esc(item.name)}</h2><p>${money(price(item))}</p><div class="wishlist-card__actions"><button class="btn btn-primary btn-small" data-wish-cart="${esc(item.id)}">У кошик</button><button class="wishlist-remove" data-wish-remove="${esc(item.id)}" aria-label="Видалити ${esc(item.name)} зі списку бажань">Видалити</button></div></div></article>`;
+    }).join("");
+    document.querySelectorAll("[data-wish-cart]").forEach((button) => button.addEventListener("click", () => {
+      window.Cart?.add(button.dataset.wishCart, 1);
+      window.VAHome?.showToast("Додано в кошик");
+    }));
+    document.querySelectorAll("[data-wish-remove]").forEach((button) => button.addEventListener("click", async () => {
+      button.disabled = true;
+      const { error: removeError } = await sb.from("wishlists").delete().eq("product_slug", button.dataset.wishRemove);
+      if (removeError) $("#wishlistMessage").textContent = "Не вдалося видалити аромат.";
+      else await loadWishlist();
+    }));
+  }
+
+  function bind() {
+    $("#wishlistProduct").innerHTML = PRODUCTS.map((item) => `<option value="${esc(item.id)}">${esc(item.name)}</option>`).join("");
+    $("#wishlistAddForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = event.currentTarget.querySelector("button");
+      setBusy(button, true, "Додаємо…");
+      $("#wishlistMessage").textContent = "";
+      const { error } = await sb.from("wishlists").upsert({ user_id: user.id, product_slug: $("#wishlistProduct").value }, { onConflict: "user_id,product_slug" });
+      setBusy(button, false, "");
+      $("#wishlistMessage").textContent = error ? "Не вдалося додати аромат." : "Аромат збережено у списку бажань.";
+      if (!error) await loadWishlist();
+    });
+
+    $("#accountForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = $("#accountSubmit");
+      setBusy(button, true, mode === "login" ? "Входимо…" : "Створюємо…");
+      const email = event.currentTarget.email.value.trim().toLowerCase();
+      const password = event.currentTarget.password.value;
+      const result = mode === "login"
+        ? await sb.auth.signInWithPassword({ email, password })
+        : await sb.auth.signUp({ email, password, options: { emailRedirectTo: `${SITE_CONFIG.siteUrl}/account.html` } });
+      setBusy(button, false, "");
+      if (result.error) return message(mode === "login" ? "Email або пароль не підходить." : "Не вдалося створити кабінет. Можливо, email уже зареєстрований.");
+      if (mode === "signup" && !result.data.session) return message("Перевірте email і підтвердьте реєстрацію.");
+      if (result.data.user) await showDashboard(result.data.user);
+    });
+
+    $("#accountResetPassword").addEventListener("click", async () => {
+      const email = $("#accountForm").elements.email.value.trim().toLowerCase();
+      if (!email) return message("Спочатку введіть email.");
+      message("Надсилаємо посилання…");
+      const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: `${SITE_CONFIG.siteUrl}/account.html` });
+      message(error ? "Не вдалося надіслати лист. Спробуйте пізніше." : "Посилання для відновлення пароля надіслано на email.");
+    });
+
+    $("#accountRecoveryForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const output = $("#accountRecoveryMessage");
+      output.textContent = "Зберігаємо…";
+      const { error } = await sb.auth.updateUser({ password: event.currentTarget.newPassword.value });
+      output.textContent = error ? "Не вдалося змінити пароль." : "Пароль змінено.";
+      if (!error) setTimeout(() => location.replace("account.html"), 700);
+    });
+
+    document.querySelectorAll("[data-auth-mode]").forEach((button) => button.addEventListener("click", () => {
+      mode = button.dataset.authMode;
+      document.querySelectorAll("[data-auth-mode]").forEach((item) => item.classList.toggle("is-active", item === button));
+      $("#accountSubmit").dataset.label = mode === "login" ? "Увійти" : "Створити кабінет";
+      $("#accountSubmit").textContent = $("#accountSubmit").dataset.label;
+      $("#accountForm").elements.password.autocomplete = mode === "login" ? "current-password" : "new-password";
+      $("#accountResetPassword").hidden = mode !== "login";
+      message("");
+    }));
+    $("#accountLogout").addEventListener("click", async () => { await sb.auth.signOut(); user = null; showAuth(); });
+    document.querySelectorAll("[data-account-tab]").forEach((button) => button.addEventListener("click", () => {
+      document.querySelectorAll("[data-account-tab]").forEach((item) => item.classList.toggle("is-active", item === button));
+      $("#accountOrders").hidden = button.dataset.accountTab !== "orders";
+      $("#accountWishlist").hidden = button.dataset.accountTab !== "wishlist";
+    }));
+  }
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    bind();
+    sb.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY") {
+        finishLoading();
+        $("#accountAuth").hidden = false;
+        $("#accountForm").hidden = true;
+        $("#accountRecoveryForm").hidden = false;
+        $("#accountDashboard").hidden = true;
+      } else if (event === "SIGNED_OUT") showAuth();
+      else if (event === "SIGNED_IN" && session?.user && !user) showDashboard(session.user);
+    });
+    const { data, error } = await sb.auth.getSession();
+    if (error) return showAuth();
+    if ((location.hash || "").includes("type=recovery")) return;
+    data.session?.user ? await showDashboard(data.session.user) : showAuth();
+  });
+})();

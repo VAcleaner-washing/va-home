@@ -55,7 +55,7 @@
     const imgRoot = context === "product" ? "../" : root;
     const hasImage = product.images && product.images.main;
     const mediaMarkup = hasImage
-      ? `<img src="${imgRoot}${product.images.main}" alt="${product.name} — аромадифузор VA HOME" loading="lazy" width="480" height="600" onerror="this.closest('.product-card__media').classList.add('placeholder-media');this.remove();">`
+      ? `<img src="${imgRoot}${product.images.main}" alt="${product.name} — аромадифузор VA HOME" loading="lazy" decoding="async" fetchpriority="low" width="480" height="600" onerror="this.closest('.product-card__media').classList.add('placeholder-media');this.remove();">`
       : `<div class="placeholder-media">${product.name}</div>`;
 
     const badges = (product.badges || [])
