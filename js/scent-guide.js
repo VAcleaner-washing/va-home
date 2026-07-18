@@ -168,7 +168,11 @@
         .map(({ product, matched }) => {
           const card = window.VAHomeProducts.renderProductCard(product, "", { context: "guide" });
           const reason = `<p class="guide-result-reason">${buildReason(product, matched)}</p>`;
-          return `<div>${card}${reason}</div>`;
+          // Insert the reason inside the card body (right before the price/meta row)
+          // instead of as a trailing sibling, so cards of different heights still
+          // align consistently — the card's own bottom-pinned price/button row
+          // keeps working the same way it does on the catalog page.
+          return card.replace('<div class="product-card__meta">', reason + '<div class="product-card__meta">');
         })
         .join("");
     }
