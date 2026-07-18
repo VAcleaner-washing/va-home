@@ -95,19 +95,45 @@
 
   async function submitOrder(payload) {
     if (!configured()) throw new Error("Supabase is not configured");
-    const response = await fetch(`${cfg.url}/functions/v1/create-order`, {
-      method: "POST",
-      headers: {
-        apikey: cfg.publishableKey,
-        Authorization: `Bearer ${cfg.publishableKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-    const data = await response.json().catch(() => ({}));
+    const requestId = `checkout-${Date.now().toString(36)}-${crypto.randomUUID().slice(0, 8)}`;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 25000);
+    let response;
+    try {
+      response = await fetch(`${cfg.url}/functions/v1/create-order`, {
+        method: "POST",
+        headers: {
+          apikey: cfg.publishableKey,
+          Authorization: `Bearer ${cfg.publishableKey}`,
+          "Content-Type": "application/json",
+          "X-Request-ID": requestId
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+    } catch (cause) {
+      const error = new Error(cause && cause.name === "AbortError" ? "CHECKOUT_TIMEOUT" : "NETWORK_ERROR");
+      error.requestId = requestId;
+      error.cause = cause;
+      throw error;
+    } finally {
+      clearTimeout(timeout);
+    }
+    const raw = await response.text().catch(() => "");
+    let data = {};
+    try { data = raw ? JSON.parse(raw) : {}; } catch (_) {}
     if (!response.ok) {
-      const error = new Error(data.error || `Order creation failed (${response.status})`);
+      const fallbackCode = response.status === 401 || response.status === 403
+        ? "CHECKOUT_AUTH_ERROR"
+        : response.status === 404
+          ? "CHECKOUT_FUNCTION_MISSING"
+          : response.status >= 500
+            ? "CHECKOUT_SERVICE_ERROR"
+            : `CHECKOUT_HTTP_${response.status}`;
+      const error = new Error(data.error || fallbackCode);
       error.status = response.status;
+      error.requestId = data.request_id || response.headers.get("x-request-id") || requestId;
+      error.details = raw.slice(0, 500);
       throw error;
     }
     return data;

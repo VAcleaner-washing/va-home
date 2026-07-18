@@ -430,7 +430,13 @@
 
   function buildOrderPayload(form) {
     const items = getItems();
+    let checkoutRequestId = sessionStorage.getItem("vahome_checkout_request_id");
+    if (!checkoutRequestId) {
+      checkoutRequestId = crypto.randomUUID();
+      sessionStorage.setItem("vahome_checkout_request_id", checkoutRequestId);
+    }
     return {
+      checkout_request_id: checkoutRequestId,
       customer_name: form.elements.customerName.value.trim(),
       customer_phone: form.elements.customerPhone.value.trim(),
       customer_email: form.elements.customerEmail.value.trim().toLowerCase(),
@@ -468,9 +474,16 @@
       INVALID_ITEMS: "У кошику є некоректний товар. Оновіть кошик і повторіть спробу.",
       INVALID_ITEM: "Один із товарів більше недоступний. Оновіть кошик і повторіть спробу.",
       INVALID_DISCOVERY_SELECTION: "Для Discovery Set потрібно обрати рівно 6 різних ароматів.",
-      ORDER_CREATION_FAILED: "Система тимчасово не змогла зберегти замовлення. Повторіть спробу трохи пізніше."
+      ORDER_CREATION_FAILED: "Система замовлень не змогла записати дані. Ми не списували кошик — повторіть після перевірки сервісу.",
+      CHECKOUT_SERVICE_ERROR: "Сервіс замовлень тимчасово недоступний. Кошик збережено — повторіть спробу трохи пізніше.",
+      CHECKOUT_AUTH_ERROR: "Сервіс замовлень потребує повторного налаштування доступу. Кошик збережено.",
+      CHECKOUT_FUNCTION_MISSING: "Сервіс оформлення ще не опублікований. Кошик збережено.",
+      CHECKOUT_TIMEOUT: "Сервіс відповідає надто довго. Кошик збережено — повторіть спробу.",
+      NETWORK_ERROR: "Не вдалося з’єднатися із сервісом замовлень. Перевірте інтернет і повторіть спробу."
     };
-    return messages[code] || "Замовлення не збережено. Перевірте з’єднання та повторіть спробу.";
+    const message = messages[code] || "Замовлення не збережено. Кошик залишився без змін — повторіть спробу.";
+    const requestId = error && error.requestId ? ` Код звернення: ${error.requestId}.` : "";
+    return `${message}${requestId}`;
   }
 
   async function placeOrder(form, button) {
@@ -512,6 +525,7 @@
         createdAt: new Date().toISOString()
       };
       sessionStorage.setItem("vahome_last_order", JSON.stringify(confirmation));
+      sessionStorage.removeItem("vahome_checkout_request_id");
 
       clear();
       window.location.href = "thank-you.html";
