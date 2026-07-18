@@ -18,6 +18,10 @@
       document.getElementById("orderNumber").textContent = "Замовлення вже збережено";
       document.getElementById("orderItems").innerHTML = '<p class="text-muted">Деталі цього замовлення більше не зберігаються у браузері.</p>';
       document.getElementById("orderTotal").textContent = "—";
+      document.getElementById("paymentPanel").hidden = true;
+      document.getElementById("codPanel").hidden = true;
+      document.querySelector(".order-success__grid").classList.add("is-single");
+      document.getElementById("orderSuccessLead").textContent = "Дані замовлення вже передано магазину. Перевірити актуальний стан можна за його номером.";
     } else {
       document.getElementById("orderNumber").textContent = order.orderNumber;
       document.getElementById("orderItems").innerHTML = order.items.map(function (item) {
@@ -26,8 +30,10 @@
       document.getElementById("orderTotal").textContent = formatUAH(order.total);
     }
     const isCod = Boolean(order && order.paymentMethod === "cash_on_delivery");
-    document.getElementById("paymentPanel").hidden = isCod;
-    document.getElementById("codPanel").hidden = !isCod;
+    if (order) {
+      document.getElementById("paymentPanel").hidden = isCod;
+      document.getElementById("codPanel").hidden = !isCod;
+    }
     if (isCod) {
       document.getElementById("orderSuccessLead").textContent = "Ми отримали ваше замовлення з оплатою при отриманні. Збережіть його номер.";
       document.getElementById("paymentNote").textContent = "Замовлення буде відправлено Новою поштою протягом 1–2 робочих днів. Оплата — під час отримання.";
