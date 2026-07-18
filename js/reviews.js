@@ -92,7 +92,10 @@
   }
 
   function initForm() {
-    const form = document.getElementById("reviewForm");
+    const formRoot = document.getElementById("reviewForm");
+    const form = formRoot && formRoot.tagName === "FORM"
+      ? formRoot
+      : formRoot?.querySelector("form");
     if (!form || typeof PRODUCT_ID === "undefined") return;
     const submit = form.querySelector('button[type="submit"]');
     const textarea = form.elements.reviewText;
