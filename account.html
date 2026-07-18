@@ -19,7 +19,11 @@
 </div>
 <main id="main-content" class="account-page">
 <div class="container">
-<section id="accountAuth" class="account-auth">
+<div id="accountLoading" class="account-loading" role="status" aria-live="polite">
+  <span class="account-loading__mark">VA</span>
+  <span>Відкриваємо ваш кабінет…</span>
+</div>
+<section id="accountAuth" class="account-auth" hidden>
 <div>
 <p class="eyebrow">VA HOME</p>
 <h1>Особистий кабінет</h1>
@@ -56,7 +60,7 @@
 </div>
 <button id="accountLogout" class="btn btn-secondary" type="button">Вийти</button>
 </div>
-<nav class="account-tabs">
+<nav class="account-tabs" aria-label="Розділи кабінету">
 <button class="is-active" data-account-tab="orders">Замовлення</button>
 <button data-account-tab="wishlist">Список бажань</button>
 </nav>
@@ -67,6 +71,7 @@
 </section>
 <section id="accountWishlist" hidden>
 <form id="wishlistAddForm" class="wishlist-add"><select id="wishlistProduct" aria-label="Оберіть аромат"></select><button class="btn btn-primary" type="submit">Додати аромат</button></form>
+<p id="wishlistMessage" class="account-message" role="status"></p>
 <div id="accountWishlistList" class="wishlist-grid">
 </div>
 <p id="accountWishlistEmpty" class="account-empty" hidden>Додайте сюди аромати, до яких хочеться повернутися.</p>
