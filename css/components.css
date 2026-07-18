@@ -1025,7 +1025,7 @@ body.menu-open {
 .guide-result-reason {
   font-size: var(--fs-small);
   color: var(--text-secondary);
-  padding: var(--space-2) var(--space-3) 0;
+  margin-top: 0.3em;
 }
 
 /* ---- Slide indicator (hero) ---- */
