@@ -33,7 +33,12 @@
 
   function getApprovedReviews(productSlug) {
     const filter = productSlug ? `&product_slug=eq.${encodeURIComponent(productSlug)}` : "";
-    return request(`reviews?select=id,product_slug,customer_name,rating,review_text,verified_purchase,created_at&status=eq.approved${filter}&order=created_at.desc`, { method: "GET" });
+    return request(`reviews?select=id,product_slug,customer_name,rating,review_text,verified_purchase,photo_url,created_at&status=eq.approved${filter}&order=created_at.desc`, { method: "GET" });
+  }
+
+  function getRecentApprovedReviews(limit = 6) {
+    const safeLimit = Math.max(1, Math.min(12, Number(limit) || 6));
+    return request(`reviews?select=product_slug,customer_name,rating,review_text,verified_purchase,photo_url,created_at&status=eq.approved&order=created_at.desc&limit=${safeLimit}`);
   }
 
   function getApprovedRatings() {
@@ -66,7 +71,9 @@
         product_slug: payload.product_slug,
         customer_name: payload.customer_name,
         rating: payload.rating,
-        review_text: payload.review_text
+        review_text: payload.review_text,
+        photo_data: payload.photo_data || null,
+        photo_type: payload.photo_type || null
       })
     });
     const data = await response.json().catch(() => ({}));
@@ -126,5 +133,5 @@
     return Array.isArray(data.items) ? data.items : [];
   }
 
-  window.VAHomeSupabase = { configured, getApprovedReviews, getApprovedRatings, submitReview, getPublicOrderStatus, submitOrder, novaPoshtaLookup };
+  window.VAHomeSupabase = { configured, getApprovedReviews, getRecentApprovedReviews, getApprovedRatings, submitReview, getPublicOrderStatus, submitOrder, novaPoshtaLookup };
 })();

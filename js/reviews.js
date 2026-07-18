@@ -4,6 +4,8 @@
   const MIN_TEXT = 10;
   const MAX_TEXT = 1000;
   const COOLDOWN_MS = 60 * 1000;
+  const MAX_PHOTO_BYTES = 2 * 1024 * 1024;
+  const PHOTO_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
   function escapeHTML(value) {
     return String(value || "").replace(/[&<>'"]/g, (char) => ({
@@ -73,6 +75,7 @@
           <time datetime="${escapeHTML(row.created_at)}">${escapeHTML(formatDate(row.created_at))}</time>
         </div>
         <p class="review-card__text">${escapeHTML(row.review_text)}</p>
+        ${row.photo_url ? `<img class="review-card__photo" src="${escapeHTML(row.photo_url)}" alt="Фото покупця до відгуку" loading="lazy" decoding="async">` : ""}
         <div class="review-card__author">
           <strong>${escapeHTML(row.customer_name)}</strong>
           ${row.verified_purchase ? '<span class="verified-badge">Перевірена покупка</span>' : ""}
@@ -118,6 +121,7 @@
     const submit = form.querySelector('button[type="submit"]');
     const textarea = form.elements.reviewText;
     const counter = document.getElementById("reviewCharCount");
+    const photoInput = form.elements.reviewPhoto;
     if (textarea && counter) {
       const update = () => { counter.textContent = `${textarea.value.length}/${MAX_TEXT}`; };
       textarea.addEventListener("input", update); update();
@@ -137,10 +141,20 @@
       const last = Number(localStorage.getItem(cooldownKey) || 0);
       if (Date.now() - last < COOLDOWN_MS) return setMessage("Відгук уже надіслано. Зачекайте хвилину перед повторною спробою.", "error");
 
+      const photo = photoInput?.files?.[0] || null;
+      if (photo && !PHOTO_TYPES.has(photo.type)) return setMessage("Додайте фото у форматі JPG, PNG або WebP.", "error");
+      if (photo && photo.size > MAX_PHOTO_BYTES) return setMessage("Фото має бути не більше 2 МБ.", "error");
       submit.disabled = true;
       submit.textContent = "Надсилаємо…";
       try {
-        const result = await window.VAHomeSupabase.submitReview({ product_slug: PRODUCT_ID, customer_name: name, rating, review_text: text });
+        let photoData = null;
+        if (photo) {
+          const dataUrl = await new Promise((resolve, reject) => {
+            const reader = new FileReader(); reader.onload = () => resolve(String(reader.result || "")); reader.onerror = reject; reader.readAsDataURL(photo);
+          });
+          photoData = String(dataUrl).split(",")[1] || null;
+        }
+        const result = await window.VAHomeSupabase.submitReview({ product_slug: PRODUCT_ID, customer_name: name, rating, review_text: text, photo_data: photoData, photo_type: photo?.type || null });
         localStorage.setItem(cooldownKey, String(Date.now()));
         form.reset();
         if (counter) counter.textContent = `0/${MAX_TEXT}`;

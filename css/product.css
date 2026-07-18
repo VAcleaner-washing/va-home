@@ -211,7 +211,11 @@
 
 /* Formula and practical details continue below the purchase hero. Keeping
    them out of the right hero column prevents a blank well below the photo. */
-.product-substance{border-top:1px solid var(--border-hairline)}
+.product-substance{
+  border-top:1px solid var(--border-hairline);
+  padding-top:clamp(.75rem,1.5vw,1.5rem);
+  padding-bottom:var(--space-5);
+}
 .product-substance__grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);gap:clamp(2rem,6vw,6rem);align-items:start}
 .product-substance .product-formula-proof{height:100%;margin:0;padding:clamp(1.4rem,3vw,2.2rem)}
 .product-substance .product-accordion{border:1px solid var(--border-hairline);border-bottom:0;background:var(--bg-elevated)}
@@ -222,6 +226,7 @@
 
 @media(max-width:900px){
   .product-substance__grid{grid-template-columns:1fr;gap:1.25rem}
+  .product-substance{padding-top:1rem;padding-bottom:var(--space-4)}
 }
 
 @media (max-width: 900px) {
@@ -288,6 +293,7 @@
 .review-card__top{display:flex;justify-content:space-between;gap:1rem}
 .review-card time{font-size:.75rem;color:var(--text-secondary)}
 .review-card__text{color:var(--text-primary);font-size:1rem;line-height:1.75;margin:1rem 0;white-space:pre-line}
+.review-card__photo{display:block;width:100%;max-height:520px;object-fit:cover;margin:0 0 1rem}
 .review-card__author{display:flex;align-items:center;gap:.7rem;font-size:.82rem;color:var(--text-secondary)}
 .verified-badge{padding:.25rem .5rem;border:1px solid var(--border-hairline);color:var(--color-gold);font-size:.66rem;text-transform:uppercase;letter-spacing:.06em}
 
@@ -300,6 +306,9 @@
 .review-form{display:grid;gap:1.15rem;max-width:680px}
 .review-form label{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.45rem}
 .review-form input[type="text"],.review-form textarea{width:100%;border:1px solid var(--border-hairline);background:var(--bg-elevated);color:var(--text-primary);padding:.85rem 1rem;border-radius:0}
+.review-photo-field{border:1px solid var(--border-hairline);padding:1rem;background:var(--bg-elevated)}
+.review-photo-field label span,.review-photo-field small{color:var(--text-secondary);text-transform:none;letter-spacing:0}
+.review-photo-field input{display:block;width:100%;margin:.6rem 0;color:var(--text-secondary)}
 .review-form textarea{min-height:150px;resize:vertical}
 .review-form__counter{text-align:right;font-size:.72rem;color:var(--color-text-muted,#746f68)}
 
