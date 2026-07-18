@@ -35,6 +35,12 @@ const SITE_CONFIG = {
     taxId: "3314215243"
   },
 
+  analytics: {
+    // Add the GA4 Measurement ID, for example: G-H4F0WWB8R9.
+    // Analytics stays fully disabled while this value is empty.
+    ga4MeasurementId: "G-H4F0WWB8R9"
+  },
+
   cartStorageKey: "vahome_cart_v1",
 
   supabase: {

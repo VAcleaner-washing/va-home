@@ -73,11 +73,14 @@
       items.push({ productId: id, quantity: clamp(qty || 1), selections: options && Array.isArray(options.selections) ? options.selections.slice() : undefined });
     }
     writeRaw(items);
+    window.VAAnalytics?.addToCart?.(id, clamp(qty || 1));
   }
 
   function remove(id) {
+    const current = readRaw().find((i) => i.productId === id);
     const items = readRaw().filter((i) => i.productId !== id);
     writeRaw(items);
+    if (current) window.VAAnalytics?.removeFromCart?.(id, current.quantity || 1);
   }
 
   function updateQty(id, qty) {

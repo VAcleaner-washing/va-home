@@ -879,6 +879,9 @@ body.menu-open {
 .discovery-picker__actions{display:flex;flex:0 0 auto;justify-content:flex-end;gap:.75rem;padding:var(--space-3) var(--space-4);border-top:1px solid var(--border-hairline);background:var(--bg-primary)}
 .has-open-discovery-picker,.has-open-discovery-picker body{overflow:hidden!important;overscroll-behavior:none}
 @media(max-width:640px){.discovery-picker{width:100%;height:100svh;max-width:none;max-height:none;border:0}.discovery-picker__list{grid-template-columns:1fr}.discovery-picker__head{padding:1rem}.discovery-picker__actions{padding:1rem}.discovery-picker__actions .btn{flex:1;padding-inline:.5rem}}
+.analytics-consent{position:fixed;z-index:var(--z-toast);right:1rem;bottom:1rem;display:grid;width:min(520px,calc(100% - 2rem));gap:1rem;padding:1.25rem;border:1px solid var(--border-hairline-strong);background:var(--bg-elevated);box-shadow:var(--shadow-lift);color:var(--text-primary)}
+.analytics-consent p{margin-top:.35rem;color:var(--text-secondary);font-size:var(--fs-small);line-height:1.55}.analytics-consent a{color:var(--text-gold);text-decoration:underline}.analytics-consent>div:last-child{display:flex;justify-content:flex-end;gap:.65rem}.analytics-consent .btn{padding:.75rem 1rem;font-size:var(--fs-caption)}
+@media(max-width:560px){.analytics-consent{right:.75rem;bottom:.75rem;width:calc(100% - 1.5rem)}.analytics-consent>div:last-child{display:grid;grid-template-columns:1fr}.analytics-consent .btn{width:100%}}
 
 /* ---- Info blocks (Discovery Set page: what's included, how to test, etc.) ---- */
 .info-block-grid {

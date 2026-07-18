@@ -135,6 +135,7 @@
     const footerEl = document.getElementById("site-footer");
     if (headerEl) {
       const root = headerEl.getAttribute("data-root") || "";
+      window.VA_HOME_ROOT = root;
       const active = headerEl.getAttribute("data-active") || "";
       headerEl.outerHTML = renderHeader(root, active);
     }
@@ -357,6 +358,12 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     mountHeaderFooter();
+    if (window.SITE_CONFIG && !document.querySelector('script[data-vahome-analytics]')) {
+      const analyticsScript = document.createElement("script");
+      analyticsScript.src = `${window.VA_HOME_ROOT || ""}js/analytics.js`;
+      analyticsScript.dataset.vahomeAnalytics = "true";
+      document.body.appendChild(analyticsScript);
+    }
     initHeaderScroll();
     initMobileMenu();
     initProductGrids();

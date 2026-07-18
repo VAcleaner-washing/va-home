@@ -36,6 +36,24 @@
       const width = count ? Math.round(item.count / count * 100) : 0;
       return `<div class="reviews-breakdown__row"><span>${item.rating}</span><span aria-hidden="true">★</span><div class="reviews-breakdown__track"><span style="width:${width}%"></span></div><span>${item.count}</span></div>`;
     }).join("");
+    if (count) updateProductStructuredData(average, count);
+  }
+
+  function updateProductStructuredData(average, count) {
+    document.querySelectorAll('script[type="application/ld+json"]').forEach((script) => {
+      try {
+        const data = JSON.parse(script.textContent || "{}");
+        if (data["@type"] !== "Product") return;
+        data.aggregateRating = {
+          "@type": "AggregateRating",
+          ratingValue: Number(average.toFixed(2)),
+          reviewCount: count,
+          bestRating: 5,
+          worstRating: 1
+        };
+        script.textContent = JSON.stringify(data);
+      } catch (_) {}
+    });
   }
 
   function renderList(rows) {
