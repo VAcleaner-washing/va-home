@@ -102,6 +102,10 @@
       event("discovery_set_complete", { set_size: 6 });
     });
 
+    document.querySelector("[data-formula-discovery]")?.addEventListener("click", () => {
+      event("select_promotion", { promotion_name: "Product formula to Discovery Set" });
+    });
+
     if (document.body.classList.contains("thank-you-page") || /thank-you\.html$/.test(location.pathname)) {
       try {
         const order = JSON.parse(sessionStorage.getItem("vahome_last_order") || "null");

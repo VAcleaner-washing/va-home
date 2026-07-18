@@ -209,6 +209,21 @@
 .product-accordion__content .tag-pills { margin-bottom: .35rem; }
 .product-accordion__content .scent-scale { margin: 0 0 1rem; }
 
+/* Formula and practical details continue below the purchase hero. Keeping
+   them out of the right hero column prevents a blank well below the photo. */
+.product-substance{border-top:1px solid var(--border-hairline)}
+.product-substance__grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);gap:clamp(2rem,6vw,6rem);align-items:start}
+.product-substance .product-formula-proof{height:100%;margin:0;padding:clamp(1.4rem,3vw,2.2rem)}
+.product-substance .product-accordion{border:1px solid var(--border-hairline);border-bottom:0;background:var(--bg-elevated)}
+.product-substance .product-accordion__item summary{padding:1.25rem 3.2rem 1.25rem 1.35rem}
+.product-substance .product-accordion__item summary::before,
+.product-substance .product-accordion__item summary::after{right:1.35rem}
+.product-substance .product-accordion__content{padding:0 1.35rem 1.45rem}
+
+@media(max-width:900px){
+  .product-substance__grid{grid-template-columns:1fr;gap:1.25rem}
+}
+
 @media (max-width: 900px) {
   .product-hero__media { height: auto; aspect-ratio: 4 / 5; }
   .product-accordion__item summary { padding-block: 1rem; }
@@ -296,6 +311,20 @@
 .review-form__message.is-success{background:#edf3eb;color:#2f5b32}
 .review-form__message.is-error{background:#f7ece9;color:#8a382d}
 .review-honeypot{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;overflow:hidden!important}
+
+/* ---- Quiet product proof: factual, not comparative ---- */
+.product-formula-proof{margin:1.25rem 0;padding:1.35rem;border:1px solid var(--border-hairline);background:linear-gradient(135deg,rgba(199,151,77,.07),rgba(255,255,255,.015))}
+.product-formula-proof h2{margin:.25rem 0 .65rem;font-size:clamp(1.45rem,2.8vw,2rem)}
+.product-formula-proof>p:not(.eyebrow){max-width:62ch;color:var(--text-secondary);line-height:1.7}
+.product-formula-proof__intent{margin-bottom:.65rem;color:var(--text-primary)!important}
+.product-formula-proof__intent strong{font-weight:650}
+.product-formula-proof dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin:1.15rem 0;background:var(--border-hairline)}
+.product-formula-proof dl div{padding:.9rem;background:var(--bg-primary)}
+.product-formula-proof dt{margin-bottom:.25rem;color:var(--text-secondary);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em}
+.product-formula-proof dd{font-weight:600}
+.product-formula-proof small{display:block;color:var(--text-secondary);line-height:1.55}
+.product-formula-proof__discovery{display:inline-block;margin-top:1rem;color:var(--text-gold);font-size:.78rem;text-decoration:underline;text-underline-offset:4px}
+@media(max-width:620px){.product-formula-proof dl{grid-template-columns:1fr}.product-formula-proof{padding:1.1rem}}
 
 @media(max-width:760px){.reviews-layout{grid-template-columns:1fr}
 .reviews-summary{position:static}

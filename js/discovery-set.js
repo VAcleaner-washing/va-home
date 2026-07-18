@@ -36,7 +36,9 @@
     };
     picker.addEventListener("close",()=>document.documentElement.classList.remove("has-open-discovery-picker"));
     $("#openDiscoveryPicker").addEventListener("click",openPicker);
-    $("#discoveryPickerList").addEventListener("click",e=>{const choice=e.target.closest("[data-discovery-choice]");if(!choice)return;const id=choice.dataset.discoveryChoice;if(!selected.includes(id)){if(selected.length>=MAX){$("#discoveryPickerError").textContent="Вже обрано 6 ароматів. Зніміть один вибір, щоб додати інший.";return}selected.push(id)}else selected=selected.filter(x=>x!==id);$("#discoveryPickerError").textContent="";updateChoice(choice);updateSummary()});
+    const pickerList=$("#discoveryPickerList");
+    pickerList.addEventListener("pointerdown",e=>{if(e.target.closest("[data-discovery-choice]"))e.preventDefault()});
+    pickerList.addEventListener("click",e=>{const choice=e.target.closest("[data-discovery-choice]");if(!choice)return;const scrollPosition=pickerList.scrollTop;const id=choice.dataset.discoveryChoice;if(!selected.includes(id)){if(selected.length>=MAX){$("#discoveryPickerError").textContent="Вже обрано 6 ароматів. Зніміть один вибір, щоб додати інший.";return}selected.push(id)}else selected=selected.filter(x=>x!==id);$("#discoveryPickerError").textContent="";updateChoice(choice);updateSummary();requestAnimationFrame(()=>{pickerList.scrollTop=scrollPosition})});
     $("#clearDiscoverySelection").addEventListener("click",clearSelection);
     $("#confirmDiscoverySelection").addEventListener("click",()=>{if(selected.length!==MAX)return;picker.close();$("#addDiscovery6").focus()});
     $("#addDiscovery6").addEventListener("click",()=>{if(selected.length!==MAX){openPicker();return}window.Cart.add("discovery-6",1,{selections:[...selected]});window.Cart.refreshCountBadge?.();window.VAHome?.showToast("Discovery Set із 6 ароматів додано в кошик")});

@@ -62,6 +62,7 @@
 
       if (window.Cart && typeof window.Cart.add === "function") {
         window.Cart.add(PRODUCT_ID, qty);
+        window.VAAnalytics?.addToCart?.(PRODUCT_ID, qty);
         if (window.VAHome && window.VAHome.showToast) {
           window.VAHome.showToast(`${name} додано в кошик`);
         }
@@ -76,6 +77,7 @@
     if (typeof PRODUCT_ID === "undefined" || !window.Cart) return;
     const qtyInput = document.getElementById("qtyInput");
     window.Cart.add(PRODUCT_ID, qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1);
+    window.VAAnalytics?.addToCart?.(PRODUCT_ID, qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1);
     window.Cart.refreshCountBadge?.();
     const product = typeof getProduct === "function" ? getProduct(PRODUCT_ID) : null;
     window.VAHome?.showToast(`${product?.name || "Аромат"} додано в кошик`);
@@ -200,7 +202,8 @@
     });
 
     const notes = byTitle.get("Ноти");
-    if (notes && accordion.children.length) notes.insertAdjacentElement("afterend", accordion);
+    const accordionAnchor = document.querySelector(".product-formula-proof") || notes;
+    if (accordionAnchor && accordion.children.length) accordionAnchor.insertAdjacentElement("afterend", accordion);
     info.classList.add("is-compact");
 
     accordion.querySelectorAll("details").forEach((item) => {
@@ -213,11 +216,28 @@
     });
   }
 
+  function initProductSubstanceLayout() {
+    const hero = document.querySelector(".product-hero");
+    const heroSection = hero?.closest("section");
+    const proof = document.querySelector(".product-formula-proof");
+    const accordion = document.querySelector(".product-accordion");
+    if (!heroSection || !proof || !accordion || document.querySelector(".product-substance")) return;
+
+    const section = document.createElement("section");
+    section.className = "section section--tight product-substance";
+    section.setAttribute("aria-label", "Формула, комплектація та безпечне використання");
+    section.innerHTML = `<div class="container"><div class="product-substance__grid"></div></div>`;
+    const grid = section.querySelector(".product-substance__grid");
+    grid.append(proof, accordion);
+    heroSection.insertAdjacentElement("afterend", section);
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     initQtyStepper();
     initAddToCart();
     initPurchaseSupport();
     initProductExperience();
     initCompactDetails();
+    initProductSubstanceLayout();
   });
 })();
