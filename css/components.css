@@ -694,7 +694,7 @@ body.menu-open {
   font-size: var(--fs-caption);
   color: var(--text-secondary);
 }
-.footer-bottom>span:first-child{max-width:72ch}.footer-col a[href^="mailto:"]{overflow-wrap:anywhere}
+.footer-bottom>span:last-child{max-width:74ch;text-align:right}.footer-col a[href^="mailto:"]{overflow-wrap:anywhere}
 
 @media (max-width: 640px) {
   .footer-bottom {
@@ -702,6 +702,7 @@ body.menu-open {
     gap: 0.5em;
     align-items: flex-start;
   }
+  .footer-bottom>span:last-child{text-align:left}
 }
 
 /* ---- Quantity stepper (product page + cart page) ---- */

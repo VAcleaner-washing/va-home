@@ -123,8 +123,8 @@
           </div>
         </div>
         <div class="container footer-bottom">
-          <span>&copy; <span id="footerYear">${year}</span> VA HOME · ФОП Невідома Анна Сергіївна · РНОКПП 3314215243</span>
-          <span>Створено в Україні</span>
+          <span>&copy; <span id="footerYear">${year}</span> VA HOME</span>
+          <span>Усі права захищені. Копіювання матеріалів можливе лише за згодою власника сайту.</span>
         </div>
       </footer>
     `;

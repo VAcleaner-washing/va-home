@@ -152,6 +152,10 @@
 
 .product-wishlist{display:inline-flex;align-items:center;gap:9px;margin-top:-4px;margin-bottom:var(--space-3);padding:8px 0;color:var(--text-secondary);font-size:.82rem;border-bottom:1px solid transparent}.product-wishlist:hover,.product-wishlist.is-active{color:var(--color-gold);border-color:var(--color-gold)}.product-wishlist:disabled{opacity:.55}
 
+/* Delivery and payment information */
+.delivery-page__container{max-width:1180px}.delivery-page__head{max-width:720px;margin-bottom:clamp(32px,5vw,58px)}.delivery-page__head h1{margin:.15em 0 .2em}.delivery-page__head>p:last-child{color:var(--text-secondary);font-size:clamp(1rem,2vw,1.2rem)}.delivery-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.delivery-info-card{height:100%;padding:clamp(24px,3vw,38px)!important;border:1px solid var(--border-hairline)!important;background:var(--bg-elevated)}.delivery-info-card h2{font-family:var(--font-display)!important;font-size:1.65rem!important;font-weight:500!important}.delivery-info-card p,.delivery-info-card li{line-height:1.7}.delivery-info-card ul{margin:var(--space-2) 0 var(--space-2) 1.2em!important}.delivery-info-card--support a[href^="tel:"],.delivery-info-card--support a[href^="mailto:"]{white-space:nowrap}.delivery-info-card--support .btn{margin-top:var(--space-3)}
+@media(max-width:760px){.delivery-info-grid{grid-template-columns:1fr}.delivery-info-card{padding:22px!important}.delivery-page__head{margin-bottom:28px}.delivery-info-card--support a[href^="mailto:"]{white-space:normal;overflow-wrap:anywhere}}
+
 
 /* ---- Product detail sections ---- */
 .product-detail-section {
