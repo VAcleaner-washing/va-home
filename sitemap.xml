@@ -9,6 +9,8 @@
   <url><loc>https://vahome.com.ua/about.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://vahome.com.ua/delivery.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
   <url><loc>https://vahome.com.ua/contacts.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://vahome.com.ua/offer.html</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://vahome.com.ua/privacy.html</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
 
   <url><loc>https://vahome.com.ua/products/signature-relax.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://vahome.com.ua/products/forbidden-fruit.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
