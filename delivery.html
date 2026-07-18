@@ -35,7 +35,7 @@
 
 <div id="site-header" data-root="" data-active="delivery"></div>
 
-<main id="main-content">
+<main id="main-content" class="delivery-page">
 
   <div class="container">
     <nav class="breadcrumbs" aria-label="Хлібні крихти">
@@ -46,10 +46,16 @@
   </div>
 
   <section class="section section--tight">
-    <div class="container" style="max-width: 780px;">
-      <h1 class="reveal">Доставка і оплата</h1>
+    <div class="container delivery-page__container">
+      <div class="delivery-page__head reveal">
+        <p class="eyebrow">Інформація для покупців</p>
+        <h1>Доставка і оплата</h1>
+        <p>Усе важливе про відправлення, оплату, повернення та підтримку.</p>
+      </div>
 
-      <div class="product-detail-section" style="border-top:none; padding-top: var(--space-3);">
+      <div class="delivery-info-grid">
+
+      <div class="product-detail-section delivery-info-card">
         <h2 class="product-detail-section__title" style="font-size:1.3rem;">Доставка</h2>
         <p>Відправляємо замовлення Новою поштою протягом 1–2 робочих днів після підтвердження.</p>
         <ul style="margin: var(--space-2) 0 var(--space-2) 1.2em; color: var(--text-secondary);">
@@ -60,13 +66,13 @@
         <p class="text-muted">Точний строк прибуття залежить від маршруту та роботи перевізника.</p>
       </div>
 
-      <div class="product-detail-section">
+      <div class="product-detail-section delivery-info-card">
         <h2 class="product-detail-section__title" style="font-size:1.3rem;">Оплата</h2>
         <p>Під час оформлення можна обрати оплату на рахунок або оплату при отриманні у відділенні чи поштоматі Нової пошти. Для оплати на рахунок реквізити з’являться після оформлення та надійдуть на вказаний email.</p>
         <p class="text-muted" style="margin-top:var(--space-2);">У разі оплати при отриманні комісія за післяплату сплачується за чинними тарифами Нової пошти.</p>
       </div>
 
-      <div class="product-detail-section">
+      <div class="product-detail-section delivery-info-card">
         <h2 class="product-detail-section__title" style="font-size:1.3rem;">Повернення та обмін</h2>
         <p>Повернення та обмін здійснюються відповідно до законодавства України.</p>
         <ul style="margin: var(--space-2) 0 var(--space-2) 1.2em; color: var(--text-secondary);">
@@ -78,10 +84,11 @@
         <p class="text-muted">Для звернення напишіть у Instagram <a href="https://instagram.com/va_home.aroma" target="_blank" rel="noopener" class="text-gold">@va_home.aroma</a> або на <a href="mailto:vahome.aroma@gmail.com" class="text-gold">vahome.aroma@gmail.com</a>.</p>
       </div>
 
-      <div class="product-detail-section">
+      <div class="product-detail-section delivery-info-card delivery-info-card--support">
         <h2 class="product-detail-section__title" style="font-size:1.3rem;">Питання щодо замовлення</h2>
         <p>Менеджер відповідає щодня з 09:00 до 19:00. Телефон: <a href="tel:+380953919569" class="text-gold">+38 (095) 391-9569</a>. Email: <a href="mailto:vahome.aroma@gmail.com" class="text-gold">vahome.aroma@gmail.com</a>. Найшвидший спосіб зв'язатися — написати в Instagram Direct.</p>
         <a href="contacts.html" class="btn btn-secondary">Контакти</a>
+      </div>
       </div>
     </div>
   </section>
