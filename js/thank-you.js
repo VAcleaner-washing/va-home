@@ -25,7 +25,7 @@
     } else {
       document.getElementById("orderNumber").textContent = order.orderNumber;
       document.getElementById("orderItems").innerHTML = order.items.map(function (item) {
-        return `<div class="order-line"><span>${item.name} × ${item.quantity}</span><span>${formatUAH(item.line_total)}</span></div>`;
+        return `<div class="order-line"><span>${item.name} × ${item.quantity}${Array.isArray(item.selections)&&item.selections.length?`<small>Обрано: ${item.selections.join(" · ")}</small>`:""}</span><span>${formatUAH(item.line_total)}</span></div>`;
       }).join("");
       document.getElementById("orderTotal").textContent = formatUAH(order.total);
       if (order.emailStatus === "failed") {

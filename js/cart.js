@@ -63,13 +63,14 @@
     return null;
   }
 
-  function add(id, qty) {
+  function add(id, qty, options) {
     const items = readRaw();
     const existing = items.find((i) => i.productId === id);
     if (existing) {
-      existing.quantity = clamp(existing.quantity + (qty || 1));
+      existing.quantity = id === "discovery-6" && options && Array.isArray(options.selections) ? 1 : clamp(existing.quantity + (qty || 1));
+      if (options && Array.isArray(options.selections)) existing.selections = options.selections.slice();
     } else {
-      items.push({ productId: id, quantity: clamp(qty || 1) });
+      items.push({ productId: id, quantity: clamp(qty || 1), selections: options && Array.isArray(options.selections) ? options.selections.slice() : undefined });
     }
     writeRaw(items);
   }
@@ -110,6 +111,7 @@
           url: info.url,
           image: info.image || null,
           quantity: entry.quantity,
+          selections: Array.isArray(entry.selections) ? entry.selections.slice() : [],
           lineTotal: (info.price || 0) * entry.quantity
         };
       })
@@ -185,6 +187,7 @@
           <div>
             <p class="cart-item__name">${item.name}</p>
             <p class="cart-item__meta">${item.volume || ""}</p>
+            ${item.selections.length ? `<p class="cart-item__selection"><strong>Обрані аромати:</strong> ${item.selections.map(id=>{const p=typeof getProduct==="function"?getProduct(id):null;return p?p.name:id}).join(" · ")}</p>` : ""}
             <div class="cart-item__controls">
               <div class="qty-stepper">
                 <button type="button" class="cart-qty-minus" aria-label="Зменшити кількість">−</button>
@@ -284,7 +287,7 @@
       delivery_details: form.elements.deliveryDetails.value.trim(),
       payment_method: form.elements.paymentMethod.value,
       customer_comment: form.elements.customerComment ? form.elements.customerComment.value.trim() || null : null,
-      items: items.map((item) => ({ id: item.id, quantity: item.quantity }))
+      items: items.map((item) => ({ id: item.id, quantity: item.quantity, selections: item.selections }))
     };
   }
 
@@ -301,8 +304,15 @@
   }
 
   async function placeOrder(form, button) {
-    if (!getItems().length) {
+    const currentItems = getItems();
+    if (!currentItems.length) {
       if (window.VAHome) window.VAHome.showToast("Кошик порожній");
+      return;
+    }
+    const invalidDiscovery = currentItems.find(item => item.id === "discovery-6" && item.selections.length !== 6);
+    if (invalidDiscovery) {
+      setCheckoutState(button, "idle", "Для Discovery Set потрібно обрати рівно 6 ароматів.", true);
+      window.VAHome?.showToast("Поверніться до Discovery Set і оберіть 6 ароматів");
       return;
     }
     if (!validateCheckoutForm(form)) {

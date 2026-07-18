@@ -61,6 +61,8 @@
   color: var(--text-secondary);
   margin-bottom: var(--space-2);
 }
+.cart-item__selection{max-width:62ch;margin-bottom:var(--space-2);color:var(--text-secondary);font-size:var(--fs-caption);line-height:1.55}
+.cart-item__selection strong{color:var(--text-primary)}
 
 .cart-item__controls {
   display: flex;

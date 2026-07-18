@@ -26,6 +26,7 @@ const PRODUCTS: Record<string, { name: string; price: number }> = {
   "discovery-6": { name: "Discovery Set — 6 ароматів", price: 150 },
   "discovery-17": { name: "Discovery Set — 17 ароматів", price: 450 },
 };
+const FRAGRANCE_IDS = Object.keys(PRODUCTS).filter(id => !id.startsWith("discovery-"));
 
 function cors(req: Request) {
   const origin = req.headers.get("origin") || "";
@@ -94,7 +95,14 @@ Deno.serve(async req => {
       const product = PRODUCTS[id];
       const quantity = Math.trunc(Number(raw.quantity));
       if (!product || !Number.isInteger(quantity) || quantity < 1 || quantity > 10) throw new Error("INVALID_ITEM");
-      return { id, name: product.name, quantity, unit_price: product.price, line_total: product.price * quantity };
+      const requested = Array.isArray(raw.selections) ? raw.selections.map(value => text(value, 80)) : [];
+      if (id === "discovery-6") {
+        if (quantity !== 1) throw new Error("INVALID_DISCOVERY_SELECTION");
+        const unique = [...new Set(requested)];
+        if (unique.length !== 6 || unique.some(selection => !FRAGRANCE_IDS.includes(selection))) throw new Error("INVALID_DISCOVERY_SELECTION");
+        return { id, name: product.name, quantity, unit_price: product.price, line_total: product.price * quantity, selection_ids: unique, selections: unique.map(selection => PRODUCTS[selection].name) };
+      }
+      return { id, name: product.name, quantity, unit_price: product.price, line_total: product.price * quantity, selections: [] };
     });
     const total = items.reduce((sum, item) => sum + item.line_total, 0);
     if (total <= 0) return json(req, { error: "INVALID_TOTAL" }, 400);
@@ -121,7 +129,7 @@ Deno.serve(async req => {
     const resendKey = Deno.env.get("RESEND_API_KEY");
     if (resendKey) {
       try {
-        const rows = items.map(item => `<tr><td style="padding:8px 0;border-bottom:1px solid #332b20">${escapeHtml(item.name)} × ${item.quantity}</td><td style="padding:8px 0;border-bottom:1px solid #332b20;text-align:right">${money(item.line_total)}</td></tr>`).join("");
+        const rows = items.map(item => `<tr><td style="padding:8px 0;border-bottom:1px solid #332b20">${escapeHtml(item.name)} × ${item.quantity}${item.selections.length ? `<br><small style="color:#b9aa96">Обрано: ${item.selections.map(escapeHtml).join(" · ")}</small>` : ""}</td><td style="padding:8px 0;border-bottom:1px solid #332b20;text-align:right">${money(item.line_total)}</td></tr>`).join("");
         const common = `<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;padding:32px;background:#0a0908;color:#eee6db"><h1 style="font-family:Georgia,serif;font-weight:400">VA HOME</h1><p>Замовлення <strong>${escapeHtml(order.client_order_id)}</strong></p><table style="width:100%;border-collapse:collapse">${rows}</table><p style="font-size:18px"><strong>Разом: ${money(total)}</strong></p>`;
         const cod = paymentMethod === "cash_on_delivery";
         await Promise.all([
@@ -138,7 +146,8 @@ Deno.serve(async req => {
     return json(req, { order: { client_order_id: order.client_order_id, customer_name: name, customer_email: email, payment_method: paymentMethod, items, total_amount: total }, email_status: emailStatus }, 201);
   } catch (error) {
     console.error(error);
-    const code = error instanceof Error && error.message === "INVALID_ITEM" ? "INVALID_ITEMS" : "ORDER_CREATION_FAILED";
-    return json(req, { error: code }, code === "INVALID_ITEMS" ? 400 : 500);
+    const validationErrors = new Set(["INVALID_ITEM", "INVALID_DISCOVERY_SELECTION"]);
+    const code = error instanceof Error && validationErrors.has(error.message) ? error.message : "ORDER_CREATION_FAILED";
+    return json(req, { error: code }, code === "ORDER_CREATION_FAILED" ? 500 : 400);
   }
 });
