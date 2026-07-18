@@ -15,7 +15,7 @@
   // Keep this list in sync with the buttons on discovery-set.html.
   const SPECIAL_ITEMS = {
     "discovery-6": { name: "Discovery Set — 6 ароматів", price: 150, volume: "6 пробників", image: "images/discovery/discovery-set.webp" },
-    "discovery-17": { name: "Discovery Set — 17 ароматів", price: 450, volume: "17 пробників", image: "images/discovery/discovery-set.webp" }
+    "discovery-17": { name: "Discovery Set — 18 ароматів", price: 450, volume: "18 пробників", image: "images/discovery/discovery-set.webp" }
   };
 
   function readRaw() {

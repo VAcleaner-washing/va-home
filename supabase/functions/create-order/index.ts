@@ -24,7 +24,8 @@ const PRODUCTS: Record<string, { name: string; price: number }> = {
   "moss-and-shadow": { name: "Moss & Shadow", price: 1199 },
   "dark-bloom": { name: "Dark Bloom", price: 1199 },
   "discovery-6": { name: "Discovery Set — 6 ароматів", price: 150 },
-  "discovery-17": { name: "Discovery Set — 17 ароматів", price: 450 },
+  // Legacy ID is kept so existing carts remain valid; the complete set now contains 18 scents.
+  "discovery-17": { name: "Discovery Set — 18 ароматів", price: 450 },
 };
 const FRAGRANCE_IDS = Object.keys(PRODUCTS).filter(id => !id.startsWith("discovery-"));
 
