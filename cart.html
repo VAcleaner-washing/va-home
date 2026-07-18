@@ -89,7 +89,7 @@
 
             <div class="form-field">
               <label for="customerPhone">Номер телефону *</label>
-              <input type="tel" id="customerPhone" name="customerPhone" autocomplete="tel" required aria-describedby="err-customerPhone">
+              <input type="tel" id="customerPhone" name="customerPhone" autocomplete="tel" inputmode="tel" required aria-describedby="err-customerPhone" placeholder="+38 (095) 123-45-67">
               <p class="form-error" id="err-customerPhone">Вкажіть, будь ласка, номер телефону.</p>
             </div>
 
@@ -108,7 +108,7 @@
             <div class="form-field">
               <label for="deliveryMethod">Спосіб доставки *</label>
               <select id="deliveryMethod" name="deliveryMethod" required aria-describedby="err-deliveryMethod">
-                <option value="Нова пошта" selected>Нова пошта</option>
+                <option value="nova_poshta" selected>Нова пошта</option>
               </select>
               <p class="form-error" id="err-deliveryMethod">Оберіть спосіб доставки.</p>
             </div>
@@ -145,10 +145,11 @@
               <button type="submit" class="btn btn-primary btn-block" id="placeOrderBtn">Оформити замовлення</button>
             </div>
             <p class="checkout-status" id="checkoutStatus" role="status" aria-live="polite"></p>
-            <p class="checkout-note">Для оплати на рахунок реквізити з’являться після оформлення та надійдуть на email. При оплаті у відділенні ви сплачуєте замовлення під час отримання.</p>
-            <p class="checkout-note">Відправка протягом 1–2 робочих днів. Доставка безкоштовна для замовлень від 2000 грн.</p>
-            <p class="checkout-note">Менеджер відповідає щодня з 09:00 до 19:00.</p>
-            <p class="checkout-note">Питання щодо замовлення: <a href="tel:+380953919569" class="text-gold">+38 (095) 391-9569</a> або <a href="https://instagram.com/va_home.aroma" target="_blank" rel="noopener" class="text-gold">Instagram</a>.</p>
+            <div class="checkout-reassurance" aria-label="Умови оформлення">
+              <p><strong>Оплата:</strong> реквізити надійдуть після оформлення або сплатіть при отриманні.</p>
+              <p><strong>Відправка:</strong> протягом 1–2 робочих днів. Безкоштовна доставка від 2000 грн.</p>
+              <p><strong>Підтримка:</strong> щодня 09:00–19:00 · <a href="tel:+380953919569">+38 (095) 391-9569</a> · <a href="https://instagram.com/va_home.aroma" target="_blank" rel="noopener">Instagram</a></p>
+            </div>
           </form>
         </div>
       </div>

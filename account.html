@@ -35,8 +35,15 @@
 <label>Пароль<input name="password" type="password" minlength="6" autocomplete="current-password" required>
 </label>
 <button id="accountSubmit" class="btn btn-primary btn-block" type="submit">Увійти</button>
+<button id="accountResetPassword" class="account-reset" type="button">Забули пароль?</button>
 <p id="accountMessage" class="account-message" role="status">
 </p>
+</form>
+<form id="accountRecoveryForm" class="account-form" hidden>
+  <h2>Новий пароль</h2>
+  <label>Новий пароль<input name="newPassword" type="password" minlength="8" autocomplete="new-password" required></label>
+  <button class="btn btn-primary btn-block" type="submit">Зберегти новий пароль</button>
+  <p id="accountRecoveryMessage" class="account-message" role="status"></p>
 </form>
 </section>
 <section id="accountDashboard" hidden>
