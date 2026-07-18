@@ -147,7 +147,9 @@
         setMessage(result?.verified_purchase ? "Дякуємо! Покупку підтверджено автоматично. Відгук з’явиться після модерації." : "Дякуємо! Відгук отримано й з’явиться на сайті після перевірки.", "success");
       } catch (error) {
         console.warn("Review submit failed", error);
-        setMessage(error?.status === 429 ? "Забагато спроб. Зачекайте кілька хвилин." : "Не вдалося надіслати відгук. Перевірте інтернет і спробуйте ще раз.", "error");
+        if (error?.status === 409) setMessage("Ви вже залишили відгук про цей аромат. Після модерації він з’явиться на сайті.", "error");
+        else if (error?.status === 429) setMessage("Забагато спроб. Зачекайте кілька хвилин.", "error");
+        else setMessage("Не вдалося надіслати відгук. Перевірте інтернет і спробуйте ще раз.", "error");
       } finally {
         submit.disabled = false;
         submit.textContent = "Надіслати відгук";

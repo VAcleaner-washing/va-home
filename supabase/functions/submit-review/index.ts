@@ -50,10 +50,14 @@ Deno.serve(async req => {
 
     const service = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
     const bearer = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
-    let user: { id: string; email?: string } | null = null;
+    let user: { id: string; email?: string; emailConfirmed?: boolean } | null = null;
     if (bearer && bearer !== Deno.env.get("SUPABASE_ANON_KEY")) {
       const { data } = await service.auth.getUser(bearer);
-      if (data.user) user = { id: data.user.id, email: data.user.email };
+      if (data.user) user = {
+        id: data.user.id,
+        email: data.user.email,
+        emailConfirmed: Boolean(data.user.email_confirmed_at)
+      };
     }
 
     const forwarded = req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
@@ -65,17 +69,26 @@ Deno.serve(async req => {
 
     let verifiedPurchase = false;
     let emailHash: string | null = null;
-    if (user?.email) {
+    if (user?.email && user.emailConfirmed) {
       const email = user.email.toLowerCase();
       emailHash = await sha256(email);
+      const { count: previousReviews } = await service.from("reviews")
+        .select("id", { count: "exact", head: true })
+        .eq("created_by", user.id)
+        .eq("product_slug", productSlug)
+        .in("status", ["pending", "approved"]);
+      if ((previousReviews || 0) > 0) return json(req, { error: "REVIEW_ALREADY_EXISTS" }, 409);
+
       const [linkedResult, emailResult] = await Promise.all([
         service.from("orders").select("items,status").eq("customer_user_id", user.id).in("status", ["paid", "shipped", "completed"]).limit(100),
         service.from("orders").select("items,status").ilike("customer_email", email).in("status", ["paid", "shipped", "completed"]).limit(100)
       ]);
       const orders = [...(linkedResult.data || []), ...(emailResult.data || [])];
-      verifiedPurchase = orders.some(order => Array.isArray(order.items) && order.items.some((item: Record<string, unknown>) =>
-        item.id === productSlug || (Array.isArray(item.selection_ids) && item.selection_ids.includes(productSlug))
-      ));
+      verifiedPurchase = orders.some(order => Array.isArray(order.items) && order.items.some((item: Record<string, unknown>) => {
+        const selections = [item.selection_ids, item.selections, item.selectionIds]
+          .find(value => Array.isArray(value)) as unknown[] | undefined;
+        return item.id === productSlug || Boolean(selections?.includes(productSlug));
+      }));
     }
 
     const { error } = await service.from("reviews").insert({
