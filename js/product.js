@@ -93,6 +93,12 @@
     reassurance.innerHTML = `<div><strong>В наявності</strong><span>Відправка 1–2 робочі дні</span></div><div><strong>Нова пошта</strong><span>Безкоштовно від 2000 грн</span></div><div><strong>Зручна оплата</strong><span>На рахунок або при отриманні</span></div><a href="../delivery.html#returns">Умови доставки й повернення</a>`;
     primaryButton.closest(".product-purchase-row")?.insertAdjacentElement("afterend", reassurance);
 
+    const facts = document.createElement("div");
+    facts.className = "product-buy-facts";
+    facts.setAttribute("aria-label", "Коротко про використання");
+    facts.innerHTML = `<span><strong>100 мл</strong> об’єм</span><span><strong>3–4 палички</strong> рекомендований старт</span><span><strong>Регульована</strong> інтенсивність</span>`;
+    reassurance.insertAdjacentElement("beforebegin", facts);
+
     const discovery = document.createElement("a");
     discovery.className = "product-discovery-link";
     discovery.href = "../discovery-set.html";
@@ -103,12 +109,31 @@
     sticky.className = "product-mobile-buy";
     const product = typeof getProduct === "function" && typeof PRODUCT_ID !== "undefined" ? getProduct(PRODUCT_ID) : null;
     const price = product && typeof getProductPrice === "function" ? getProductPrice(product) : 0;
-    sticky.innerHTML = `<div><span>${product?.name || "VA HOME"}</span><strong>${Number(price).toLocaleString("uk-UA")} грн</strong></div><button type="button">У кошик</button>`;
+    sticky.innerHTML = `<div><span>${product?.name || "VA HOME"}</span><strong>${Number(price).toLocaleString("uk-UA")} грн</strong></div><button type="button">Додати в кошик</button>`;
     sticky.querySelector("button").addEventListener("click", addCurrentProductToCart);
     document.body.appendChild(sticky);
 
-    const observer = new IntersectionObserver(([entry]) => sticky.classList.toggle("is-visible", !entry.isIntersecting), { threshold: .15 });
-    observer.observe(primaryButton);
+    let primaryVisible = true;
+    let footerVisible = false;
+    const updateSticky = () => {
+      const visible = !primaryVisible && !footerVisible;
+      sticky.classList.toggle("is-visible", visible);
+      document.body.classList.toggle("product-buybar-visible", visible);
+    };
+    const primaryObserver = new IntersectionObserver(([entry]) => {
+      primaryVisible = entry.isIntersecting;
+      updateSticky();
+    }, { threshold: .15 });
+    primaryObserver.observe(primaryButton);
+
+    const footerTarget = document.getElementById("site-footer");
+    if (footerTarget) {
+      const footerObserver = new IntersectionObserver(([entry]) => {
+        footerVisible = entry.isIntersecting;
+        updateSticky();
+      }, { threshold: 0 });
+      footerObserver.observe(footerTarget);
+    }
   }
 
   function initProductExperience() {

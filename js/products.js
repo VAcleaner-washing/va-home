@@ -88,7 +88,7 @@
           <a href="${root}${href}" class="btn btn-secondary btn-block">Детальніше</a>
           ${
             price
-              ? `<button type="button" class="btn btn-primary product-card__cart-btn${context === "home" ? " product-card__quick-add" : ""}" data-add-to-cart="${product.id}" aria-label="Додати ${product.name} у кошик">${context === "home" ? '<span>До кошика</span>' : ''}<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 8.5h11l-.9 10.2a1.5 1.5 0 0 1-1.5 1.3H8.9a1.5 1.5 0 0 1-1.5-1.3L6.5 8.5z"/><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5"/></svg></button>`
+              ? `<button type="button" class="btn btn-primary product-card__cart-btn${context === "home" ? " product-card__quick-add" : ""}" data-add-to-cart="${product.id}" aria-label="Додати ${product.name} у кошик">${context === "home" || context === "catalog" ? '<span>До кошика</span>' : ''}<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 8.5h11l-.9 10.2a1.5 1.5 0 0 1-1.5 1.3H8.9a1.5 1.5 0 0 1-1.5-1.3L6.5 8.5z"/><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5"/></svg></button>`
               : ""
           }
         </div>
