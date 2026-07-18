@@ -40,6 +40,8 @@ Deno.serve(async (req) => {
       `<tr><td style="padding:8px 0;border-bottom:1px solid #eee">${escapeHtml(item.name)} × ${escapeHtml(item.quantity)}</td><td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right">${money(Number(item.line_total))}</td></tr>`
     ).join("");
     const purpose = `Оплата замовлення ${escapeHtml(order.client_order_id)}`;
+    const isCod = order.payment_method === "cash_on_delivery";
+    const paymentLabel = isCod ? "Оплата при отриманні" : "Оплата на рахунок";
     const common = `<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;color:#171717"><h1 style="font-family:Georgia,serif;font-weight:400">VA HOME</h1><p>Замовлення <strong>${escapeHtml(order.client_order_id)}</strong></p><table style="width:100%;border-collapse:collapse">${rows}</table><p style="font-size:18px"><strong>Разом: ${money(Number(order.total_amount))}</strong></p>`;
 
     await Promise.all([
@@ -48,13 +50,13 @@ Deno.serve(async (req) => {
         to: ["vahome.aroma@gmail.com"],
         reply_to: order.customer_email,
         subject: `Нове замовлення ${order.client_order_id}`,
-        html: `${common}<hr><p><strong>Клієнт:</strong> ${escapeHtml(order.customer_name)}</p><p>${escapeHtml(order.customer_phone)} · ${escapeHtml(order.customer_email)}</p><p>${escapeHtml(order.customer_city)}, ${escapeHtml(order.delivery_details)}</p><p>${escapeHtml(order.customer_comment || "Без коментаря")}</p></div>`,
+        html: `${common}<hr><p><strong>Клієнт:</strong> ${escapeHtml(order.customer_name)}</p><p>${escapeHtml(order.customer_phone)} · ${escapeHtml(order.customer_email)}</p><p>${escapeHtml(order.customer_city)}, ${escapeHtml(order.delivery_details)}</p><p><strong>Оплата:</strong> ${paymentLabel}</p><p>${escapeHtml(order.customer_comment || "Без коментаря")}</p></div>`,
       }),
       sendEmail(resendKey, {
         from: "VA HOME <orders@vahome.com.ua>",
         to: [order.customer_email],
         subject: `Ваше замовлення ${order.client_order_id} прийнято`,
-        html: `${common}<hr><h2 style="font-family:Georgia,serif;font-weight:400">Реквізити для оплати</h2><p>Отримувач: ФОП Невідома Анна Сергіївна</p><p>IBAN: <strong>UA523220010000026006370119233</strong></p><p>Призначення: ${purpose}</p><p>Відправка Новою поштою протягом 1–2 робочих днів після підтвердження оплати.</p></div>`,
+        html: isCod ? `${common}<hr><h2 style="font-family:Georgia,serif;font-weight:400">Оплата при отриманні</h2><p>Ви сплатите замовлення у відділенні або поштоматі Нової пошти під час отримання.</p><p>Відправка протягом 1–2 робочих днів.</p></div>` : `${common}<hr><h2 style="font-family:Georgia,serif;font-weight:400">Реквізити для оплати</h2><p>Отримувач: ФОП Невідома Анна Сергіївна</p><p>IBAN: <strong>UA523220010000026006370119233</strong></p><p>Призначення: ${purpose}</p><p>Відправка Новою поштою протягом 1–2 робочих днів після підтвердження оплати.</p></div>`,
       }),
     ]);
 
