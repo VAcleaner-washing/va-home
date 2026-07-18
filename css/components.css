@@ -1091,24 +1091,35 @@ body.menu-open {
 
 @media (max-width: 640px) {
   .product-card__actions {
-    gap: 6px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
     padding-inline: 10px;
     padding-bottom: 12px;
   }
 
   .product-card__actions > .btn-secondary {
+    width: 100%;
     min-height: 42px;
-    padding-inline: 0.45rem;
-    font-size: 0.66rem;
-    letter-spacing: 0.055em;
+    padding-inline: 0.65rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.045em;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .product-card__actions > .btn-primary[data-add-to-cart] {
-    flex-basis: 42px;
-    width: 42px;
-    min-width: 42px;
+    width: 100%;
+    min-width: 0;
     min-height: 42px;
-    font-size: 1.2rem;
+    padding-inline: .55rem;
+    font-size: .68rem;
+  }
+
+  .product-card__quick-add {
+    min-width: 0 !important;
+    width: 100% !important;
+    justify-content: center;
   }
 }
 

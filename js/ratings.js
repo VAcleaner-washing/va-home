@@ -19,13 +19,25 @@
     return data && data.count ? `${data.average.toFixed(1)} · ${data.count}` : "Без відгуків";
   }
 
+  function reviewsLabel(count) {
+    const value = Math.abs(Number(count) || 0);
+    const mod100 = value % 100;
+    const mod10 = value % 10;
+    if (mod100 >= 11 && mod100 <= 14) return "відгуків";
+    if (mod10 === 1) return "відгук";
+    if (mod10 >= 2 && mod10 <= 4) return "відгуки";
+    return "відгуків";
+  }
+
   function applyToCards(map) {
     document.querySelectorAll("[data-product-id]").forEach((card) => {
       const id = card.getAttribute("data-product-id");
       const el = card.querySelector("[data-product-rating]");
       if (!el) return;
       const data = map[id];
-      el.textContent = data && data.count ? `★ ${ratingText(data)}` : "Без відгуків";
+      el.textContent = data && data.count
+        ? `★ ${data.average.toFixed(1)} · ${data.count} ${reviewsLabel(data.count)}`
+        : "Без відгуків";
       el.classList.toggle("has-rating", Boolean(data && data.count));
     });
   }
@@ -36,7 +48,7 @@
     const compact = document.getElementById("productRatingCompact");
     if (!compact) return;
     if (data && data.count) {
-      compact.innerHTML = `<span aria-hidden="true">★★★★★</span> <strong>${data.average.toFixed(1)}</strong> <a href="#reviews">${data.count} відгуків</a>`;
+      compact.innerHTML = `<span aria-hidden="true">★★★★★</span> <strong>${data.average.toFixed(1)}</strong> <a href="#reviews">${data.count} ${reviewsLabel(data.count)}</a>`;
     } else {
       compact.innerHTML = `<span aria-hidden="true">★★★★★</span> <a href="#reviewForm">Залишити перший відгук</a>`;
       compact.classList.add("is-empty");
