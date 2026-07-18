@@ -209,25 +209,15 @@
 .product-accordion__content .tag-pills { margin-bottom: .35rem; }
 .product-accordion__content .scent-scale { margin: 0 0 1rem; }
 
-/* Formula and practical details continue below the purchase hero. Keeping
-   them out of the right hero column prevents a blank well below the photo. */
-.product-substance{
-  border-top:1px solid var(--border-hairline);
-  padding-top:clamp(.75rem,1.5vw,1.5rem);
-  padding-bottom:var(--space-5);
-}
-.product-substance__grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);gap:clamp(2rem,6vw,6rem);align-items:start}
-.product-substance .product-formula-proof{height:100%;margin:0;padding:clamp(1.4rem,3vw,2.2rem)}
-.product-substance .product-accordion{border:1px solid var(--border-hairline);border-bottom:0;background:var(--bg-elevated)}
-.product-substance .product-accordion__item summary{padding:1.25rem 3.2rem 1.25rem 1.35rem}
-.product-substance .product-accordion__item summary::before,
-.product-substance .product-accordion__item summary::after{right:1.35rem}
-.product-substance .product-accordion__content{padding:0 1.35rem 1.45rem}
-
-@media(max-width:900px){
-  .product-substance__grid{grid-template-columns:1fr;gap:1.25rem}
-  .product-substance{padding-top:1rem;padding-bottom:var(--space-4)}
-}
+/* Image and formula are one visual stack, so the formula starts immediately
+   below the photograph instead of waiting for the taller product-info column. */
+.product-hero__visual-stack{display:grid;gap:clamp(1rem,2vw,1.75rem);align-self:start;min-width:0}
+.product-hero__visual-stack>.product-formula-proof{margin:0;padding:clamp(1.4rem,3vw,2.2rem)}
+.product-hero.has-inline-substance .product-hero__info>.product-accordion{margin-top:1.25rem;border:1px solid var(--border-hairline);border-bottom:0;background:var(--bg-elevated)}
+.product-hero.has-inline-substance .product-hero__info>.product-accordion .product-accordion__item summary{padding:1.25rem 3.2rem 1.25rem 1.35rem}
+.product-hero.has-inline-substance .product-hero__info>.product-accordion .product-accordion__item summary::before,
+.product-hero.has-inline-substance .product-hero__info>.product-accordion .product-accordion__item summary::after{right:1.35rem}
+.product-hero.has-inline-substance .product-hero__info>.product-accordion .product-accordion__content{padding:0 1.35rem 1.45rem}
 
 @media (max-width: 900px) {
   .product-hero__media { height: auto; aspect-ratio: 4 / 5; }

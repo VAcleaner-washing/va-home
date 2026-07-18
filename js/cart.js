@@ -280,11 +280,14 @@
       list.hidden = false;
       input.setAttribute("aria-expanded", "true");
     };
-    const manualMode = () => {
+    const manualMode = (message = "Автопошук тимчасово недоступний — введіть місто вручну.") => {
       form.dataset.npMode = "manual";
+      cityRef.value = "";
+      if (settlementRef) settlementRef.value = "";
+      warehouseRef.value = "";
       warehouse.disabled = false;
       warehouse.placeholder = "Наприклад: відділення №12 або поштомат №1234";
-      if (cityHint) cityHint.textContent = "Автопошук тимчасово недоступний — введіть місто вручну.";
+      if (cityHint) cityHint.textContent = message;
       if (warehouseHint) warehouseHint.textContent = "Введіть номер або адресу відділення вручну.";
       closeList(city, cityList);
       closeList(warehouse, warehouseList);
@@ -315,6 +318,10 @@
         try {
           const items = await window.VAHomeSupabase.novaPoshtaLookup({ action: "cities", query });
           if (request !== cityRequest) return;
+          if (!items.length) {
+            manualMode("Населений пункт не знайдено в базі — перевірте назву та введіть його вручну.");
+            return;
+          }
           renderItems(city, cityList, items, (item) => {
             city.value = item.label;
             cityRef.value = item.ref;
@@ -346,6 +353,11 @@
         try {
           const items = await window.VAHomeSupabase.novaPoshtaLookup({ action: "warehouses", city_ref: cityRef.value, query });
           if (request !== warehouseRequest) return;
+          if (!items.length) {
+            manualMode("Населений пункт збережено. Дані доставки можна завершити вручну.");
+            if (warehouseHint) warehouseHint.textContent = "Відділення не знайдено в базі — введіть номер або адресу вручну.";
+            return;
+          }
           renderItems(warehouse, warehouseList, items, (item) => {
             warehouse.value = item.label;
             warehouseRef.value = item.ref;
@@ -382,6 +394,8 @@
       if (!field) return;
       const wrap = field.closest(".form-field");
       let invalid = !field.value || !field.value.trim();
+      if (name === "customerCity" && !invalid) invalid = field.value.trim().length < 2;
+      if (name === "deliveryDetails" && !invalid) invalid = field.value.trim().length < 3;
       if (name === "customerEmail" && !invalid) invalid = !/^\S+@\S+\.\S+$/.test(field.value.trim());
       if (name === "customerPhone" && !invalid) {
         const phone = field.value.replace(/[^\d+]/g, "");

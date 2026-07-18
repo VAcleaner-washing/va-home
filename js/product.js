@@ -218,18 +218,18 @@
 
   function initProductSubstanceLayout() {
     const hero = document.querySelector(".product-hero");
-    const heroSection = hero?.closest("section");
+    const media = document.querySelector(".product-hero__media");
+    const info = document.querySelector(".product-hero__info");
     const proof = document.querySelector(".product-formula-proof");
     const accordion = document.querySelector(".product-accordion");
-    if (!heroSection || !proof || !accordion || document.querySelector(".product-substance")) return;
+    if (!hero || !media || !info || !proof || !accordion || hero.classList.contains("has-inline-substance")) return;
 
-    const section = document.createElement("section");
-    section.className = "section section--tight product-substance";
-    section.setAttribute("aria-label", "Формула, комплектація та безпечне використання");
-    section.innerHTML = `<div class="container"><div class="product-substance__grid"></div></div>`;
-    const grid = section.querySelector(".product-substance__grid");
-    grid.append(proof, accordion);
-    heroSection.insertAdjacentElement("afterend", section);
+    const visualStack = document.createElement("div");
+    visualStack.className = "product-hero__visual-stack";
+    hero.insertBefore(visualStack, media);
+    visualStack.append(media, proof);
+    info.appendChild(accordion);
+    hero.classList.add("has-inline-substance");
   }
 
   document.addEventListener("DOMContentLoaded", () => {
