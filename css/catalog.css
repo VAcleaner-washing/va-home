@@ -217,7 +217,7 @@
   }
 }
 
-@media (max-width: 340px) {
+@media (max-width: 430px) {
   .catalog-grid {
     grid-template-columns: 1fr;
   }

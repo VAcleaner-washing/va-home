@@ -7,6 +7,7 @@
   grid-template-columns: 1.6fr 1fr;
   gap: var(--space-5);
   align-items: start;
+  margin-top: var(--space-4);
 }
 
 @media (max-width: 900px) {

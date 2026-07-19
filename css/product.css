@@ -141,6 +141,12 @@
   font-weight: 500;
 }
 
+.product-hero__quickfacts {
+  font-size: var(--fs-small);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-3);
+}
+
 
 .product-purchase-row {
   display: flex;
