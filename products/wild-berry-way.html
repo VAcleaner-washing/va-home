@@ -60,10 +60,25 @@
     "seller": {
       "@type": "Organization",
       "name": "VA HOME"
+    },
+    "shippingDetails": {
+      "@type": "OfferShippingDetails",
+      "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "UA" },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 2, "unitCode": "DAY" }
+      }
+    },
+    "hasMerchantReturnPolicy": {
+      "@type": "MerchantReturnPolicy",
+      "applicableCountry": "UA",
+      "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+      "merchantReturnDays": 14,
+      "returnMethod": "https://schema.org/ReturnByMail"
     }
   },
   "url": "https://vahome.com.ua/products/wild-berry-way.html",
-  "category": "Аромадифузори > Entry Collection",
+  "category": "Home & Garden > Decor > Home Fragrances",
   "additionalProperty": [
     {
       "@type": "PropertyValue",
