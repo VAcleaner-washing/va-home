@@ -132,6 +132,20 @@ Deno.serve(async req => {
     }
     if (!city || !deliveryDetails || deliveryMethod !== "nova_poshta") return json(req, { error: "INVALID_DELIVERY" }, 400);
     if (Boolean(novaPoshtaCityRef) !== Boolean(novaPoshtaWarehouseRef)) return json(req, { error: "INVALID_DELIVERY" }, 400);
+
+    const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+
+    // Rate limit: max 5 orders per phone number within a 10-minute window.
+    // Uses only the existing customer_phone/created_at columns — no migration required.
+    const rateLimitSince = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+    const { count: recentOrders, error: rateLimitError } = await supabase
+      .from("orders")
+      .select("id", { count: "exact", head: true })
+      .eq("customer_phone", phone)
+      .gte("created_at", rateLimitSince);
+    if (rateLimitError) throw rateLimitError;
+    if ((recentOrders || 0) >= 5) return json(req, { error: "RATE_LIMITED" }, 429);
+
     if (novaPoshtaCityRef && novaPoshtaWarehouseRef) {
       const validDelivery = await validateNovaPoshtaSelection(novaPoshtaCityRef, novaPoshtaWarehouseRef);
       if (!validDelivery) return json(req, { error: "INVALID_DELIVERY" }, 400);
@@ -156,7 +170,6 @@ Deno.serve(async req => {
     const total = items.reduce((sum, item) => sum + item.line_total, 0);
     if (total <= 0) return json(req, { error: "INVALID_TOTAL" }, 400);
 
-    const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
     if (checkoutRequestId) {
       const { data: existing, error: existingError } = await supabase
         .from("orders")
