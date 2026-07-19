@@ -92,11 +92,12 @@
 @media (max-width: 480px) {
   .cart-item {
     grid-template-columns: 64px 1fr;
+    padding-bottom: var(--space-4);
   }
   .cart-item__price-col {
     grid-column: 2 / -1;
     text-align: left;
-    margin-top: var(--space-1);
+    margin-top: var(--space-2);
   }
 }
 
