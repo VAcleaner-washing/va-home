@@ -1,3 +1,14 @@
+if (window.location.pathname.endsWith('.html')) {
+    let cleanUrl = window.location.pathname.slice(0, -5);
+    if (cleanUrl.endsWith('/index')) {
+        cleanUrl = cleanUrl.slice(0, -6); // видаляємо "/index", щоб залишився просто корінь /
+    }
+    window.location.replace(cleanUrl + window.location.search + window.location.hash);
+}
+
+
+
+
 /* ==========================================================================
    VA HOME — main.js
    Injects shared header/footer, handles nav state, mobile menu,
