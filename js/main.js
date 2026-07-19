@@ -101,6 +101,7 @@
               <li><a href="${root}collections.html">Колекції</a></li>
               <li><a href="${root}discovery-set.html">Discovery Set</a></li>
               <li><a href="${root}scent-guide.html">Гід ароматів</a></li>
+              <li><a href="${root}guides/index.html">Гіди й статті</a></li>
             </ul>
           </div>
           <div class="footer-col">

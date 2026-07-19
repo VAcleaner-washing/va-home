@@ -1142,3 +1142,168 @@ body.menu-open {
 }
 .product-card__rating.has-rating{color:#8c6b30}
 .product-card__rating + .product-card__meta{margin-top:0}
+
+/* ---- Guide articles (long-form content pages) ---- */
+.article-content {
+  max-width: 68ch;
+}
+.article-content h2 {
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-2);
+}
+.article-content h3 {
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
+  font-size: 1.15rem;
+}
+.article-content p {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+  max-width: none;
+}
+.article-content ul,
+.article-content ol {
+  margin: var(--space-2) 0 var(--space-3) 1.3em;
+  color: var(--text-secondary);
+}
+.article-content li {
+  margin-bottom: 0.5em;
+}
+.article-content li::marker {
+  color: var(--color-gold);
+}
+.article-content a:not(.btn) {
+  color: var(--text-gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Related-guides links live inside .article-content too, but should look like
+   clean nav cards, not inline gold links — override with higher specificity. */
+.article-content .related-guides__list a {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.article-content .related-guides__list a:hover,
+.article-content .related-guides__list a:focus-visible {
+  color: var(--color-gold);
+}
+.article-meta {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: var(--fs-caption);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+}
+.article-cta {
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  display: flex;
+  flex-direction: column;
+}
+.article-cta > .btn {
+  display: inline-flex;
+  flex: 1 1 0;
+  min-width: 0;
+  white-space: normal;
+  text-align: center;
+}
+@media (min-width: 480px) {
+  .article-cta {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .article-cta p {
+    flex-basis: 100%;
+    margin-bottom: var(--space-2);
+  }
+}
+.article-cta p {
+  margin-bottom: var(--space-2);
+}
+
+/* ---- Guides hub grid ---- */
+.guides-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+@media (max-width: 640px) {
+  .guides-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.guide-card {
+  display: block;
+  padding: var(--space-4);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+.guide-card:hover,
+.guide-card:focus-visible {
+  border-color: var(--color-gold);
+}
+.guide-card h2 {
+  font-size: 1.3rem;
+  margin-bottom: var(--space-1);
+}
+.guide-card p {
+  color: var(--text-secondary);
+  font-size: var(--fs-small);
+}
+
+/* ---- Guide article featured image ---- */
+.article-hero-image {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: var(--space-4);
+}
+.article-hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---- Related guides at the bottom of each article ---- */
+.related-guides {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-hairline);
+}
+.related-guides h2 {
+  font-size: 1.7rem;
+  margin-bottom: var(--space-3);
+}
+.related-guides__list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+@media (max-width: 640px) {
+  .related-guides__list {
+    grid-template-columns: 1fr;
+  }
+}
+.related-guides__list a {
+  display: block;
+  padding: var(--space-3);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: var(--fs-small);
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+.related-guides__list a:hover,
+.related-guides__list a:focus-visible {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}

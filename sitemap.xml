@@ -31,4 +31,10 @@
   <url><loc>https://vahome.com.ua/products/moss-and-shadow.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://vahome.com.ua/products/dark-bloom.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 
+  <url><loc>https://vahome.com.ua/guides/index.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://vahome.com.ua/guides/aromat-dlya-spalni.html</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://vahome.com.ua/guides/svizhi-chy-tepli-aromaty.html</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://vahome.com.ua/guides/noty-aromatu.html</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://vahome.com.ua/guides/yak-korystuvatis-dyfuzorom.html</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
+
 </urlset>
