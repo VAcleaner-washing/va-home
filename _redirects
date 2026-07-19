@@ -1,9 +1,8 @@
-# VA HOME — чисті URL без .html
-/*.html          /:splat/          301!
+# VA HOME — чисті URL
+/*.html     /:splat/     301!
 
-# index.html на корінь
-/index.html      /                 301!
-/index           /                 301!
+/index.html      /          301!
+/index           /          301!
 
-# Для підпапок (якщо будуть)
-/*/index.html    /:splat/          301!
+# Для папок
+/*/index.html    /:splat/   301!
