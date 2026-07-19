@@ -24,7 +24,6 @@ const PRODUCTS: Record<string, { name: string; price: number }> = {
   "moss-and-shadow": { name: "Moss & Shadow", price: 1199 },
   "dark-bloom": { name: "Dark Bloom", price: 1199 },
   "discovery-6": { name: "Discovery Set — 6 ароматів", price: 150 },
-  // Legacy ID is kept so existing carts remain valid; the complete set now contains 18 scents.
   "discovery-17": { name: "Discovery Set — 18 ароматів", price: 450 },
 };
 const FRAGRANCE_IDS = Object.keys(PRODUCTS).filter(id => !id.startsWith("discovery-"));
@@ -135,8 +134,6 @@ Deno.serve(async req => {
 
     const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
-    // Rate limit: max 5 orders per phone number within a 10-minute window.
-    // Uses only the existing customer_phone/created_at columns — no migration required.
     const rateLimitSince = new Date(Date.now() - 10 * 60 * 1000).toISOString();
     const { count: recentOrders, error: rateLimitError } = await supabase
       .from("orders")
@@ -217,12 +214,142 @@ Deno.serve(async req => {
     const resendKey = Deno.env.get("RESEND_API_KEY");
     if (resendKey) {
       try {
-        const rows = items.map(item => `<tr><td style="padding:8px 0;border-bottom:1px solid #332b20">${escapeHtml(item.name)} × ${item.quantity}${item.selections.length ? `<br><small style="color:#b9aa96">Обрано: ${item.selections.map(escapeHtml).join(" · ")}</small>` : ""}</td><td style="padding:8px 0;border-bottom:1px solid #332b20;text-align:right">${money(item.line_total)}</td></tr>`).join("");
-        const common = `<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;padding:32px;background:#0a0908;color:#eee6db"><h1 style="font-family:Georgia,serif;font-weight:400">VA HOME</h1><p>Замовлення <strong>${escapeHtml(order.client_order_id)}</strong></p><table style="width:100%;border-collapse:collapse">${rows}</table><p style="font-size:18px"><strong>Разом: ${money(total)}</strong></p>`;
+        const orderIdEscaped = escapeHtml(order.client_order_id);
         const cod = paymentMethod === "cash_on_delivery";
+
+        // Рендеринг списку товарів для листа адміністратора (Темна тема)
+        const rowsForAdmin = items.map(item => `
+          <tr>
+            <td style="padding: 12px 0; border-bottom: 1px solid #262626; font-size: 14px; color: #E5E5E5; line-height: 1.5;">
+              <strong style="color: #FFFFFF;">${escapeHtml(item.name)}</strong> × ${item.quantity}
+              ${item.selections.length ? `<br><small style="color: #A3A3A3; font-size: 12px;">Аромати: ${item.selections.map(escapeHtml).join(" · ")}</small>` : ""}
+            </td>
+            <td style="padding: 12px 0; border-bottom: 1px solid #262626; text-align: right; font-size: 14px; color: #FFFFFF; font-weight: 500; white-space: nowrap;">
+              ${money(item.line_total)}
+            </td>
+          </tr>
+        `).join("");
+
+        // Рендеринг списку товарів для листа клієнта (Світла преміум тема)
+        const rowsForClient = items.map(item => `
+          <tr>
+            <td style="padding: 16px 0; border-bottom: 1px solid #E5E5E5; font-size: 15px; color: #404040; line-height: 1.5;">
+              <span style="color: #171717; font-weight: 500;">${escapeHtml(item.name)}</span>
+              <span style="color: #737373; font-size: 14px; margin-left: 4px;">(×${item.quantity})</span>
+              ${item.selections.length ? `<br><small style="color: #737373; font-size: 12px; display: inline-block; margin-top: 4px;">Обрані аромати: ${item.selections.map(escapeHtml).join(" · ")}</small>` : ""}
+            </td>
+            <td style="padding: 16px 0; border-bottom: 1px solid #E5E5E5; text-align: right; font-size: 15px; color: #171717; font-weight: 500; white-space: nowrap;">
+              ${money(item.line_total)}
+            </td>
+          </tr>
+        `).join("");
+
+        // ДИЗАЙН 1: Лист для адміністратора (Глибокий преміальний темний)
+        const adminHtml = `
+          <div style="background-color: #050505; padding: 40px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #0D0D0D; margin: 0 auto; border: 1px solid #1F1F1F; border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+              <tr>
+                <td style="padding: 32px 32px 24px 32px; border-bottom: 1px solid #1F1F1F;">
+                  <div style="font-family: 'Georgia', serif; font-size: 22px; letter-spacing: 3px; color: #FFFFFF; text-transform: uppercase;">VA HOME</div>
+                  <div style="font-size: 11px; letter-spacing: 2px; color: #C8A27C; margin-top: 4px; text-transform: uppercase; font-weight: 500;">Нове замовлення</div>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 32px;">
+                  <p style="font-size: 15px; color: #A3A3A3; margin: 0 0 24px 0;">Номер замовлення: <strong style="color: #FFFFFF; font-family: monospace; font-size: 16px;">${orderIdEscaped}</strong></p>
+                  
+                  <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 24px;">
+                    ${rowsForAdmin}
+                    <tr>
+                      <td style="padding: 24px 0 0 0; font-size: 16px; color: #A3A3A3;">Всього до сплати:</td>
+                      <td style="padding: 24px 0 0 0; text-align: right; font-size: 20px; color: #C8A27C; font-weight: 600; font-family: 'Georgia', serif;">${money(total)}</td>
+                    </tr>
+                  </table>
+
+                  <div style="background-color: #141414; border: 1px solid #262626; border-radius: 4px; padding: 20px; margin-top: 32px;">
+                    <h3 style="font-family: 'Georgia', serif; font-size: 15px; color: #C8A27C; margin: 0 0 16px 0; font-weight: normal; letter-spacing: 1px; text-transform: uppercase;">Дані доставки та покупця</h3>
+                    <p style="font-size: 14px; color: #E5E5E5; margin: 0 0 10px 0; line-height: 1.5;"><strong style="color: #A3A3A3;">Клієнт:</strong> ${escapeHtml(name)}</p>
+                    <p style="font-size: 14px; color: #E5E5E5; margin: 0 0 10px 0; line-height: 1.5;"><strong style="color: #A3A3A3;">Телефон:</strong> <a href="tel:${phone}" style="color: #C8A27C; text-decoration: none;">${escapeHtml(phone)}</a></p>
+                    <p style="font-size: 14px; color: #E5E5E5; margin: 0 0 10px 0; line-height: 1.5;"><strong style="color: #A3A3A3;">Email:</strong> ${escapeHtml(email)}</p>
+                    <p style="font-size: 14px; color: #E5E5E5; margin: 0 0 10px 0; line-height: 1.5;"><strong style="color: #A3A3A3;">Адреса:</strong> м. ${escapeHtml(city)}, ${escapeHtml(deliveryDetails)}</p>
+                    <p style="font-size: 14px; color: #E5E5E5; margin: 0 0 10px 0; line-height: 1.5;"><strong style="color: #A3A3A3;">Тип оплати:</strong> ${cod ? "При отриманні (накладений платіж)" : "Предоплата на рахунок ФОП"}</p>
+                    <p style="font-size: 14px; color: #E5E5E5; margin: 0; line-height: 1.5;"><strong style="color: #A3A3A3;">Коментар:</strong> ${escapeHtml(comment || "Не вказано")}</p>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        `;
+
+        // ДИЗАЙН 2: Лист для клієнта (Елегантний світлий нішевий дизайн)
+        const clientPaymentBlock = cod 
+          ? `<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #F5F4F0; border-radius: 3px; border: 1px solid #EAE8E2;">
+              <tr>
+                <td style="padding: 24px;">
+                  <h2 style="font-family: 'Georgia', serif; font-size: 18px; color: #171717; margin: 0 0 12px 0; font-weight: normal; letter-spacing: 0.5px;">Оплата при отриманні</h2>
+                  <p style="font-size: 14px; margin: 0 0 8px 0; color: #525252; line-height: 1.6;">Ви зможете розрахуватися за посилку у відділенні або поштоматі Нової пошти при отриманні.</p>
+                  <p style="font-size: 13px; margin: 0; color: #737373; font-style: italic;">Термін відправки: протягом 1–2 робочих днів.</p>
+                </td>
+              </tr>
+            </table>`
+          : `<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FBF9F6; border-radius: 3px; border: 1px solid #C8A27C;">
+              <tr>
+                <td style="padding: 24px;">
+                  <h2 style="font-family: 'Georgia', serif; font-size: 18px; color: #171717; margin: 0 0 16px 0; font-weight: normal; letter-spacing: 0.5px;">Реквізити для оплати замовлення</h2>
+                  <p style="font-size: 14px; margin: 0 0 12px 0; color: #404040; line-height: 1.5;"><strong style="color: #171717;">Отримувач:</strong><br>ФОП Невідома Анна Сергіївна</p>
+                  <p style="font-size: 14px; margin: 0 0 12px 0; color: #404040; line-height: 1.5;"><strong style="color: #171717;">IBAN рахунок:</strong><br><span style="font-family: monospace; font-size: 14px; background: #EAE8E2; padding: 4px 8px; display: inline-block; margin-top: 4px; border-radius: 2px; letter-spacing: 0.5px; color: #171717;">UA523220010000026006370119233</span></p>
+                  <p style="font-size: 14px; margin: 0 0 16px 0; color: #404040; line-height: 1.5;"><strong style="color: #171717;">Призначення платежу:</strong><br>Оплата замовлення ${orderIdEscaped}</p>
+                  <div style="font-size: 13px; color: #737373; line-height: 1.5; border-top: 1px solid #EAE8E2; padding-top: 12px;">
+                    Будь ласка, надішліть квитанцію про оплату в наш Instagram або менеджеру. Відправка здійснюється протягом 1–2 робочих днів після зарахування коштів.
+                  </div>
+                </td>
+              </tr>
+            </table>`;
+
+        const clientHtml = `
+          <div style="background-color: #F9F8F6; padding: 40px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 540px; background-color: #FFFFFF; margin: 0 auto; border: 1px solid #E5E5E5; border-radius: 2px;">
+              <tr>
+                <td align="center" style="padding: 40px 24px 32px 24px; border-bottom: 1px solid #F5F5F5;">
+                  <div style="font-family: 'Georgia', serif; font-size: 26px; letter-spacing: 5px; color: #171717; font-weight: normal; text-transform: uppercase;">VA HOME</div>
+                  <div style="font-size: 9px; letter-spacing: 3px; color: #C8A27C; margin-top: 6px; text-transform: uppercase; font-weight: 500;">invisible luxury atmosphere</div>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 40px 32px 48px 32px;">
+                  <h1 style="font-family: 'Georgia', serif; font-size: 24px; line-height: 1.4; color: #171717; margin: 0 0 16px 0; font-weight: normal;">Дякуємо за ваше замовлення</h1>
+                  <p style="font-size: 15px; line-height: 1.6; color: #525252; margin: 0 0 32px 0;">Вітаємо! Ми успішно прийняли ваше замовлення <strong style="color: #171717;">${orderIdEscaped}</strong> та вже готуємо його до підтвердження.</p>
+                  
+                  <h3 style="font-size: 12px; letter-spacing: 1.5px; color: #737373; text-transform: uppercase; margin: 0 0 12px 0; font-weight: 600; border-bottom: 1px solid #171717; padding-bottom: 6px;">Перелік обраного</h3>
+                  <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 24px;">
+                    ${rowsForClient}
+                    <tr>
+                      <td style="padding: 20px 0 0 0; font-size: 15px; color: #525252; font-weight: 500;">Разом до сплати:</td>
+                      <td style="padding: 20px 0 0 0; text-align: right; font-size: 18px; color: #171717; font-weight: 600; font-family: 'Georgia', serif;">${money(total)}</td>
+                    </tr>
+                  </table>
+
+                  <div style="margin-top: 40px; margin-bottom: 32px;">
+                    ${clientPaymentBlock}
+                  </div>
+
+                  <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-top: 1px solid #E5E5E5; padding-top: 24px; margin-top: 40px;">
+                    <tr>
+                      <td align="center" style="font-size: 13px; color: #A3A3A3; line-height: 1.5;">
+                        Якщо у вас виникли запитання, зв'яжіться з нами за номером<br>
+                        <a href="tel:+380953919569" style="color: #171717; text-decoration: none; font-weight: 500;">+38 (095) 391-95-69</a> або в Instagram.
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+        `;
+
         await Promise.all([
-          sendEmail(resendKey, { from: "VA HOME <orders@vahome.com.ua>", to: ["vahome.aroma@gmail.com"], reply_to: email, subject: `Нове замовлення ${order.client_order_id}`, html: `${common}<hr><p>${escapeHtml(name)} · ${escapeHtml(phone)} · ${escapeHtml(email)}</p><p>${escapeHtml(city)}, ${escapeHtml(deliveryDetails)}</p><p><strong>Оплата:</strong> ${cod ? "при отриманні" : "на рахунок"}</p><p>${escapeHtml(comment || "Без коментаря")}</p></div>` }),
-          sendEmail(resendKey, { from: "VA HOME <orders@vahome.com.ua>", to: [email], reply_to: "vahome.aroma@gmail.com", subject: `Ваше замовлення ${order.client_order_id} прийнято`, html: cod ? `${common}<hr><h2 style="font-family:Georgia,serif;font-weight:400">Оплата при отриманні</h2><p>Ви сплатите замовлення у відділенні або поштоматі Нової пошти під час отримання.</p><p>Відправка протягом 1–2 робочих днів.</p></div>` : `${common}<hr><h2 style="font-family:Georgia,serif;font-weight:400">Реквізити для оплати</h2><p>Отримувач: ФОП Невідома Анна Сергіївна</p><p>IBAN: <strong>UA523220010000026006370119233</strong></p><p>Призначення: Оплата замовлення ${escapeHtml(order.client_order_id)}</p><p>Відправка протягом 1–2 робочих днів після підтвердження оплати.</p></div>` }),
+          sendEmail(resendKey, { from: "VA HOME <orders@vahome.com.ua>", to: ["vahome.aroma@gmail.com"], reply_to: email, subject: `Нове замовлення ${order.client_order_id}`, html: adminHtml }),
+          sendEmail(resendKey, { from: "VA HOME <orders@vahome.com.ua>", to: [email], reply_to: "vahome.aroma@gmail.com", subject: `Ваше замовлення ${order.client_order_id} прийнято`, html: clientHtml }),
         ]);
         emailStatus = "sent";
       } catch (emailError) {
