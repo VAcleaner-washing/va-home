@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <circle cx="32" cy="32" r="31" fill="#D8C8B2"/>
-  <circle cx="32" cy="32" r="26" fill="none" stroke="#B88A4B" stroke-width="1.1"/>
-  <text x="32" y="30" text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="bold" font-size="24" fill="#856236">VA</text>
-  <text x="32" y="46" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold" font-size="8" letter-spacing="2" fill="#B88A4B">HOME</text>
+  <text x="32" y="29" text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="bold" font-size="27" fill="#856236">VA</text>
+  <text x="32" y="47" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold" font-size="9" letter-spacing="2" fill="#B88A4B">HOME</text>
 </svg>
