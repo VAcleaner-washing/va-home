@@ -51,12 +51,13 @@
 
 
 .product-hero__media {
-  aspect-ratio: 4 / 5;
+  width: 100%;
+  aspect-ratio: 4 / 5 !important;
   border-radius: var(--radius-md);
   overflow: hidden;
   position: relative;
+  align-self: start;
 }
-
 
 .product-hero__media img {
   width: 100%;
@@ -123,14 +124,13 @@
 
 @media (min-width: 901px) {
   .product-hero__media {
-    /* Keep the badge anchored to the product image, not to the page/header. */
     position: relative;
     width: 100%;
-    height: clamp(560px, 64vh, 720px);
-    aspect-ratio: auto;
+    height: auto;
+    aspect-ratio: 4 / 5 !important;
     align-self: start;
   }
-
+}
   .product-hero__info { position: static; }
 
 }
@@ -379,4 +379,29 @@
 .reviews-summary{position:static}
 .review-card__top{align-items:flex-start}
 .review-form .btn{width:100%}
+}
+
+/* На ПК: прев'ю зліва вертикально */
+@media (min-width: 901px) {
+  .product-hero__visual-stack {
+    display: grid;
+    grid-template-columns: 72px 1fr; /* 72px під прев'ю, решта під фото */
+    gap: var(--space-3);
+    align-items: start;
+  }
+
+  .product-gallery-thumbs {
+    order: -1; /* Переносить прев'ю наліво від фото */
+    flex-direction: column !important;
+    margin-top: 0 !important;
+  }
+}
+
+/* На телефоні: прев'ю знизу горизонтально */
+@media (max-width: 900px) {
+  .product-gallery-thumbs {
+    display: flex;
+    flex-direction: row;
+    margin-top: var(--space-2);
+  }
 }
