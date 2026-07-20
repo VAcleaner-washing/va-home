@@ -384,83 +384,75 @@
 
 
 
-/* ---- ПК (від 901px) ---- */
+/* ==== ФІКС ГАЛЕРЕЇ ТА ФОТО ==== */
+
+/* 1. Повертаємо видимість фото та задаємо пропорцію 4:5 */
+.product-hero__media,
+div.product-hero__media {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 4 / 5 !important;
+  position: relative !important;
+}
+
+.product-hero__media img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* 2. Десктоп (від 901px): прев'ю зліва, фото справа */
 @media (min-width: 901px) {
-  /* Фіксуємо пропорцію 4:5 для фото */
-  .product-hero__media {
-    width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 4 / 5 !important;
-    position: relative !important;
-  }
-
-  .product-hero__media img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-  }
-
-  /* Обгортка фото та мініатюр у рядок */
   .product-hero__visual-stack {
     display: flex !important;
+    flex-wrap: wrap !important;
     flex-direction: row !important;
     align-items: flex-start !important;
     gap: 16px !important;
   }
 
-  /* Мініатюри вертикальною колонкою зліва */
   .product-gallery-thumbs,
   .product-gallery-thumbs.has-multiple {
     display: flex !important;
     flex-direction: column !important;
-    width: 80px !important;
+    width: 72px !important;
     flex-shrink: 0 !important;
     margin: 0 !important;
-    order: 1 !important;
   }
 
-  /* Фото праворуч від мініатюр */
+  /* Фото стає поруч із прев'ю */
   .product-hero__media {
-    order: 2 !important;
-    flex: 1 1 auto !important;
+    flex: 1 1 calc(100% - 88px) !important;
+    max-width: calc(100% - 88px) !important;
   }
 
-  /* Блок формули під ними */
+  /* Блок формули падає вниз на повну ширину */
   .product-formula-proof {
     width: 100% !important;
-    order: 3 !important;
+    flex: 1 1 100% !important;
   }
 }
 
-/* ---- Мобілка (до 900px) ---- */
+/* 3. Мобілка (до 900px): фото зверху, прев'ю знизу */
 @media (max-width: 900px) {
-  .product-hero__media {
-    width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 4 / 5 !important;
-  }
-
-  .product-hero__media img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-  }
-
   .product-hero__visual-stack {
     display: flex !important;
     flex-direction: column !important;
   }
 
+  .product-hero__media {
+    order: 1 !important;
+    width: 100% !important;
+  }
+
   .product-gallery-thumbs,
   .product-gallery-thumbs.has-multiple {
+    order: 2 !important;
     display: flex !important;
     flex-direction: row !important;
     width: 100% !important;
     margin-top: 12px !important;
-    order: 2 !important;
-  }
-
-  .product-hero__media {
-    order: 1 !important;
   }
 }
