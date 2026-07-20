@@ -50,7 +50,7 @@
       <a class="skip-link" href="#main-content">Перейти до контенту</a>
       <header class="site-header" id="siteHeaderEl">
         <div class="container site-header__inner">
-          <a href="${root}" class="site-logo">VA<span>HOME</span></a>
+          <a href="${root}index.html" class="site-logo">VA<span>HOME</span></a>
           <nav class="main-nav" aria-label="Основна навігація">${navLinks}</nav>
           <div class="header-actions">
             <a class="header-phone" href="tel:+380953919569" aria-label="Зателефонувати VA HOME">+38 (095) 391-9569</a>
@@ -69,7 +69,7 @@
 
       <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu__top">
-          <a href="${root}" class="site-logo">VA<span>HOME</span></a>
+          <a href="${root}index.html" class="site-logo">VA<span>HOME</span></a>
           <button class="icon-btn" type="button" aria-label="Закрити меню" id="mobileMenuClose">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
           </button>
@@ -384,4 +384,25 @@
       document.body.appendChild(script);
     }
   });
+
+// Автоматичний редирект з .html на чисті URL (клієнтська сторона)
+(function() {
+    const path = window.location.pathname;
+
+    if (path.endsWith('.html')) {
+        let cleanUrl = path;
+
+        // Прибираємо .html
+        if (path.endsWith('index.html')) {
+            cleanUrl = path.replace('index.html', '');
+        } else {
+            cleanUrl = path.slice(0, -5); // прибираємо .html
+        }
+
+        const newUrl = cleanUrl + window.location.search + window.location.hash;
+
+        // Заміна URL без перезавантаження сторінки
+        window.history.replaceState({}, document.title, newUrl);
+    }
+})();
 })();
