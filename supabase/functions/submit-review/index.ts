@@ -99,7 +99,7 @@ Deno.serve(async req => {
     let photoPath: string | null = null;
     if (photoData) {
       const bytes = Uint8Array.from(atob(photoData), c => c.charCodeAt(0));
-      if (bytes.byteLength > 2 * 1024 * 1024) return json(req, { error: "PHOTO_TOO_LARGE" }, 400);
+      if (bytes.byteLength > 5 * 1024 * 1024) return json(req, { error: "PHOTO_TOO_LARGE" }, 400);
       photoPath = `${productSlug}/${crypto.randomUUID()}.${PHOTO_TYPES[photoType]}`;
       const uploaded = await service.storage.from("review-photos").upload(photoPath, bytes, { contentType: photoType, upsert: false });
       if (uploaded.error) throw uploaded.error;
