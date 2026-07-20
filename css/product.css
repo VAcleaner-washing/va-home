@@ -381,25 +381,55 @@
 .review-form .btn{width:100%}
 }
 
-/* На ПК: прев'ю зліва вертикально */
+/* ---- Галерея 4:5 + прев'ю збоку (ПК) ---- */
 @media (min-width: 901px) {
-  .product-hero__visual-stack {
-    display: grid;
-    grid-template-columns: 72px 1fr; /* 72px під прев'ю, решта під фото */
-    gap: var(--space-3);
-    align-items: start;
+  /* Головне фото та прев'ю вишиковуємо в один рядок */
+  .product-hero__media {
+    position: relative;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5 !important;
+    align-self: start;
   }
 
-  .product-gallery-thumbs {
-    order: -1; /* Переносить прев'ю наліво від фото */
-    flex-direction: column !important;
-    margin-top: 0 !important;
+  .product-hero__visual-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  /* Прев'ю стають вертикально зліва від фото */
+  .product-gallery-thumbs.has-multiple {
+    display: flex;
+    flex-direction: column;
+    order: 1;
+    width: 72px;
+    margin: 0;
+  }
+
+  /* Фото стає праворуч від прев'ю */
+  .product-hero__media {
+    order: 2;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Блок "Формула VA HOME" стає знизу під фото на всю ширину */
+  .product-formula-proof {
+    order: 3;
+    width: 100%;
   }
 }
 
-/* На телефоні: прев'ю знизу горизонтально */
+/* ---- На мобільному (до 900px) ---- */
 @media (max-width: 900px) {
-  .product-gallery-thumbs {
+  .product-hero__media {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5 !important;
+  }
+
+  .product-gallery-thumbs.has-multiple {
     display: flex;
     flex-direction: row;
     margin-top: var(--space-2);
