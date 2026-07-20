@@ -33,6 +33,17 @@
     button.disabled = busy;
     button.textContent = busy ? busyText : button.dataset.label;
   }
+  function loadSavedDeliveryIntoForm() {
+    const form = document.getElementById("accountDeliveryForm");
+    if (!form) return;
+    let saved;
+    try { saved = JSON.parse(localStorage.getItem("vahome_saved_delivery") || "null"); } catch (_) { saved = null; }
+    if (!saved) return;
+    if (saved.name) form.savedName.value = saved.name;
+    if (saved.phone) form.savedPhone.value = saved.phone;
+    if (saved.city) form.savedCity.value = saved.city;
+    if (saved.warehouse) form.savedWarehouse.value = saved.warehouse;
+  }
   function finishLoading() { $("#accountLoading").hidden = true; }
   function showAuth() {
     finishLoading();
@@ -56,14 +67,37 @@
     return dashboardPromise;
   }
 
+  function orderProgressHtml(status) {
+    if (status === "cancelled") {
+      return `<div class="account-order__progress account-order__progress--cancelled"><span>Замовлення скасовано</span></div>`;
+    }
+    const steps = [
+      { key: "new", label: "Прийнято" },
+      { key: "paid", label: "Оплачено" },
+      { key: "shipped", label: "Відправлено" },
+      { key: "completed", label: "Виконано" },
+    ];
+    const order = ["new", "pending", "paid", "shipped", "completed"];
+    const currentIndex = order.indexOf(status);
+    const stepIndex = (key) => (key === "new" ? 0 : order.indexOf(key));
+    return `<div class="account-order__progress">${steps.map((step) => {
+      const done = currentIndex >= stepIndex(step.key);
+      return `<div class="account-order__progress-step${done ? " is-done" : ""}"><span class="account-order__progress-dot"></span><span>${step.label}</span></div>`;
+    }).join("")}</div>`;
+  }
+
   function orderItems(items) {
     return (Array.isArray(items) ? items : []).map((item) => {
       const chosen = Array.isArray(item.selections) ? item.selections : [];
-      const nameHtml = item.id
+      const hasProductPage = item.id && !item.id.startsWith("discovery-");
+      const nameHtml = hasProductPage
         ? `<a href="products/${esc(item.id)}.html" class="account-order__item-link">${esc(item.name)}</a>`
         : esc(item.name);
-      const reviewLink = item.id
-        ? `<a href="products/${esc(item.id)}.html#reviews" class="account-order__review-link">Залишити відгук</a>`
+      const alreadyReviewed = hasProductPage && !!localStorage.getItem(`vahome_review_${item.id}`);
+      const reviewLink = hasProductPage
+        ? (alreadyReviewed
+            ? `<span class="account-order__review-done">✓ Відгук залишено</span>`
+            : `<a href="products/${esc(item.id)}.html#reviews" class="account-order__review-link">Залишити відгук</a>`)
         : "";
       return `<div class="account-order__item"><span>${nameHtml} × ${esc(item.quantity)}${chosen.length ? `<small>Обрано: ${chosen.map(esc).join(" · ")}</small>` : ""}${reviewLink}</span><strong>${money(item.line_total)}</strong></div>`;
     }).join("");
@@ -90,6 +124,7 @@
     list.innerHTML = rows.map((order) => `<article class="account-order">
       <div class="account-order__top"><div><h2>${esc(order.client_order_id)}</h2><small>${new Date(order.created_at).toLocaleDateString("uk-UA")}</small></div>
       <div class="account-order__summary"><span class="order-status order-status--${esc(order.status)}">${esc(labels[order.status] || order.status)}</span><strong>${money(order.total_amount)}</strong></div></div>
+      ${orderProgressHtml(order.status)}
       <p class="account-order__payment"><strong>Оплата:</strong> ${order.payment_method === "cash_on_delivery" ? "при отриманні" : "на рахунок"}</p>
       <div class="account-order__items">${orderItems(order.items)}</div>
       ${order.tracking_number ? `<p class="account-order__tracking">ТТН: <strong>${esc(order.tracking_number)}</strong></p>` : ""}
@@ -196,6 +231,37 @@
       if (!error) setTimeout(() => location.replace("account.html"), 700);
     });
 
+    $("#accountPasswordForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const output = $("#accountPasswordMessage");
+      const form = event.currentTarget;
+      const pass = form.newPassword.value;
+      const confirm = form.newPasswordConfirm.value;
+      if (pass.length < 6) { output.textContent = "Пароль має бути щонайменше 6 символів."; return; }
+      if (pass !== confirm) { output.textContent = "Паролі не збігаються."; return; }
+      output.textContent = "Зберігаємо…";
+      let error;
+      try { ({ error } = await withTimeout(sb.auth.updateUser({ password: pass }), "PASSWORD_TIMEOUT")); }
+      catch (_) { output.textContent = "Сервер не відповідає. Спробуйте ще раз."; return; }
+      output.textContent = error ? "Не вдалося змінити пароль." : "Пароль змінено.";
+      if (!error) form.reset();
+    });
+
+    $("#accountDeliveryForm")?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const details = {
+        name: form.savedName.value.trim(),
+        phone: form.savedPhone.value.trim(),
+        city: form.savedCity.value.trim(),
+        warehouse: form.savedWarehouse.value.trim(),
+      };
+      try { localStorage.setItem("vahome_saved_delivery", JSON.stringify(details)); } catch (_) {}
+      const output = $("#accountDeliveryMessage");
+      output.textContent = "Збережено. Дані підставляться при наступному оформленні замовлення.";
+    });
+    loadSavedDeliveryIntoForm();
+
     document.querySelectorAll("[data-auth-mode]").forEach((button) => button.addEventListener("click", () => {
       mode = button.dataset.authMode;
       document.querySelectorAll("[data-auth-mode]").forEach((item) => item.classList.toggle("is-active", item === button));
@@ -216,6 +282,7 @@
       document.querySelectorAll("[data-account-tab]").forEach((item) => item.classList.toggle("is-active", item === button));
       $("#accountOrders").hidden = button.dataset.accountTab !== "orders";
       $("#accountWishlist").hidden = button.dataset.accountTab !== "wishlist";
+      $("#accountSettings").hidden = button.dataset.accountTab !== "settings";
     }));
   }
 

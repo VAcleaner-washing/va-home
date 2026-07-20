@@ -535,11 +535,24 @@
     }
   }
 
+  function prefillCheckoutFromSaved(form) {
+    let saved;
+    try { saved = JSON.parse(localStorage.getItem("vahome_saved_delivery") || "null"); } catch (_) { saved = null; }
+    if (!saved) return;
+    if (saved.name && form.elements.customerName && !form.elements.customerName.value) form.elements.customerName.value = saved.name;
+    if (saved.phone && form.elements.customerPhone && !form.elements.customerPhone.value) form.elements.customerPhone.value = saved.phone;
+    if (saved.city && form.elements.customerCity && !form.elements.customerCity.value) {
+      form.elements.customerCity.value = saved.city;
+      form.elements.customerCity.placeholder = `Востаннє: ${saved.city}${saved.warehouse ? ", " + saved.warehouse : ""} — оберіть зі списку ще раз`;
+    }
+  }
+
   function initCheckoutForm() {
     const form = document.getElementById("checkoutForm");
     if (!form) return;
     const button = document.getElementById("placeOrderBtn");
     initNovaPoshtaCheckout(form);
+    prefillCheckoutFromSaved(form);
 
     form.addEventListener("submit", (event) => {
       event.preventDefault();
