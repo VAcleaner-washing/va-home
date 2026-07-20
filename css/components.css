@@ -1317,3 +1317,45 @@ body.menu-open {
   border-color: var(--color-gold);
   color: var(--color-gold);
 }
+
+/* ---- Collections comparison table ---- */
+.collections-compare {
+  margin-top: var(--space-5);
+  overflow-x: auto;
+}
+.collections-compare table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 480px;
+}
+.collections-compare th,
+.collections-compare td {
+  text-align: left;
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid var(--border-hairline);
+}
+.collections-compare th {
+  font-size: var(--fs-caption);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+.collections-compare td {
+  color: var(--text-secondary);
+  font-size: var(--fs-small);
+}
+.collections-compare td:first-child a {
+  color: var(--text-gold);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  text-decoration: none;
+}
+.collections-compare td:first-child a:hover,
+.collections-compare td:first-child a:focus-visible {
+  text-decoration: underline;
+}
+.collections-compare tbody tr:last-child th,
+.collections-compare tbody tr:last-child td {
+  border-bottom: none;
+}

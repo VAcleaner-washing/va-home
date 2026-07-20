@@ -61,11 +61,11 @@ p.lead {
 }
 
 .section {
-  padding-block: var(--space-7);
+  padding-block: var(--space-8);
 }
 
 .section--tight {
-  padding-block: var(--space-6);
+  padding-block: var(--space-7);
 }
 
 @media (max-width: 640px) {
@@ -152,10 +152,6 @@ p.lead {
   white-space: nowrap;
 }
 
-.btn:active {
-  transform: translateY(1px);
-}
-
 .btn-primary {
   background: var(--color-gold);
   color: var(--text-on-contrast);
@@ -165,6 +161,22 @@ p.lead {
 .btn-primary:focus-visible {
   background: var(--color-dark-gold);
   color: var(--color-ivory);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover,
+  .btn-primary:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(199, 151, 77, 0.25);
+  }
+  .btn-secondary:hover,
+  .btn-secondary:focus-visible {
+    transform: translateY(-2px);
+  }
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .btn-secondary {

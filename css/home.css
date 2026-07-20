@@ -551,38 +551,3 @@
   .home-review-card footer{align-items:flex-start;gap:.5rem .65rem}
   .home-review-card footer em{display:block;width:max-content;max-width:100%}
 }
-
-/* ---- Brand process (about.html 4-step section) ---- */
-.brand-process {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-3);
-  margin-top: var(--space-6);
-  padding-top: var(--space-5);
-  border-top: 1px solid var(--border-hairline);
-}
-@media (max-width: 900px) {
-  .brand-process {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-@media (max-width: 560px) {
-  .brand-process {
-    grid-template-columns: 1fr;
-  }
-}
-.brand-process__num {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  color: var(--color-gold);
-  margin-bottom: var(--space-2);
-}
-.brand-process__step h3 {
-  font-size: 1.1rem;
-  margin-bottom: var(--space-1);
-}
-.brand-process__step p {
-  color: var(--text-secondary);
-  font-size: var(--fs-small);
-}
