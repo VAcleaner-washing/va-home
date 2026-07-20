@@ -147,6 +147,15 @@
   margin-bottom: var(--space-3);
 }
 
+.product-hero__suit-for {
+  font-size: var(--fs-small);
+  color: var(--text-primary);
+  padding: var(--space-2) var(--space-3);
+  border-left: 2px solid var(--color-gold);
+  background: var(--bg-elevated);
+  margin-bottom: var(--space-3);
+}
+
 
 .product-purchase-row {
   display: flex;

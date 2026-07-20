@@ -163,6 +163,7 @@
     if (results) results.classList.add("is-active");
 
     const recs = getRecommendations();
+    window.VAAnalytics?.event?.("select_content", { content_type: "scent_guide_completed", items: recs.map(r => ({ item_id: r.product.id })) });
     if (grid) {
       grid.innerHTML = recs
         .map(({ product, matched }) => {
@@ -179,6 +180,9 @@
   }
 
   function selectOption(question, value, stepEl) {
+    if (Object.keys(state.answers).length === 0) {
+      window.VAAnalytics?.event?.("select_content", { content_type: "scent_guide_started" });
+    }
     state.answers[question] = value;
     stepEl.querySelectorAll(".guide-option").forEach((btn) => {
       btn.classList.toggle("is-selected", btn.getAttribute("data-value") === value);

@@ -140,6 +140,9 @@
         window.VAHome?.showToast("Товари додано в кошик");
       } catch (_) { window.VAHome?.showToast("Не вдалося повторити замовлення"); }
     }));
+    document.querySelectorAll(".account-order__review-link").forEach((link) => link.addEventListener("click", () => {
+      window.VAAnalytics?.event?.("select_content", { content_type: "leave_review_click", item_id: link.getAttribute("href")?.split("/")[1]?.replace(".html#reviews", "") || "" });
+    }));
   }
 
   async function loadWishlist() {
