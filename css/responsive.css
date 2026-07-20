@@ -195,14 +195,16 @@ h1, h2, h3, .product-card__name, .cart-item__name {
 }
 
 /* iOS autofill should preserve the dark VA HOME form style. */
-.form-field input:-webkit-autofill,
-.form-field input:-webkit-autofill:hover,
-.form-field input:-webkit-autofill:focus,
-.form-field textarea:-webkit-autofill,
-.form-field select:-webkit-autofill {
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
   -webkit-text-fill-color: var(--text-primary);
   -webkit-box-shadow: 0 0 0 1000px var(--bg-elevated) inset;
   box-shadow: 0 0 0 1000px var(--bg-elevated) inset;
+  background-color: var(--bg-elevated) !important;
   caret-color: var(--text-primary);
   transition: background-color 9999s ease-out 0s;
 }
