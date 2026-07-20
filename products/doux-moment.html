@@ -128,7 +128,14 @@
 
         <div class="product-hero__media" id="productMedia">
           <div class="product-hero__badges" id="productBadges"></div>
-          <img src="../images/products/doux-moment.webp" alt="DOUX Moment — аромадифузор VA HOME" loading="eager" fetchpriority="high" decoding="async" width="600" height="750" onerror="this.parentElement.classList.add('placeholder-media');this.remove();">
+        <div class="product-gallery-thumbs" id="productGalleryThumbs">
+            <button type="button" class="product-gallery-thumb is-active" data-full="../images/products/doux-moment.webp"><img src="../images/products/doux-moment.webp" alt="" loading="lazy"></button>
+            <button type="button" class="product-gallery-thumb" data-full="../images/products/doux-moment-2.webp"><img src="../images/products/doux-moment-2.webp" alt="" loading="lazy" onerror="this.closest('.product-gallery-thumb').remove()"></button>
+            <button type="button" class="product-gallery-thumb" data-full="../images/products/doux-moment-3.webp"><img src="../images/products/doux-moment-3.webp" alt="" loading="lazy" onerror="this.closest('.product-gallery-thumb').remove()"></button>
+            <button type="button" class="product-gallery-thumb" data-full="../images/products/doux-moment-4.webp"><img src="../images/products/doux-moment-4.webp" alt="" loading="lazy" onerror="this.closest('.product-gallery-thumb').remove()"></button>
+        </div>
+
+          <img id="productMainImage" src="../images/products/doux-moment.webp" alt="DOUX Moment — аромадифузор VA HOME" loading="eager" fetchpriority="high" decoding="async" width="600" height="750" onerror="this.parentElement.classList.add('placeholder-media');this.remove();">
         </div>
 
         <div class="product-hero__info">
@@ -377,6 +384,7 @@
 <script src="../js/reviews.js" defer></script>
 <script src="../js/product.js" defer></script>
 <script src="../js/cart.js" defer></script>
+<script src="../js/wishlist.js" defer data-vahome-wishlist="true"></script>
 <script src="../js/main.js" defer></script>
 </body>
 </html>
