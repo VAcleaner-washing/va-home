@@ -123,11 +123,11 @@
 
 @media (min-width: 901px) {
   .product-hero__media {
-    /* Keep the badge anchored to the product image, not to the page/header. */
+    /* Keep every product image in the same portrait 4:5 frame. */
     position: relative;
     width: 100%;
-    height: clamp(560px, 64vh, 720px);
-    aspect-ratio: auto;
+    height: auto;
+    aspect-ratio: 4 / 5;
     align-self: start;
   }
 
@@ -257,8 +257,91 @@
 
 /* Image and formula are one visual stack, so the formula starts immediately
    below the photograph instead of waiting for the taller product-info column. */
-.product-hero__visual-stack{display:grid;gap:clamp(1rem,2vw,1.75rem);align-self:start;min-width:0}
+/* Product gallery layout.
+   Desktop: vertical previews on the left, 4:5 main image on the right.
+   Mobile/tablet: 4:5 main image first, horizontal previews underneath. */
+.product-hero__visual-stack{
+  display:grid;
+  gap:clamp(1rem,2vw,1.75rem);
+  align-self:start;
+  min-width:0;
+}
 .product-hero__visual-stack>.product-formula-proof{margin:0;padding:clamp(1.4rem,3vw,2.2rem)}
+
+@media (min-width: 901px) {
+  .product-hero__visual-stack{
+    grid-template-columns:72px minmax(0,1fr);
+    column-gap:clamp(.85rem,1.4vw,1.25rem);
+    row-gap:clamp(1rem,2vw,1.75rem);
+    align-items:start;
+  }
+
+  .product-hero__visual-stack>.product-hero__media{
+    grid-column:2;
+    grid-row:1;
+  }
+
+  .product-hero__visual-stack>.product-gallery-thumbs{
+    grid-column:1;
+    grid-row:1;
+    align-self:start;
+  }
+
+  .product-gallery-thumbs.has-multiple{
+    display:flex;
+    flex-direction:column;
+    margin-top:0;
+    max-height:100%;
+    overflow-y:auto;
+    overflow-x:hidden;
+    scrollbar-width:none;
+  }
+
+  .product-gallery-thumbs.has-multiple::-webkit-scrollbar{display:none}
+
+  .product-gallery-thumb{
+    width:72px;
+  }
+
+  .product-hero__visual-stack>.product-formula-proof{
+    grid-column:1 / -1;
+  }
+}
+
+@media (max-width: 900px) {
+  .product-hero__visual-stack{
+    grid-template-columns:minmax(0,1fr);
+  }
+
+  .product-hero__visual-stack>.product-hero__media{
+    grid-column:1;
+    grid-row:1;
+  }
+
+  .product-hero__visual-stack>.product-gallery-thumbs{
+    grid-column:1;
+    grid-row:2;
+  }
+
+  .product-gallery-thumbs.has-multiple{
+    display:flex;
+    flex-direction:row;
+    margin-top:0;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding-bottom:2px;
+    scroll-snap-type:x proximity;
+    scrollbar-width:none;
+  }
+
+  .product-gallery-thumbs.has-multiple::-webkit-scrollbar{display:none}
+  .product-gallery-thumb{scroll-snap-align:start}
+
+  .product-hero__visual-stack>.product-formula-proof{
+    grid-column:1;
+    grid-row:3;
+  }
+}
 .product-hero.has-inline-substance .product-hero__info>.product-accordion{margin-top:1.25rem;border:1px solid var(--border-hairline);border-bottom:0;background:var(--bg-elevated)}
 .product-hero.has-inline-substance .product-hero__info>.product-accordion .product-accordion__item summary{padding:1.25rem 3.2rem 1.25rem 1.35rem}
 .product-hero.has-inline-substance .product-hero__info>.product-accordion .product-accordion__item summary::before,
