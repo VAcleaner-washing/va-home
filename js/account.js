@@ -90,6 +90,10 @@
     return (Array.isArray(items) ? items : []).map((item) => {
       const chosen = Array.isArray(item.selections) ? item.selections : [];
       const hasProductPage = item.id && !item.id.startsWith("discovery-");
+      const imgSrc = hasProductPage
+        ? `images/products/${esc(item.id)}.webp`
+        : "images/discovery/discovery-set.webp";
+      const thumbHtml = `<img class="account-order__item-thumb" src="${imgSrc}" alt="" loading="lazy" onerror="this.remove()">`;
       const nameHtml = hasProductPage
         ? `<a href="products/${esc(item.id)}.html" class="account-order__item-link">${esc(item.name)}</a>`
         : esc(item.name);
@@ -99,7 +103,7 @@
             ? `<span class="account-order__review-done">✓ Відгук залишено</span>`
             : `<a href="products/${esc(item.id)}.html#reviews" class="account-order__review-link">Залишити відгук</a>`)
         : "";
-      return `<div class="account-order__item"><span>${nameHtml} × ${esc(item.quantity)}${chosen.length ? `<small>Обрано: ${chosen.map(esc).join(" · ")}</small>` : ""}${reviewLink}</span><strong>${money(item.line_total)}</strong></div>`;
+      return `<div class="account-order__item">${thumbHtml}<span>${nameHtml} × ${esc(item.quantity)}${chosen.length ? `<small>Обрано: ${chosen.map(esc).join(" · ")}</small>` : ""}${reviewLink}</span><strong>${money(item.line_total)}</strong></div>`;
     }).join("");
   }
 

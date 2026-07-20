@@ -384,28 +384,4 @@
       document.body.appendChild(script);
     }
   });
-
-    
-// Автоматичний редирект з .html на чисті URL (клієнтська сторона)
-(function() {
-    const path = window.location.pathname;
-    
-    if (path.endsWith('.html')) {
-        let cleanUrl = path;
-        
-        // Прибираємо .html
-        if (path.endsWith('index.html')) {
-            cleanUrl = path.replace('index.html', '');
-        } else {
-            cleanUrl = path.slice(0, -5); // прибираємо .html
-        }
-        
-        const newUrl = cleanUrl + window.location.search + window.location.hash;
-        
-        // Заміна URL без перезавантаження сторінки
-        window.history.replaceState({}, document.title, newUrl);
-    }
-})();
-    
-    
 })();
