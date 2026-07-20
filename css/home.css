@@ -191,11 +191,6 @@
   font-size: var(--fs-small);
 }
 
-.collection-card__unit {
-  color: var(--text-secondary);
-  opacity: 0.75;
-}
-
 .collection-card__arrow {
   grid-area: arrow;
   display: grid;

@@ -803,13 +803,23 @@ body.menu-open {
 .collection-editorial__price {
   font-size: 1.1rem;
   margin-top: 0.9rem;
-  margin-bottom: 1.75rem;
+  margin-bottom: 0.2rem;
   color: var(--text-primary);
+}
+
+.collection-editorial__unit {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  opacity: 0.65;
+  margin-bottom: 1.75rem;
 }
 
 @media (max-width: 640px) {
   .collection-editorial__price {
     margin-top: 0.75rem;
+    margin-bottom: 0.2rem;
+  }
+  .collection-editorial__unit {
     margin-bottom: 1.35rem;
   }
 }
