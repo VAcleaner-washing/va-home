@@ -64,6 +64,7 @@
 <nav class="account-tabs" aria-label="Розділи кабінету">
 <button class="is-active" data-account-tab="orders">Замовлення</button>
 <button data-account-tab="wishlist">Список бажань</button>
+<button data-account-tab="settings">Налаштування</button>
 </nav>
 <section id="accountOrders">
 <div id="accountOrdersList" class="account-list">
@@ -76,6 +77,36 @@
 <div id="accountWishlistList" class="wishlist-grid">
 </div>
 <p id="accountWishlistEmpty" class="account-empty" hidden>Додайте сюди аромати, до яких хочеться повернутися.</p>
+</section>
+<section id="accountSettings" hidden>
+  <div class="account-settings-block">
+    <h2>Дані для доставки</h2>
+    <p class="account-settings-block__hint">Збережіть дані один раз — вони автоматично підставляться в форму замовлення наступного разу.</p>
+    <form id="accountDeliveryForm" class="account-form">
+      <label for="savedName">Ім'я та прізвище</label>
+      <input id="savedName" name="savedName" type="text" autocomplete="name">
+      <label for="savedPhone">Телефон</label>
+      <input id="savedPhone" name="savedPhone" type="tel" autocomplete="tel" placeholder="+380XXXXXXXXX">
+      <label for="savedCity">Місто</label>
+      <input id="savedCity" name="savedCity" type="text" autocomplete="address-level2">
+      <label for="savedWarehouse">Відділення Нової пошти</label>
+      <input id="savedWarehouse" name="savedWarehouse" type="text">
+      <button class="btn btn-primary" type="submit">Зберегти дані доставки</button>
+      <p id="accountDeliveryMessage" class="account-message" role="status"></p>
+    </form>
+  </div>
+
+  <div class="account-settings-block">
+    <h2>Змінити пароль</h2>
+    <form id="accountPasswordForm" class="account-form">
+      <label for="newPassword">Новий пароль</label>
+      <input id="newPassword" name="newPassword" type="password" minlength="6" autocomplete="new-password" required>
+      <label for="newPasswordConfirm">Повторіть новий пароль</label>
+      <input id="newPasswordConfirm" name="newPasswordConfirm" type="password" minlength="6" autocomplete="new-password" required>
+      <button class="btn btn-primary" type="submit">Змінити пароль</button>
+      <p id="accountPasswordMessage" class="account-message" role="status"></p>
+    </form>
+  </div>
 </section>
 </section>
 </div>

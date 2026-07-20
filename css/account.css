@@ -6,3 +6,20 @@
 @media(max-width:760px){.account-auth{grid-template-columns:1fr}.account-form{padding:22px}.account-head{align-items:flex-start;flex-direction:column}.wishlist-grid{grid-template-columns:1fr 1fr}.account-tabs button{min-width:0;flex:1}}
 @media(max-width:520px){.wishlist-grid{grid-template-columns:1fr}.wishlist-add{grid-template-columns:1fr}.account-order__top{flex-direction:column}.account-order__summary{justify-items:start}.account-order__item{font-size:12px}.account-tabs{margin-top:30px}}
 @media(prefers-reduced-motion:reduce){.account-loading__mark{animation:none}.wishlist-card img{transition:none}}
+
+/* ---- Order progress bar ---- */
+.account-order__progress{display:flex;align-items:center;gap:4px;margin:16px 0;padding-top:16px;border-top:1px solid var(--border-hairline)}
+.account-order__progress-step{display:flex;align-items:center;gap:8px;flex:1;font-size:11px;letter-spacing:.03em;color:var(--text-secondary)}
+.account-order__progress-step::after{content:"";flex:1;height:1px;background:var(--border-hairline);margin-left:8px}
+.account-order__progress-step:last-child::after{display:none}
+.account-order__progress-dot{width:9px;height:9px;border-radius:50%;border:1px solid var(--border-hairline-strong);flex-shrink:0}
+.account-order__progress-step.is-done{color:var(--color-gold)}
+.account-order__progress-step.is-done .account-order__progress-dot{background:var(--color-gold);border-color:var(--color-gold)}
+.account-order__progress--cancelled{color:var(--text-secondary);font-size:12px;padding-top:16px;margin:16px 0;border-top:1px solid var(--border-hairline)}
+@media(max-width:520px){.account-order__progress{flex-direction:column;align-items:flex-start;gap:10px}.account-order__progress-step::after{display:none}}
+
+/* ---- Settings tab ---- */
+.account-settings-block{padding:clamp(18px,3vw,28px);background:var(--bg-elevated);border:1px solid var(--border-hairline);margin-bottom:20px}
+.account-settings-block h2{font-family:var(--font-display);font-size:22px;margin-bottom:10px}
+.account-settings-block__hint{color:var(--text-secondary);font-size:13px;margin-bottom:18px}
+.account-order__review-done{display:block;margin-top:5px;color:var(--text-secondary);font-size:12px}
