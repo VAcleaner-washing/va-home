@@ -4,7 +4,7 @@
   const MIN_TEXT = 10;
   const MAX_TEXT = 1000;
   const COOLDOWN_MS = 60 * 1000;
-  const MAX_PHOTO_BYTES = 2 * 1024 * 1024;
+  const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
   const PHOTO_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
   function escapeHTML(value) {
@@ -122,6 +122,12 @@
     const textarea = form.elements.reviewText;
     const counter = document.getElementById("reviewCharCount");
     const photoInput = form.elements.reviewPhoto;
+    const photoNameEl = document.getElementById("reviewPhotoName");
+    if (photoInput && photoNameEl) {
+      photoInput.addEventListener("change", () => {
+        photoNameEl.textContent = photoInput.files && photoInput.files[0] ? photoInput.files[0].name : "Файл не обрано";
+      });
+    }
     if (textarea && counter) {
       const update = () => { counter.textContent = `${textarea.value.length}/${MAX_TEXT}`; };
       textarea.addEventListener("input", update); update();
@@ -143,7 +149,7 @@
 
       const photo = photoInput?.files?.[0] || null;
       if (photo && !PHOTO_TYPES.has(photo.type)) return setMessage("Додайте фото у форматі JPG, PNG або WebP.", "error");
-      if (photo && photo.size > MAX_PHOTO_BYTES) return setMessage("Фото має бути не більше 2 МБ.", "error");
+      if (photo && photo.size > MAX_PHOTO_BYTES) return setMessage("Фото має бути не більше 5 МБ.", "error");
       submit.disabled = true;
       submit.textContent = "Надсилаємо…";
       try {

@@ -304,7 +304,11 @@
 .review-form input[type="text"],.review-form textarea{width:100%;border:1px solid var(--border-hairline);background:var(--bg-elevated);color:var(--text-primary);padding:.85rem 1rem;border-radius:0}
 .review-photo-field{border:1px solid var(--border-hairline);padding:1rem;background:var(--bg-elevated)}
 .review-photo-field label span,.review-photo-field small{color:var(--text-secondary);text-transform:none;letter-spacing:0}
-.review-photo-field input{display:block;width:100%;margin:.6rem 0;color:var(--text-secondary)}
+.review-photo-picker{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin:.6rem 0}
+.review-photo-picker__btn{display:inline-flex;align-items:center;justify-content:center;padding:.6rem 1.2rem;border:1px solid var(--color-gold);border-radius:var(--radius-sm);color:var(--color-gold);font-size:var(--fs-small);font-weight:600;letter-spacing:.02em;text-transform:none;cursor:pointer;transition:background-color var(--duration-fast) var(--ease-standard),color var(--duration-fast) var(--ease-standard);}
+.review-photo-picker__btn:hover,.review-photo-picker__btn:focus-visible{background:var(--color-gold);color:var(--color-black);}
+.review-photo-picker__name{color:var(--text-secondary);font-size:var(--fs-small);overflow-wrap:anywhere;}
+.review-photo-picker__input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
 .review-form textarea{min-height:150px;resize:vertical}
 .review-form__counter{text-align:right;font-size:.72rem;color:var(--color-text-muted,#746f68)}
 

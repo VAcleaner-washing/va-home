@@ -59,7 +59,13 @@
   function orderItems(items) {
     return (Array.isArray(items) ? items : []).map((item) => {
       const chosen = Array.isArray(item.selections) ? item.selections : [];
-      return `<div class="account-order__item"><span>${esc(item.name)} × ${esc(item.quantity)}${chosen.length ? `<small>Обрано: ${chosen.map(esc).join(" · ")}</small>` : ""}</span><strong>${money(item.line_total)}</strong></div>`;
+      const nameHtml = item.id
+        ? `<a href="products/${esc(item.id)}.html" class="account-order__item-link">${esc(item.name)}</a>`
+        : esc(item.name);
+      const reviewLink = item.id
+        ? `<a href="products/${esc(item.id)}.html#reviews" class="account-order__review-link">Залишити відгук</a>`
+        : "";
+      return `<div class="account-order__item"><span>${nameHtml} × ${esc(item.quantity)}${chosen.length ? `<small>Обрано: ${chosen.map(esc).join(" · ")}</small>` : ""}${reviewLink}</span><strong>${money(item.line_total)}</strong></div>`;
     }).join("");
   }
 

@@ -346,8 +346,12 @@
               </div>
               <div class="review-photo-field">
                 <label for="reviewPhoto">Фото <span>(необов’язково)</span></label>
-                <input id="reviewPhoto" name="reviewPhoto" type="file" accept="image/jpeg,image/png,image/webp">
-                <small>JPG, PNG або WebP до 2 МБ.</small>
+                <div class="review-photo-picker">
+                  <label for="reviewPhoto" class="review-photo-picker__btn">Обрати фото</label>
+                  <span class="review-photo-picker__name" id="reviewPhotoName">Файл не обрано</span>
+                  <input id="reviewPhoto" name="reviewPhoto" type="file" accept="image/jpeg,image/png,image/webp" class="review-photo-picker__input">
+                </div>
+                <small>JPG, PNG або WebP до 5 МБ.</small>
               </div>
               <div class="review-honeypot" aria-hidden="true"><label>Website<input name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
               <p class="review-form__message" id="reviewFormMessage" hidden aria-live="polite"></p>
