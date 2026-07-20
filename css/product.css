@@ -381,57 +381,55 @@
 .review-form .btn{width:100%}
 }
 
+
+
+
 /* ---- Галерея 4:5 + прев'ю збоку (ПК) ---- */
 @media (min-width: 901px) {
-  /* Головне фото та прев'ю вишиковуємо в один рядок */
-  .product-hero__media {
-    position: relative;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 5 !important;
-    align-self: start;
-  }
-
   .product-hero__visual-stack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
+    display: grid !important;
+    grid-template-columns: 80px 1fr !important;
+    gap: var(--space-3) !important;
+    align-items: start !important;
   }
 
-  /* Прев'ю стають вертикально зліва від фото */
+  /* Прев'ю стають у першу колонку (80px) */
   .product-gallery-thumbs.has-multiple {
-    display: flex;
-    flex-direction: column;
-    order: 1;
-    width: 72px;
-    margin: 0;
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    margin: 0 !important;
+    gap: var(--space-2) !important;
   }
 
-  /* Фото стає праворуч від прев'ю */
+  /* Головне фото стає у другу колонку (1fr) */
   .product-hero__media {
-    order: 2;
-    flex: 1;
-    min-width: 0;
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 4 / 5 !important;
+    margin: 0 !important;
   }
 
-  /* Блок "Формула VA HOME" стає знизу під фото на всю ширину */
+  /* Блок "Формула VA HOME" розтягується під ними на обидві колонки */
   .product-formula-proof {
-    order: 3;
-    width: 100%;
+    grid-column: 1 / -1 !important;
   }
 }
 
 /* ---- На мобільному (до 900px) ---- */
 @media (max-width: 900px) {
   .product-hero__media {
-    width: 100%;
-    height: auto;
+    width: 100% !important;
+    height: auto !important;
     aspect-ratio: 4 / 5 !important;
   }
 
   .product-gallery-thumbs.has-multiple {
-    display: flex;
-    flex-direction: row;
-    margin-top: var(--space-2);
+    display: flex !important;
+    flex-direction: row !important;
+    margin-top: var(--space-2) !important;
   }
 }
