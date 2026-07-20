@@ -384,42 +384,55 @@
 
 
 
-/* ---- Галерея 4:5 + прев'ю збоку (ПК) ---- */
+/* ---- ПК (від 901px) ---- */
 @media (min-width: 901px) {
-  .product-hero__visual-stack {
-    display: grid !important;
-    grid-template-columns: 80px 1fr !important;
-    gap: var(--space-3) !important;
-    align-items: start !important;
-  }
-
-  /* Прев'ю стають у першу колонку (80px) */
-  .product-gallery-thumbs.has-multiple {
-    grid-column: 1 !important;
-    grid-row: 1 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    margin: 0 !important;
-    gap: var(--space-2) !important;
-  }
-
-  /* Головне фото стає у другу колонку (1fr) */
+  /* Фіксуємо пропорцію 4:5 для фото */
   .product-hero__media {
-    grid-column: 2 !important;
-    grid-row: 1 !important;
     width: 100% !important;
     height: auto !important;
     aspect-ratio: 4 / 5 !important;
-    margin: 0 !important;
+    position: relative !important;
   }
 
-  /* Блок "Формула VA HOME" розтягується під ними на обидві колонки */
+  .product-hero__media img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Обгортка фото та мініатюр у рядок */
+  .product-hero__visual-stack {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+
+  /* Мініатюри вертикальною колонкою зліва */
+  .product-gallery-thumbs,
+  .product-gallery-thumbs.has-multiple {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 80px !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+    order: 1 !important;
+  }
+
+  /* Фото праворуч від мініатюр */
+  .product-hero__media {
+    order: 2 !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Блок формули під ними */
   .product-formula-proof {
-    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    order: 3 !important;
   }
 }
 
-/* ---- На мобільному (до 900px) ---- */
+/* ---- Мобілка (до 900px) ---- */
 @media (max-width: 900px) {
   .product-hero__media {
     width: 100% !important;
@@ -427,9 +440,27 @@
     aspect-ratio: 4 / 5 !important;
   }
 
+  .product-hero__media img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .product-hero__visual-stack {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .product-gallery-thumbs,
   .product-gallery-thumbs.has-multiple {
     display: flex !important;
     flex-direction: row !important;
-    margin-top: var(--space-2) !important;
+    width: 100% !important;
+    margin-top: 12px !important;
+    order: 2 !important;
+  }
+
+  .product-hero__media {
+    order: 1 !important;
   }
 }
