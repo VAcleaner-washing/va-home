@@ -224,10 +224,22 @@
     const accordion = document.querySelector(".product-accordion");
     if (!hero || !media || !info || !proof || !accordion || hero.classList.contains("has-inline-substance")) return;
 
+    const gallery = document.createElement("div");
+    gallery.className = "product-gallery";
+
+    const thumbs = document.getElementById("productGalleryThumbs");
+    hero.insertBefore(gallery, media);
+    gallery.append(media);
+
+    // The old markup keeps thumbnails inside the photo container. Move them
+    // into the gallery so desktop can place them beside the 4:5 image and
+    // mobile can place them below it.
+    if (thumbs) gallery.insertBefore(thumbs, media);
+
     const visualStack = document.createElement("div");
     visualStack.className = "product-hero__visual-stack";
-    hero.insertBefore(visualStack, media);
-    visualStack.append(media, proof);
+    hero.insertBefore(visualStack, gallery);
+    visualStack.append(gallery, proof);
     info.appendChild(accordion);
     hero.classList.add("has-inline-substance");
   }
