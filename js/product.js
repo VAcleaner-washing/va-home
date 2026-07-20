@@ -232,6 +232,26 @@
     hero.classList.add("has-inline-substance");
   }
 
+  function initGallery() {
+    const strip = document.getElementById("productGalleryThumbs");
+    const mainImg = document.getElementById("productMainImage");
+    if (!strip || !mainImg) return;
+
+    strip.addEventListener("click", (event) => {
+      const thumb = event.target.closest(".product-gallery-thumb");
+      if (!thumb) return;
+      strip.querySelectorAll(".product-gallery-thumb").forEach((t) => t.classList.toggle("is-active", t === thumb));
+      mainImg.src = thumb.dataset.full;
+    });
+
+    // Give onerror handlers a moment to remove any missing extra photos,
+    // then only reveal the thumbnail strip if more than one photo remains.
+    setTimeout(() => {
+      const count = strip.querySelectorAll(".product-gallery-thumb").length;
+      strip.classList.toggle("has-multiple", count >= 2);
+    }, 300);
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     initQtyStepper();
     initAddToCart();
@@ -239,5 +259,6 @@
     initProductExperience();
     initCompactDetails();
     initProductSubstanceLayout();
+    initGallery();
   });
 })();
