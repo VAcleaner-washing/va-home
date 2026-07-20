@@ -51,13 +51,12 @@
 
 
 .product-hero__media {
-  width: 100%;
-  aspect-ratio: 4 / 5 !important;
+  aspect-ratio: 4 / 5;
   border-radius: var(--radius-md);
   overflow: hidden;
   position: relative;
-  align-self: start;
 }
+
 
 .product-hero__media img {
   width: 100%;
@@ -124,13 +123,14 @@
 
 @media (min-width: 901px) {
   .product-hero__media {
+    /* Keep the badge anchored to the product image, not to the page/header. */
     position: relative;
     width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 5 !important;
+    height: clamp(560px, 64vh, 720px);
+    aspect-ratio: auto;
     align-self: start;
   }
-}
+
   .product-hero__info { position: static; }
 
 }
@@ -379,80 +379,4 @@
 .reviews-summary{position:static}
 .review-card__top{align-items:flex-start}
 .review-form .btn{width:100%}
-}
-
-
-
-
-/* ==== ФІКС ГАЛЕРЕЇ ТА ФОТО ==== */
-
-/* 1. Повертаємо видимість фото та задаємо пропорцію 4:5 */
-.product-hero__media,
-div.product-hero__media {
-  display: block !important;
-  width: 100% !important;
-  height: auto !important;
-  aspect-ratio: 4 / 5 !important;
-  position: relative !important;
-}
-
-.product-hero__media img {
-  display: block !important;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-}
-
-/* 2. Десктоп (від 901px): прев'ю зліва, фото справа */
-@media (min-width: 901px) {
-  .product-hero__visual-stack {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    flex-direction: row !important;
-    align-items: flex-start !important;
-    gap: 16px !important;
-  }
-
-  .product-gallery-thumbs,
-  .product-gallery-thumbs.has-multiple {
-    display: flex !important;
-    flex-direction: column !important;
-    width: 72px !important;
-    flex-shrink: 0 !important;
-    margin: 0 !important;
-  }
-
-  /* Фото стає поруч із прев'ю */
-  .product-hero__media {
-    flex: 1 1 calc(100% - 88px) !important;
-    max-width: calc(100% - 88px) !important;
-  }
-
-  /* Блок формули падає вниз на повну ширину */
-  .product-formula-proof {
-    width: 100% !important;
-    flex: 1 1 100% !important;
-  }
-}
-
-/* 3. Мобілка (до 900px): фото зверху, прев'ю знизу */
-@media (max-width: 900px) {
-  .product-hero__visual-stack {
-    display: flex !important;
-    flex-direction: column !important;
-  }
-
-  .product-hero__media {
-    order: 1 !important;
-    width: 100% !important;
-  }
-
-  .product-gallery-thumbs,
-  .product-gallery-thumbs.has-multiple {
-    order: 2 !important;
-    display: flex !important;
-    flex-direction: row !important;
-    width: 100% !important;
-    margin-top: 12px !important;
-  }
 }
