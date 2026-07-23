@@ -8,11 +8,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]').filter(Boolean).slice(0,3)}catch{return[]}};
 const productById=id=>(window.PRODUCTS||[]).find(p=>p.id===id);
 const coll=p=>typeof window.getCollection==='function'?window.getCollection(p.collection):null;
-const imageCandidates=p=>[
-  `images/product-story/${p.id}/macro.webp`,
-  `images/products/${p.id}.webp`,
-  `images/product-gallery/${p.id}/hero.webp`
-].filter(Boolean);
+const imageCandidates=p=>{const gallery=Array.isArray(p?.images?.gallery)?p.images.gallery:[];const macro=gallery.find(item=>item?.type==='macro'&&item.src)?.src;const main=p?.images?.main||`images/product-gallery/${p.id}/hero.webp`;return [...new Set([macro,main].filter(Boolean))]};
 const tags=p=>(p.character||[]).slice(0,4).map(x=>`<span class="oc-tag">${esc(chars[x]||x)}</span>`).join('');
 const scale=(p,k)=>{const raw=p.scales?.[k];if(raw===null||raw===undefined||raw==='')return '<span class="oc-scale-empty">—</span>';const v=Math.max(0,Math.min(10,Number(raw)));return `<div class="oc-scale-wrap"><div class="oc-scale">${Array.from({length:10},(_,i)=>`<i class="${i<v?'on':''}"></i>`).join('')}</div><span class="oc-scale-value">${v}/10</span></div>`};
 const names=p=>(p.room||[]).slice(0,3).map(x=>rooms[x]||x).join(' · ')||'Універсальний простір';

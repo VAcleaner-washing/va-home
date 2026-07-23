@@ -1,14 +1,11 @@
 {
-  "version": "13.3.2",
-  "name": "SCENT GUIDE MOBILE ALIGNMENT FIX",
+  "version": "13.5.0",
+  "name": "ABOUT + SCENT GUIDE CSS CLEANUP",
   "date": "2026-07-23",
   "changes": [
-    "shared core CSS extracted",
-    "page CSS de-duplicated",
-    "image intrinsic dimensions and loading policy",
-    "Discovery draft persistence and dialog cleanup",
-    "compare missing values fixed",
-    "single checkout idempotency key",
-    "session-only order confirmation"
+    "Removed unrelated product, compare, checkout and legacy patch selectors from 404 page CSS",
+    "Removed unrelated product and legacy selectors from legal page CSS",
+    "Removed unrelated product, compare and legacy selectors from delivery/contact page CSS",
+    "Preserved core.css and all high-risk commerce/product styles unchanged"
   ]
 }

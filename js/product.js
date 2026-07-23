@@ -273,21 +273,21 @@
     const atmosphereFallback = (collection && collection.heroImage) || product.images.main;
     const galleryItems = getProductGallery(product);
     const byType = (type, fallback) => galleryItems.find((item) => item.type === type)?.src || fallback;
-    const storyBase = `images/product-story/${product.id}`;
-    const storyAsset = (name) => `${storyBase}/${name}.webp`;
+    const storyMap = product.images.story || {};
+    const storyAsset = (name, fallback = catalogHeroFallback) => storyMap[name] || fallback;
     const catalogHeroFallback = product.images.main;
     const interiorFallback = byType("interior", catalogHeroFallback);
     const macroFallback = byType("macro", catalogHeroFallback);
     const detailFallback = byType("detail", catalogHeroFallback);
-    const heroStoryImage = storyAsset("hero");
-    const atmosphereStoryImage = storyAsset("atmosphere");
-    const interiorStoryImage = storyAsset("interior");
-    const macroStoryImage = storyAsset("macro");
-    const detailStoryImage = storyAsset("detail");
-    const topStoryImage = storyAsset("top");
-    const heartStoryImage = storyAsset("heart");
-    const baseStoryImage = storyAsset("base");
-    const discoveryStoryImage = storyAsset("discovery");
+    const heroStoryImage = storyAsset("hero", catalogHeroFallback);
+    const atmosphereStoryImage = storyAsset("atmosphere", catalogHeroFallback);
+    const interiorStoryImage = storyAsset("interior", interiorFallback);
+    const macroStoryImage = storyAsset("macro", macroFallback);
+    const detailStoryImage = storyAsset("detail", detailFallback);
+    const topStoryImage = storyAsset("top", interiorFallback);
+    const heartStoryImage = storyAsset("heart", macroFallback);
+    const baseStoryImage = storyAsset("base", detailFallback);
+    const discoveryStoryImage = storyAsset("discovery", "images/discovery/discovery-set.webp");
     const quote = insight.aura || product.shortDescription || "Аромат, що змінює відчуття простору.";
     const labels = {
       freshness: "Свіжість",
