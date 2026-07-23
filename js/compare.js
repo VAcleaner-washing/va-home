@@ -218,7 +218,7 @@
   }
 
   function compareImageAlt(product) {
-    return `images/product-story/${product.id}/Macro.webp`;
+    return `images/products/${product.id}.webp`;
   }
 
   function compareImageFallback(product) {

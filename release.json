@@ -1,0 +1,14 @@
+{
+  "version": "13.3.1",
+  "name": "SCENT GUIDE MOBILE ALIGNMENT",
+  "date": "2026-07-23",
+  "changes": [
+    "shared core CSS extracted",
+    "page CSS de-duplicated",
+    "image intrinsic dimensions and loading policy",
+    "Discovery draft persistence and dialog cleanup",
+    "compare missing values fixed",
+    "single checkout idempotency key",
+    "session-only order confirmation"
+  ]
+}

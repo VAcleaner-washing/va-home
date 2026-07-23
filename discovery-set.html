@@ -5,8 +5,8 @@
 <script>document.documentElement.classList.add('va-hero-fonts-loading');</script>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<link as="font" crossorigin href="fonts/cormorant-garamond-cyrillic-500-normal.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin href="fonts/manrope-cyrillic-400-normal.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="fonts/cormorant-garamond-cyrillic-500-normal.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="fonts/manrope-cyrillic-400-normal.woff2" rel="preload" type="font/woff2"/>
 <meta content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://yweluzclearwrazdkahu.supabase.co; font-src 'self'; connect-src 'self' https://yweluzclearwrazdkahu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';" http-equiv="Content-Security-Policy"/>
 <title>Discovery Set — VA HOME</title>
 <meta content="Discovery Set VA HOME — 6 або 18 тестерів, щоб протестувати аромати вдома перед вибором флакона." name="description"/>
@@ -20,8 +20,7 @@
 <link href="favicon/favicon.ico" rel="icon" sizes="any"/>
 <link href="favicon/favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="favicon/apple-touch-icon.png" rel="apple-touch-icon"/>
-<link href="css/variables.css" rel="stylesheet"/><link href="css/fonts.css" rel="stylesheet"/><link href="css/reset.css" rel="stylesheet"/><link href="css/global.css" rel="stylesheet"/><link href="css/components.css" rel="stylesheet"/><link href="css/responsive.css" rel="stylesheet"/><link href="css/motion.css" rel="stylesheet"/>
-<link href="css/home.css" rel="stylesheet"/>
+<link href="css/core.css?v=13.3.0" rel="stylesheet"/><link href="css/site-discovery.css?v=13.3.0" rel="stylesheet"/>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -60,15 +59,9 @@
   ]
 }
 </script>
-<meta content="11.7 SEO &amp; Launch Audit" name="va-home-release"/><link href="css/discovery-premium.css" rel="stylesheet"/><link href="css/final-polish.css" rel="stylesheet"/><link href="css/v11-3-final-polish.css" rel="stylesheet"/><meta content="#15130f" name="theme-color"/><meta content="telephone=no" name="format-detection"/><link href="css/v11-4-mobile-product-polish.css" rel="stylesheet"/><link href="css/v11-5-mobile-perfection.css" rel="stylesheet"/>
-<link href="css/v11-6-luxury-product-polish.css" rel="stylesheet"/>
-<meta content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" name="robots"/><meta content="uk_UA" property="og:locale"/><meta content="VA HOME" property="og:site_name"/><meta content="Атмосфера домашнього тестування ароматів VA HOME" property="og:image:alt"/><meta content="Discovery Set — VA HOME" name="twitter:title"/><meta content="Discovery Set VA HOME — 6 або 18 тестерів, щоб протестувати аромати вдома перед вибором флакона." name="twitter:description"/><meta content="https://vahome.com.ua/images/pages/discovery-ritual.webp" name="twitter:image"/><meta content="Атмосфера домашнього тестування ароматів VA HOME" name="twitter:image:alt"/><link href="css/v11-8-21-unified-page-heroes.css" rel="stylesheet"/>
-<link href="css/v11-8-24-hero-dna.css" rel="stylesheet"/><link href="css/v11-8-42-unified-hero-font-reveal.css" rel="stylesheet"/>
-<script defer src="js/hero-font-reveal.js"></script>
-<link rel="stylesheet" href="css/compare.css"/>
-  <link rel="stylesheet" href="css/v12-0-rc1.css">
-  <link rel="stylesheet" href="css/v12-0-rc2.css">
-<link rel="stylesheet" href="css/v12-1-site-audit.css">
+<meta content="11.7 SEO &amp; Launch Audit" name="va-home-release"/><meta content="#15130f" name="theme-color"/><meta content="telephone=no" name="format-detection"/>
+<meta content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" name="robots"/><meta content="uk_UA" property="og:locale"/><meta content="VA HOME" property="og:site_name"/><meta content="Атмосфера домашнього тестування ароматів VA HOME" property="og:image:alt"/><meta content="Discovery Set — VA HOME" name="twitter:title"/><meta content="Discovery Set VA HOME — 6 або 18 тестерів, щоб протестувати аромати вдома перед вибором флакона." name="twitter:description"/><meta content="https://vahome.com.ua/images/pages/discovery-ritual.webp" name="twitter:image"/><meta content="Атмосфера домашнього тестування ароматів VA HOME" name="twitter:image:alt"/>
+<script defer="" src="js/hero-font-reveal.js?v=13.3.0"></script>
 </head>
 <body class="discovery-page">
 <div data-active="discovery" data-root="" id="site-header"></div>
@@ -94,7 +87,7 @@
 <form class="discovery-picker__panel" method="dialog">
 <div class="discovery-picker__head">
 <div><p class="eyebrow">Discovery Set</p><h2 id="discoveryPickerTitle">Оберіть 6 ароматів</h2><p>Вибрано <strong id="pickerCount">0 з 6</strong></p></div>
-<button type="button" aria-label="Закрити" class="discovery-picker__close" value="cancel">×</button>
+<button aria-label="Закрити" class="discovery-picker__close" type="button" value="cancel">×</button>
 </div>
 <div class="discovery-picker__list" id="discoveryPickerList"></div>
 <p class="discovery-picker__error" id="discoveryPickerError" role="status"></p>
@@ -103,7 +96,7 @@
 <button class="btn btn-primary" disabled="" id="confirmDiscoverySelection" type="button">Підтвердити вибір</button>
 </div>
 </form>
-</dialog><section class="discovery-ritual"><div class="discovery-ritual__media"><img alt="Атмосфера домашнього тестування ароматів VA HOME" decoding="async" loading="lazy" src="images/pages/discovery-ritual.webp"/></div><div class="discovery-ritual__copy"><p class="eyebrow">Домашній ритуал</p><h2>Дайте аромату<br/>час і простір.</h2><div class="discovery-steps"><div class="discovery-step"><span>01</span><div><h3>Оберіть одну композицію</h3><p class="text-muted">Не тестуйте всі аромати одночасно — почніть із одного характеру.</p></div></div><div class="discovery-step"><span>02</span><div><h3>Поставте у звичній кімнаті</h3><p class="text-muted">Відчуйте, як аромат взаємодіє зі світлом, текстилем і рухом повітря.</p></div></div><div class="discovery-step"><span>03</span><div><h3>Поверніться до нього завтра</h3><p class="text-muted">Справжнє враження формується не за хвилину, а протягом кількох днів.</p></div></div></div></div></section><section aria-label="Про Discovery Set" class="discovery-info"><div class="container"><div class="section-heading"><p class="eyebrow">Перед замовленням</p><h2>Усе, що важливо знати</h2></div><div class="info-block-grid reveal">
+</dialog><section class="discovery-ritual"><div class="discovery-ritual__media"><img alt="Атмосфера домашнього тестування ароматів VA HOME" decoding="async" height="941" loading="eager" src="images/pages/discovery-ritual.webp" width="1672"/></div><div class="discovery-ritual__copy"><p class="eyebrow">Домашній ритуал</p><h2>Дайте аромату<br/>час і простір.</h2><div class="discovery-steps"><div class="discovery-step"><span>01</span><div><h3>Оберіть одну композицію</h3><p class="text-muted">Не тестуйте всі аромати одночасно — почніть із одного характеру.</p></div></div><div class="discovery-step"><span>02</span><div><h3>Поставте у звичній кімнаті</h3><p class="text-muted">Відчуйте, як аромат взаємодіє зі світлом, текстилем і рухом повітря.</p></div></div><div class="discovery-step"><span>03</span><div><h3>Поверніться до нього завтра</h3><p class="text-muted">Справжнє враження формується не за хвилину, а протягом кількох днів.</p></div></div></div></div></section><section aria-label="Про Discovery Set" class="discovery-info"><div class="container"><div class="section-heading"><p class="eyebrow">Перед замовленням</p><h2>Усе, що важливо знати</h2></div><div class="info-block-grid reveal">
 <div class="info-block">
 <h3>Що входить у набір</h3>
 <p>Кожен тестер містить 5 мл аромату. Набір включає обрані тестери VA HOME у компактному форматі та фірмове пакування.</p>
@@ -138,7 +131,7 @@
 <div class="faq-list accordion" id="discoveryFaq">
 <div class="accordion-item">
 <h3>
-<button type="button" aria-controls="dfaq-1" aria-expanded="false" class="accordion-trigger">
+<button aria-controls="dfaq-1" aria-expanded="false" class="accordion-trigger" type="button">
               Чи можна докупити повний флакон після тестування?
               <span aria-hidden="true" class="accordion-trigger__icon"></span>
 </button>
@@ -151,7 +144,7 @@
 </div>
 <div class="accordion-item">
 <h3>
-<button type="button" aria-controls="dfaq-2" aria-expanded="false" class="accordion-trigger">
+<button aria-controls="dfaq-2" aria-expanded="false" class="accordion-trigger" type="button">
               Скільки ароматів варто обрати для набору 6?
               <span aria-hidden="true" class="accordion-trigger__icon"></span>
 </button>
@@ -164,7 +157,7 @@
 </div>
 <div class="accordion-item">
 <h3>
-<button type="button" aria-controls="dfaq-3" aria-expanded="false" class="accordion-trigger">
+<button aria-controls="dfaq-3" aria-expanded="false" class="accordion-trigger" type="button">
               Різниця між набором 6 і 18 ароматів?
               <span aria-hidden="true" class="accordion-trigger__icon"></span>
 </button>
@@ -177,7 +170,7 @@
 </div>
 <div class="accordion-item">
 <h3>
-<button type="button" aria-controls="dfaq-volume" aria-expanded="false" class="accordion-trigger">
+<button aria-controls="dfaq-volume" aria-expanded="false" class="accordion-trigger" type="button">
               Який об’єм одного тестера?
               <span aria-hidden="true" class="accordion-trigger__icon"></span>
 </button>
@@ -192,15 +185,14 @@
 </div>
 </section></main>
 <div data-root="" id="site-footer"></div>
-<script defer="" src="js/config.js"></script>
-<script defer="" src="js/supabase-api.js"></script>
-<script defer="" src="js/products.js"></script>
-<script defer="" src="js/compare.js"></script>
-<script defer="" src="js/cart.js"></script>
-<script defer="" src="js/discovery-set.js"></script>
-<script defer="" src="js/ratings.js"></script>
-<script defer="" src="js/main.js"></script>
-<script defer="" src="js/motion.js"></script>
-<script defer src="js/production-qa.js"></script>
+<script defer="" src="js/config.js?v=13.3.0"></script>
+<script defer="" src="js/supabase-api.js?v=13.3.0"></script>
+<script defer="" src="js/products.js?v=13.3.0"></script>
+<script defer="" src="js/compare.js?v=13.3.0"></script>
+<script defer="" src="js/cart.js?v=13.3.0"></script>
+<script defer="" src="js/discovery-set.js?v=13.3.0"></script>
+<script defer="" src="js/ratings.js?v=13.3.0"></script>
+<script defer="" src="js/main.js?v=13.3.0"></script>
+<script defer="" src="js/motion.js?v=13.3.0"></script>
 </body>
 </html>

@@ -1,6 +1,0 @@
-VA HOME v12.1 STATIC QA
-==========================
-HTML pages checked: 33
-Issues found: 0
-
-No missing title/viewport/alt or local image-path errors found.

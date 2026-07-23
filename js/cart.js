@@ -585,7 +585,6 @@
         createdAt: new Date().toISOString()
       };
       sessionStorage.setItem("vahome_last_order", JSON.stringify(confirmation));
-      localStorage.setItem("vahome_last_order", JSON.stringify(confirmation));
       sessionStorage.removeItem("vahome_checkout_request_id");
       sessionStorage.removeItem("vahome_checkout_draft_v65");
 

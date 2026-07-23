@@ -50,10 +50,10 @@
     // New unified nine-image product story. These four files also power the hero gallery.
     const storyBase = `${root}images/product-story/${productId}/`;
     [
-      ["hero", ["hero.webp", "Hero.webp"]],
-      ["interior", ["interior.webp", "Interior.webp"]],
-      ["macro", ["macro.webp", "Macro.webp"]],
-      ["detail", ["detail.webp", "Detail.webp"]]
+      ["hero", ["hero.webp"]],
+      ["interior", ["interior.webp"]],
+      ["macro", ["macro.webp"]],
+      ["detail", ["detail.webp"]]
     ].forEach(([type, filenames], index) => {
       filenames.forEach((filename) => {
         candidates.push({
