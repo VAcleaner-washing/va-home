@@ -1,0 +1,150 @@
+/* VA HOME v11.8.55 — About craft editorial rebuild */
+
+/* Hero composition: match the higher v11.8.49 placement. */
+.about-editorial-hero__copy{transform:translateY(-120px)}
+
+/* Story image caption: improve breathing room and legibility. */
+.about-editorial-image__caption{
+  display:grid;
+  grid-template-columns:minmax(180px,.85fr) minmax(320px,1.55fr);
+  gap:clamp(2rem,5vw,7rem);
+  align-items:start;
+  padding:1rem clamp(1.25rem,4vw,5rem) 1.35rem;
+}
+.about-editorial-image__caption p{
+  margin:0;
+  max-width:760px;
+  font-size:clamp(1rem,1.15vw,1.12rem);
+  line-height:1.7;
+}
+
+.about-craft--editorial{overflow:hidden}
+.about-craft-editorial{
+  display:grid;
+  gap:clamp(5rem,9vw,10rem);
+}
+.about-craft-row{
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);
+  gap:clamp(2.5rem,6vw,7.5rem);
+  align-items:center;
+}
+.about-craft-row--reverse{
+  grid-template-columns:minmax(300px,.65fr) minmax(0,1.35fr);
+}
+.about-craft-row--reverse .about-craft-row__media{order:2}
+.about-craft-row--reverse .about-craft-row__copy{order:1}
+.about-craft-row__media{
+  position:relative;
+  position:relative;
+  aspect-ratio:3 / 2;
+  min-height:0;
+  overflow:hidden;
+  background:#11100d;
+}
+.about-craft-row__media::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(183,137,67,.14);
+}
+.about-craft-row__media img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  transition:transform 1.2s var(--ease-standard);
+}
+.about-craft-row:hover .about-craft-row__media img{transform:scale(1.018)}
+.about-craft-row__copy{max-width:560px}
+.about-craft-row__copy>span{
+  display:block;
+  margin-bottom:1rem;
+  color:var(--color-gold,#b98b49);
+  font-size:.76rem;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+}
+.about-craft-row__kicker{
+  margin:0 0 1.15rem;
+  color:rgba(238,230,215,.58);
+  font-size:.78rem!important;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.about-craft-row h3{
+  margin:0 0 1.4rem;
+  max-width:10ch;
+  font-family:var(--font-display);
+  font-size:clamp(3rem,4.6vw,5.55rem);
+  font-weight:500;
+  line-height:.92;
+  letter-spacing:-.035em;
+}
+.about-craft-row__copy>p:last-child{
+  margin:0;
+  max-width:47ch;
+  color:rgba(238,230,215,.72);
+  font-size:clamp(1rem,1.16vw,1.12rem);
+  line-height:1.82;
+}
+
+/* Molecular Architecture becomes a focused editorial feature. */
+.about-molecules{
+  display:grid;
+  grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);
+  align-items:stretch;
+  min-height:min(840px,90svh);
+}
+.about-molecules__media{min-height:720px}
+.about-molecules__media img{width:100%;height:100%;object-fit:cover;object-position:center}
+.about-molecules__copy{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:clamp(4rem,7vw,8rem);
+}
+.about-molecules h2{
+  max-width:8ch;
+  font-size:clamp(3.5rem,5.4vw,6.3rem);
+}
+
+.about-materials__copy>p{max-width:52ch}
+
+@media(max-width:1100px){
+  .about-editorial-hero__copy{transform:translateY(-90px)}
+  .about-craft-row,.about-craft-row--reverse{grid-template-columns:minmax(0,1.15fr) minmax(290px,.85fr)}
+  .about-molecules{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:900px){
+  .about-editorial-hero__copy{transform:translateY(-64px)}
+  .about-editorial-image__caption{grid-template-columns:1fr;gap:.8rem}
+  .about-craft-row,.about-craft-row--reverse{grid-template-columns:1fr;gap:2rem}
+  .about-craft-row--reverse .about-craft-row__media,.about-craft-row--reverse .about-craft-row__copy{order:initial}
+  .about-craft-row__media{aspect-ratio:3/2}
+  .about-craft-row__copy{max-width:680px}
+  .about-molecules{grid-template-columns:1fr;min-height:0}
+  .about-molecules__media{min-height:0;aspect-ratio:4/5}
+  .about-molecules__copy{padding:clamp(3.5rem,8vw,6rem) var(--container-padding)}
+}
+
+@media(max-width:600px){
+  .about-editorial-hero__copy{transform:translateY(-34px)}
+  .about-editorial-image__caption{padding:1rem var(--container-padding) 1.25rem}
+  .about-craft-editorial{gap:4.5rem}
+  .about-craft-row{gap:1.7rem}
+  .about-craft-row__media{aspect-ratio:4/3}
+  .about-craft-row h3{font-size:clamp(2.9rem,13.2vw,4rem);max-width:11ch}
+  .about-craft-row__copy>p:last-child{font-size:1rem;line-height:1.72}
+  .about-molecules__media{aspect-ratio:4/5}
+  .about-molecules h2{font-size:clamp(3.2rem,14vw,4.4rem)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .about-craft-row__media img{transition:none}
+  .about-craft-row:hover .about-craft-row__media img{transform:none}
+}

@@ -1,0 +1,285 @@
+/* VA HOME v11.8.58 — mobile typography + safe gutters
+   Keeps editorial text inside the viewport without flattening the desktop design. */
+@media (max-width: 760px) {
+  html, body { max-width: 100%; overflow-x: clip; }
+
+  /* Shared mobile safety: real inner width + symmetric gutters. */
+  .home-page .hero-slide__content,
+  .scent-experience-page .scent-experience__hero-content,
+  .about-editorial-page .about-craft__head,
+  .about-editorial-page .about-process__head,
+  .about-editorial-page .about-molecules__copy,
+  .formula-story .formula-story__inner,
+  .reviews-section > .container {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  /* HOME HERO */
+  .home-page .hero.hero--editorial .hero-slide__content {
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
+    padding-inline: 20px !important;
+  }
+  .home-page .hero.hero--editorial .hero-slide__title {
+    width: 100%;
+    max-width: 100%;
+    margin-inline: 0;
+    font-size: clamp(2.25rem, 10.2vw, 3rem) !important;
+    line-height: .98 !important;
+    letter-spacing: -.04em;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+    text-wrap: balance;
+  }
+
+  /* SCENT GUIDE HERO */
+  .scent-experience-page .scent-experience__hero-content {
+    left: auto !important;
+    right: auto !important;
+    margin: 0 !important;
+    padding-inline: 20px !important;
+  }
+  .scent-experience-page .scent-experience__hero-content h1 {
+    width: 100%;
+    max-width: 9.5ch;
+    font-size: clamp(2.55rem, 12vw, 3.45rem) !important;
+    line-height: .98 !important;
+    letter-spacing: -.035em;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+    text-wrap: balance;
+  }
+  .scent-experience-page .scent-experience__hero-content p,
+  .scent-experience-page .scent-experience__hero-meta {
+    max-width: 100%;
+  }
+
+  /* SCENT PROFILE RESULT */
+  .scent-experience-page .scent-profile,
+  .scent-profile {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100%;
+    max-width: 100%;
+  }
+  .scent-profile__main,
+  .scent-profile__details {
+    width: 100%;
+    min-width: 0;
+    padding: 26px 20px !important;
+  }
+  .scent-profile__title {
+    width: 100%;
+    max-width: 9ch;
+    font-size: clamp(2.35rem, 11.5vw, 3.25rem) !important;
+    line-height: .96 !important;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+    text-wrap: balance;
+  }
+  .scent-profile__row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 5px;
+  }
+
+  /* PRODUCT — formula and reviews */
+  .formula-story .formula-story__inner {
+    padding: 64px 20px !important;
+  }
+  .formula-story__head {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 22px !important;
+    width: 100%;
+  }
+  .formula-story h2 {
+    width: 100%;
+    max-width: 12ch;
+    margin-inline: 0;
+    font-size: clamp(2rem, 9.4vw, 2.75rem) !important;
+    line-height: 1.02 !important;
+    letter-spacing: -.035em;
+    text-wrap: balance;
+  }
+  .formula-story__lead,
+  .formula-story__item,
+  .formula-story__item p,
+  .formula-story__item h3,
+  .formula-story__note { min-width: 0; max-width: 100%; }
+  .formula-story__grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100%;
+  }
+  .reviews-section > .container { padding-inline: 20px !important; }
+
+  /* ABOUT */
+  .about-editorial-page .about-craft__head,
+  .about-editorial-page .about-process__head {
+    grid-template-columns: minmax(0, 1fr) !important;
+    padding-inline: 20px !important;
+  }
+  .about-editorial-page .about-molecules__copy {
+    padding: 64px 20px !important;
+  }
+  .about-editorial-page .about-craft__head h2,
+  .about-editorial-page .about-process__head h2,
+  .about-editorial-page .about-molecules h2 {
+    width: 100%;
+    max-width: 10ch;
+    margin-inline: 0;
+    font-size: clamp(2.45rem, 11.2vw, 3.35rem) !important;
+    line-height: .98 !important;
+    letter-spacing: -.035em;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+    text-wrap: balance;
+  }
+  .about-editorial-page .about-craft__head > p,
+  .about-editorial-page .about-process__head > p,
+  .about-editorial-page .about-molecules__copy p {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* COLLECTIONS */
+  .collections-v2-page .collection-world__content {
+    min-width: 0;
+    overflow: hidden;
+    padding-inline: 20px !important;
+  }
+  .collections-v2-page .collection-world__name {
+    max-width: 100%;
+    font-size: .72rem !important;
+    line-height: 1.35;
+    letter-spacing: .16em;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+  .collections-v2-page .collection-world h2 {
+    max-width: 100%;
+    font-size: clamp(2.55rem, 12vw, 3.65rem) !important;
+    line-height: .96 !important;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+  }
+}
+
+@media (max-width: 390px) {
+  .home-page .hero.hero--editorial .hero-slide__title { font-size: 2.25rem !important; }
+  .scent-experience-page .scent-experience__hero-content h1 { font-size: 2.55rem !important; }
+  .about-editorial-page .about-craft__head h2,
+  .about-editorial-page .about-process__head h2,
+  .about-editorial-page .about-molecules h2 { font-size: 2.45rem !important; }
+}
+
+
+/* v11.8.58 — mobile text alignment refinement */
+@media (max-width: 760px) {
+  /* Keep the intended line breaks on the long Noir headline. */
+  .home-page .hero.hero--editorial .hero-slide:nth-child(3) .hero-slide__title br {
+    display: block !important;
+  }
+  .home-page .hero.hero--editorial .hero-slide:nth-child(3) .hero-slide__title {
+    max-width: 9.4ch !important;
+    font-size: clamp(2.05rem, 9.5vw, 2.65rem) !important;
+    line-height: .96 !important;
+    letter-spacing: -.045em !important;
+  }
+
+  /* Scent guide: move the copy away from the physical screen edge. */
+  .scent-experience-page .scent-experience__hero-content {
+    padding-left: 28px !important;
+    padding-right: 20px !important;
+  }
+
+  /* About page captions and body copy need the same editorial gutter. */
+  .about-editorial-page .about-editorial-image__caption,
+  .about-editorial-page .about-materials__copy {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    box-sizing: border-box;
+  }
+
+  /* Mobile menu footer: account and phone stay readable instead of collapsing. */
+  .mobile-menu__footer {
+    grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr) !important;
+    column-gap: 14px !important;
+    row-gap: 9px !important;
+    font-size: .72rem !important;
+  }
+  .mobile-menu__footer a {
+    min-width: 0;
+  }
+  .mobile-menu__footer a:nth-child(1) {
+    grid-column: 1 !important;
+    white-space: nowrap;
+  }
+  .mobile-menu__footer a:nth-child(2) {
+    grid-column: 2 !important;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .mobile-menu__footer a:nth-child(4) {
+    text-align: right;
+  }
+}
+
+/* v11.8.58 — Molecular Architecture mobile adaptation */
+@media (max-width: 760px) {
+  .about-editorial-page .about-molecules__copy {
+    padding: 64px 24px 72px !important;
+    align-items: flex-start;
+  }
+
+  .about-editorial-page .about-molecules__copy .eyebrow {
+    width: 100%;
+    max-width: 32ch;
+    margin-inline: 0;
+  }
+
+  .about-editorial-page .about-molecules__copy h2,
+  .about-editorial-page .about-molecules h2 {
+    width: auto !important;
+    max-width: 8.2ch !important;
+    margin: 0 0 24px !important;
+    font-size: clamp(2.65rem, 12.2vw, 3.45rem) !important;
+    line-height: .92 !important;
+    letter-spacing: -.04em !important;
+    text-wrap: balance;
+  }
+
+  .about-editorial-page .about-molecules__copy p:not(.eyebrow) {
+    width: auto !important;
+    max-width: 32ch !important;
+    margin-inline: 0 !important;
+    font-size: .96rem !important;
+    line-height: 1.68 !important;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+  }
+
+  .about-editorial-page .about-molecules__copy p:not(.eyebrow) + p {
+    margin-top: 18px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .about-editorial-page .about-molecules__copy {
+    padding-inline: 20px !important;
+  }
+  .about-editorial-page .about-molecules__copy h2,
+  .about-editorial-page .about-molecules h2 {
+    font-size: 2.55rem !important;
+  }
+}

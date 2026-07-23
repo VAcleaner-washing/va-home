@@ -1,0 +1,77 @@
+/* VA HOME v11.8.42 — stable hero typography reveal
+   Keeps hero copy hidden only until display/body fonts are ready,
+   then reveals it with a subtle 8px lift. */
+
+html.va-hero-fonts-loading :is(
+  .home-page .hero--editorial .hero-slide__content,
+  .brand-hero__copy,
+  .editorial-page-hero__content,
+  .delivery-hero__copy,
+  .contact-hero__copy,
+  .discovery-hero__content,
+  .scent-experience__hero-content,
+  .product-hero__info,
+  .cart-hero > div:first-child,
+  .account-auth > div:first-child,
+  .journal-hero .container,
+  .order-track__intro
+) {
+  opacity: 0 !important;
+  transform: translate3d(0, 8px, 0) !important;
+}
+
+html.va-hero-fonts-ready :is(
+  .home-page .hero--editorial .hero-slide__content,
+  .brand-hero__copy,
+  .editorial-page-hero__content,
+  .delivery-hero__copy,
+  .contact-hero__copy,
+  .discovery-hero__content,
+  .scent-experience__hero-content,
+  .product-hero__info,
+  .cart-hero > div:first-child,
+  .account-auth > div:first-child
+) {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+  transition: opacity 560ms ease, transform 560ms cubic-bezier(.22,.61,.36,1) !important;
+  will-change: opacity, transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.va-hero-fonts-loading :is(
+    .home-page .hero--editorial .hero-slide__content,
+  .brand-hero__copy,
+    .editorial-page-hero__content,
+    .delivery-hero__copy,
+    .contact-hero__copy,
+    .discovery-hero__content,
+    .scent-experience__hero-content,
+    .product-hero__info,
+    .cart-hero > div:first-child,
+    .account-auth > div:first-child,
+    .journal-hero .container,
+    .order-track__intro
+  ) {
+    transform: none !important;
+  }
+
+  html.va-hero-fonts-ready :is(
+    .home-page .hero--editorial .hero-slide__content,
+  .brand-hero__copy,
+    .editorial-page-hero__content,
+    .delivery-hero__copy,
+    .contact-hero__copy,
+    .discovery-hero__content,
+    .scent-experience__hero-content,
+    .product-hero__info,
+    .cart-hero > div:first-child,
+    .account-auth > div:first-child,
+    .journal-hero .container,
+    .order-track__intro
+  ) {
+    transform: none !important;
+    transition: opacity 180ms linear !important;
+    will-change: auto;
+  }
+}

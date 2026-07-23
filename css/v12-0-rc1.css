@@ -1,0 +1,167 @@
+/* ==========================================================================
+   VA HOME v12.0 RC1 — Production design-system and interaction polish
+   Scope: shared cards, account wishlist, scent comparison, focus/touch UX.
+   ========================================================================== */
+
+:root{
+  --ui-border:rgba(184,138,75,.22);
+  --ui-border-hover:rgba(184,138,75,.48);
+  --ui-surface:#12100d;
+  --ui-surface-deep:#0b0a08;
+  --ui-gold:#b88a4b;
+  --ui-radius:2px;
+  --ui-shadow-rest:0 12px 32px rgba(0,0,0,.18);
+  --ui-shadow-lift:0 24px 64px rgba(0,0,0,.32);
+  --ui-ease:cubic-bezier(.2,.7,.2,1);
+  --ui-fast:180ms;
+  --ui-base:360ms;
+}
+
+/* Consistent, visible keyboard focus without changing pointer interactions. */
+:where(a,button,input,select,textarea,[tabindex]):focus-visible{
+  outline:1px solid var(--ui-gold);
+  outline-offset:4px;
+}
+
+/* Shared product-card geometry. Keeps every catalogue surface aligned. */
+.product-card{
+  min-width:0;
+  height:100%;
+  border-color:var(--ui-border);
+  border-radius:var(--ui-radius);
+  box-shadow:var(--ui-shadow-rest);
+  transition:transform var(--ui-base) var(--ui-ease),border-color var(--ui-fast) ease,box-shadow var(--ui-base) var(--ui-ease);
+}
+.product-card__media{
+  aspect-ratio:4/5;
+  overflow:hidden;
+  background:var(--ui-surface-deep);
+}
+.product-card__media>img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+}
+.product-card__body{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  min-width:0;
+}
+.product-card__desc{
+  display:-webkit-box;
+  overflow:hidden;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  min-height:calc(2em * 1.55);
+}
+.product-card__meta{margin-top:auto}
+.product-card__actions{margin-top:auto}
+.product-card__wishlist{
+  box-sizing:border-box;
+  aspect-ratio:1;
+  padding:0;
+}
+@media(hover:hover) and (pointer:fine){
+  .product-card:hover{
+    transform:translateY(-3px);
+    border-color:var(--ui-border-hover);
+    box-shadow:var(--ui-shadow-lift);
+  }
+}
+
+/* Account: quieter private-space treatment and stable wishlist cards. */
+.account-tabs button{
+  min-height:48px;
+  transition:color var(--ui-fast) ease,border-color var(--ui-fast) ease,background var(--ui-fast) ease;
+}
+.account-tabs button:hover{color:var(--text-primary);background:rgba(255,255,255,.018)}
+.wishlist-grid{
+  align-items:stretch;
+  grid-template-columns:repeat(auto-fill,minmax(176px,218px));
+  gap:18px;
+}
+.wishlist-card{
+  min-width:0;
+  height:100%;
+  border-color:var(--ui-border);
+  box-shadow:var(--ui-shadow-rest);
+  transition:transform var(--ui-base) var(--ui-ease),border-color var(--ui-fast) ease,box-shadow var(--ui-base) var(--ui-ease);
+}
+.wishlist-card__media{aspect-ratio:4/5}
+.wishlist-card__media img{object-fit:cover;object-position:center}
+.wishlist-card__body{min-width:0;padding:15px}
+.wishlist-card h2{overflow-wrap:anywhere;line-height:1.08}
+.wishlist-card__actions{flex-wrap:wrap}
+.wishlist-remove{min-height:38px;display:inline-flex;align-items:center}
+@media(hover:hover) and (pointer:fine){
+  .wishlist-card:hover{
+    transform:translateY(-3px);
+    border-color:var(--ui-border-hover);
+    box-shadow:var(--ui-shadow-lift);
+  }
+}
+@media(max-width:760px){
+  .wishlist-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+}
+@media(max-width:520px){
+  .wishlist-grid{grid-template-columns:1fr}
+  .wishlist-card{display:grid;grid-template-columns:88px minmax(0,1fr);min-height:110px}
+  .wishlist-card__media{width:88px;height:110px;aspect-ratio:4/5}
+  .wishlist-card__body{padding:11px 12px}
+  .wishlist-card__actions{padding-top:8px}
+  .wishlist-card__actions .btn{min-height:36px;padding:8px 11px}
+  .wishlist-remove{min-height:36px}
+}
+
+/* Comparison: editorial cards with predictable image ratio and safer mobile flow. */
+.va-compare-modal__inner{scrollbar-gutter:stable}
+.va-compare-modal__close,.va-compare-card__remove{
+  box-sizing:border-box;
+  display:grid;
+  place-items:center;
+  aspect-ratio:1;
+  padding:0;
+}
+.va-compare-grid{align-items:stretch}
+.va-compare-card{height:auto;min-width:0}
+.va-compare-card__hero{aspect-ratio:4/5}
+.va-compare-card__hero img{object-fit:cover;object-position:center}
+.va-compare-panel{flex:1}
+.va-compare-buy,.va-compare-dock__open{transition:background var(--ui-fast) ease,border-color var(--ui-fast) ease,transform var(--ui-fast) ease}
+@media(hover:hover) and (pointer:fine){
+  .va-compare-buy:hover,.va-compare-dock__open:hover{transform:translateY(-1px)}
+}
+@media(max-width:900px){
+  .va-compare-grid{
+    scroll-snap-type:x mandatory;
+    scroll-padding-inline:16px;
+    overscroll-behavior-inline:contain;
+    gap:12px;
+    padding:0 16px calc(12px + env(safe-area-inset-bottom));
+  }
+  .va-compare-card{
+    flex:0 0 min(82vw,410px);
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+  }
+}
+@media(max-width:600px){
+  .va-compare-dock{bottom:calc(12px + env(safe-area-inset-bottom))}
+  .va-compare-card{flex-basis:calc(100vw - 44px)}
+  .va-compare-modal__top{padding-top:calc(17px + env(safe-area-inset-top))}
+  .va-compare-tabs{scrollbar-width:none}
+  .va-compare-tabs::-webkit-scrollbar{display:none}
+}
+
+/* Keep touch controls comfortably tappable. */
+@media(pointer:coarse){
+  .va-compare-add,.wishlist-remove{min-height:44px}
+  .va-compare-card__remove{min-width:40px;min-height:40px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .product-card,.wishlist-card,.product-card__media img,.wishlist-card__media img,
+  .va-compare-buy,.va-compare-dock__open{transition:none!important;transform:none!important}
+}

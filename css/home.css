@@ -5,7 +5,7 @@
 /* ---- Hero ---- */
 .hero {
   position: relative;
-  min-height: 100svh;
+  min-height: 100dvh;
   overflow: hidden;
   background: var(--color-black);
 }
@@ -15,8 +15,7 @@
   inset: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  align-items: end;
-  align-content: end;
+  align-items: center;
   opacity: 0;
   visibility: hidden;
   transition: opacity var(--duration-slow) var(--ease-standard);
@@ -58,10 +57,6 @@
 }
 
 .hero-slide__title {
-  font-family: var(--font-display);
-  font-weight: 500;
-  line-height: var(--lh-tight);
-  letter-spacing: 0.005em;
   font-size: var(--fs-h1);
   margin-bottom: var(--space-3);
 }
@@ -79,8 +74,11 @@
   flex-wrap: wrap;
 }
 
-.slide-dots {
-  margin-top: var(--space-3);
+.hero-nav {
+  position: absolute;
+  bottom: var(--space-4);
+  left: var(--container-pad);
+  z-index: 2;
 }
 
 @media (max-width: 900px) {
@@ -90,7 +88,7 @@
   .hero-slide {
     position: relative;
     grid-template-columns: 1fr;
-    min-height: 100svh;
+    min-height: 100dvh;
     display: flex;
     align-items: flex-end;
   }
@@ -107,9 +105,12 @@
   .hero-slide__actions .btn {
     width: 100%;
   }
-  .slide-dots {
+  .hero-nav {
+    left: 0;
+    right: 0;
     display: flex;
     justify-content: center;
+    bottom: var(--space-3);
   }
 }
 
@@ -550,4 +551,261 @@
   .home-review-card p{font-size:.8rem;line-height:1.4;margin-bottom:.6rem}
   .home-review-card footer{align-items:flex-start;gap:.35rem .5rem;font-size:.66rem}
   .home-review-card footer em{display:block;width:max-content;max-width:100%}
+}
+
+/* ========================================================================== 
+   VA HOME v6.2 — Editorial Homepage
+   ========================================================================== */
+.home-page { background:#0b0b0a; }
+.home-page .section { padding-block:clamp(88px,10vw,150px); }
+.home-page .section--tight { padding-block:clamp(68px,8vw,110px); }
+.hero--editorial { min-height:100svh; }
+.hero--editorial .hero-slide { min-height:100svh; align-items:end; }
+.hero--editorial .hero-slide__media::after { background:linear-gradient(90deg,rgba(5,5,4,.78) 0%,rgba(5,5,4,.46) 42%,rgba(5,5,4,.08) 76%),linear-gradient(0deg,rgba(5,5,4,.35),transparent 42%); }
+.hero--editorial .hero-slide__content { padding-bottom:clamp(72px,9vw,130px); max-width:760px; }
+.hero--editorial .hero-slide__title { font-size:clamp(54px,7.4vw,116px); line-height:.92; letter-spacing:-.025em; max-width:10ch; }
+.hero--editorial .hero-slide__subtitle { max-width:48ch; font-size:clamp(16px,1.5vw,21px); line-height:1.65; }
+.hero-scroll { position:absolute; right:var(--container-pad); bottom:42px; z-index:2; display:flex; align-items:center; gap:14px; color:rgba(255,255,255,.7); font-size:11px; letter-spacing:.18em; text-transform:uppercase; }
+.hero-scroll i { display:block; width:64px; height:1px; background:currentColor; position:relative; }
+.hero-scroll i::after { content:""; position:absolute; right:0; top:-3px; width:7px; height:7px; border-right:1px solid currentColor; border-bottom:1px solid currentColor; transform:rotate(-45deg); }
+.brand-facts { padding:36px 0; border-bottom:1px solid rgba(255,255,255,.1); background:#0f0f0e; }
+.brand-facts__grid { display:grid; grid-template-columns:repeat(4,1fr); }
+.brand-facts__grid>div { padding:8px clamp(18px,3vw,48px); border-right:1px solid rgba(255,255,255,.1); }
+.brand-facts__grid>div:first-child { padding-left:0; }
+.brand-facts__grid>div:last-child { border-right:0; }
+.brand-facts strong { display:block; font-family:var(--font-display); font-size:clamp(28px,3vw,48px); font-weight:500; color:var(--color-gold); margin-bottom:4px; }
+.brand-facts span { color:rgba(255,255,255,.58); font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
+.brand-manifesto { min-height:min(82vh,900px); position:relative; display:grid; place-items:center; overflow:hidden; }
+.brand-manifesto__media,.brand-manifesto__shade { position:absolute; inset:0; }
+.brand-manifesto__media img { transform:scale(1.02); }
+.brand-manifesto__shade { background:rgba(5,5,4,.48); }
+.brand-manifesto__content { position:relative; z-index:1; width:min(1100px,calc(100% - 48px)); text-align:center; }
+.brand-manifesto__content h2 { font-family:var(--font-display); font-weight:500; font-size:clamp(38px,5.4vw,82px); line-height:1.03; letter-spacing:-.02em; }
+.collections-grid { gap:clamp(18px,2.4vw,38px); }
+.collections-grid .collection-card:nth-child(even) { transform:translateY(44px); }
+.discovery-banner { border-radius:0; grid-template-columns:1.15fr 1fr; min-height:620px; }
+.discovery-banner__media { min-height:620px; }
+.discovery-banner__body { padding:clamp(42px,6vw,90px); }
+.discovery-banner__body h2 { font-size:clamp(42px,5vw,76px); line-height:1; }
+.discovery-banner__side { display:none; }
+.scent-finder { border-radius:0; }
+.brand-process,.about-split { border-radius:0; }
+.atmosphere-strip { gap:0; }
+.atmosphere-strip__item:nth-child(2) { transform:translateY(42px); }
+.journal-grid { display:grid; grid-template-columns:1.35fr 1fr; gap:clamp(18px,2vw,30px); }
+.journal-card { display:grid; grid-template-columns:1fr 1fr; min-height:260px; background:#11110f; color:var(--text-primary); overflow:hidden; }
+.journal-card--large { grid-row:span 2; grid-template-columns:1fr; min-height:620px; }
+.journal-card__media { min-height:260px; overflow:hidden; }
+.journal-card--large .journal-card__media { min-height:450px; }
+.journal-card__media img { transition:transform 900ms var(--ease-standard); }
+.journal-card__body { padding:clamp(24px,3vw,42px); display:flex; flex-direction:column; justify-content:flex-end; }
+.journal-card__body p { color:var(--color-gold); text-transform:uppercase; letter-spacing:.14em; font-size:10px; margin-bottom:16px; }
+.journal-card__body h3 { font-family:var(--font-display); font-size:clamp(25px,2.3vw,38px); font-weight:500; line-height:1.08; margin-bottom:28px; }
+.journal-card__body span { font-size:11px; text-transform:uppercase; letter-spacing:.14em; color:var(--text-secondary); }
+@media (hover:hover){ .journal-card:hover img{transform:scale(1.04)} }
+@media(max-width:900px){
+ .hero--editorial .hero-slide__media::after{background:linear-gradient(180deg,rgba(5,5,4,.08) 18%,rgba(5,5,4,.9) 82%)}
+ .hero--editorial .hero-slide__content{padding-bottom:86px}.hero--editorial .hero-slide__title{font-size:clamp(48px,14vw,76px)}.hero-scroll{display:none}
+ .brand-facts__grid{grid-template-columns:1fr 1fr;gap:28px 0}.brand-facts__grid>div{border-right:0;padding:0 18px 0 0}.brand-facts strong{font-size:32px}.brand-facts span{font-size:10px}
+ .collections-grid .collection-card:nth-child(even){transform:none}
+ .brand-manifesto{min-height:70vh}.brand-manifesto__content h2 br{display:none}
+ .discovery-banner{grid-template-columns:1fr;min-height:auto}.discovery-banner__media{min-height:420px}.discovery-banner__body{padding:38px 24px}
+ .journal-grid{grid-template-columns:1fr}.journal-card,.journal-card--large{grid-template-columns:1fr;min-height:auto;grid-row:auto}.journal-card__media,.journal-card--large .journal-card__media{min-height:330px}.journal-card__body{min-height:220px}
+ .atmosphere-strip__item:nth-child(2){transform:none}
+}
+@media(max-width:560px){
+ .home-page .section{padding-block:74px}.hero--editorial .hero-slide__actions{gap:10px}.brand-manifesto__content{width:calc(100% - 32px)}
+ .brand-manifesto__content h2{font-size:38px}.discovery-banner__media{min-height:330px}.journal-card__media,.journal-card--large .journal-card__media{min-height:280px}
+}
+
+/* v6.3 responsive hero safety patch */
+.hero--editorial .hero-slide__content {
+  padding-top: calc(var(--header-height, 86px) + clamp(28px, 5vh, 64px));
+  box-sizing: border-box;
+}
+.hero--editorial .hero-slide__title {
+  font-size: clamp(48px, min(7.4vw, 11.5vh), 104px);
+  line-height: .94;
+  max-width: 11ch;
+  text-wrap: balance;
+}
+@media (min-width: 901px) and (max-height: 850px) {
+  .hero--editorial .hero-slide__content {
+    padding-top: calc(var(--header-height, 78px) + 22px);
+    padding-bottom: clamp(34px, 5vh, 58px);
+    max-width: 700px;
+  }
+  .hero--editorial .hero-slide__title {
+    font-size: clamp(46px, min(6.4vw, 9.4vh), 78px);
+    line-height: .96;
+    margin-bottom: 18px;
+  }
+  .hero--editorial .hero-slide__subtitle {
+    font-size: clamp(15px, 1.25vw, 18px);
+    line-height: 1.5;
+    margin-bottom: 22px;
+  }
+  .hero--editorial .hero-slide__eyebrow { margin-bottom: 14px; }
+  .hero-scroll { bottom: 26px; }
+}
+@media (min-width: 901px) and (max-height: 720px) {
+  .hero--editorial .hero-slide__content { padding-top: 96px; padding-bottom: 28px; }
+  .hero--editorial .hero-slide__title { font-size: clamp(42px, min(5.8vw, 8.2vh), 64px); }
+  .hero--editorial .hero-slide__subtitle { max-width: 42ch; }
+  .hero-scroll { display:none; }
+}
+@media (max-width: 900px) {
+  .hero--editorial .hero-slide__content { padding-top: calc(var(--header-height, 72px) + 36px); }
+  .hero--editorial .hero-slide__title { font-size: clamp(44px, 13vw, 72px); max-width: 10ch; }
+}
+
+/* ========================================================================== 
+   Production QA patch — stable editorial hero across common laptop heights
+   ========================================================================== */
+.home-page .hero--editorial,
+.home-page .hero--editorial .hero-slide {
+  height: 100svh;
+  min-height: 620px;
+}
+
+.home-page .hero--editorial .hero-slide__content {
+  width: min(760px, calc(100vw - (2 * var(--container-pad))));
+  max-width: none;
+  padding-top: calc(var(--header-height, 86px) + 24px);
+  padding-bottom: clamp(36px, 6vh, 72px);
+}
+
+.home-page .hero--editorial .hero-slide__title {
+  font-size: clamp(46px, min(6.4vw, 9.2vh), 86px);
+  line-height: .96;
+  max-width: 11ch;
+  margin-bottom: clamp(16px, 2.4vh, 26px);
+}
+
+.home-page .hero--editorial .hero-slide__subtitle {
+  font-size: clamp(15px, 1.25vw, 19px);
+  line-height: 1.55;
+  margin-bottom: clamp(18px, 2.6vh, 28px);
+}
+
+@media (min-width: 901px) and (max-height: 760px) {
+  .home-page .hero--editorial,
+  .home-page .hero--editorial .hero-slide {
+    min-height: 560px;
+  }
+
+  .home-page .hero--editorial .hero-slide__content {
+    padding-top: calc(var(--header-height, 76px) + 18px);
+    padding-bottom: 28px;
+  }
+
+  .home-page .hero--editorial .hero-slide__title {
+    font-size: clamp(42px, min(5.5vw, 8vh), 62px);
+  }
+
+  .home-page .hero--editorial .hero-slide__eyebrow {
+    margin-bottom: 10px;
+  }
+
+  .home-page .hero--editorial .hero-slide__subtitle {
+    font-size: 15px;
+    line-height: 1.45;
+    margin-bottom: 18px;
+  }
+
+  .home-page .hero--editorial .hero-scroll {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .home-page .hero--editorial,
+  .home-page .hero--editorial .hero-slide {
+    min-height: 600px;
+  }
+
+  .home-page .hero--editorial .hero-slide__content {
+    width: 100%;
+    padding-top: calc(var(--header-height, 72px) + 24px);
+    padding-bottom: max(56px, calc(32px + env(safe-area-inset-bottom)));
+  }
+
+  .home-page .hero--editorial .hero-slide__title {
+    font-size: clamp(42px, 12vw, 68px);
+    line-height: .98;
+    max-width: 10ch;
+  }
+}
+
+@media (max-width: 430px) {
+  .home-page .hero--editorial .hero-slide__content {
+    padding-inline: 18px;
+  }
+
+  .home-page .hero--editorial .hero-slide__title {
+    font-size: clamp(40px, 12.5vw, 56px);
+  }
+}
+
+/* ========================================================================== 
+   v11.8.3 — Hero controls overlap fix
+   Reserve a dedicated lower zone for the slide navigation on desktop and
+   short laptop viewports. The CTA row must always finish above 01 / 02 / 03.
+   ========================================================================== */
+@media (min-width: 901px) {
+  .home-page .hero--editorial .hero-slide__content {
+    /* Navigation occupies the lower ~58px; keep a safe visual gap above it. */
+    padding-bottom: clamp(104px, 13vh, 132px);
+  }
+
+  .home-page .hero--editorial .hero-nav {
+    bottom: clamp(22px, 3.5vh, 34px);
+  }
+}
+
+/* Short notebook screens need smaller type, never a smaller controls gap. */
+@media (min-width: 901px) and (max-height: 850px) {
+  .home-page .hero--editorial .hero-slide__content {
+    padding-bottom: 100px;
+  }
+
+  .home-page .hero--editorial .hero-nav {
+    bottom: 22px;
+  }
+}
+
+@media (min-width: 901px) and (max-height: 720px) {
+  .home-page .hero--editorial .hero-slide__content {
+    padding-bottom: 88px;
+  }
+
+  .home-page .hero--editorial .hero-slide__actions {
+    gap: 10px;
+  }
+
+  .home-page .hero--editorial .hero-nav {
+    bottom: 16px;
+  }
+}
+
+/* v11.8.20 — readable scent labels over photography */
+.scent-category__label {
+  left: 12px;
+  bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 7px 13px 8px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  background: rgba(12,11,9,.48);
+  -webkit-backdrop-filter: blur(10px) saturate(.9);
+  backdrop-filter: blur(10px) saturate(.9);
+  box-shadow: 0 8px 24px rgba(0,0,0,.22);
+  color: #fffaf1;
+  line-height: 1;
+  text-shadow: 0 1px 8px rgba(0,0,0,.48);
+}
+@media (max-width: 480px) {
+  .scent-category__label { left: 9px; bottom: 9px; min-height: 32px; padding: 6px 10px 7px; font-size: .98rem; }
 }

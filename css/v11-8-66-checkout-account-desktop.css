@@ -1,0 +1,239 @@
+/* VA HOME v11.8.66 — desktop checkout & account refinement
+   Mobile layout remains unchanged. */
+
+@media (min-width: 901px) {
+  /* Compact utility hero: keeps atmosphere without pushing the cart below the fold. */
+  .cart-hero {
+    grid-template-columns: minmax(0, 1.08fr) minmax(300px, .92fr);
+    min-height: 286px;
+    margin-bottom: 26px;
+  }
+  .cart-hero > div:first-child {
+    padding: 38px 48px;
+  }
+  .cart-hero h1 {
+    max-width: none;
+    margin: .08em 0 .16em;
+    font-size: clamp(3.7rem, 5vw, 5.8rem);
+    line-height: .9;
+  }
+  .cart-hero p:last-child {
+    max-width: 48ch;
+    line-height: 1.62;
+  }
+  .cart-hero__visual {
+    min-height: 286px;
+    background-position: center 48%;
+  }
+
+  /* Real stepper rather than three oversized tabs. */
+  .checkout-progress {
+    margin: 0 0 32px;
+    border: 0;
+  }
+  .checkout-progress ol {
+    position: relative;
+    max-width: 760px;
+    margin-inline: auto;
+  }
+  .checkout-progress ol::before {
+    content: "";
+    position: absolute;
+    top: 17px;
+    left: 16.66%;
+    right: 16.66%;
+    height: 1px;
+    background: var(--border-hairline-strong);
+  }
+  .checkout-progress li {
+    z-index: 1;
+    min-height: 0;
+    padding: 0 12px;
+    flex-direction: column;
+    gap: 8px;
+    background: transparent !important;
+    border: 0 !important;
+    text-align: center;
+  }
+  .checkout-progress li span {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--border-hairline-strong);
+    border-radius: 50%;
+    background: var(--bg-primary);
+    font-family: var(--font-body);
+    font-size: 11px;
+  }
+  .checkout-progress li.is-current span {
+    border-color: var(--color-gold);
+    background: var(--color-gold);
+    color: #090806;
+  }
+  .checkout-progress li strong {
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .checkout-progress li.is-complete::after { display: none; }
+
+  .cart-layout {
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 34px;
+    margin-top: 0;
+  }
+  .cart-items { gap: 12px; }
+  .cart-item {
+    grid-template-columns: 96px minmax(0, 1fr) auto;
+    gap: 22px;
+    min-height: 150px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #15130f, #0f0e0c 72%);
+  }
+  .cart-item__media {
+    width: 96px;
+  }
+  .cart-item__name {
+    margin-bottom: 4px;
+    font-size: 1.34rem;
+  }
+  .cart-item__meta { margin-bottom: 13px; }
+  .cart-item__controls { gap: 16px; }
+  .cart-item__price-col {
+    align-self: center;
+    min-width: 110px;
+    font-family: var(--font-display);
+    font-size: 1.18rem;
+  }
+  .cart-continue-link {
+    display: inline-flex;
+    margin-top: 22px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-decoration: none;
+    transition: color var(--duration-fast), transform var(--duration-fast);
+  }
+  .cart-continue-link:hover,
+  .cart-continue-link:focus-visible {
+    color: var(--color-gold);
+    transform: translateX(-3px);
+  }
+
+  /* Summary fits typical laptop heights and never scrolls internally. */
+  .cart-summary {
+    top: calc(var(--header-height) + 18px);
+    padding: 24px 26px;
+    max-height: none;
+    overflow: visible;
+    background:
+      linear-gradient(145deg, rgba(30, 25, 18, .98), rgba(13, 12, 10, .99)),
+      radial-gradient(circle at 80% 0%, rgba(184, 138, 75, .13), transparent 45%);
+    box-shadow: 0 28px 64px rgba(0, 0, 0, .34);
+  }
+  .cart-summary__eyebrow { margin-bottom: 2px; }
+  .cart-summary__title {
+    margin-bottom: 20px;
+    font-size: 2rem;
+  }
+  .cart-summary__row {
+    margin-bottom: 13px;
+  }
+  .cart-summary__total {
+    margin-top: 17px;
+    padding-top: 17px;
+    font-family: var(--font-display);
+    font-size: 1.38rem;
+  }
+  .cart-summary__note {
+    margin-top: 14px;
+    font-size: 11px;
+    line-height: 1.55;
+  }
+  .shipping-progress {
+    margin-top: 18px;
+    padding-top: 18px;
+  }
+  .cart-summary__trust {
+    gap: 7px;
+    margin-top: 18px;
+    padding-top: 18px;
+    font-size: 11px;
+  }
+
+  /* Checkout content gains clearer hierarchy without becoming taller. */
+  .checkout-form {
+    margin-top: 46px;
+    padding: 38px;
+  }
+  .checkout-form__head {
+    margin-bottom: 32px;
+  }
+  .checkout-form__head h2 {
+    font-size: clamp(3.1rem, 4.5vw, 4.8rem);
+  }
+  .checkout-fields-grid,
+  .checkout-submit-panel {
+    gap: 26px;
+  }
+  .checkout-fieldset {
+    padding: 26px;
+  }
+  #placeOrderBtn {
+    min-height: 62px;
+    padding-inline: 22px;
+    box-shadow: 0 12px 30px rgba(184, 138, 75, .12);
+  }
+}
+
+@media (min-width: 901px) and (max-height: 820px) {
+  .cart-summary {
+    position: static;
+  }
+}
+
+@media (min-width: 761px) {
+  /* Account: clearer dashboard rhythm and more premium order cards. */
+  .account-head {
+    min-height: 260px;
+    padding: 42px 48px;
+  }
+  .account-tabs {
+    margin-top: 28px;
+  }
+  .account-order {
+    padding: 24px 28px;
+    transition: border-color var(--duration-fast), transform var(--duration-fast), box-shadow var(--duration-fast);
+  }
+  .account-order:hover {
+    border-color: rgba(184, 138, 75, .38);
+    transform: translateY(-2px);
+    box-shadow: 0 18px 42px rgba(0,0,0,.18);
+  }
+  .account-order__preview-thumb,
+  .account-order__preview-more {
+    width: 58px;
+    height: 58px;
+  }
+  .account-order__toggle {
+    margin-top: 18px;
+  }
+  .signature-scent {
+    min-height: 330px;
+    grid-template-columns: minmax(240px, 360px) minmax(0, 1fr);
+  }
+  .signature-scent__media { min-height: 330px; }
+}
+
+/* Thank-you experience: subtle finishing polish on all screens. */
+.order-success__check {
+  box-shadow: 0 0 0 10px rgba(184,138,75,.045);
+}
+.order-success__number {
+  box-shadow: 0 18px 44px rgba(0,0,0,.22);
+}
+.post-purchase-steps > div {
+  transition: background var(--duration-fast), border-color var(--duration-fast);
+}
+.post-purchase-steps > div:hover {
+  background: rgba(184,138,75,.045);
+}

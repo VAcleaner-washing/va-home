@@ -1,0 +1,76 @@
+/* ==========================================================================
+   VA HOME v12.0 RC2 — Production QA hardening
+   Scope: mobile stability, accessibility, safe-area and overflow protection.
+   No visual redesign and no commerce logic changes.
+   ========================================================================== */
+
+:root{
+  --tap-target:44px;
+  --focus-ring:rgba(184,138,75,.95);
+}
+
+html{
+  overflow-x:clip;
+  scrollbar-gutter:stable;
+  text-size-adjust:100%;
+  -webkit-text-size-adjust:100%;
+}
+body{min-width:0;overflow-wrap:break-word}
+main,section,article,aside,nav,header,footer{min-width:0}
+img,video,canvas,svg{max-width:100%}
+
+/* Anchored sections remain visible below the sticky header. */
+:where([id]){scroll-margin-top:96px}
+
+/* Production-grade focus that remains visible on dark and light surfaces. */
+:where(a,button,input,select,textarea,[role="button"],[tabindex]):focus-visible{
+  outline:2px solid var(--focus-ring);
+  outline-offset:3px;
+}
+
+/* Reliable touch behaviour without changing desktop sizing. */
+:where(button,[role="button"],input[type="button"],input[type="submit"],input[type="checkbox"],input[type="radio"]){
+  touch-action:manipulation;
+}
+@media(pointer:coarse){
+  :where(.icon-btn,.header-action,.wishlist-remove,.va-compare-add,.va-compare-card__remove,.va-compare-modal__close){
+    min-width:var(--tap-target);
+    min-height:var(--tap-target);
+  }
+}
+
+/* Prevent iOS form zoom and clipping in checkout/account forms. */
+@media(max-width:760px){
+  :where(input,select,textarea){font-size:16px}
+  :where(.modal,.drawer,.va-compare-modal__inner){overscroll-behavior:contain}
+}
+
+/* Stable account/wishlist geometry across long titles and small screens. */
+.wishlist-card__body,.wishlist-card__actions{min-width:0}
+.wishlist-card__actions>*{max-width:100%}
+.wishlist-card h2,.wishlist-card p{word-break:normal;overflow-wrap:anywhere}
+@media(max-width:520px){
+  .wishlist-card__media img{width:100%;height:100%;object-fit:cover;object-position:center}
+}
+
+/* Comparison modal: no accidental page scroll and no clipped final card. */
+.va-compare-modal[aria-hidden="false"],.va-compare-modal.is-open{overscroll-behavior:contain}
+.va-compare-grid>*{min-width:0}
+@media(max-width:900px){
+  .va-compare-grid::after{content:"";flex:0 0 4px}
+}
+
+/* Better behaviour for users who request less motion. */
+@media(prefers-reduced-motion:reduce){
+  html:focus-within{scroll-behavior:auto!important}
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+  }
+}
+
+/* High-contrast fallback keeps controls understandable. */
+@media(forced-colors:active){
+  :where(button,.btn,input,select,textarea,.product-card,.wishlist-card){border:1px solid CanvasText}
+}
