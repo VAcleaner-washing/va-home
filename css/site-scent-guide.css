@@ -3889,9 +3889,10 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
   .product-card__actions .btn { padding-inline: 10px; }
 }
 
-/* v13.3.1 — mobile scent-guide hero text alignment */
-@media (max-width: 680px) {
-  .scent-experience__hero-content {
-    padding-left: calc(var(--container-pad) + 8px);
+/* v13.3.2 — mobile scent-guide hero text alignment */
+@media (max-width: 700px) {
+  .scent-experience__hero--consultation .scent-experience__hero-content {
+    padding-left: 36px !important;
+    padding-right: 20px !important;
   }
 }
