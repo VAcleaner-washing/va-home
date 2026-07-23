@@ -132,7 +132,7 @@
     dock.classList.toggle('is-visible', selected.length > 0);
     dock.querySelector('.va-compare-dock__thumbs').innerHTML = selected.map((id) => {
       const product = byId(id);
-      return product ? `<img class="va-compare-dock__thumb" src="${root}${esc(product.images.main)}" alt="">` : '';
+      return product ? `<img class="va-compare-dock__thumb" src="${root}${esc(compareImage(product))}" alt="">` : '';
     }).join('');
     dock.querySelector('.va-compare-dock__open').textContent = selected.length < 2
       ? `Обрано ${selected.length} · додайте ще`
@@ -179,6 +179,10 @@
   }
 
   function openModal() {
+    if (selected.length >= 2) {
+      window.location.href = `${root}compare.html`;
+      return;
+    }
     ensureModal();
     renderModal();
     const modal = document.querySelector('.va-compare-modal');
@@ -208,6 +212,19 @@
     </div>`;
   }
 
+
+  function compareImage(product) {
+    return `images/product-story/${product.id}/macro.webp`;
+  }
+
+  function compareImageAlt(product) {
+    return `images/product-story/${product.id}/Macro.webp`;
+  }
+
+  function compareImageFallback(product) {
+    return `images/product-gallery/${product.id}/hero.webp`;
+  }
+
   function compactRooms(product) {
     return (product.room || []).slice(0, 3).map((item) => rooms[item] || item).join(' · ') || 'Універсальний простір';
   }
@@ -220,20 +237,24 @@
       || 'Авторська атмосфера';
 
     return `
-      <article class="va-compare-card">
-        <div class="va-compare-card__hero">
-          <img src="${root}${esc(product.images.main)}" alt="${esc(product.name)}">
-          <span class="va-compare-card__index">${String(selected.indexOf(product.id) + 1).padStart(2, '0')}</span>
-          <button class="va-compare-card__remove" data-remove="${product.id}" type="button" aria-label="Прибрати ${esc(product.name)}">×</button>
-        </div>
-
-        <div class="va-compare-card__identity">
-          <p class="va-compare-card__collection">${esc(group.name || product.collection)}</p>
-          <h3 class="va-compare-card__name">${esc(product.name)}</h3>
-          <div class="va-compare-card__meta">
-            <span>${esc(group.volume || '100 мл')}</span>
-            <strong>${esc(group.price || '—')} грн</strong>
+      <article class="va-compare-card va-compare-card--dossier">
+        <div class="va-compare-card__identity va-compare-card__identity--portrait">
+          <div class="va-compare-card__copy">
+            <div class="va-compare-card__heading">
+              <p class="va-compare-card__collection">${esc(group.name || product.collection)}</p>
+              <button class="va-compare-card__remove" data-remove="${product.id}" type="button" aria-label="Прибрати ${esc(product.name)}">×</button>
+            </div>
+            <span class="va-compare-card__number">SCENT ${String(selected.indexOf(product.id) + 1).padStart(2, '0')}</span>
+            <h3 class="va-compare-card__name">${esc(product.name)}</h3>
+            <div class="va-compare-card__meta">
+              <span>${esc(group.volume || '100 мл')}</span>
+              <strong>${esc(group.price || '—')} грн</strong>
+            </div>
           </div>
+          <figure class="va-compare-card__portrait">
+            <img class="va-compare-card__portrait-image" src="${root}${esc(compareImage(product))}" data-alt-src="${root}${esc(compareImageAlt(product))}" data-fallback-src="${root}${esc(compareImageFallback(product))}" alt="Макродеталь ${esc(product.name)}" loading="eager" decoding="auto" fetchpriority="low">
+            <figcaption>OLFACTIVE PORTRAIT</figcaption>
+          </figure>
         </div>
 
         <div class="va-compare-panel ${currentTab === 'character' ? 'is-active' : ''}" data-panel="character">
@@ -290,6 +311,22 @@
 
     box.innerHTML = `<div class="va-compare-grid" style="--compare-count:${chosen.length}">${chosen.map(card).join('')}</div>`;
 
+    box.querySelectorAll('.va-compare-card__portrait-image').forEach((image) => {
+      image.addEventListener('error', () => {
+        const alt = image.dataset.altSrc;
+        const fallback = image.dataset.fallbackSrc;
+        if (!image.dataset.triedAlt && alt && image.src !== alt) {
+          image.dataset.triedAlt = '1';
+          image.src = alt;
+          return;
+        }
+        if (!image.dataset.triedFallback && fallback && image.src !== fallback) {
+          image.dataset.triedFallback = '1';
+          image.src = fallback;
+        }
+      });
+    });
+
     box.querySelectorAll('[data-remove]').forEach((button) => {
       button.addEventListener('click', () => {
         selected = selected.filter((item) => item !== button.dataset.remove);
@@ -324,5 +361,8 @@
     renderDock();
     syncButtons();
     setTimeout(enhance, 500);
+    document.addEventListener('vahome:products-rendered', () => {
+      requestAnimationFrame(() => { enhance(); syncButtons(); renderDock(); });
+    });
   });
 })();

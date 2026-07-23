@@ -275,9 +275,10 @@
     const byType = (type, fallback) => galleryItems.find((item) => item.type === type)?.src || fallback;
     const storyBase = `images/product-story/${product.id}`;
     const storyAsset = (name) => `${storyBase}/${name}.webp`;
-    const interiorFallback = byType("interior", atmosphereImage);
-    const macroFallback = byType("macro", product.images.main);
-    const detailFallback = byType("detail", interiorFallback);
+    const catalogHeroFallback = product.images.main;
+    const interiorFallback = byType("interior", catalogHeroFallback);
+    const macroFallback = byType("macro", catalogHeroFallback);
+    const detailFallback = byType("detail", catalogHeroFallback);
     const heroStoryImage = storyAsset("hero");
     const atmosphereStoryImage = storyAsset("atmosphere");
     const interiorStoryImage = storyAsset("interior");

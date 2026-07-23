@@ -50,36 +50,29 @@
     // New unified nine-image product story. These four files also power the hero gallery.
     const storyBase = `${root}images/product-story/${productId}/`;
     [
-      ["hero", "hero.webp"],
-      ["interior", "interior.webp"],
-      ["macro", "macro.webp"],
-      ["detail", "detail.webp"]
-    ].forEach(([type, filename], index) => {
-      candidates.push({
-        type,
-        label: TYPE_LABELS[type] || `Фото ${index + 1}`,
-        src: `${storyBase}${filename}`,
-        automatic: true,
-        source: "product-story"
+      ["hero", ["hero.webp", "Hero.webp"]],
+      ["interior", ["interior.webp", "Interior.webp"]],
+      ["macro", ["macro.webp", "Macro.webp"]],
+      ["detail", ["detail.webp", "Detail.webp"]]
+    ].forEach(([type, filenames], index) => {
+      filenames.forEach((filename) => {
+        candidates.push({
+          type,
+          label: TYPE_LABELS[type] || `Фото ${index + 1}`,
+          src: `${storyBase}${filename}`,
+          automatic: true,
+          source: "product-story"
+        });
       });
     });
 
-    // Backward-compatible support for the older numbered product-gallery folders.
-    const galleryBase = `${root}images/product-gallery/${productId}/`;
-    AUTO_GROUPS.forEach((group) => {
-      const filenames = group.files || Array.from(
-        { length: group.max },
-        (_, index) => `${group.prefix}${index + 1}.webp`
-      );
-      filenames.forEach((filename, index) => {
-        candidates.push({
-          type: group.type,
-          label: TYPE_LABELS[group.type] || `Фото ${index + 1}`,
-          src: `${galleryBase}${filename}`,
-          automatic: true,
-          source: "product-gallery"
-        });
-      });
+    // Dedicated catalog image. Used only as a safe fallback when a product-story slot is absent.
+    candidates.push({
+      type: "hero",
+      label: TYPE_LABELS.hero,
+      src: `${root}images/product-gallery/${productId}/hero.webp`,
+      automatic: true,
+      source: "product-gallery"
     });
 
     return candidates;
@@ -97,30 +90,30 @@
   }
 
   async function resolveGallery(product, items, root) {
-    const automatic = makeAutomaticCandidates(product, root);
+    // Prefer product-story per gallery slot. When a specific story image is absent,
+    // immediately keep the legacy item for that same slot instead of leaving it blank.
+    const storyCandidates = makeAutomaticCandidates(product, root)
+      .filter((item) => item.source === "product-story");
     const provided = normalizeProvidedItems(items, root);
-    const ordered = [...automatic, ...provided];
-    const seen = new Set();
-    const unique = ordered.filter((item) => {
-      if (!item.src || seen.has(item.src)) return false;
-      seen.add(item.src);
-      return true;
+    const typeOrder = ["hero", "macro", "interior", "detail"];
+
+    const availability = await Promise.all(storyCandidates.map((item) => canLoad(item.src)));
+    const availableStory = storyCandidates.filter((_, index) => availability[index]);
+    const selected = [];
+
+    typeOrder.forEach((type) => {
+      const storyItem = availableStory.find((item) => item.type === type);
+      const legacyItem = provided.find((item) => item.type === type);
+      const chosen = storyItem || legacyItem;
+      if (chosen && !selected.some((item) => item.src === chosen.src)) selected.push(chosen);
     });
 
-    const availability = await Promise.all(unique.map((item) => canLoad(item.src)));
-    const available = unique.filter((_, index) => availability[index]);
+    // Preserve any extra legacy gallery items after the four primary slots.
+    provided.forEach((item) => {
+      if (!selected.some((selectedItem) => selectedItem.src === item.src)) selected.push(item);
+    });
 
-    // If a new hero exists, use the new folder as the gallery source of truth.
-    // Legacy images remain only as a safety fallback when no new hero is present.
-    const hasStoryHero = available.some((item) => item.source === "product-story" && item.type === "hero");
-    const hasAutomaticHero = available.some((item) => item.automatic && item.type === "hero");
-    const selected = hasStoryHero
-      ? available.filter((item) => item.source === "product-story")
-      : hasAutomaticHero
-        ? available.filter((item) => item.automatic && item.source !== "product-story")
-        : available.filter((item) => !item.automatic);
-
-    return selected.length ? selected : available;
+    return selected;
   }
 
   async function mount({ product, items, root = "", fallbackSrc = "" }) {
@@ -142,9 +135,16 @@
 
     const gallery = await resolveGallery(product, items, root);
     if (!gallery.length) {
-      if (fallbackSrc) mainImage.src = fallbackSrc;
+      mainImage.removeAttribute("src");
+      mainImage.style.visibility = "hidden";
+      media.dataset.storyEmpty = "true";
+      strip.replaceChildren();
       return;
     }
+
+    mainImage.style.removeProperty("visibility");
+    mainImage.removeAttribute("data-product-story-empty");
+    media.removeAttribute("data-story-empty");
 
     let current = 0;
     let autoplayTimer = null;
@@ -205,7 +205,7 @@
         data-gallery-index="${index}"
         aria-label="${escapeHtml(item.label)}: фото ${index + 1} з ${gallery.length}"
         aria-current="${index === 0 ? "true" : "false"}">
-        <img src="${escapeHtml(item.src)}" alt="" loading="lazy" decoding="async">
+        <img src="${escapeHtml(item.src)}" alt="" loading="eager" decoding="auto">
       </button>`).join("");
     strip.classList.toggle("has-multiple", gallery.length > 1);
 

@@ -6,8 +6,8 @@ h1,h2,h3,.hero-slide__title,.collection-world h2{overflow-wrap:normal;word-break
 p{max-width:var(--content-measure)}
 a,button,input,select,textarea{-webkit-tap-highlight-color:transparent}
 button,.btn,[role="button"],.header-icon,.collection-world__cta{min-height:var(--tap-min)}
-img{background-color:#e9e5dc}
-.editorial-fallback-image{object-fit:cover;filter:saturate(.82) contrast(.96);background:#e7e1d5}
+img{background-color:transparent}
+.editorial-fallback-image{object-fit:cover;filter:saturate(.82) contrast(.96);background:transparent}
 .checkout-trust-strip{border-bottom:1px solid var(--border-hairline);background:var(--bg-primary);padding:18px 0}
 .checkout-trust-strip__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .checkout-trust-strip__grid div{display:flex;flex-direction:column;gap:3px}

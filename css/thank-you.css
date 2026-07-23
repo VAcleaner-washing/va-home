@@ -52,3 +52,49 @@
 @media(max-width:900px){.ty-intro__grid,.ty-primary-grid,.ty-journey{grid-template-columns:1fr}.ty-intro__grid{gap:54px}.ty-order-id{max-width:560px}.ty-card--payment{order:1}.ty-card--order{order:2}.ty-journey{gap:34px}.ty-footer-card{align-items:flex-start;flex-direction:column}.ty-actions{justify-content:flex-start}}
 @media(max-width:600px){.ty-intro{padding:calc(var(--header-height-mobile,72px) + 54px) 0 62px}.ty-intro__grid{gap:42px}.ty-success-mark{width:42px;height:42px;margin-bottom:26px}.ty-intro h1{font-size:clamp(4.2rem,23vw,6.8rem)}.ty-intro__statement{margin-top:22px;font-size:clamp(2rem,11vw,3.15rem)}.ty-intro__lead{margin-top:24px;font-size:13px}.ty-order-id{padding-top:24px}.ty-content{padding-top:30px}.ty-primary-grid{gap:14px}.ty-card{padding:30px 20px}.ty-card::before{left:20px}.ty-card__header h2{font-size:clamp(2.6rem,15vw,3.8rem)}.ty-payment-list{margin-top:30px}.ty-payment-list>div{grid-template-columns:1fr;gap:8px;padding:15px 0}.ty-order-line{gap:14px;font-size:12px}.ty-journey{margin-top:70px;padding-top:34px}.ty-steps li{grid-template-columns:42px minmax(0,1fr);gap:10px}.ty-footer-card{margin-top:62px}.ty-actions{width:100%;display:grid}.ty-actions .btn{width:100%}}
 @media(prefers-reduced-motion:no-preference){.ty-intro__copy,.ty-order-id,.ty-card,.ty-journey{animation:tyFade .7s ease both}.ty-order-id{animation-delay:.08s}.ty-primary-grid .ty-card:nth-child(1){animation-delay:.12s}.ty-primary-grid .ty-card:nth-child(2){animation-delay:.18s}.ty-journey{animation-delay:.22s}@keyframes tyFade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}}
+
+/* v12.1 — premium thank-you experience */
+.ty-intro{padding:clamp(104px,9vw,138px) 0 clamp(52px,6vw,82px)}
+.ty-intro__grid{grid-template-columns:minmax(0,.9fr) minmax(420px,1.1fr);gap:clamp(42px,6vw,86px);align-items:center;max-width:1280px}
+.ty-intro h1{font-size:clamp(4.4rem,7.2vw,7.7rem);line-height:.82;max-width:8.2ch}
+.ty-intro__statement{font-size:clamp(1.7rem,2.8vw,3rem);margin-top:24px}
+.ty-intro__lead{margin-top:22px;max-width:500px}
+.ty-intro__visual{position:relative;min-height:520px;overflow:hidden;border:1px solid rgba(184,138,75,.2);background:#15110d}
+.ty-intro__visual::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 46%,rgba(7,6,5,.88) 100%)}
+.ty-intro__visual img{display:block;width:100%;height:100%;min-height:520px;object-fit:cover;object-position:center}
+.ty-order-id{position:absolute;z-index:2;left:30px;right:30px;bottom:26px;padding:20px 0 0;border-top:1px solid rgba(224,190,126,.55)}
+.ty-order-id strong{font-size:clamp(1.55rem,2.3vw,2.25rem)}
+.ty-text-button{color:#e1ba75}
+.ty-content{padding-top:clamp(42px,5vw,68px)}
+.ty-card__header h2,.ty-journey__heading h2{font-size:clamp(2.3rem,3.5vw,3.6rem)}
+.ty-journey{margin-top:clamp(56px,7vw,86px)}
+@media(max-width:900px){
+ .ty-intro__grid{grid-template-columns:1fr;gap:38px}
+ .ty-intro h1{max-width:10ch}
+ .ty-intro__visual{min-height:420px}
+ .ty-intro__visual img{min-height:420px}
+}
+@media(max-width:600px){
+ .ty-intro{padding-top:calc(var(--header-height-mobile,72px) + 38px)}
+ .ty-intro h1{font-size:clamp(3.8rem,18vw,5.5rem)}
+ .ty-intro__visual{min-height:330px}
+ .ty-intro__visual img{min-height:330px}
+ .ty-order-id{left:20px;right:20px;bottom:18px}
+}
+
+/* v12.2 — lifted, 15% more compact thank-you hero */
+@media (min-width:901px){
+  .ty-intro{padding:clamp(62px,5.2vw,82px) 0 clamp(42px,4.8vw,66px)}
+  .ty-intro__grid{max-width:1220px;gap:clamp(36px,5vw,72px)}
+  .ty-success-mark{width:42px;height:42px;margin-bottom:25px}
+  .ty-intro h1{font-size:clamp(3.9rem,6.1vw,6.55rem);line-height:.84}
+  .ty-intro__statement{font-size:clamp(1.5rem,2.4vw,2.55rem);margin-top:20px}
+  .ty-intro__lead{margin-top:18px}
+  .ty-intro__visual,.ty-intro__visual img{min-height:440px}
+  .ty-order-id{bottom:22px}
+}
+@media (min-width:901px) and (max-height:900px){
+  .ty-intro{padding-top:44px;padding-bottom:42px}
+  .ty-intro__visual,.ty-intro__visual img{min-height:390px}
+  .ty-intro h1{font-size:clamp(3.65rem,5.5vw,5.9rem)}
+}

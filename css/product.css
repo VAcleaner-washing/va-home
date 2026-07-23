@@ -1304,3 +1304,15 @@ body.lightbox-open{overflow:hidden}
     transition: none !important;
   }
 }
+
+/* VA HOME v12.0.8 — product gallery thumbnail paint fix
+   Prevent visible grey tiles before eager gallery images are painted. */
+.product-gallery .product-gallery-thumb,
+.product-gallery .product-gallery-thumb img {
+  background: transparent !important;
+}
+
+
+/* v13.1.2 — strict product-story gallery source */
+.product-hero__media[data-story-empty="true"] { background: transparent; }
+.product-hero__media[data-story-empty="true"] #productMainImage { visibility: hidden; }

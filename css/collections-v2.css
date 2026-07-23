@@ -278,3 +278,13 @@
   .collections-v2-page .collections-v2-hero h1 { font-size: clamp(3.2rem, 15vw, 4.9rem); }
   .collection-world--entry h2 { max-width: 10.5ch; font-size: clamp(3.2rem, 15.2vw, 4.9rem); }
 }
+
+/* v13.1.1 — scoped Collections hero alignment fix.
+   Restores the approved centered editorial composition without touching
+   any other hero, page container, image loading rule or site-wide layout. */
+@media (min-width: 761px) {
+  .collections-v2-page .collections-v2-hero__content {
+    width: min(calc(100% - 48px), 680px);
+    margin-inline: auto;
+  }
+}

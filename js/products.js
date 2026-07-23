@@ -92,6 +92,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 8,
+      "warmth": 3,
       "sweetness": 3,
       "woodiness": 2,
       "cleanliness": 9,
@@ -117,12 +118,12 @@ const PRODUCTS = [
     ],
     "popularity": null,
     "images": {
-      "main": "images/products/signature-relax.webp",
+      "main": "images/product-gallery/signature-relax/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/signature-relax.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/signature-relax/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/signature-relax.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/signature-relax/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/signature-relax/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/signature-relax/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/signature-relax/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/signature-relax/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -159,6 +160,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 3,
+      "warmth": 8,
       "sweetness": 8,
       "woodiness": 3,
       "cleanliness": 3,
@@ -186,12 +188,12 @@ const PRODUCTS = [
     "badges": [],
     "popularity": null,
     "images": {
-      "main": "images/products/forbidden-fruit.webp",
+      "main": "images/product-gallery/forbidden-fruit/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/forbidden-fruit.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/forbidden-fruit/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/forbidden-fruit.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/forbidden-fruit/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/forbidden-fruit/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/forbidden-fruit/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/forbidden-fruit/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/forbidden-fruit/hero.webp" }
       ]
     },
     "quickFacts": "2–3 палички для старту",
@@ -228,6 +230,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 3,
+      "warmth": 9,
       "sweetness": 9,
       "woodiness": 2,
       "cleanliness": 3,
@@ -253,12 +256,12 @@ const PRODUCTS = [
     "badges": [],
     "popularity": null,
     "images": {
-      "main": "images/products/doux-moment.webp",
+      "main": "images/product-gallery/doux-moment/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/doux-moment.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/doux-moment/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/doux-moment.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/doux-moment/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/doux-moment/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/doux-moment/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/doux-moment/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/doux-moment/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -296,6 +299,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 8,
+      "warmth": 4,
       "sweetness": 5,
       "woodiness": 5,
       "cleanliness": 7,
@@ -319,12 +323,12 @@ const PRODUCTS = [
     "badges": [],
     "popularity": null,
     "images": {
-      "main": "images/products/wild-berry-way.webp",
+      "main": "images/product-gallery/wild-berry-way/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/wild-berry-way.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/wild-berry-way/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/wild-berry-way.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/wild-berry-way/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/wild-berry-way/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/wild-berry-way/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/wild-berry-way/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/wild-berry-way/hero.webp" }
       ]
     },
     "quickFacts": "2–3 палички для старту",
@@ -361,6 +365,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 9,
+      "warmth": 3,
       "sweetness": 3,
       "woodiness": 3,
       "cleanliness": 9,
@@ -383,12 +388,12 @@ const PRODUCTS = [
     "badges": [],
     "popularity": null,
     "images": {
-      "main": "images/products/hotel-spring.webp",
+      "main": "images/product-gallery/hotel-spring/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/hotel-spring.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/hotel-spring/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/hotel-spring.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/hotel-spring/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/hotel-spring/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/hotel-spring/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/hotel-spring/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/hotel-spring/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -423,6 +428,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 5,
+      "warmth": 8,
       "sweetness": 6,
       "woodiness": 4,
       "cleanliness": 5,
@@ -448,12 +454,12 @@ const PRODUCTS = [
     "badges": [],
     "popularity": null,
     "images": {
-      "main": "images/products/evening-ritual.webp",
+      "main": "images/product-gallery/evening-ritual/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/evening-ritual.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/evening-ritual/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/evening-ritual.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/evening-ritual/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/evening-ritual/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/evening-ritual/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/evening-ritual/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/evening-ritual/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -490,6 +496,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 3,
+      "warmth": 8,
       "sweetness": 7,
       "woodiness": 6,
       "cleanliness": 6,
@@ -514,12 +521,12 @@ const PRODUCTS = [
     "badges": [],
     "popularity": null,
     "images": {
-      "main": "images/products/velvet-spa.webp",
+      "main": "images/product-gallery/velvet-spa/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/velvet-spa.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/velvet-spa/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/velvet-spa.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/velvet-spa/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/velvet-spa/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/velvet-spa/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/velvet-spa/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/velvet-spa/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -557,6 +564,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 8,
+      "warmth": 4,
       "sweetness": 3,
       "woodiness": 4,
       "cleanliness": 9,
@@ -583,12 +591,12 @@ const PRODUCTS = [
     "badges": [],
     "popularity": null,
     "images": {
-      "main": "images/products/pure-zen.webp",
+      "main": "images/product-gallery/pure-zen/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/pure-zen.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/pure-zen/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/pure-zen.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/pure-zen/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/pure-zen/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/pure-zen/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/pure-zen/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/pure-zen/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -625,6 +633,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 9,
+      "warmth": 3,
       "sweetness": 2,
       "woodiness": 3,
       "cleanliness": 10,
@@ -654,12 +663,12 @@ const PRODUCTS = [
     ],
     "popularity": null,
     "images": {
-      "main": "images/products/hotel-luxe.webp",
+      "main": "images/product-gallery/hotel-luxe/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/hotel-luxe.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/hotel-luxe/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/hotel-luxe.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/hotel-luxe/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/hotel-luxe/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/hotel-luxe/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/hotel-luxe/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/hotel-luxe/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -696,6 +705,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 3,
+      "warmth": 8,
       "sweetness": 2,
       "woodiness": 9,
       "cleanliness": 4,
@@ -721,12 +731,12 @@ const PRODUCTS = [
     "badges": [],
     "popularity": null,
     "images": {
-      "main": "images/products/old-money.webp",
+      "main": "images/product-gallery/old-money/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/old-money.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/old-money/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/old-money.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/old-money/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/old-money/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/old-money/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/old-money/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/old-money/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -763,6 +773,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 7,
+      "warmth": 6,
       "sweetness": 1,
       "woodiness": 8,
       "cleanliness": 6,
@@ -788,12 +799,12 @@ const PRODUCTS = [
     "badges": [],
     "popularity": null,
     "images": {
-      "main": "images/products/linstinct.webp",
+      "main": "images/product-gallery/linstinct/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/linstinct.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/linstinct/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/linstinct.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/linstinct/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/linstinct/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/linstinct/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/linstinct/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/linstinct/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -830,6 +841,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 10,
+      "warmth": 2,
       "sweetness": 1,
       "woodiness": 3,
       "cleanliness": 10,
@@ -854,12 +866,12 @@ const PRODUCTS = [
     ],
     "popularity": null,
     "images": {
-      "main": "images/products/mineral-salt.webp",
+      "main": "images/product-gallery/mineral-salt/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/mineral-salt.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/mineral-salt/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/mineral-salt.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/mineral-salt/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/mineral-salt/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/mineral-salt/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/mineral-salt/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/mineral-salt/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -896,6 +908,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 9,
+      "warmth": 3,
       "sweetness": 3,
       "woodiness": 5,
       "cleanliness": 9,
@@ -921,12 +934,12 @@ const PRODUCTS = [
     ],
     "popularity": null,
     "images": {
-      "main": "images/products/pure-imagination.webp",
+      "main": "images/product-gallery/pure-imagination/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/pure-imagination.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/pure-imagination/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/pure-imagination.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/pure-imagination/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/pure-imagination/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/pure-imagination/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/pure-imagination/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/pure-imagination/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -963,6 +976,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 4,
+      "warmth": 7,
       "sweetness": 6,
       "woodiness": 5,
       "cleanliness": 7,
@@ -993,12 +1007,12 @@ const PRODUCTS = [
     "badges": [],
     "popularity": null,
     "images": {
-      "main": "images/products/silk-molecule.webp",
+      "main": "images/product-gallery/silk-molecule/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/silk-molecule.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/silk-molecule/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/silk-molecule.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/silk-molecule/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/silk-molecule/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/silk-molecule/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/silk-molecule/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/silk-molecule/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -1034,6 +1048,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 4,
+      "warmth": 7,
       "sweetness": 2,
       "woodiness": 10,
       "cleanliness": 4,
@@ -1062,12 +1077,12 @@ const PRODUCTS = [
     "badges": [],
     "popularity": null,
     "images": {
-      "main": "images/products/the-archive.webp",
+      "main": "images/product-gallery/the-archive/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/the-archive.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/the-archive/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/the-archive.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/the-archive/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/the-archive/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/the-archive/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/the-archive/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/the-archive/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -1106,6 +1121,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 8,
+      "warmth": 4,
       "sweetness": 1,
       "woodiness": 8,
       "cleanliness": 9,
@@ -1133,12 +1149,12 @@ const PRODUCTS = [
     ],
     "popularity": null,
     "images": {
-      "main": "images/products/silent-temple.webp",
+      "main": "images/product-gallery/silent-temple/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/silent-temple.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/silent-temple/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/silent-temple.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/silent-temple/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/silent-temple/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/silent-temple/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/silent-temple/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/silent-temple/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -1175,6 +1191,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 5,
+      "warmth": 6,
       "sweetness": 2,
       "woodiness": 10,
       "cleanliness": 4,
@@ -1201,12 +1218,12 @@ const PRODUCTS = [
     ],
     "popularity": null,
     "images": {
-      "main": "images/products/moss-and-shadow.webp",
+      "main": "images/product-gallery/moss-and-shadow/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/moss-and-shadow.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/moss-and-shadow/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/moss-and-shadow.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/moss-and-shadow/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/moss-and-shadow/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/moss-and-shadow/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/moss-and-shadow/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/moss-and-shadow/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -1243,6 +1260,7 @@ const PRODUCTS = [
     ],
     "scales": {
       "freshness": 3,
+      "warmth": 9,
       "sweetness": 7,
       "woodiness": 5,
       "cleanliness": 3,
@@ -1270,12 +1288,12 @@ const PRODUCTS = [
     ],
     "popularity": null,
     "images": {
-      "main": "images/products/dark-bloom.webp",
+      "main": "images/product-gallery/dark-bloom/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/products/dark-bloom.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-gallery/dark-bloom/macro-1.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/atmosphere/dark-bloom.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-gallery/dark-bloom/detail-1.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/dark-bloom/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/dark-bloom/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/dark-bloom/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/dark-bloom/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",

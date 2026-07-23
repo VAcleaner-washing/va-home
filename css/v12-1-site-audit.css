@@ -1,0 +1,54 @@
+/* VA HOME v12.1 — final adaptive/site-wide polish
+   Safe layout corrections only: no redesign, loaders, blur, skeletons or reveal logic. */
+
+html, body { max-width: 100%; overflow-x: clip; }
+img, picture, video, canvas, svg { max-width: 100%; }
+/* Do not force global image height: hero media relies on height:100%. */
+
+/* Prevent long labels, prices and controls from forcing horizontal overflow. */
+button, input, select, textarea, a { min-width: 0; }
+.product-card, .collection-card, .journal-card, .cart-item,
+.checkout-fieldset, .cart-summary, .va-compare-card { min-width: 0; }
+.product-card__name, .product-card__desc, .va-compare-card__name,
+.va-compare-statement, .va-compare-value, .cart-item__title { overflow-wrap: anywhere; }
+
+/* Cart: remove the oversized empty gap between breadcrumbs and the hero. */
+.cart-hero { margin-top: 0 !important; }
+.cart-hero + .checkout-progress { margin-top: clamp(18px, 2.2vw, 30px); }
+body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 42px); }
+
+/* Laptop viewport: keep first checkout screen composed and readable. */
+@media (min-width: 901px) and (max-height: 900px) {
+  body:has(.cart-hero) .section.section--tight { padding-top: 24px; }
+  .cart-hero {
+    min-height: clamp(220px, 25vw, 320px);
+    margin-bottom: 22px;
+  }
+  .cart-hero > div:first-child { padding: clamp(30px, 4vw, 58px); }
+  .cart-hero h1 { font-size: clamp(3.2rem, 5.2vw, 5.4rem); }
+  .cart-hero__visual { min-height: 100%; }
+  .checkout-progress { margin-bottom: 30px; }
+}
+
+/* Compact notebook widths without shrinking touch targets. */
+@media (min-width: 901px) and (max-width: 1440px) {
+  .container { width: min(100% - 48px, var(--container-max)); }
+  .btn { min-height: 46px; }
+  .product-card__actions .btn { padding-inline: 16px; }
+}
+
+/* Mobile: preserve breathing room and avoid edge collisions. */
+@media (max-width: 760px) {
+  html, body { overflow-x: hidden; }
+  body:has(.cart-hero) .section.section--tight { padding-top: 14px; }
+  .cart-hero { margin-bottom: 16px; }
+  .checkout-progress { margin-top: 14px; }
+  .btn, button, input, select, textarea { max-width: 100%; }
+}
+
+/* Very small screens: keep dense controls usable. */
+@media (max-width: 380px) {
+  .container { width: min(100% - 28px, var(--container-max)); }
+  .product-card__actions { gap: 8px; }
+  .product-card__actions .btn { padding-inline: 10px; }
+}

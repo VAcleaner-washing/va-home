@@ -108,3 +108,401 @@
     border-radius:999px;
   }
 }
+
+/* v12.1 — compact adaptive compare */
+.va-compare-modal__top{min-height:88px;padding:17px clamp(18px,3vw,46px)}
+.va-compare-modal__title{font-size:clamp(32px,3.1vw,48px)}
+.va-compare-modal__close{width:42px;height:42px;font-size:24px}
+.va-compare-tabs{top:88px;padding:13px 20px;gap:30px}
+.va-compare-tab::after{bottom:-14px}
+.va-compare-grid{width:min(1280px,calc(100% - 32px));margin:20px auto 48px}
+.va-compare-card__hero{aspect-ratio:16/9;max-height:260px;background:transparent}
+.va-compare-card__hero img{object-fit:cover;object-position:center 56%}
+.va-compare-card__identity{padding:18px 20px 17px}
+.va-compare-card__name{font-size:clamp(25px,2vw,36px)}
+.va-compare-card__meta{margin-top:14px}
+.va-compare-panel{padding:20px;min-height:230px}
+.va-compare-block{padding-bottom:17px;margin-bottom:17px}
+.va-compare-block--statement{min-height:72px}
+.va-compare-statement{font-size:clamp(19px,1.55vw,25px)}
+.va-compare-card__actions{padding:0 20px 20px}
+.va-compare-buy{min-height:46px}
+@media (min-width:901px) and (max-height:820px){
+  .va-compare-modal__top{min-height:76px;padding-top:12px;padding-bottom:12px}
+  .va-compare-modal__eyebrow{margin-bottom:5px}
+  .va-compare-modal__title{font-size:36px}
+  .va-compare-tabs{top:76px;padding:10px 18px}
+  .va-compare-tab::after{bottom:-11px}
+  .va-compare-grid{margin-top:14px}
+  .va-compare-card__hero{max-height:190px;aspect-ratio:16/8}
+  .va-compare-card__identity{padding-top:14px;padding-bottom:14px}
+  .va-compare-panel{padding-top:16px;min-height:210px}
+}
+@media(max-width:900px){
+  .va-compare-modal__top{min-height:82px}
+  .va-compare-tabs{top:82px}
+  .va-compare-grid{width:100%;padding:0 14px;gap:12px}
+  .va-compare-card{flex:0 0 min(78vw,390px)}
+  .va-compare-card:first-child{margin-left:0}
+  .va-compare-card:last-child{margin-right:0}
+  .va-compare-card__hero{aspect-ratio:16/10;max-height:220px}
+}
+@media(max-width:600px){
+  .va-compare-card{flex-basis:calc(100vw - 28px)}
+  .va-compare-card__hero{aspect-ratio:4/3;max-height:240px}
+}
+
+/* v12.2 — laptop-first comparison composition */
+.va-compare-grid{
+  width:min(1460px,calc(100% - 40px));
+  margin-top:16px;
+}
+.va-compare-card__hero{
+  height:clamp(190px,22vh,250px);
+  aspect-ratio:auto;
+  background:transparent;
+}
+.va-compare-card__hero::after{
+  background:linear-gradient(180deg,rgba(8,7,6,.03) 48%,rgba(8,7,6,.32));
+}
+.va-compare-card__hero img{
+  object-position:center 44%;
+}
+.va-compare-card__identity{
+  padding:18px 22px 18px;
+}
+.va-compare-card__heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:8px;
+}
+.va-compare-card__collection{
+  margin:0;
+}
+.va-compare-card__remove{
+  position:static;
+  width:30px;
+  height:30px;
+  flex:0 0 30px;
+  border-color:rgba(244,239,231,.16);
+  background:transparent;
+  backdrop-filter:none;
+  color:rgba(244,239,231,.68);
+  font-size:17px;
+  line-height:1;
+}
+.va-compare-card__remove:hover{
+  transform:rotate(6deg);
+}
+.va-compare-card__name{
+  font-size:clamp(25px,2vw,36px);
+}
+.va-compare-card__meta{
+  margin-top:14px;
+}
+.va-compare-panel{
+  padding:20px 22px;
+  min-height:238px;
+}
+.va-compare-block{
+  padding-bottom:18px;
+  margin-bottom:18px;
+}
+.va-compare-block--statement{
+  min-height:72px;
+}
+.va-compare-statement{
+  font-size:clamp(20px,1.65vw,26px);
+}
+.va-compare-card__actions{
+  padding:0 22px 20px;
+}
+
+@media (min-width:901px) and (max-height:900px){
+  .va-compare-modal__top{min-height:82px;padding-top:14px;padding-bottom:14px}
+  .va-compare-modal__title{font-size:clamp(30px,3vw,46px)}
+  .va-compare-tabs{top:82px;padding-top:13px;padding-bottom:13px}
+  .va-compare-tab::after{bottom:-14px}
+  .va-compare-card__hero{height:clamp(165px,20vh,210px)}
+  .va-compare-grid{margin-top:14px;margin-bottom:44px}
+}
+
+@media(max-width:900px){
+  .va-compare-card__hero{height:220px;aspect-ratio:auto}
+  .va-compare-card__identity{padding:18px 20px}
+  .va-compare-panel{padding:20px;min-height:0}
+}
+
+@media(max-width:600px){
+  .va-compare-card__hero{height:190px}
+  .va-compare-card__name{font-size:30px}
+}
+
+/* v12.3 — VA HOME Macro Lens comparison */
+.va-compare-card__hero--macro{
+  position:relative;
+  isolation:isolate;
+  height:clamp(210px,25vh,286px);
+  overflow:hidden;
+  background:#0d0b09;
+  border-bottom:1px solid rgba(215,184,128,.14);
+}
+.va-compare-card__hero--macro::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  background:
+    linear-gradient(90deg,rgba(8,7,6,.46),transparent 24%,transparent 76%,rgba(8,7,6,.46)),
+    linear-gradient(180deg,rgba(8,7,6,.06),rgba(8,7,6,.18));
+  pointer-events:none;
+}
+.va-compare-card__hero--macro::after{
+  content:"";
+  position:absolute;
+  inset:14px;
+  z-index:3;
+  border:1px solid rgba(238,218,181,.16);
+  background:none;
+  pointer-events:none;
+}
+.va-compare-card__ambient,
+.va-compare-card__focus{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+}
+.va-compare-card__ambient{
+  z-index:0;
+  object-fit:cover;
+  filter:blur(22px) saturate(.72) brightness(.52);
+  transform:scale(1.15);
+  opacity:.72;
+}
+.va-compare-card__focus{
+  z-index:2;
+  object-fit:contain;
+  object-position:center;
+  padding:14px 42px;
+  filter:drop-shadow(0 22px 34px rgba(0,0,0,.28));
+  transition:transform .9s cubic-bezier(.2,.7,.2,1),filter .9s ease;
+}
+.va-compare-card:hover .va-compare-card__focus{
+  transform:scale(1.018);
+  filter:drop-shadow(0 26px 42px rgba(0,0,0,.34));
+}
+.va-compare-card:hover .va-compare-card__ambient{
+  transform:scale(1.18);
+}
+.va-compare-card__lens{
+  position:absolute;
+  left:27px;
+  right:27px;
+  bottom:25px;
+  z-index:4;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:12px;
+  color:rgba(250,244,235,.72);
+  pointer-events:none;
+}
+.va-compare-card__lens span,
+.va-compare-card__lens b{
+  font:600 8px/1 Manrope,sans-serif;
+  letter-spacing:.2em;
+}
+.va-compare-card__lens b{font-weight:500;color:#d1aa6a}
+.va-compare-card__lens i{height:1px;background:linear-gradient(90deg,rgba(209,170,106,.52),rgba(209,170,106,.08))}
+.va-compare-card__index{display:none}
+
+@media (min-width:901px) and (max-height:900px){
+  .va-compare-card__hero--macro{height:clamp(184px,23vh,228px)}
+  .va-compare-card__focus{padding:12px 34px}
+}
+@media(max-width:900px){
+  .va-compare-card__hero--macro{height:240px}
+  .va-compare-card__focus{padding:14px 30px}
+}
+@media(max-width:600px){
+  .va-compare-card__hero--macro{height:218px}
+  .va-compare-card__hero--macro::after{inset:10px}
+  .va-compare-card__focus{padding:10px 22px}
+  .va-compare-card__lens{left:20px;right:20px;bottom:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  .va-compare-card__ambient,.va-compare-card__focus{transition:none!important}
+}
+
+/* v12.4 — VA HOME Olfactive Dossier comparison */
+.va-compare-card--dossier .va-compare-card__hero{display:none!important}
+.va-compare-card--dossier{
+  background:linear-gradient(180deg,#0d0c0a 0%,#0b0a08 100%);
+}
+.va-compare-card__identity--portrait{
+  min-height:218px;
+  padding:28px 28px 24px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) clamp(104px,10vw,148px);
+  gap:26px;
+  align-items:stretch;
+  border-bottom:1px solid rgba(214,184,128,.14);
+}
+.va-compare-card__copy{min-width:0;display:flex;flex-direction:column}
+.va-compare-card__number{
+  display:block;
+  margin:22px 0 9px;
+  color:rgba(210,172,108,.66);
+  font:600 9px/1 Manrope,sans-serif;
+  letter-spacing:.22em;
+}
+.va-compare-card--dossier .va-compare-card__name{
+  margin:0;
+  font-size:clamp(29px,2.25vw,42px);
+  line-height:.98;
+  max-width:12ch;
+}
+.va-compare-card--dossier .va-compare-card__meta{margin-top:auto;padding-top:24px}
+.va-compare-card__portrait{
+  position:relative;
+  margin:0;
+  min-width:0;
+  overflow:hidden;
+  border:1px solid rgba(225,196,143,.2);
+  background:#13100c;
+  isolation:isolate;
+}
+.va-compare-card__portrait::after{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border:1px solid rgba(248,239,222,.12);
+  pointer-events:none;
+  z-index:2;
+}
+.va-compare-card__portrait-image{
+  width:100%;height:100%;min-height:164px;display:block;
+  object-fit:cover;object-position:center;
+  transition:transform .8s cubic-bezier(.2,.7,.2,1),filter .8s ease;
+}
+.va-compare-card:hover .va-compare-card__portrait-image{transform:scale(1.025)}
+.va-compare-card__portrait figcaption{
+  position:absolute;left:15px;right:15px;bottom:13px;z-index:3;
+  color:rgba(250,245,236,.74);
+  font:600 7px/1 Manrope,sans-serif;
+  letter-spacing:.18em;
+  text-shadow:0 1px 10px rgba(0,0,0,.7);
+}
+.va-compare-card__portrait figcaption::before{
+  content:"";display:block;width:24px;height:1px;margin-bottom:8px;background:#c99d57;
+}
+@media(min-width:901px) and (max-height:900px){
+  .va-compare-card__identity--portrait{min-height:188px;padding:22px;grid-template-columns:minmax(0,1fr) 112px;gap:20px}
+  .va-compare-card__portrait-image{min-height:142px}
+  .va-compare-card__number{margin-top:15px}
+}
+@media(max-width:900px){
+  .va-compare-card__identity--portrait{min-height:190px;grid-template-columns:minmax(0,1fr) 118px;padding:22px;gap:18px}
+  .va-compare-card__portrait-image{min-height:146px}
+}
+@media(max-width:520px){
+  .va-compare-card__identity--portrait{grid-template-columns:minmax(0,1fr) 92px;min-height:170px;padding:18px;gap:14px}
+  .va-compare-card__portrait-image{min-height:128px}
+  .va-compare-card__portrait figcaption{font-size:6px;left:11px;bottom:10px}
+  .va-compare-card__number{margin-top:13px}
+}
+
+/* v12.5 — Material Sample Compare polish */
+.va-compare-card__identity--portrait{
+  grid-template-columns:minmax(0,1fr) clamp(126px,9.2vw,148px);
+  align-items:center;
+  min-height:208px;
+}
+.va-compare-card__portrait{
+  width:100%;
+  aspect-ratio:1 / 1;
+  align-self:center;
+  border:1px solid rgba(225,196,143,.22);
+  background:#100e0b;
+  box-shadow:0 18px 44px rgba(0,0,0,.24);
+}
+.va-compare-card__portrait::before{
+  content:"MATERIAL / 01";
+  position:absolute;
+  top:12px;
+  left:13px;
+  z-index:3;
+  color:rgba(250,245,236,.56);
+  font:600 6px/1 Manrope,sans-serif;
+  letter-spacing:.18em;
+  text-shadow:0 1px 8px rgba(0,0,0,.72);
+}
+.va-compare-card__portrait::after{inset:7px}
+.va-compare-card__portrait-image{
+  width:100%;height:100%;min-height:0;
+  object-fit:cover;
+  object-position:center center;
+}
+.va-compare-card__portrait figcaption{
+  left:13px;right:13px;bottom:12px;
+  font-size:6px;
+  letter-spacing:.16em;
+}
+.va-compare-card__portrait figcaption::before{width:20px;margin-bottom:7px}
+
+.va-compare-card__heading{position:relative}
+.va-compare-card__remove{
+  width:auto;
+  height:30px;
+  min-width:30px;
+  padding:0 9px;
+  border-radius:999px;
+  border:1px solid rgba(205,166,101,.34);
+  background:rgba(12,10,8,.18);
+  color:rgba(239,225,202,.72);
+  backdrop-filter:none;
+  font:500 15px/1 Manrope,sans-serif;
+  box-shadow:none;
+}
+.va-compare-card__remove::before{
+  content:"REMOVE";
+  margin-right:7px;
+  font:600 7px/1 Manrope,sans-serif;
+  letter-spacing:.16em;
+  color:rgba(205,166,101,.58);
+}
+.va-compare-card__remove:hover,
+.va-compare-card__remove:focus-visible{
+  transform:none;
+  background:rgba(205,166,101,.08);
+  border-color:rgba(205,166,101,.66);
+  color:#ead9bd;
+  outline:none;
+}
+
+@media(min-width:901px) and (max-height:900px){
+  .va-compare-card__identity--portrait{
+    min-height:180px;
+    grid-template-columns:minmax(0,1fr) 126px;
+    padding:20px 22px;
+  }
+}
+@media(max-width:900px){
+  .va-compare-card__identity--portrait{
+    grid-template-columns:minmax(0,1fr) 128px;
+    min-height:188px;
+  }
+}
+@media(max-width:520px){
+  .va-compare-card__identity--portrait{
+    grid-template-columns:minmax(0,1fr) 104px;
+    min-height:168px;
+  }
+  .va-compare-card__remove::before{display:none}
+  .va-compare-card__remove{width:30px;padding:0}
+  .va-compare-card__portrait::before{display:none}
+}
