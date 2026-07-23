@@ -9,26 +9,163 @@
 (function () {
   "use strict";
 
-  const PRODUCT_INSIGHTS = {
-    "signature-relax": { aura: "М’яка чайна атмосфера", season: "Універсальний", zones: "Спальня · зона відпочинку · кабінет", comfort: "Дуже комфортний для щоденного використання", evolution: "Спочатку — мандарин і лимон. За кілька днів аромат стає теплішим, а білий чай формує спокійну шовкову ауру." },
-    "forbidden-fruit": { aura: "Темна соковита вишня", season: "Осінь · зима", zones: "Спальня · lounge · beauty-zone", comfort: "Виразний вечірній характер", evolution: "Стартує соковитою вишнею з лікерним акцентом, а з часом стає глибшим, теплішим і менш солодким." },
-    "doux-moment": { aura: "Тепла вершкова атмосфера", season: "Осінь · зима", zones: "Вітальня · їдальня · затишна зона", comfort: "М’який домашній gourmand", evolution: "Груша й яблуко відкривають аромат, після чого вершки, карамель і праліне створюють відчуття дорогого домашнього спокою." },
-    "wild-berry-way": { aura: "Свіже ягідне повітря", season: "Весна · літо", zones: "Тераса · балкон · ванна кімната", comfort: "Легкий і ненав’язливий", evolution: "Ожина й лавр звучать свіжо на старті; за кілька днів проявляються грейпфрут, кедр і чиста деревна повітряність." },
-    "hotel-spring": { aura: "Світла весняна clean-атмосфера", season: "Березень · червень", zones: "Світлі кімнати · хол · вітальня", comfort: "Легкий сезонний характер", evolution: "Дзвінкий юзу та світлі квіти поступово стають м’якшими й формують атмосферу весняного boutique hotel." },
-    "evening-ritual": { aura: "Темна квіткова атмосфера", season: "Осінь · вечір цілий рік", zones: "Спальня · lounge · зона відпочинку", comfort: "Найкраще розкривається ввечері", evolution: "Повітряні квіти й озон на старті переходять у темнішу кашемірову композицію з пачулі, мускусом та амброю." },
-    "velvet-spa": { aura: "Оксамитова SPA-хмара", season: "Осінь · зима", zones: "Ванна кімната · SPA · спальня", comfort: "Теплий огортальний профіль", evolution: "Кокосове молоко й бензоїн поступово зливаються із сандалом та кедром у м’яку атмосферу домашнього SPA." },
-    "pure-zen": { aura: "Тиха медитативна атмосфера", season: "Весна · універсальний", zones: "Спальня · SPA · зона медитації", comfort: "Один із найтихіших ароматів лінійки", evolution: "Білий чай, цитрус і кардамон стають спокійнішими, відкриваючи лотос, сандал і м’яку мигдальну глибину." },
-    "hotel-luxe": { aura: "Об’ємна готельна чистота", season: "Універсальний", zones: "Хол · великі простори · гардероб", comfort: "Чистий профіль без відчуття стерильності", evolution: "Озон, льон і свіже повітря поступово набувають теплої текстури — так формується ефект дорогого готелю." },
-    "old-money": { aura: "Глибока dark luxury-атмосфера", season: "Осінь · зима", zones: "Кабінет · темний інтер’єр · представницький простір", comfort: "Камерний, стриманий характер", evolution: "Суха шкіра й бергамот відкривають композицію; пізніше тютюн, лабданум та амбра створюють теплу кашемірову глибину." },
-    "linstinct": { aura: "Впевнена деревно-пряна атмосфера", season: "Універсальний · холодний сезон", zones: "Кабінет · showroom · передпокій", comfort: "Виразний характер для просторих зон", evolution: "Бергамот і перець звучать енергійно, а з часом кедр, ветивер і лабданум формують суху деревну основу." },
-    "mineral-salt": { aura: "Повітряна мінеральна SPA-атмосфера", season: "Весна · літо · універсальний", zones: "Ванна · спальня · SPA · гардероб", comfort: "Свіжий профіль для тривалого використання", evolution: "Морська сіль, шавлія та грейпфрут створюють свіжий старт; пізніше аромат стає глибшим і шовковистішим." },
-    "pure-imagination": { aura: "Об’ємний кришталевий luxury-шлейф", season: "Універсальний", zones: "Вітальня · open-space · lobby · кабінет", comfort: "Найкраще для великого простору", evolution: "Повітряний цитрус дає швидкий room bloom, а троянда, жасмин, сандал і пачулі поступово додають теплу глибину." },
-    "silk-molecule": { aura: "М’яка шовкова аура", season: "Осінь · зима", zones: "Спальня · гардероб · особистий простір", comfort: "Камерна texture-атмосфера", evolution: "Шафран і легкі спеції переходять у кашемірово-мускусну хмару з фіалкою, сандалом та м’якою ваніллю." },
-    "the-archive": { aura: "Суха інтелектуальна атмосфера", season: "Осінь · зима", zones: "Бібліотека · кабінет · приватний lounge", comfort: "Нішевий камерний профіль", evolution: "Копал, кедр і прохолодна камфора поступово теплішають, створюючи атмосферу тихої приватної бібліотеки." },
-    "silent-temple": { aura: "Тиха японська temple-атмосфера", season: "Весна · осінь · універсальний", zones: "Кабінет · SPA · спальня · медитація", comfort: "Найспокійніший характер NOIR", evolution: "Евкаліпт, озон і білий чай відкривають композицію; кипарис, сосна й кедр залишають чисту деревну тишу." },
-    "moss-and-shadow": { aura: "Темна мохова luxury-атмосфера", season: "Осінь · зима", zones: "Кабінет · бібліотека · темний lounge", comfort: "Нішевий природний профіль", evolution: "Шавлія та цитруси поступаються лаванді, дубовому моху й амбрі — ніби повітря після дощу в старому лісі." },
-    "dark-bloom": { aura: "Темна квітково-смоляна атмосфера", season: "Осінь · зима · вечір", zones: "Спальня · lounge · темний інтер’єр", comfort: "Виразний вечірній профіль", evolution: "Рожевий перець і слива відкривають композицію; чорна троянда, пачулі та лабданум поступово створюють темну оксамитову ауру." }
+
+  const LABELS = {
+    character: { clean: "Чисті", fresh: "Свіжі", fruity: "Фруктові", warm: "Теплі", woody: "Деревні", spa: "Спа", molecular: "Молекулярні" },
+    room: { "living-room": "Вітальня", bedroom: "Спальня", bathroom: "Ванна", office: "Кабінет", hallway: "Передпокій", wardrobe: "Гардероб" },
+    mood: { calm: "Спокій", "warm-evening": "Теплий вечір", "warm-sweet": "Тепла солодкість", clean: "Чистота", focus: "Фокус" },
+    scales: { freshness: "Свіжість", sweetness: "Солодкість", woodiness: "Деревність", cleanliness: "Чистота" }
   };
+
+  function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
+  }
+
+  function setText(id, value) {
+    const node = document.getElementById(id);
+    if (node) node.textContent = value || "";
+  }
+
+  function renderPills(id, values, map) {
+    const node = document.getElementById(id);
+    if (!node) return;
+    node.innerHTML = (values || []).map((value) => `<span class="tag-pill">${escapeHtml(map[value] || value)}</span>`).join("");
+  }
+
+  function getProductGallery(product) {
+    const typed = Array.isArray(product?.images?.gallery) ? product.images.gallery : [];
+    const normalized = typed
+      .map((item, index) => typeof item === "string"
+        ? { type: index === 0 ? "hero" : "detail", label: `Фото ${index + 1}`, src: item }
+        : item)
+      .filter((item) => item && item.src);
+    if (!normalized.length && product?.images?.main) {
+      normalized.push({ type: "hero", label: "Hero", src: product.images.main });
+    }
+    return normalized;
+  }
+
+  function getPrimaryProductImage(product) {
+    return getProductGallery(product)[0]?.src || product?.images?.main || "";
+  }
+
+  function hydrateSeo(product, collection, price, volume) {
+    const title = `${product.name} — аромадифузор ${volume} | VA HOME`;
+    const description = `${product.shortDescription} ${volume}, ${price} грн. Преміальний аромадифузор VA HOME.`;
+    document.title = title;
+    const setMeta = (selector, content) => { const el = document.querySelector(selector); if (el) el.setAttribute("content", content); };
+    setMeta('meta[name="description"]', description);
+    setMeta('meta[property="og:title"]', title);
+    setMeta('meta[property="og:description"]', description);
+    setMeta('meta[property="og:image"]', `https://vahome.com.ua/${getPrimaryProductImage(product)}`);
+    setMeta('meta[property="og:url"]', location.href);
+    setMeta('meta[name="twitter:title"]', title);
+    setMeta('meta[name="twitter:description"]', description);
+
+    const schema = {
+      "@context": "https://schema.org", "@type": "Product", name: product.name,
+      image: [`https://vahome.com.ua/${getPrimaryProductImage(product)}`], description: product.shortDescription,
+      brand: { "@type": "Brand", name: "VA HOME" }, sku: product.id,
+      offers: { "@type": "Offer", url: location.href, priceCurrency: "UAH", price, availability: "https://schema.org/InStock" },
+      additionalProperty: [{ "@type": "PropertyValue", name: "Об’єм", value: volume }, { "@type": "PropertyValue", name: "Інтенсивність", value: `${product.scales.intensity} з 10` }]
+    };
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.textContent = JSON.stringify(schema);
+    document.head.appendChild(script);
+  }
+
+  function hydrateProductPage() {
+    if (typeof PRODUCT_ID === "undefined" || typeof getProduct !== "function") return false;
+    const product = getProduct(PRODUCT_ID);
+    if (!product) return false;
+    const collection = getCollection(product.collection);
+    const price = getProductPrice(product);
+    const volume = getProductVolume(product);
+
+    setText("breadcrumbCollection", collection?.name);
+    const crumb = document.getElementById("breadcrumbCollection");
+    if (crumb) crumb.href = `../collections.html#${product.collection}`;
+    setText("breadcrumbName", product.name);
+    setText("productCollectionLabel", collection?.name);
+    setText("productName", product.name);
+    const productNameEl = document.getElementById("productName");
+    if (productNameEl && product.id === "pure-imagination") {
+      productNameEl.replaceChildren(
+        Object.assign(document.createElement("span"), { className: "product-title-line", textContent: "Pure" }),
+        Object.assign(document.createElement("span"), { className: "product-title-line", textContent: "Imagination" })
+      );
+    }
+    setText("productDesc", product.shortDescription);
+    setText("productVolume", volume);
+    setText("productPrice", `${Number(price).toLocaleString("uk-UA")} грн`);
+    document.querySelector(".product-hero__quickfacts")?.replaceChildren(document.createTextNode(product.quickFacts || "3–4 палички для старту"));
+    document.querySelector(".product-hero__suit-for")?.replaceChildren(document.createTextNode(product.suitFor || ""));
+
+    const gallery = getProductGallery(product);
+    if (window.VAHomeGallery) {
+      window.VAHomeGallery.mount({ product, items: gallery, root: "../", fallbackSrc: `../${product.images?.main || ""}` });
+    }
+    const badges = document.getElementById("productBadges");
+    if (badges) badges.innerHTML = (product.badges || []).map((badge) => `<span class="badge badge--${escapeHtml(badge)}">${badge === "bestseller" ? "Bestseller" : badge === "new" ? "Новинка" : "Limited"}</span>`).join("");
+
+    renderPills("profileTags", product.character, LABELS.character);
+    renderPills("roomTags", product.room, LABELS.room);
+    renderPills("moodTags", product.mood, LABELS.mood);
+
+    const notes = document.getElementById("notesSection");
+    if (notes) notes.innerHTML = `<h2 class="product-detail-section__title">Ноти</h2><p><strong>Верхні:</strong> ${escapeHtml(product.notes.top.join(", "))}</p><p><strong>Серце:</strong> ${escapeHtml(product.notes.heart.join(", "))}</p><p><strong>База:</strong> ${escapeHtml(product.notes.base.join(", "))}</p>`;
+    const scales = document.getElementById("scalesSection");
+    if (scales) scales.innerHTML = `<h2 class="product-detail-section__title">Візуальні шкали</h2><div class="scent-scale">${Object.entries(LABELS.scales).map(([key,label]) => `<div class="scent-scale__row"><span>${label}</span><div class="scent-scale__track"><div class="scent-scale__fill" style="width:${Math.max(0,Math.min(10,product.scales[key]))*10}%"></div></div></div>`).join("")}</div>`;
+    const intensity = document.getElementById("intensitySection");
+    if (intensity) intensity.innerHTML = `<h2 class="product-detail-section__title">Інтенсивність</h2><p>${product.scales.intensity} / 10</p>`;
+    const formula = document.querySelector(".product-formula-proof__intent");
+    if (formula) formula.innerHTML = `<strong>Задум композиції.</strong> ${escapeHtml(product.formulaIntent)}`;
+
+    const similarTitleName = document.getElementById("similarSourceName");
+    if (similarTitleName) similarTitleName.textContent = product.name;
+
+    const similar = document.getElementById("similarGrid");
+    if (similar && window.VAHomeProducts) {
+      const recommendations = getSimilarProducts(product);
+      similar.innerHTML = recommendations.map((item) => window.VAHomeProducts.renderProductCard(item, "", { context: "product" })).join("");
+
+      const recommendationReason = (source, item) => {
+        const sourceChars = new Set(source.character || []);
+        const shared = (item.character || []).find((value) => sourceChars.has(value));
+        const phrases = {
+          fresh: "Свіжіша й повітряніша інтерпретація.",
+          clean: "Таке ж чисте, спокійне звучання.",
+          molecular: "Споріднений молекулярний характер.",
+          woody: "Глибший деревний настрій.",
+          warm: "Тепліша, камерніша атмосфера.",
+          spa: "Більш мінеральне відчуття SPA.",
+          fruity: "М’якший фруктовий акцент."
+        };
+        if (shared && phrases[shared]) return phrases[shared];
+        const delta = (item.scales?.woodiness || 0) - (source.scales?.woodiness || 0);
+        if (delta >= 2) return "Глибший, більш деревний характер.";
+        if ((item.scales?.freshness || 0) > (source.scales?.freshness || 0)) return "Свіжіша й легша за настроєм.";
+        if ((item.scales?.sweetness || 0) > (source.scales?.sweetness || 0)) return "М’якша, тепліша інтерпретація.";
+        return "Інший відтінок спорідненої атмосфери.";
+      };
+
+      similar.querySelectorAll(".product-card").forEach((card, index) => {
+        const body = card.querySelector(".product-card__body");
+        const meta = card.querySelector(".product-card__meta");
+        const item = recommendations[index];
+        if (!body || !item || body.querySelector(".product-card__reason")) return;
+        const reason = document.createElement("p");
+        reason.className = "product-card__reason";
+        reason.textContent = recommendationReason(product, item);
+        body.insertBefore(reason, meta || null);
+      });
+      document.dispatchEvent(new CustomEvent("vahome:products-rendered"));
+    }
+    // SEO is pre-rendered statically in each product HTML for crawler reliability.
+    if (!document.getElementById("productStructuredData")) hydrateSeo(product, collection, price, volume);
+    return true;
+  }
 
   function initQtyStepper() {
     const input = document.getElementById("qtyInput");
@@ -88,15 +225,23 @@
     const info = document.querySelector(".product-hero__info");
     if (!primaryButton || !info) return;
 
+    if (info.querySelector(".product-purchase-support")) return;
+
     const reassurance = document.createElement("div");
     reassurance.className = "product-purchase-support";
-    reassurance.innerHTML = `<div><strong>В наявності</strong><span>Відправка 1–2 робочі дні</span></div><div><strong>Нова пошта</strong><span>Безкоштовно від 2000 грн</span></div><div><strong>Зручна оплата</strong><span>На рахунок або при отриманні</span></div><a href="../delivery.html#returns">Умови доставки й повернення</a>`;
-    primaryButton.closest(".product-purchase-row")?.insertAdjacentElement("afterend", reassurance);
+    reassurance.innerHTML = `<div><span class="product-support-icon" aria-hidden="true">✓</span><p><strong>Відправка 1–2 дні</strong><span>Товар є в наявності</span></p></div><div><span class="product-support-icon" aria-hidden="true">◇</span><p><strong>Безкоштовно від 2000 грн</strong><span>Доставка Новою поштою</span></p></div><div><span class="product-support-icon" aria-hidden="true">○</span><p><strong>Зручна оплата</strong><span>На рахунок або при отриманні</span></p></div><a href="../delivery.html#returns">Доставка, оплата та повернення →</a>`;
+    const hero = document.querySelector(".product-hero");
+    if (hero) {
+      reassurance.classList.add("product-purchase-support--full");
+      hero.insertAdjacentElement("afterend", reassurance);
+    } else {
+      info.querySelector(".product-primary-actions")?.insertAdjacentElement("afterend", reassurance);
+    }
 
     const discovery = document.createElement("a");
     discovery.className = "product-discovery-link";
     discovery.href = "../discovery-set.html";
-    discovery.innerHTML = `<span>Не впевнені у виборі?</span><strong>Спробувати Discovery Set →</strong>`;
+    discovery.innerHTML = `<span class="product-discovery-link__eyebrow">Discovery Set</span><span class="product-discovery-link__copy"><strong>Спочатку відчуйте аромат</strong><small>Оберіть 6 із 18 композицій · 150 грн</small></span><span class="product-discovery-link__arrow" aria-hidden="true">→</span>`;
     reassurance.insertAdjacentElement("afterend", discovery);
 
     const sticky = document.createElement("div");
@@ -111,40 +256,176 @@
     observer.observe(primaryButton);
   }
 
-  function initProductExperience() {
+  function initEditorialProductStory() {
     if (typeof PRODUCT_ID === "undefined" || typeof getProduct !== "function") return;
     const product = getProduct(PRODUCT_ID);
-    if (!product || !product.scales || !product.images || !product.images.main) return;
-    const similarSection = document.getElementById("similarGrid")?.closest("section");
-    if (!similarSection) return;
+    if (!product || !product.scales || !product.images) return;
 
-    const scaleLabels = {
+    const hero = document.querySelector(".product-hero");
+    const heroSection = hero?.closest("section");
+    const similarSection = document.getElementById("similarGrid")?.closest("section");
+    const info = document.querySelector(".product-hero__info");
+    if (!hero || !heroSection || !similarSection || !info) return;
+
+    const collection = typeof getCollection === "function" ? getCollection(product.collection) : null;
+    const insight = product.insights || {};
+    const atmosphereImage = product.images.atmosphere || `images/atmosphere/${product.id}.webp`;
+    const atmosphereFallback = (collection && collection.heroImage) || product.images.main;
+    const galleryItems = getProductGallery(product);
+    const byType = (type, fallback) => galleryItems.find((item) => item.type === type)?.src || fallback;
+    const storyBase = `images/product-story/${product.id}`;
+    const storyAsset = (name) => `${storyBase}/${name}.webp`;
+    const interiorFallback = byType("interior", atmosphereImage);
+    const macroFallback = byType("macro", product.images.main);
+    const detailFallback = byType("detail", interiorFallback);
+    const heroStoryImage = storyAsset("hero");
+    const atmosphereStoryImage = storyAsset("atmosphere");
+    const interiorStoryImage = storyAsset("interior");
+    const macroStoryImage = storyAsset("macro");
+    const detailStoryImage = storyAsset("detail");
+    const topStoryImage = storyAsset("top");
+    const heartStoryImage = storyAsset("heart");
+    const baseStoryImage = storyAsset("base");
+    const discoveryStoryImage = storyAsset("discovery");
+    const quote = insight.aura || product.shortDescription || "Аромат, що змінює відчуття простору.";
+    const labels = {
       freshness: "Свіжість",
       sweetness: "Солодкість",
       woodiness: "Деревність",
       cleanliness: "Чистота",
       intensity: "Інтенсивність"
     };
-    const collection = typeof getCollection === "function" ? getCollection(product.collection) : null;
-    const insight = PRODUCT_INSIGHTS[product.id] || {};
-    const atmosphereImage = product.images.atmosphere || `images/atmosphere/${product.id}.webp`;
-    const atmosphereFallback = (collection && collection.heroImage) || product.images.main;
-    const scaleRows = Object.entries(scaleLabels).map(([key, label]) => {
-      const value = Math.max(0, Math.min(10, Number(product.scales[key]) || 0));
-      return `<div class="product-dna__row"><div class="product-dna__label"><span>${label}</span><strong>${value}/10</strong></div><div class="product-dna__track" role="meter" aria-label="${label}" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${value}"><span style="--dna-value:${value * 10}%"></span></div></div>`;
+    const radarKeys = ["freshness", "sweetness", "woodiness", "cleanliness", "intensity"];
+    const radarLabels = ["Свіжість", "Солодкість", "Деревність", "Чистота", "Інтенсивність"];
+    const radarValues = radarKeys.map((key) => Math.max(0, Math.min(10, Number(product.scales[key]) || 0)));
+    const radarPoint = (value, index, radius = 82) => {
+      const angle = (-90 + index * (360 / radarValues.length)) * Math.PI / 180;
+      const r = radius * value / 10;
+      return `${100 + Math.cos(angle) * r},${100 + Math.sin(angle) * r}`;
+    };
+    const radarGrid = [2.5, 5, 7.5, 10].map((level) => `<polygon points="${radarValues.map((_, i) => radarPoint(level, i)).join(" ")}"/>`).join("");
+    const radarAxes = radarValues.map((_, i) => `<line x1="100" y1="100" x2="${radarPoint(10, i).split(',')[0]}" y2="${radarPoint(10, i).split(',')[1]}"/>`).join("");
+    const radarShapePoints = radarValues.map((value, i) => radarPoint(value, i));
+    const radarShape = radarShapePoints.join(" ");
+    const radarLabelPoint = (index, radius = 103) => {
+      const angle = (-90 + index * (360 / radarValues.length)) * Math.PI / 180;
+      return { x: 100 + Math.cos(angle) * radius, y: 100 + Math.sin(angle) * radius };
+    };
+    const radarLabelsSvg = radarLabels.map((label, i) => {
+      const point = radarLabelPoint(i);
+      const anchor = point.x < 85 ? "end" : point.x > 115 ? "start" : "middle";
+      return `<text class="story-dna__axis-label" x="${point.x.toFixed(1)}" y="${point.y.toFixed(1)}" text-anchor="${anchor}"><tspan>${label}</tspan><tspan class="story-dna__axis-value" x="${point.x.toFixed(1)}" dy="11">${radarValues[i]}</tspan></text>`;
     }).join("");
+    const radarDots = radarShapePoints.map((point) => {
+      const [cx, cy] = point.split(",");
+      return `<circle class="story-dna__point" cx="${cx}" cy="${cy}" r="2.6"/>`;
+    }).join("");
+    const levelName = (value) => value <= 3 ? "Низька" : value <= 6 ? "Середня" : "Висока";
+    const radarLegend = radarLabels.map((label, i) => `<li><span>${label}</span><i aria-hidden="true"><b style="--dna-level:${radarValues[i]}"></b></i><strong>${levelName(radarValues[i])}</strong></li>`).join("");
+    const characterWords = {
+      freshness: "свіжий",
+      sweetness: "м’який",
+      woodiness: "деревний",
+      cleanliness: "чистий",
+      intensity: "виразний"
+    };
+    const character = radarKeys
+      .map((key, i) => ({ key, value: radarValues[i] }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 3)
+      .map((item) => characterWords[item.key])
+      .join(" · ");
 
-    const section = document.createElement("section");
-    section.className = "section product-experience";
-    section.innerHTML = `<div class="container"><div class="product-experience__head"><p class="eyebrow">Відчуття у просторі</p><h2>Як виглядає аромат</h2></div><div class="product-experience__grid"><figure class="product-atmosphere"><img src="../${atmosphereImage}" data-dna-photo="${product.id}" alt="Атмосфера аромату ${product.name}" loading="lazy" onerror="this.onerror=null;this.src='../${atmosphereFallback}'"><figcaption><span>${product.name}</span><p>${insight.aura || product.shortDescription}</p><small>${insight.zones ? `Найкраще: ${insight.zones}` : (collection ? collection.tagline : "")}</small></figcaption></figure><div class="product-dna"><div class="product-dna__heading"><p class="eyebrow">Scent profile</p><h3>DNA аромату</h3><p>${insight.evolution || "Характер композиції у п’яти зрозумілих вимірах."}</p></div><div class="product-dna__scales">${scaleRows}</div><div class="product-dna__facts">${insight.season ? `<div><span>Сезон</span><strong>${insight.season}</strong></div>` : ""}${insight.comfort ? `<div><span>Комфорт</span><strong>${insight.comfort}</strong></div>` : ""}</div></div></div></div>`;
-    similarSection.parentNode.insertBefore(section, similarSection);
+    const existingFormula = document.querySelector(".product-formula-proof");
+    const formulaIntent = existingFormula?.querySelector(".product-formula-proof__intent")?.innerHTML || `<strong>Задум композиції.</strong> ${escapeHtml(product.formulaIntent || product.shortDescription)}`;
 
-    document.getElementById("scalesSection")?.remove();
-    document.getElementById("intensitySection")?.remove();
-    document.querySelectorAll(".product-hero__info .product-detail-section").forEach((detail) => {
-      const title = detail.querySelector(".product-detail-section__title")?.textContent.trim();
-      if (["Для якої кімнати", "Яку атмосферу створює"].includes(title)) detail.remove();
-    });
+    info.querySelectorAll(".product-detail-section, .product-formula-proof, .product-accordion").forEach((node) => node.remove());
+    document.querySelector(".product-substance")?.remove();
+    document.querySelector(".product-experience")?.remove();
+    document.querySelector(".product-discovery-link")?.remove();
+    document.querySelector(".product-editorial-story")?.remove();
+
+    const story = document.createElement("div");
+    story.className = "product-editorial-story product-story-v10";
+    story.innerHTML = `
+      <section class="story-cinema" aria-labelledby="storyQuoteTitle">
+        <img src="../${atmosphereStoryImage}" alt="${escapeHtml(product.name)} в інтер’єрі" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../${atmosphereImage}';this.onerror=()=>{this.onerror=null;this.closest('section,figure,article')?.classList.add('story-media-missing');this.remove()}">
+        <div class="story-cinema__shade"></div>
+        <div class="container story-cinema__copy">
+          <p class="eyebrow">Відчуття у просторі</p>
+          <h2 id="storyQuoteTitle">${escapeHtml(quote)}</h2>
+          <span>VA HOME</span>
+        </div>
+      </section>
+
+      <section class="story-composition">
+        <div class="story-composition__copy">
+          <p class="eyebrow">Формула VA HOME</p>
+          <h2>Від композиції<br>до простору</h2>
+          <p>${formulaIntent}</p>
+          <a href="../scent-guide.html">Дізнатися більше про аромат →</a>
+        </div>
+        <figure class="story-composition__macro">
+          <img src="../${macroStoryImage}" alt="Деталь флакону ${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../${macroFallback}';this.onerror=()=>{this.onerror=null;this.closest('section,figure,article')?.classList.add('story-media-missing');this.remove()}">
+        </figure>
+        <div class="story-dna">
+          <p class="eyebrow">DNA аромату</p>
+          <div class="story-dna__radar" role="img" aria-label="Радарний профіль аромату">
+            <svg viewBox="-18 -18 236 236" aria-hidden="true"><g class="story-dna__grid">${radarGrid}${radarAxes}</g><polygon class="story-dna__shape" points="${radarShape}"/>${radarDots}${radarLabelsSvg}</svg>
+          </div>
+          <div class="story-dna__character"><span>Характер</span><strong>${character}</strong></div>
+          <ul class="story-dna__legend">${radarLegend}</ul>
+        </div>
+      </section>
+
+      <section class="story-notes" aria-labelledby="storyNotesTitle">
+        <div class="story-notes__label"><p class="eyebrow">Ноти аромату</p><h2 id="storyNotesTitle">Три фази звучання</h2></div>
+        <div class="story-notes__grid">
+          <article>
+            <img src="../${topStoryImage}" alt="Верхні ноти ${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../${interiorFallback}';this.onerror=()=>{this.onerror=null;this.closest('article')?.classList.add('story-media-missing');this.remove()}">
+            <div><span>Верхні ноти</span><h3>${escapeHtml(product.notes.top.join(", "))}</h3><p>перший дотик</p></div>
+          </article>
+          <article>
+            <img src="../${heartStoryImage}" alt="Серце аромату ${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../${macroFallback}';this.onerror=()=>{this.onerror=null;this.closest('section,figure,article')?.classList.add('story-media-missing');this.remove()}">
+            <div><span>Серце</span><h3>${escapeHtml(product.notes.heart.join(", "))}</h3><p>через кілька хвилин</p></div>
+          </article>
+          <article>
+            <img src="../${baseStoryImage}" alt="База аромату ${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../${detailFallback}';this.onerror=()=>{this.onerror=null;this.closest('article')?.classList.add('story-media-missing');this.remove()}">
+            <div><span>База</span><h3>${escapeHtml(product.notes.base.join(", "))}</h3><p>довгий післясмак</p></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="story-ritual story-ritual--render">
+        <div class="story-ritual__header"><p class="eyebrow">Ритуал використання</p></div>
+        <div class="story-ritual__bar">
+          <article>
+            <div class="story-ritual__icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M18 10h12M20 10V5h8v5M17 16h14v24H17zM20 21h8"/></svg></div>
+            <div><span>01</span><h3>Відкрийте флакон</h3><p>Зніміть захисну кришку.</p></div>
+          </article>
+          <article>
+            <div class="story-ritual__icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M17 38h14M19 24h10l2 14H17zM21 24 15 5M24 24V4M27 24 34 6"/></svg></div>
+            <div><span>02</span><h3>Додайте 3–4 палички</h3><p>Регулюйте кількість під бажану інтенсивність.</p></div>
+          </article>
+          <article>
+            <div class="story-ritual__icon" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="17"/><path d="M24 13v12l8 5"/></svg></div>
+            <div><span>03</span><h3>Дайте аромату час</h3><p>Через 24–48 годин композиція розкриється.</p></div>
+          </article>
+          <figure><img src="../${interiorStoryImage}" alt="${escapeHtml(product.name)} у просторі" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../${interiorFallback}';this.onerror=()=>{this.onerror=null;this.src='../${atmosphereImage}'}"></figure>
+        </div>
+        <div class="container"><details class="story-ritual__details"><summary>Комплектація та безпечне використання</summary><div><p><strong>У комплекті:</strong> флакон 100 мл і 4 чорні палички.</p><p><strong>Тривалість:</strong> орієнтовно 8–12 тижнів.</p><p>Не ковтати. Уникайте контакту рідини зі шкірою, очима, меблями та текстилем. Тримайте подалі від дітей, домашніх тварин, вогню й джерел тепла.</p></div></details></div>
+      </section>
+
+      <section class="story-discovery">
+        <div class="container story-discovery__inner">
+          <div><p class="eyebrow">Не можете обрати один?</p><h2>Спробуйте Discovery Set</h2><p>6 композицій по 5 мл для знайомства з колекцією.</p><a class="btn btn-outline" href="../discovery-set.html">Дізнатися більше</a></div>
+          <img src="../${discoveryStoryImage}" alt="Discovery Set ${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../images/discovery/discovery-set.webp'">
+        </div>
+      </section>`;
+
+    heroSection.insertAdjacentElement("afterend", story);
+    similarSection.classList.add("story-similar");
+    document.body.classList.add("has-editorial-product-story", "has-product-story-v10");
   }
 
   function initCompactDetails() {
@@ -218,59 +499,34 @@
 
   function initProductSubstanceLayout() {
     const hero = document.querySelector(".product-hero");
-    const media = document.querySelector(".product-hero__media");
-    const info = document.querySelector(".product-hero__info");
+    const gallery = document.querySelector(".product-gallery");
     const proof = document.querySelector(".product-formula-proof");
     const accordion = document.querySelector(".product-accordion");
-    if (!hero || !media || !info || !proof || !accordion || hero.classList.contains("has-inline-substance")) return;
+    if (!hero || !gallery || !proof || !accordion || hero.classList.contains("has-premium-substance")) return;
 
-    const gallery = document.createElement("div");
-    gallery.className = "product-gallery";
-
-    const thumbs = document.getElementById("productGalleryThumbs");
-    hero.insertBefore(gallery, media);
-    gallery.append(media);
-
-    // The old markup keeps thumbnails inside the photo container. Move them
-    // into the gallery so desktop can place them beside the 4:5 image and
-    // mobile can place them below it.
-    if (thumbs) gallery.insertBefore(thumbs, media);
-
+    // Keep the purchase hero visually balanced: image and buying information only.
+    // Deeper product information becomes a full-width editorial block below it,
+    // preventing either column from creating a large empty vertical area.
     const visualStack = document.createElement("div");
     visualStack.className = "product-hero__visual-stack";
     hero.insertBefore(visualStack, gallery);
-    visualStack.append(gallery, proof);
-    info.appendChild(accordion);
-    hero.classList.add("has-inline-substance");
+    visualStack.appendChild(gallery);
+
+    const substance = document.createElement("div");
+    substance.className = "product-substance";
+    substance.setAttribute("aria-label", "Детальна інформація про аромат");
+    substance.append(proof, accordion);
+    hero.insertAdjacentElement("afterend", substance);
+
+    hero.classList.add("has-premium-substance");
   }
 
-  function initGallery() {
-    const strip = document.getElementById("productGalleryThumbs");
-    const mainImg = document.getElementById("productMainImage");
-    if (!strip || !mainImg) return;
-
-    strip.addEventListener("click", (event) => {
-      const thumb = event.target.closest(".product-gallery-thumb");
-      if (!thumb) return;
-      strip.querySelectorAll(".product-gallery-thumb").forEach((t) => t.classList.toggle("is-active", t === thumb));
-      mainImg.src = thumb.dataset.full;
-    });
-
-    // Give onerror handlers a moment to remove any missing extra photos,
-    // then only reveal the thumbnail strip if more than one photo remains.
-    setTimeout(() => {
-      const count = strip.querySelectorAll(".product-gallery-thumb").length;
-      strip.classList.toggle("has-multiple", count >= 2);
-    }, 300);
-  }
 
   document.addEventListener("DOMContentLoaded", () => {
+    hydrateProductPage();
     initQtyStepper();
     initAddToCart();
     initPurchaseSupport();
-    initProductExperience();
-    initCompactDetails();
-    initProductSubstanceLayout();
-    initGallery();
+    initEditorialProductStory();
   });
 })();

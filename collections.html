@@ -1,31 +1,63 @@
 <!DOCTYPE html>
+
 <html lang="uk">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://yweluzclearwrazdkahu.supabase.co; font-src 'self'; connect-src 'self' https://yweluzclearwrazdkahu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<link as="image" fetchpriority="high" href="images/pages/collections-hero.webp" rel="preload" type="image/webp"/>
+<link as="font" crossorigin href="fonts/cormorant-garamond-cyrillic-500-normal.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin href="fonts/cormorant-garamond-latin-500-normal.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin href="fonts/manrope-cyrillic-400-normal.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin href="fonts/manrope-latin-400-normal.woff2" rel="preload" type="font/woff2"/>
+<script>document.documentElement.classList.add('collections-fonts-loading');</script>
+<meta content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://yweluzclearwrazdkahu.supabase.co; font-src 'self'; connect-src 'self' https://yweluzclearwrazdkahu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';" http-equiv="Content-Security-Policy"/>
 <title>Колекції ароматів — VA HOME</title>
-<meta name="description" content="Чотири колекції VA HOME: Entry, Signature, Premium і Noir. Кожна — окремий характер простору та настрою.">
-<link rel="canonical" href="https://vahome.com.ua/collections.html">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Колекції ароматів — VA HOME">
-<meta property="og:url" content="https://vahome.com.ua/collections.html">
-<meta property="og:description" content="Чотири колекції VA HOME: Entry, Signature, Premium і Noir.">
-<meta property="og:image" content="https://vahome.com.ua/images/collections/signature.webp">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="favicon/favicon.ico" sizes="any">
-<link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="favicon/apple-touch-icon.png">
-
-
-<link rel="stylesheet" href="css/variables.css">
-<link rel="stylesheet" href="css/fonts.css">
-<link rel="stylesheet" href="css/reset.css">
-<link rel="stylesheet" href="css/global.css">
-<link rel="stylesheet" href="css/components.css">
-<link rel="stylesheet" href="css/home.css">
-<link rel="stylesheet" href="css/responsive.css">
-
+<meta content="Чотири колекції VA HOME — Entry, Signature, Premium і Noir. Оберіть атмосферу, яка відповідає вашому простору." name="description"/>
+<link href="https://vahome.com.ua/collections.html" rel="canonical"/>
+<meta content="website" property="og:type"/>
+<meta content="Колекції ароматів — VA HOME" property="og:title"/>
+<meta content="https://vahome.com.ua/collections.html" property="og:url"/>
+<meta content="Чотири колекції VA HOME — Entry, Signature, Premium і Noir. Оберіть атмосферу, яка відповідає вашому простору." property="og:description"/>
+<meta content="https://vahome.com.ua/images/pages/collections-hero.webp" property="og:image"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<link href="favicon/favicon.ico" rel="icon" sizes="any"/>
+<link href="favicon/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="favicon/apple-touch-icon.png" rel="apple-touch-icon"/>
+<style>
+html,
+body,
+.collections-v2-page,
+.collections-v2-page #main-content {
+  background-color: #0b0a08;
+}
+.collections-v2-breadcrumb-band {
+  min-height: 46px;
+  background: #0b0a08;
+  color: rgba(242,237,229,.62);
+}
+.collections-v2-breadcrumb-band .breadcrumbs {
+  padding-block: .85rem;
+}
+.collections-v2-page .collections-v2-hero,
+.collections-v2-page .collections-v2-hero__media {
+  background-color: #080705;
+  background-image: url("images/pages/collections-hero.webp");
+  background-position: center 48%;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+</style>
+<link href="css/variables.css" rel="stylesheet"/>
+<link href="css/fonts.css" rel="stylesheet"/>
+<link href="css/reset.css" rel="stylesheet"/>
+<link href="css/global.css" rel="stylesheet"/>
+<link href="css/components.css" rel="stylesheet"/>
+<link href="css/responsive.css" rel="stylesheet"/>
+<link href="css/motion.css" rel="stylesheet"/>
+<link href="css/home.css" rel="stylesheet"/>
+<link href="css/final-polish.css" rel="stylesheet"/>
+<link href="css/brand-world.css" rel="stylesheet"/>
+<link href="css/collections-v2.css" rel="stylesheet"/>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -36,169 +68,139 @@
   ]
 }
 </script>
+<meta content="11.7 SEO &amp; Launch Audit" name="va-home-release"/>
+<link href="css/v11-3-final-polish.css" rel="stylesheet"/><meta content="#15130f" name="theme-color"/><meta content="telephone=no" name="format-detection"/><link href="css/v11-4-mobile-product-polish.css" rel="stylesheet"/><link href="css/v11-5-mobile-perfection.css" rel="stylesheet"/>
+<link href="css/v11-6-luxury-product-polish.css" rel="stylesheet"/>
+<meta content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" name="robots"/><meta content="uk_UA" property="og:locale"/><meta content="VA HOME" property="og:site_name"/><meta content="Колекції ароматів — VA HOME" property="og:image:alt"/><meta content="Колекції ароматів — VA HOME" name="twitter:title"/><meta content="Чотири колекції VA HOME — Entry, Signature, Premium і Noir. Оберіть атмосферу, яка відповідає вашому простору." name="twitter:description"/><meta content="https://vahome.com.ua/images/pages/collections-hero.webp" name="twitter:image"/><meta content="Колекції ароматів — VA HOME" name="twitter:image:alt"/><link href="css/v11-8-21-unified-page-heroes.css" rel="stylesheet"/><link href="css/v11-8-22-collections-hero-title.css" rel="stylesheet"/>
+<link href="css/v11-8-24-hero-dna.css" rel="stylesheet"/><link href="css/v11-8-58-mobile-text-polish.css" rel="stylesheet"/><link rel="stylesheet" href="css/compare.css"/>
+  <link rel="stylesheet" href="css/v12-0-rc1.css">
+  <link rel="stylesheet" href="css/v12-0-rc2.css">
 </head>
-<body>
-
-<div id="site-header" data-root="" data-active="collections"></div>
-
+<body class="collections-v2-page">
+<div data-active="collections" data-root="" id="site-header"></div>
 <main id="main-content">
-
-  <div class="container">
-    <nav class="breadcrumbs" aria-label="Хлібні крихти">
-      <a href="index.html">Головна</a>
-      <span class="breadcrumbs__sep">/</span>
-      <span aria-current="page">Колекції</span>
-    </nav>
-  </div>
-
-  <section class="section section--tight">
-    <div class="container">
-      <h1 class="reveal">Колекції ароматів</h1>
-      <p class="lead reveal">
-        Кожна колекція VA HOME — окремий характер простору: від світлої повсякденності
-        до стриманої, майже мовчазної Noir-композиції.
-      </p>
-
-      <div class="collections-compare reveal">
-        <table>
-          <thead>
-            <tr>
-              <th>Колекція</th>
-              <th>Характер</th>
-              <th>Ціна</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><a href="#entry">Entry</a></td>
-              <td>Легкість і щоденне використання</td>
-              <td>799 грн</td>
-            </tr>
-            <tr>
-              <td><a href="#signature">Signature</a></td>
-              <td>Затишок і домашні ритуали</td>
-              <td>899 грн</td>
-            </tr>
-            <tr>
-              <td><a href="#premium">Premium</a></td>
-              <td>Виразний, впевнений характер</td>
-              <td>999 грн</td>
-            </tr>
-            <tr>
-              <td><a href="#noir">Noir</a></td>
-              <td>Найглибші й найстриманіші композиції</td>
-              <td>1199 грн</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ ENTRY ============ -->
-  <section class="collection-editorial" id="entry">
-    <div class="container">
-      <div class="about-split reveal">
-        <div class="about-split__media"><img class="fill-img" src="images/collections/entry.webp" alt="Entry Collection VA HOME — світлий камінь, груша, ранкове світло" loading="lazy" onerror="this.parentElement.classList.add('placeholder-media');this.remove();"></div>
-        <div class="about-split__body">
-          <p class="collection-editorial__eyebrow">Entry Collection · 5 ароматів</p>
-          <h2>Перше знайомство з ароматом</h2>
-          <p class="collection-editorial__price">799 грн · 100 мл</p>
-          <p class="collection-editorial__unit">≈80 грн / 10 мл</p>
-          <p>Чисті, доступні композиції для щоденного простору — без зайвої складності, з акцентом на свіжість і легкість ранку.</p>
-          <div class="aroma-list">
-            <a href="products/signature-relax.html">Signature Relax</a>
-            <a href="products/forbidden-fruit.html">Forbidden Fruit</a>
-            <a href="products/doux-moment.html">DOUX Moment</a>
-            <a href="products/wild-berry-way.html">Wild Berry Way</a>
-            <a href="products/hotel-spring.html">Hotel Spring</a>
-          </div>
-          <a href="catalog.html?collection=entry" class="btn btn-secondary">Переглянути Entry</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ SIGNATURE ============ -->
-  <section class="collection-editorial" id="signature">
-    <div class="container">
-      <div class="about-split about-split--reverse reveal">
-        <div class="about-split__media"><img class="fill-img" src="images/collections/signature.webp" alt="Signature Collection VA HOME — тепле дерево, ivory, текстиль" loading="lazy" onerror="this.parentElement.classList.add('placeholder-media');this.remove();"></div>
-        <div class="about-split__body">
-          <p class="collection-editorial__eyebrow">Signature Collection · 4 аромати</p>
-          <h2>Вечірній ритуал дому</h2>
-          <p class="collection-editorial__price">899 грн · 100 мл</p>
-          <p class="collection-editorial__unit">≈90 грн / 10 мл</p>
-          <p>Композиції для дому, де важливий вечір: тепле дерево, м'який текстиль і відчуття завершеного дня.</p>
-          <div class="aroma-list">
-            <a href="products/evening-ritual.html">Evening Ritual</a>
-            <a href="products/velvet-spa.html">Velvet Spa</a>
-            <a href="products/pure-zen.html">Pure Zen</a>
-            <a href="products/hotel-luxe.html">Hotel Luxe</a>
-          </div>
-          <a href="catalog.html?collection=signature" class="btn btn-secondary">Переглянути Signature</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ PREMIUM ============ -->
-  <section class="collection-editorial" id="premium">
-    <div class="container">
-      <div class="about-split reveal">
-        <div class="about-split__media"><img class="fill-img" src="images/collections/premium.webp" alt="Premium Collection VA HOME — темний камінь, травертин, спрямоване світло" loading="lazy" onerror="this.parentElement.classList.add('placeholder-media');this.remove();"></div>
-        <div class="about-split__body">
-          <p class="collection-editorial__eyebrow">Premium Collection · 3 аромати</p>
-          <h2>Простір із характером</h2>
-          <p class="collection-editorial__price">999 грн · 100 мл</p>
-          <p class="collection-editorial__unit">≈100 грн / 10 мл</p>
-          <p>Архітектурніші, впевненіші композиції — для кімнат, де важлива не лише атмосфера, а й індивідуальність.</p>
-          <div class="aroma-list">
-            <a href="products/old-money.html">Old Money</a>
-            <a href="products/linstinct.html">L'INSTINCT</a>
-            <a href="products/mineral-salt.html">Mineral Salt</a>
-          </div>
-          <a href="catalog.html?collection=premium" class="btn btn-secondary">Переглянути Premium</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ NOIR ============ -->
-  <section class="collection-editorial" id="noir">
-    <div class="container">
-      <div class="about-split about-split--reverse reveal">
-        <div class="about-split__media"><img class="fill-img" src="images/collections/noir.webp" alt="Noir Collection VA HOME — майже чорний фон, димчасті тіні" loading="lazy" onerror="this.parentElement.classList.add('placeholder-media');this.remove();"></div>
-        <div class="about-split__body">
-          <p class="collection-editorial__eyebrow">Noir Collection · 6 ароматів</p>
-          <h2>Найбільш стримана лінійка</h2>
-          <p class="collection-editorial__price">1199 грн · 100 мл</p>
-          <p class="collection-editorial__unit">≈120 грн / 10 мл</p>
-          <p>Молекулярні, майже абстрактні композиції з мінімумом світла й максимумом характеру — арт-об'єкт, а не просто аромат.</p>
-          <div class="aroma-list">
-            <a href="products/pure-imagination.html">Pure Imagination</a>
-            <a href="products/silk-molecule.html">Silk Molecule</a>
-            <a href="products/the-archive.html">The Archive</a>
-            <a href="products/silent-temple.html">Silent Temple</a>
-            <a href="products/moss-and-shadow.html">Moss & Shadow</a>
-            <a href="products/dark-bloom.html">Dark Bloom</a>
-          </div>
-          <a href="catalog.html?collection=noir" class="btn btn-secondary">Переглянути Noir</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
+<div class="collections-v2-breadcrumb-band">
+<div class="container">
+<nav aria-label="Хлібні крихти" class="breadcrumbs">
+<a href="index.html">Головна</a><span class="breadcrumbs__sep">/</span><span aria-current="page">Колекції</span>
+</nav>
+</div>
+</div>
+<section aria-labelledby="collections-title" class="collections-v2-hero">
+<div aria-hidden="true" class="collections-v2-hero__media">
+<img alt="Чотири колекції. Чотири характери простору. — noir" decoding="sync" fetchpriority="high" height="2048" loading="eager" src="images/pages/collections-hero.webp" width="3072"/>
+</div>
+<div class="collections-v2-hero__veil"></div>
+<div class="container collections-v2-hero__content">
+<p class="collections-v2-kicker">VA HOME · The Collections</p>
+<h1 class="collections-v2-hero__title" id="collections-title"><span>Чотири колекції.</span><span>Чотири характери</span><span>простору.</span></h1>
+<p class="collections-v2-hero__lead">Від світлої тиші до майже абстрактної глибини. Кожна — свій спосіб наповнити дім атмосферою.</p>
+<a aria-label="Перейти до колекцій" class="collections-v2-scroll" href="#entry"><span>Explore</span><i></i></a>
+</div>
+</section>
+<nav aria-label="Навігація колекціями" class="collections-v2-index">
+<div class="container collections-v2-index__inner">
+<a href="#entry"><span>01</span> Entry</a>
+<a href="#signature"><span>02</span> Signature</a>
+<a href="#premium"><span>03</span> Premium</a>
+<a href="#noir"><span>04</span> Noir</a>
+</div>
+</nav>
+<section class="collection-world collection-world--entry" id="entry">
+<div class="collection-world__media reveal"><img alt="Entry Collection VA HOME — світла атмосфера, камінь і ранкове світло" decoding="async" loading="lazy" src="images/collections/entry.webp"/></div>
+<div class="collection-world__content reveal">
+<p class="collection-world__number">01 / 04</p>
+<p class="collection-world__name">Entry Collection</p>
+<h2>Світла<br/>повсякденність.</h2>
+<p class="collection-world__intro">Чисті й легкі композиції для першого знайомства з VA HOME. Вони не домінують — вони роблять простір спокійнішим.</p>
+<div class="collection-world__facts"><span>5 ароматів</span><span>100 мл</span><span>799 грн</span></div>
+<div class="collection-world__aromas">
+<a href="products/signature-relax.html">Signature Relax</a><a href="products/forbidden-fruit.html">Forbidden Fruit</a><a href="products/doux-moment.html">DOUX Moment</a><a href="products/wild-berry-way.html">Wild Berry Way</a><a href="products/hotel-spring.html">Hotel Spring</a>
+</div>
+<a class="collection-world__cta" href="catalog.html?collection=entry">Переглянути Entry <span>↗</span></a>
+</div>
+</section>
+<section class="collection-world collection-world--reverse collection-world--signature" id="signature">
+<div class="collection-world__media reveal"><img alt="Signature Collection VA HOME — тепле дерево, текстиль і вечірнє світло" decoding="async" loading="lazy" src="images/collections/signature.webp"/></div>
+<div class="collection-world__content reveal">
+<p class="collection-world__number">02 / 04</p>
+<p class="collection-world__name">Signature Collection</p>
+<h2>Домашній<br/>ритуал.</h2>
+<p class="collection-world__intro">М’які, теплі й зібрані композиції для повільного вечора. Тут аромат стає частиною звички — як світло, текстиль і тиша.</p>
+<div class="collection-world__facts"><span>4 аромати</span><span>100 мл</span><span>899 грн</span></div>
+<div class="collection-world__aromas"><a href="products/evening-ritual.html">Evening Ritual</a><a href="products/velvet-spa.html">Velvet Spa</a><a href="products/pure-zen.html">Pure Zen</a><a href="products/hotel-luxe.html">Hotel Luxe</a></div>
+<a class="collection-world__cta" href="catalog.html?collection=signature">Переглянути Signature <span>↗</span></a>
+</div>
+</section>
+<section class="collection-world collection-world--premium" id="premium">
+<div class="collection-world__media reveal"><img alt="Premium Collection VA HOME — архітектурний камінь і спрямоване світло" decoding="async" loading="lazy" src="images/collections/premium.webp"/></div>
+<div class="collection-world__content reveal">
+<p class="collection-world__number">03 / 04</p>
+<p class="collection-world__name">Premium Collection</p>
+<h2>Простір<br/>із характером.</h2>
+<p class="collection-world__intro">Архітектурні композиції з виразнішою присутністю. Для інтер’єрів, де аромат має не просто звучати, а формувати настрій.</p>
+<div class="collection-world__facts"><span>3 аромати</span><span>100 мл</span><span>999 грн</span></div>
+<div class="collection-world__aromas"><a href="products/old-money.html">Old Money</a><a href="products/linstinct.html">L'INSTINCT</a><a href="products/mineral-salt.html">Mineral Salt</a></div>
+<a class="collection-world__cta" href="catalog.html?collection=premium">Переглянути Premium <span>↗</span></a>
+</div>
+</section>
+<section class="collection-world collection-world--reverse collection-world--noir" id="noir">
+<div class="collection-world__media reveal"><img alt="Noir Collection VA HOME — темний фон, скло й димчасте світло" decoding="async" loading="lazy" src="images/collections/noir.webp"/></div>
+<div class="collection-world__content reveal">
+<p class="collection-world__number">04 / 04</p>
+<p class="collection-world__name">Noir Collection</p>
+<h2>Тиха<br/>глибина.</h2>
+<p class="collection-world__intro">Молекулярні й майже абстрактні композиції. Менше буквального аромату — більше тіні, текстури й характеру.</p>
+<div class="collection-world__facts"><span>6 ароматів</span><span>100 мл</span><span>1199 грн</span></div>
+<div class="collection-world__aromas"><a href="products/pure-imagination.html">Pure Imagination</a><a href="products/silk-molecule.html">Silk Molecule</a><a href="products/the-archive.html">The Archive</a><a href="products/silent-temple.html">Silent Temple</a><a href="products/moss-and-shadow.html">Moss &amp; Shadow</a><a href="products/dark-bloom.html">Dark Bloom</a></div>
+<a class="collection-world__cta" href="catalog.html?collection=noir">Переглянути Noir <span>↗</span></a>
+</div>
+</section>
+<section class="collection-style-finder">
+<div class="container">
+<div class="collection-section-heading reveal"><p>Choose by space</p><h2>Яка атмосфера ближча саме вам?</h2></div>
+<div class="collection-style-grid">
+<a class="collection-style-card collection-style-card--entry reveal" href="#entry"><span>Світлий мінімалізм</span><strong>Entry</strong><small>Air · Morning · Clean</small></a>
+<a class="collection-style-card collection-style-card--signature reveal" href="#signature"><span>Теплий сучасний дім</span><strong>Signature</strong><small>Textile · Wood · Ritual</small></a>
+<a class="collection-style-card collection-style-card--premium reveal" href="#premium"><span>Hotel &amp; Spa</span><strong>Premium</strong><small>Stone · Mineral · Presence</small></a>
+<a class="collection-style-card collection-style-card--noir reveal" href="#noir"><span>Dark luxury</span><strong>Noir</strong><small>Shadow · Molecule · Depth</small></a>
+</div>
+</div>
+</section>
+<section class="collection-next-step">
+<div class="container">
+<div class="collection-section-heading reveal"><p>Still choosing?</p><h2>Не обов’язково вирішувати одразу.</h2></div>
+<div class="collection-next-grid">
+<a class="collection-next-card reveal" href="discovery-set.html">
+<img alt="Discovery Set VA HOME" decoding="async" loading="lazy" src="images/home/hero-discovery.webp"/>
+<div><p>Спробувати вдома</p><h3>Discovery Set</h3><span>6 ароматів для особистого знайомства ↗</span></div>
+</a>
+<a class="collection-next-card reveal" href="scent-guide.html">
+<img alt="Гід ароматів VA HOME" decoding="async" loading="lazy" src="images/home/about.webp"/>
+<div><p>Знайти свій напрям</p><h3>Гід ароматів</h3><span>Підбір за простором і відчуттям ↗</span></div>
+</a>
+</div>
+</div>
+</section>
+<section class="collection-manifesto">
+<div class="container reveal"><p>VA HOME · Atmosphere first</p><h2>Не існує універсального аромату.<br/>Існує атмосфера, яка стає вашою.</h2><a href="catalog.html">Перейти до всіх ароматів <span>↗</span></a></div>
+</section>
 </main>
-
-<div id="site-footer" data-root=""></div>
-
-<script src="js/config.js"></script>
-<script src="js/supabase-api.js"></script>
-<script src="data/products-data.js"></script>
-<script src="js/products.js"></script>
-<script src="js/cart.js" defer></script>
-<script src="js/ratings.js" defer></script>
-<script src="js/main.js" defer></script>
+<div data-root="" id="site-footer"></div>
+<script>
+(function () {
+  var root = document.documentElement;
+  function revealHero() { root.classList.remove('collections-fonts-loading'); }
+  if (!document.fonts || !document.fonts.load) { revealHero(); return; }
+  Promise.all([
+    document.fonts.load('500 72px "Cormorant Garamond"', 'Чотири колекції. Чотири характери простору.'),
+    document.fonts.load('400 16px Manrope', 'VA HOME Не рівні ціни й не категорії каталогу')
+  ]).then(revealHero, revealHero);
+  window.setTimeout(revealHero, 1800);
+}());
+</script>
+<script defer="" src="js/config.js"></script><script defer="" src="js/supabase-api.js"></script><script defer="" src="js/products.js"></script>
+<script defer="" src="js/compare.js"></script><script defer="" src="js/cart.js"></script><script defer="" src="js/ratings.js"></script><script defer="" src="js/main.js"></script><script defer="" src="js/motion.js"></script>
+<script defer src="js/production-qa.js"></script>
 </body>
 </html>

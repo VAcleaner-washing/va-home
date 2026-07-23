@@ -1,35 +1,48 @@
 <!DOCTYPE html>
+
 <html lang="uk">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://yweluzclearwrazdkahu.supabase.co; font-src 'self'; connect-src 'self' https://yweluzclearwrazdkahu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';">
+<script>document.documentElement.classList.add('va-hero-fonts-loading');</script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<link as="font" crossorigin href="fonts/cormorant-garamond-cyrillic-500-normal.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin href="fonts/manrope-cyrillic-400-normal.woff2" rel="preload" type="font/woff2"/>
+<meta content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://yweluzclearwrazdkahu.supabase.co; font-src 'self'; connect-src 'self' https://yweluzclearwrazdkahu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';" http-equiv="Content-Security-Policy"/>
 <title>Статус замовлення — VA HOME</title>
-<meta name="description" content="Перевірте статус замовлення VA HOME за номером замовлення та останніми цифрами телефону.">
-<meta name="robots" content="noindex,nofollow">
-<link rel="canonical" href="https://vahome.com.ua/order-status.html">
-<link rel="icon" href="favicon/favicon.ico" sizes="any">
-<link rel="stylesheet" href="css/variables.css"><link rel="stylesheet" href="css/fonts.css"><link rel="stylesheet" href="css/reset.css"><link rel="stylesheet" href="css/global.css"><link rel="stylesheet" href="css/components.css"><link rel="stylesheet" href="css/order-status.css"><link rel="stylesheet" href="css/responsive.css">
+<meta content="Перевірте статус замовлення VA HOME за номером замовлення та останніми цифрами телефону." name="description"/>
+<meta content="noindex, nofollow, noarchive" name="robots"/>
+
+<link href="favicon/favicon.ico" rel="icon" sizes="any"/>
+<link href="css/variables.css" rel="stylesheet"/><link href="css/fonts.css" rel="stylesheet"/><link href="css/reset.css" rel="stylesheet"/><link href="css/global.css" rel="stylesheet"/><link href="css/components.css" rel="stylesheet"/><link href="css/responsive.css" rel="stylesheet"/><link href="css/motion.css" rel="stylesheet"/>
+<link href="css/order-status.css" rel="stylesheet"/><meta content="11.7 SEO &amp; Launch Audit" name="va-home-release"/><link href="css/final-polish.css" rel="stylesheet"/><link href="css/v11-3-final-polish.css" rel="stylesheet"/><meta content="#15130f" name="theme-color"/><meta content="telephone=no" name="format-detection"/><link href="css/v11-4-mobile-product-polish.css" rel="stylesheet"/><link href="css/v11-5-mobile-perfection.css" rel="stylesheet"/>
+<link href="css/v11-6-luxury-product-polish.css" rel="stylesheet"/>
+<link href="css/v11-8-24-hero-dna.css" rel="stylesheet"/><link href="css/v11-8-42-unified-hero-font-reveal.css" rel="stylesheet"/>
+<script defer src="js/hero-font-reveal.js"></script>  <link rel="stylesheet" href="css/v12-0-rc1.css">
+  <link rel="stylesheet" href="css/v12-0-rc2.css">
 </head>
 <body>
-<div id="site-header" data-root="" data-active=""></div>
+<div data-active="" data-root="" id="site-header"></div>
 <main id="main-content">
-<section class="section order-track">
-  <div class="container order-track__container">
-    <p class="eyebrow">VA HOME</p>
-    <h1>Статус замовлення</h1>
-    <p class="order-track__lead">Введіть номер замовлення та останні 4 цифри телефону, вказаного під час оформлення.</p>
-    <form id="orderTrackForm" class="order-track__form">
-      <label>Номер замовлення<input name="orderNumber" type="text" placeholder="VA-260718-9613" autocomplete="off" required></label>
-      <label>Останні 4 цифри телефону<input name="phoneLast4" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="4562" required></label>
-      <button class="btn btn-primary" type="submit">Перевірити статус</button>
-    </form>
-    <p id="orderTrackMessage" class="order-track__message" role="status"></p>
-    <section id="orderTrackResult" class="order-track__result" hidden></section>
-  </div>
+<section class="section order-track status-premium">
+<div class="container order-track__container">
+<div class="order-track__intro">
+<p class="eyebrow">VA HOME</p>
+<h1>Статус замовлення</h1>
+<p class="order-track__lead">Введіть номер замовлення та останні 4 цифри телефону, вказаного під час оформлення.</p>
+</div>
+<form class="order-track__form" id="orderTrackForm">
+<label>Номер замовлення<input autocomplete="off" name="orderNumber" placeholder="VA-260718-9613" required="" type="text"/></label>
+<label>Останні 4 цифри телефону<input inputmode="numeric" maxlength="4" name="phoneLast4" pattern="[0-9]{4}" placeholder="4562" required="" type="text"/></label>
+<button class="btn btn-primary" type="submit">Перевірити статус</button>
+</form><div aria-label="Етапи замовлення" class="order-status-timeline"><div class="order-status-step is-active"><i></i><div><strong>Замовлення отримано</strong><span>Ми перевіряємо дані та склад замовлення.</span></div></div><div class="order-status-step"><i></i><div><strong>Підтверджено</strong><span>Менеджер підтвердив замовлення.</span></div></div><div class="order-status-step"><i></i><div><strong>Передано Новій пошті</strong><span>Посилка отримала номер ТТН.</span></div></div><div class="order-status-step"><i></i><div><strong>У дорозі</strong><span>Замовлення прямує до вас.</span></div></div><div class="order-status-step"><i></i><div><strong>Доставлено</strong><span>Аромат уже у вашому просторі.</span></div></div></div>
+<p class="order-track__message" id="orderTrackMessage" role="status"></p>
+<section class="order-track__result" hidden="" id="orderTrackResult"></section>
+</div>
 </section>
 </main>
-<div id="site-footer" data-root=""></div>
-<script src="js/config.js"></script><script src="js/supabase-api.js"></script><script src="js/order-status.js" defer></script><script src="js/main.js" defer></script>
+<div data-root="" id="site-footer"></div>
+<script defer="" src="js/config.js"></script><script defer="" src="js/supabase-api.js"></script><script defer="" src="js/order-status.js"></script><script defer="" src="js/main.js"></script>
+<script defer="" src="js/motion.js"></script>
+<script defer src="js/production-qa.js"></script>
 </body>
 </html>

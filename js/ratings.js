@@ -65,7 +65,7 @@
       applyToProduct(map);
       document.dispatchEvent(new CustomEvent("vahome:ratings-ready", { detail: map }));
     } catch (error) {
-      console.warn("VA HOME ratings unavailable", error);
+      
     }
   }
 

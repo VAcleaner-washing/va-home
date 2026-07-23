@@ -1,0 +1,820 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://vahome.com.ua/about.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/home/about.webp</image:loc>
+      <image:caption>Флакон VA HOME у темному архітектурному просторі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/product-story/pure-imagination/detail.webp</image:loc>
+      <image:caption>Деталі флакона VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/textile-calm.webp</image:loc>
+      <image:caption>Спокійний домашній простір VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/catalog.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/signature-relax.webp</image:loc>
+      <image:caption>Signature Relax — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/forbidden-fruit.webp</image:loc>
+      <image:caption>Forbidden Fruit — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/doux-moment.webp</image:loc>
+      <image:caption>DOUX Moment — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/wild-berry-way.webp</image:loc>
+      <image:caption>Wild Berry Way — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-spring.webp</image:loc>
+      <image:caption>Hotel Spring — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/evening-ritual.webp</image:loc>
+      <image:caption>Evening Ritual — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/velvet-spa.webp</image:loc>
+      <image:caption>Velvet Spa — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/pure-zen.webp</image:loc>
+      <image:caption>Pure Zen — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-luxe.webp</image:loc>
+      <image:caption>Hotel Luxe — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/old-money.webp</image:loc>
+      <image:caption>Old Money — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/linstinct.webp</image:loc>
+      <image:caption>L’INSTINCT — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/mineral-salt.webp</image:loc>
+      <image:caption>Mineral Salt — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/collections.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/collections/noir.webp</image:loc>
+      <image:caption>Чотири колекції. Чотири характери простору. — noir</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/collections/entry.webp</image:loc>
+      <image:caption>Entry Collection VA HOME — світла атмосфера, камінь і ранкове світло</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/collections/signature.webp</image:loc>
+      <image:caption>Signature Collection VA HOME — тепле дерево, текстиль і вечірнє світло</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/collections/premium.webp</image:loc>
+      <image:caption>Premium Collection VA HOME — архітектурний камінь і спрямоване світло</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/collections/noir.webp</image:loc>
+      <image:caption>Noir Collection VA HOME — темний фон, скло й димчасте світло</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/home/hero-discovery.webp</image:loc>
+      <image:caption>Discovery Set VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/home/about.webp</image:loc>
+      <image:caption>Гід ароматів VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/contacts.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/inner-pages/contacts-visual.webp</image:loc>
+      <image:caption>Архітектурний простір у теплому світлі VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/delivery.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/inner-pages/delivery-visual.webp</image:loc>
+      <image:caption>Світлий спокійний інтер’єр VA HOME біля моря</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/discovery-set.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/pages/discovery-ritual.webp</image:loc>
+      <image:caption>Атмосфера домашнього тестування ароматів VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/guides/aromat-dlya-spalni.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/signature-relax.webp</image:loc>
+      <image:caption>Спокійна спальня з чистим текстилем</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/guides/index.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/signature-relax.webp</image:loc>
+      <image:caption>Спокійна спальня з ароматом VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/fresh.webp</image:loc>
+      <image:caption>Свіжа та тепла ароматична атмосфера</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/pure-imagination.webp</image:loc>
+      <image:caption>Ноти ароматичної композиції</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/mineral-salt.webp</image:loc>
+      <image:caption>Ритуал використання аромадифузора</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/guides/noty-aromatu.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/pure-imagination.webp</image:loc>
+      <image:caption>Глибокі ноти в темному дереві та тіні</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/guides/svizhi-chy-tepli-aromaty.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/fresh.webp</image:loc>
+      <image:caption>Свіжа й тепла атмосфера дому</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/guides/yak-korystuvatis-dyfuzorom.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/mineral-salt.webp</image:loc>
+      <image:caption>Аромадифузор VA HOME з паличками</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/home/hero-main.webp</image:loc>
+      <image:caption>VA HOME — темний інтер&#x27;єр з флаконом на травертиновому постаменті</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/home/hero-discovery.webp</image:loc>
+      <image:caption>Discovery Set VA HOME — чорна коробка з пробниками</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/home/hero-noir.webp</image:loc>
+      <image:caption>Noir Collection VA HOME — темний камінь, димчасті тіні</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/collections/entry.webp</image:loc>
+      <image:caption>Entry Collection VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/collections/signature.webp</image:loc>
+      <image:caption>Signature Collection VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/collections/premium.webp</image:loc>
+      <image:caption>Premium Collection VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/collections/noir.webp</image:loc>
+      <image:caption>Noir Collection VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/stone-light.webp</image:loc>
+      <image:caption>Камінь, світло і тиха атмосфера VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/discovery/discovery-set.webp</image:loc>
+      <image:caption>Discovery Set VA HOME — набір пробників</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/fresh-600.webp</image:loc>
+      <image:caption>Свіжі аромати</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/woody-600.webp</image:loc>
+      <image:caption>Деревні аромати</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/warm-600.webp</image:loc>
+      <image:caption>Теплі аромати</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/clean-600.webp</image:loc>
+      <image:caption>Чисті аромати</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/silk-molecule.webp</image:loc>
+      <image:caption>Silk Molecule — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/old-money.webp</image:loc>
+      <image:caption>Old Money — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-luxe.webp</image:loc>
+      <image:caption>Hotel Luxe — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/velvet-spa.webp</image:loc>
+      <image:caption>Velvet Spa — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/signature-relax.webp</image:loc>
+      <image:caption>Signature Relax — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/dark-bloom.webp</image:loc>
+      <image:caption>Dark Bloom — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/home/about.webp</image:loc>
+      <image:caption>Інтер&#x27;єр з теплим вечірнім світлом — VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/dark-bloom.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/dark-bloom.webp</image:loc>
+      <image:caption>VA HOME Dark Bloom — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/dark-bloom.webp</image:loc>
+      <image:caption>VA HOME Dark Bloom — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/dark-bloom.webp</image:loc>
+      <image:caption>VA HOME Dark Bloom — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/dark-bloom.webp</image:loc>
+      <image:caption>VA HOME Dark Bloom — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/dark-bloom.webp</image:loc>
+      <image:caption>Dark Bloom — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/evening-ritual.webp</image:loc>
+      <image:caption>Evening Ritual — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/forbidden-fruit.webp</image:loc>
+      <image:caption>Forbidden Fruit — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/doux-moment.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/doux-moment.webp</image:loc>
+      <image:caption>VA HOME DOUX Moment — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/doux-moment.webp</image:loc>
+      <image:caption>VA HOME DOUX Moment — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/doux-moment.webp</image:loc>
+      <image:caption>VA HOME DOUX Moment — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/doux-moment.webp</image:loc>
+      <image:caption>VA HOME DOUX Moment — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/doux-moment.webp</image:loc>
+      <image:caption>DOUX Moment — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/forbidden-fruit.webp</image:loc>
+      <image:caption>Forbidden Fruit — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/signature-relax.webp</image:loc>
+      <image:caption>Signature Relax — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/evening-ritual.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/evening-ritual.webp</image:loc>
+      <image:caption>VA HOME Evening Ritual — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/evening-ritual.webp</image:loc>
+      <image:caption>VA HOME Evening Ritual — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/evening-ritual.webp</image:loc>
+      <image:caption>VA HOME Evening Ritual — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/evening-ritual.webp</image:loc>
+      <image:caption>VA HOME Evening Ritual — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/evening-ritual.webp</image:loc>
+      <image:caption>Evening Ritual — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/dark-bloom.webp</image:loc>
+      <image:caption>Dark Bloom — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/velvet-spa.webp</image:loc>
+      <image:caption>Velvet Spa — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/forbidden-fruit.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/forbidden-fruit.webp</image:loc>
+      <image:caption>VA HOME Forbidden Fruit — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/forbidden-fruit.webp</image:loc>
+      <image:caption>VA HOME Forbidden Fruit — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/forbidden-fruit.webp</image:loc>
+      <image:caption>VA HOME Forbidden Fruit — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/forbidden-fruit.webp</image:loc>
+      <image:caption>VA HOME Forbidden Fruit — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/forbidden-fruit.webp</image:loc>
+      <image:caption>Forbidden Fruit — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/doux-moment.webp</image:loc>
+      <image:caption>DOUX Moment — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/dark-bloom.webp</image:loc>
+      <image:caption>Dark Bloom — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/hotel-luxe.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-luxe.webp</image:loc>
+      <image:caption>VA HOME Hotel Luxe — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-luxe.webp</image:loc>
+      <image:caption>VA HOME Hotel Luxe — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/hotel-luxe.webp</image:loc>
+      <image:caption>VA HOME Hotel Luxe — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-luxe.webp</image:loc>
+      <image:caption>VA HOME Hotel Luxe — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-luxe.webp</image:loc>
+      <image:caption>Hotel Luxe — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/mineral-salt.webp</image:loc>
+      <image:caption>Mineral Salt — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-spring.webp</image:loc>
+      <image:caption>Hotel Spring — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/hotel-spring.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-spring.webp</image:loc>
+      <image:caption>VA HOME Hotel Spring — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-spring.webp</image:loc>
+      <image:caption>VA HOME Hotel Spring — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/hotel-spring.webp</image:loc>
+      <image:caption>VA HOME Hotel Spring — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-spring.webp</image:loc>
+      <image:caption>VA HOME Hotel Spring — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-spring.webp</image:loc>
+      <image:caption>Hotel Spring — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/signature-relax.webp</image:loc>
+      <image:caption>Signature Relax — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-luxe.webp</image:loc>
+      <image:caption>Hotel Luxe — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/linstinct.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/linstinct.webp</image:loc>
+      <image:caption>VA HOME L’INSTINCT — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/linstinct.webp</image:loc>
+      <image:caption>VA HOME L’INSTINCT — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/linstinct.webp</image:loc>
+      <image:caption>VA HOME L’INSTINCT — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/linstinct.webp</image:loc>
+      <image:caption>VA HOME L’INSTINCT — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/linstinct.webp</image:loc>
+      <image:caption>L’INSTINCT — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/old-money.webp</image:loc>
+      <image:caption>Old Money — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/moss-and-shadow.webp</image:loc>
+      <image:caption>Moss &amp; Shadow — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/mineral-salt.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/mineral-salt.webp</image:loc>
+      <image:caption>VA HOME Mineral Salt — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/mineral-salt.webp</image:loc>
+      <image:caption>VA HOME Mineral Salt — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/mineral-salt.webp</image:loc>
+      <image:caption>VA HOME Mineral Salt — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/mineral-salt.webp</image:loc>
+      <image:caption>VA HOME Mineral Salt — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/mineral-salt.webp</image:loc>
+      <image:caption>Mineral Salt — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/pure-zen.webp</image:loc>
+      <image:caption>Pure Zen — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-luxe.webp</image:loc>
+      <image:caption>Hotel Luxe — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/moss-and-shadow.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/moss-and-shadow.webp</image:loc>
+      <image:caption>VA HOME Moss &amp; Shadow — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/moss-and-shadow.webp</image:loc>
+      <image:caption>VA HOME Moss &amp; Shadow — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/moss-and-shadow.webp</image:loc>
+      <image:caption>VA HOME Moss &amp; Shadow — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/moss-and-shadow.webp</image:loc>
+      <image:caption>VA HOME Moss &amp; Shadow — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/moss-and-shadow.webp</image:loc>
+      <image:caption>Moss &amp; Shadow — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/silent-temple.webp</image:loc>
+      <image:caption>Silent Temple — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/the-archive.webp</image:loc>
+      <image:caption>The Archive — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/old-money.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/old-money.webp</image:loc>
+      <image:caption>VA HOME Old Money — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/old-money.webp</image:loc>
+      <image:caption>VA HOME Old Money — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/old-money.webp</image:loc>
+      <image:caption>VA HOME Old Money — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/old-money.webp</image:loc>
+      <image:caption>VA HOME Old Money — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/old-money.webp</image:loc>
+      <image:caption>Old Money — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/the-archive.webp</image:loc>
+      <image:caption>The Archive — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/linstinct.webp</image:loc>
+      <image:caption>L’INSTINCT — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/pure-imagination.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/pure-imagination.webp</image:loc>
+      <image:caption>VA HOME Pure Imagination — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/pure-imagination.webp</image:loc>
+      <image:caption>VA HOME Pure Imagination — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/pure-imagination.webp</image:loc>
+      <image:caption>VA HOME Pure Imagination — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/pure-imagination.webp</image:loc>
+      <image:caption>VA HOME Pure Imagination — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/pure-imagination.webp</image:loc>
+      <image:caption>Pure Imagination — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/silk-molecule.webp</image:loc>
+      <image:caption>Silk Molecule — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/mineral-salt.webp</image:loc>
+      <image:caption>Mineral Salt — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/pure-zen.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/pure-zen.webp</image:loc>
+      <image:caption>VA HOME Pure Zen — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/pure-zen.webp</image:loc>
+      <image:caption>VA HOME Pure Zen — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/pure-zen.webp</image:loc>
+      <image:caption>VA HOME Pure Zen — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/pure-zen.webp</image:loc>
+      <image:caption>VA HOME Pure Zen — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/pure-zen.webp</image:loc>
+      <image:caption>Pure Zen — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/mineral-salt.webp</image:loc>
+      <image:caption>Mineral Salt — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/velvet-spa.webp</image:loc>
+      <image:caption>Velvet Spa — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/signature-relax.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/signature-relax.webp</image:loc>
+      <image:caption>VA HOME Signature Relax — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/signature-relax.webp</image:loc>
+      <image:caption>VA HOME Signature Relax — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/signature-relax.webp</image:loc>
+      <image:caption>VA HOME Signature Relax — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/signature-relax.webp</image:loc>
+      <image:caption>VA HOME Signature Relax — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/signature-relax.webp</image:loc>
+      <image:caption>Signature Relax — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-spring.webp</image:loc>
+      <image:caption>Hotel Spring — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/pure-zen.webp</image:loc>
+      <image:caption>Pure Zen — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/silent-temple.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/silent-temple.webp</image:loc>
+      <image:caption>VA HOME Silent Temple — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/silent-temple.webp</image:loc>
+      <image:caption>VA HOME Silent Temple — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/silent-temple.webp</image:loc>
+      <image:caption>VA HOME Silent Temple — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/silent-temple.webp</image:loc>
+      <image:caption>VA HOME Silent Temple — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/silent-temple.webp</image:loc>
+      <image:caption>Silent Temple — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/moss-and-shadow.webp</image:loc>
+      <image:caption>Moss &amp; Shadow — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/pure-zen.webp</image:loc>
+      <image:caption>Pure Zen — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/silk-molecule.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/silk-molecule.webp</image:loc>
+      <image:caption>VA HOME Silk Molecule — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/silk-molecule.webp</image:loc>
+      <image:caption>VA HOME Silk Molecule — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/silk-molecule.webp</image:loc>
+      <image:caption>VA HOME Silk Molecule — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/silk-molecule.webp</image:loc>
+      <image:caption>VA HOME Silk Molecule — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/silk-molecule.webp</image:loc>
+      <image:caption>Silk Molecule — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/pure-imagination.webp</image:loc>
+      <image:caption>Pure Imagination — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/evening-ritual.webp</image:loc>
+      <image:caption>Evening Ritual — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/the-archive.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/the-archive.webp</image:loc>
+      <image:caption>VA HOME The Archive — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/the-archive.webp</image:loc>
+      <image:caption>VA HOME The Archive — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/the-archive.webp</image:loc>
+      <image:caption>VA HOME The Archive — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/the-archive.webp</image:loc>
+      <image:caption>VA HOME The Archive — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/the-archive.webp</image:loc>
+      <image:caption>The Archive — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/old-money.webp</image:loc>
+      <image:caption>Old Money — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/moss-and-shadow.webp</image:loc>
+      <image:caption>Moss &amp; Shadow — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/velvet-spa.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/velvet-spa.webp</image:loc>
+      <image:caption>VA HOME Velvet Spa — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/velvet-spa.webp</image:loc>
+      <image:caption>VA HOME Velvet Spa — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/velvet-spa.webp</image:loc>
+      <image:caption>VA HOME Velvet Spa — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/velvet-spa.webp</image:loc>
+      <image:caption>VA HOME Velvet Spa — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/velvet-spa.webp</image:loc>
+      <image:caption>Velvet Spa — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/pure-zen.webp</image:loc>
+      <image:caption>Pure Zen — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/evening-ritual.webp</image:loc>
+      <image:caption>Evening Ritual — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/products/wild-berry-way.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/wild-berry-way.webp</image:loc>
+      <image:caption>VA HOME Wild Berry Way — головне фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/wild-berry-way.webp</image:loc>
+      <image:caption>VA HOME Wild Berry Way — макро фото</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/atmosphere/wild-berry-way.webp</image:loc>
+      <image:caption>VA HOME Wild Berry Way — в інтер’єрі</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/wild-berry-way.webp</image:loc>
+      <image:caption>VA HOME Wild Berry Way — деталі флакона</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/wild-berry-way.webp</image:loc>
+      <image:caption>Wild Berry Way — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/hotel-spring.webp</image:loc>
+      <image:caption>Hotel Spring — аромадифузор VA HOME</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/products/forbidden-fruit.webp</image:loc>
+      <image:caption>Forbidden Fruit — аромадифузор VA HOME</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/scent-guide.html</loc>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/home/hero-main.webp</image:loc>
+      <image:caption>Аромат, що відповідає вашому простору. — hero main</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vahome.com.ua/images/discovery/discovery-set.webp</image:loc>
+      <image:caption>Discovery Set VA HOME</image:caption>
+    </image:image>
+  </url>
+</urlset>

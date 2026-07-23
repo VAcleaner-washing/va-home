@@ -7,7 +7,7 @@
   })[char]);
   const money = (value) => `${Number(value || 0).toLocaleString("uk-UA")} грн`;
   const labels = {
-    new: "Нове", pending: "Очікує підтвердження", paid: "Оплачено",
+    new: "Нове", awaiting_payment: "Очікує оплату", pending: "Очікує підтвердження", paid: "Оплачено",
     shipped: "Відправлено", completed: "Виконано", cancelled: "Скасовано"
   };
   const REQUEST_TIMEOUT_MS = 12000;
@@ -77,13 +77,48 @@
       { key: "shipped", label: "Відправлено" },
       { key: "completed", label: "Виконано" },
     ];
-    const order = ["new", "pending", "paid", "shipped", "completed"];
+    const order = ["new", "awaiting_payment", "pending", "paid", "shipped", "completed"];
     const currentIndex = order.indexOf(status);
     const stepIndex = (key) => (key === "new" ? 0 : order.indexOf(key));
     return `<div class="account-order__progress">${steps.map((step) => {
       const done = currentIndex >= stepIndex(step.key);
       return `<div class="account-order__progress-step${done ? " is-done" : ""}"><span class="account-order__progress-dot"></span><span>${step.label}</span></div>`;
     }).join("")}</div>`;
+  }
+
+  function orderPreviewHtml(items) {
+    const safeItems = (Array.isArray(items) ? items : []).slice(0, 4);
+    if (!safeItems.length) return "";
+    const thumbs = safeItems.map((item) => {
+      const hasProductPage = item.id && !String(item.id).startsWith("discovery-");
+      const src = hasProductPage ? `images/products/${esc(item.id)}.webp` : "images/discovery/discovery-set.webp";
+      return `<span class="account-order__preview-thumb"><img src="${src}" alt="" loading="lazy" onerror="this.parentElement.remove()"></span>`;
+    }).join("");
+    const extra = Math.max(0, (Array.isArray(items) ? items.length : 0) - safeItems.length);
+    return `<div class="account-order__preview" aria-label="Товари в замовленні">${thumbs}${extra ? `<span class="account-order__preview-more">+${extra}</span>` : ""}</div>`;
+  }
+
+  function renderSignatureScent(orders) {
+    const block = $("#signatureScent");
+    if (!block) return;
+    const counts = new Map();
+    (orders || []).filter((order) => order.status !== "cancelled").forEach((order) => {
+      (Array.isArray(order.items) ? order.items : []).forEach((item) => {
+        if (!item.id || String(item.id).startsWith("discovery-")) return;
+        const quantity = Math.max(1, Number(item.quantity) || 1);
+        const current = counts.get(item.id) || { count: 0, name: item.name || item.id };
+        current.count += quantity;
+        counts.set(item.id, current);
+      });
+    });
+    const winner = [...counts.entries()].sort((a, b) => b[1].count - a[1].count)[0];
+    if (!winner || winner[1].count < 2) { block.hidden = true; return; }
+    const [id, info] = winner;
+    $("#signatureScentName").textContent = info.name;
+    $("#signatureScentImage").src = `images/products/${id}.webp`;
+    $("#signatureScentImage").alt = `${info.name} — ваш signature scent`;
+    $("#signatureScentLink").href = `products/${id}.html`;
+    block.hidden = false;
   }
 
   function orderItems(items) {
@@ -125,15 +160,26 @@
     }
     const rows = data || [];
     $("#accountOrdersEmpty").hidden = rows.length > 0;
+    renderSignatureScent(rows);
     list.innerHTML = rows.map((order) => `<article class="account-order">
-      <div class="account-order__top"><div><h2>${esc(order.client_order_id)}</h2><small>${new Date(order.created_at).toLocaleDateString("uk-UA")}</small></div>
+      <div class="account-order__top"><div><h2>${esc(order.client_order_id)}</h2><small>${new Date(order.created_at).toLocaleDateString("uk-UA")}</small>${orderPreviewHtml(order.items)}</div>
       <div class="account-order__summary"><span class="order-status order-status--${esc(order.status)}">${esc(labels[order.status] || order.status)}</span><strong>${money(order.total_amount)}</strong></div></div>
+      <button class="account-order__toggle" type="button" aria-expanded="false">Деталі замовлення</button>
+      <div class="account-order__details" hidden>
       ${orderProgressHtml(order.status)}
       <p class="account-order__payment"><strong>Оплата:</strong> ${order.payment_method === "cash_on_delivery" ? "при отриманні" : "на рахунок"}</p>
       <div class="account-order__items">${orderItems(order.items)}</div>
-      ${order.tracking_number ? `<p class="account-order__tracking">ТТН: <strong>${esc(order.tracking_number)}</strong></p>` : ""}
+      ${order.tracking_number ? `<p class="account-order__tracking">ТТН: <strong>${esc(order.tracking_number)}</strong> <a class="account-order__track-link" href="https://novaposhta.ua/tracking/?cargo_number=${encodeURIComponent(order.tracking_number)}" target="_blank" rel="noopener">Відстежити</a></p>` : ""}
       <div class="account-order__actions"><button class="btn btn-secondary btn-small" data-repeat='${esc(JSON.stringify(order.items || []))}'>Повторити замовлення</button></div>
+      </div>
     </article>`).join("");
+    document.querySelectorAll(".account-order__toggle").forEach((button) => button.addEventListener("click", () => {
+      const details = button.nextElementSibling;
+      const open = button.getAttribute("aria-expanded") === "true";
+      button.setAttribute("aria-expanded", String(!open));
+      button.textContent = open ? "Деталі замовлення" : "Згорнути деталі";
+      if (details) details.hidden = open;
+    }));
     document.querySelectorAll("[data-repeat]").forEach((button) => button.addEventListener("click", () => {
       try {
         JSON.parse(button.dataset.repeat).forEach((item) => window.Cart?.add(item.id, Number(item.quantity) || 1, { selections: Array.isArray(item.selection_ids) ? item.selection_ids : [] }));
@@ -163,7 +209,7 @@
     $("#accountWishlistEmpty").hidden = rows.length > 0;
     list.innerHTML = rows.map((row) => {
       const item = product(row.product_slug);
-      return `<article class="wishlist-card"><a href="products/${esc(item.id)}.html"><img src="${esc(item.images.main)}" alt="${esc(item.name)} — аромадифузор VA HOME" width="480" height="600" loading="lazy" decoding="async"></a><div class="wishlist-card__body"><h2>${esc(item.name)}</h2><p>${money(price(item))}</p><div class="wishlist-card__actions"><button class="btn btn-primary btn-small" data-wish-cart="${esc(item.id)}">У кошик</button><button class="wishlist-remove" data-wish-remove="${esc(item.id)}" aria-label="Видалити ${esc(item.name)} зі списку бажань">Видалити</button></div></div></article>`;
+      return `<article class="wishlist-card"><a class="wishlist-card__media" href="products/${esc(item.id)}.html"><img src="${esc(item.images.main)}" alt="${esc(item.name)} — аромадифузор VA HOME" width="320" height="400" loading="lazy" decoding="async"></a><div class="wishlist-card__body"><h2>${esc(item.name)}</h2><p>${money(price(item))}</p><div class="wishlist-card__actions"><button class="btn btn-primary btn-small" data-wish-cart="${esc(item.id)}">У кошик</button><button class="wishlist-remove" data-wish-remove="${esc(item.id)}" aria-label="Видалити ${esc(item.name)} зі списку бажань">Видалити</button></div></div></article>`;
     }).join("");
     document.querySelectorAll("[data-wish-cart]").forEach((button) => button.addEventListener("click", () => {
       window.Cart?.add(button.dataset.wishCart, 1);
@@ -180,22 +226,52 @@
     }));
   }
 
-  function bind() {
-    $("#wishlistProduct").innerHTML = PRODUCTS.map((item) => `<option value="${esc(item.id)}">${esc(item.name)}</option>`).join("");
-    $("#wishlistAddForm").addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const button = event.currentTarget.querySelector("button");
-      setBusy(button, true, "Додаємо…");
-      $("#wishlistMessage").textContent = "";
-      const { error } = await sb.from("wishlists").upsert({ user_id: user.id, product_slug: $("#wishlistProduct").value }, { onConflict: "user_id,product_slug" });
-      setBusy(button, false, "");
-      $("#wishlistMessage").textContent = error ? "Не вдалося додати аромат." : "Аромат збережено у списку бажань.";
-      if (!error) {
-        document.dispatchEvent(new CustomEvent("vahome:wishlist-changed", { detail: { productSlug: $("#wishlistProduct").value, saved: true } }));
-        await loadWishlist();
-      }
-    });
+  function getOAuthRedirectUrl() {
+    const url = new URL(`${SITE_CONFIG.siteUrl}/account.html`);
+    const requested = new URLSearchParams(location.search).get("returnTo");
+    if (requested && requested.startsWith("/") && !requested.startsWith("//")) {
+      try { sessionStorage.setItem("vahome_auth_return_to", requested); } catch (_) {}
+    }
+    return url.toString();
+  }
 
+  function consumeOAuthError() {
+    const params = new URLSearchParams(location.search);
+    const hash = new URLSearchParams((location.hash || "").replace(/^#/, ""));
+    const description = params.get("error_description") || hash.get("error_description");
+    const code = params.get("error") || hash.get("error");
+    if (!description && !code) return false;
+    message("Не вдалося увійти через Google. Спробуйте ще раз або скористайтеся email.");
+    try { history.replaceState({}, document.title, location.pathname); } catch (_) {}
+    return true;
+  }
+
+  async function signInWithGoogle() {
+    const button = $("#accountGoogle");
+    if (!button || button.disabled) return;
+    setBusy(button, true, "Переходимо до Google…");
+    message("");
+    let result;
+    try {
+      result = await withTimeout(sb.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: getOAuthRedirectUrl(),
+          queryParams: { prompt: "select_account" }
+        }
+      }), "GOOGLE_AUTH_TIMEOUT");
+    } catch (_) {
+      setBusy(button, false, "");
+      return message("Не вдалося відкрити вхід Google. Перевірте інтернет і спробуйте ще раз.");
+    }
+    if (result?.error) {
+      setBusy(button, false, "");
+      message("Вхід через Google поки недоступний. Спробуйте email або перевірте налаштування OAuth.");
+    }
+  }
+
+  function bind() {
+    $("#accountGoogle")?.addEventListener("click", signInWithGoogle);
     $("#accountForm").addEventListener("submit", async (event) => {
       event.preventDefault();
       const button = $("#accountSubmit");
@@ -244,7 +320,7 @@
       const form = event.currentTarget;
       const pass = form.newPassword.value;
       const confirm = form.newPasswordConfirm.value;
-      if (pass.length < 6) { output.textContent = "Пароль має бути щонайменше 6 символів."; return; }
+      if (pass.length < 8) { output.textContent = "Пароль має бути щонайменше 8 символів."; return; }
       if (pass !== confirm) { output.textContent = "Паролі не збігаються."; return; }
       output.textContent = "Зберігаємо…";
       let error;
@@ -271,10 +347,17 @@
 
     document.querySelectorAll("[data-auth-mode]").forEach((button) => button.addEventListener("click", () => {
       mode = button.dataset.authMode;
-      document.querySelectorAll("[data-auth-mode]").forEach((item) => item.classList.toggle("is-active", item === button));
-      $("#accountSubmit").dataset.label = mode === "login" ? "Увійти" : "Створити кабінет";
-      $("#accountSubmit").textContent = $("#accountSubmit").dataset.label;
+      const submit = $("#accountSubmit");
+      const toggle = $("#accountModeToggle");
+      const prompt = $("#accountModePrompt");
+      submit.dataset.label = mode === "login" ? "Увійти" : "Створити акаунт";
+      submit.textContent = submit.dataset.label;
       $("#accountForm").elements.password.autocomplete = mode === "login" ? "current-password" : "new-password";
+      if (toggle && prompt) {
+        toggle.dataset.authMode = mode === "login" ? "signup" : "login";
+        toggle.textContent = mode === "login" ? "Створити акаунт" : "Увійти";
+        prompt.textContent = mode === "login" ? "Немає акаунта?" : "Вже маєте акаунт?";
+      }
       $("#accountResetPassword").hidden = mode !== "login";
       message("");
     }));
@@ -285,6 +368,14 @@
       setBusy($("#accountLogout"), false, "");
       showAuth();
     });
+    document.querySelectorAll(".password-toggle").forEach((button) => button.addEventListener("click", () => {
+      const input = button.parentElement?.querySelector("input");
+      if (!input) return;
+      const show = input.type === "password";
+      input.type = show ? "text" : "password";
+      button.textContent = show ? "Сховати" : "Показати";
+      button.setAttribute("aria-label", show ? "Сховати пароль" : "Показати пароль");
+    }));
     document.querySelectorAll("[data-account-tab]").forEach((button) => button.addEventListener("click", () => {
       document.querySelectorAll("[data-account-tab]").forEach((item) => item.classList.toggle("is-active", item === button));
       $("#accountOrders").hidden = button.dataset.accountTab !== "orders";
@@ -307,6 +398,7 @@
       { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }
     );
     bind();
+    consumeOAuthError();
     sb.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") {
         finishLoading();
@@ -315,7 +407,15 @@
         $("#accountRecoveryForm").hidden = false;
         $("#accountDashboard").hidden = true;
       } else if (event === "SIGNED_OUT") { user = null; showAuth(); }
-      else if (event === "SIGNED_IN" && session?.user && user?.id !== session.user.id) setTimeout(() => showDashboard(session.user), 0);
+      else if (event === "SIGNED_IN" && session?.user && user?.id !== session.user.id) setTimeout(async () => {
+        await showDashboard(session.user);
+        let returnTo = "";
+        try {
+          returnTo = sessionStorage.getItem("vahome_auth_return_to") || "";
+          sessionStorage.removeItem("vahome_auth_return_to");
+        } catch (_) {}
+        if (returnTo && returnTo !== "/account.html") location.replace(returnTo);
+      }, 0);
     });
     let data, error;
     try { ({ data, error } = await withTimeout(sb.auth.getSession(), "SESSION_TIMEOUT")); }

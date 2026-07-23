@@ -1,71 +1,56 @@
 <!DOCTYPE html>
+
 <html lang="uk">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://yweluzclearwrazdkahu.supabase.co; font-src 'self'; connect-src 'self' https://yweluzclearwrazdkahu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<link as="font" crossorigin href="fonts/cormorant-garamond-cyrillic-500-normal.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin href="fonts/manrope-cyrillic-400-normal.woff2" rel="preload" type="font/woff2"/>
+<meta content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://yweluzclearwrazdkahu.supabase.co; font-src 'self'; connect-src 'self' https://yweluzclearwrazdkahu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';" http-equiv="Content-Security-Policy"/>
 <title>Замовлення прийнято — VA HOME</title>
-<meta name="robots" content="noindex,nofollow">
-<link rel="canonical" href="https://vahome.com.ua/thank-you.html">
-<link rel="icon" href="favicon/favicon.ico" sizes="any">
-<link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="favicon/apple-touch-icon.png">
-<link rel="stylesheet" href="css/variables.css">
-<link rel="stylesheet" href="css/fonts.css">
-<link rel="stylesheet" href="css/reset.css">
-<link rel="stylesheet" href="css/global.css">
-<link rel="stylesheet" href="css/components.css">
-<link rel="stylesheet" href="css/thank-you.css">
-<link rel="stylesheet" href="css/responsive.css">
+<meta content="noindex, nofollow, noarchive" name="robots"/>
+
+<link href="favicon/favicon.ico" rel="icon" sizes="any"/>
+<link href="favicon/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="favicon/apple-touch-icon.png" rel="apple-touch-icon"/>
+<link href="css/variables.css" rel="stylesheet"/><link href="css/fonts.css" rel="stylesheet"/><link href="css/reset.css" rel="stylesheet"/><link href="css/global.css" rel="stylesheet"/><link href="css/components.css" rel="stylesheet"/><link href="css/responsive.css" rel="stylesheet"/><link href="css/motion.css" rel="stylesheet"/>
+<link href="css/thank-you.css" rel="stylesheet"/>
+<meta content="Підтвердження оформлення замовлення VA HOME." name="description"/><meta content="11.8.66 Checkout Account Desktop" name="va-home-release"/><link href="css/final-polish.css" rel="stylesheet"/><link href="css/v11-3-final-polish.css" rel="stylesheet"/><meta content="#15130f" name="theme-color"/><meta content="telephone=no" name="format-detection"/><link href="css/v11-4-mobile-product-polish.css" rel="stylesheet"/><link href="css/v11-5-mobile-perfection.css" rel="stylesheet"/>
+<link href="css/v11-6-luxury-product-polish.css" rel="stylesheet"/>
+<link href="css/v11-8-24-hero-dna.css" rel="stylesheet"/><link href="css/v11-8-66-checkout-account-desktop.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/v12-0-rc1.css">
+  <link rel="stylesheet" href="css/v12-0-rc2.css">
 </head>
 <body>
-<div id="site-header" data-root="" data-active=""></div>
+<div data-active="" data-root="" id="site-header"></div>
 <main id="main-content">
-  <section class="section order-success">
-    <div class="container order-success__container">
-      <p class="eyebrow">VA HOME</p>
-      <h1>Дякуємо за замовлення</h1>
-      <p class="order-success__lead" id="orderSuccessLead">Ми отримали ваше замовлення. Збережіть його номер.</p>
-
-      <div class="order-success__number">
-        <span>Номер замовлення</span>
-        <strong id="orderNumber">—</strong>
-      </div>
-
-      <div class="order-success__grid">
-        <section class="order-panel">
-          <h2>Ваше замовлення</h2>
-          <div id="orderItems" class="order-lines"></div>
-          <div class="order-total"><span>До оплати</span><strong id="orderTotal">—</strong></div>
-        </section>
-
-        <section class="order-panel payment-panel" id="paymentPanel">
-          <h2>Реквізити для оплати</h2>
-          <dl class="payment-details">
-            <div><dt>Отримувач</dt><dd id="paymentRecipient"></dd></div>
-            <div><dt>IBAN</dt><dd id="paymentIban"></dd></div>
-            <div><dt>Призначення</dt><dd id="paymentPurpose"></dd></div>
-          </dl>
-          <button class="btn btn-primary btn-block" type="button" id="copyPaymentBtn">Скопіювати реквізити</button>
-          <p class="copy-status" id="copyStatus" role="status" aria-live="polite"></p>
-        </section>
-        <section class="order-panel payment-panel" id="codPanel" hidden>
-          <h2>Оплата при отриманні</h2>
-          <p class="text-muted">Ви сплатите замовлення у відділенні або поштоматі Нової пошти під час отримання.</p>
-        </section>
-      </div>
-
-      <div class="order-success__note">
-        <p id="paymentNote">Після надходження оплати ми підтвердимо замовлення. Відправка Новою поштою — протягом 1–2 робочих днів.</p>
-        <p>Питання щодо замовлення: <a href="tel:+380953919569">+38 (095) 391-9569</a> або <a href="mailto:vahome.aroma@gmail.com">vahome.aroma@gmail.com</a>.</p>
-      </div>
-      <a href="catalog.html" class="btn btn-secondary">Повернутися до каталогу</a>
-    </div>
-  </section>
+<section class="order-success thank-premium">
+<div class="order-success__hero">
+<div class="container order-success__hero-inner">
+<div class="order-success__check" aria-hidden="true">✓</div>
+<p class="eyebrow">Замовлення прийнято</p>
+<h1>Дякуємо. Атмосфера вже в дорозі.</h1>
+<p class="order-success__lead" id="orderSuccessLead">Ми отримали ваше замовлення та вже передали підтвердження на email.</p>
+<div class="order-success__number"><span>Номер замовлення</span><strong id="orderNumber">—</strong><button id="copyOrderNumberBtn" type="button">Скопіювати номер</button><small id="copyOrderStatus" aria-live="polite"></small></div>
+</div>
+</div>
+<div class="container order-success__container">
+<div class="post-purchase-steps" aria-label="Що буде далі"><div class="is-current"><span>01</span><strong>Замовлення отримано</strong><p>Усі деталі збережено.</p></div><div><span>02</span><strong>Email відправлено</strong><p>Перевірте вхідні та папку «Спам».</p></div><div><span>03</span><strong>Комплектація</strong><p>Менеджер перевірить і підготує замовлення.</p></div><div><span>04</span><strong>Нова пошта</strong><p>Відправка протягом 1–2 робочих днів.</p></div></div>
+<div class="order-success__grid">
+<section class="order-panel"><p class="eyebrow">Ваш вибір</p><h2>Замовлення</h2><div class="order-lines" id="orderItems"></div><div class="order-total"><span>До оплати</span><strong id="orderTotal">—</strong></div></section>
+<section class="order-panel payment-panel" id="paymentPanel"><p class="eyebrow">Оплата</p><h2>Реквізити</h2><dl class="payment-details"><div><dt>Отримувач</dt><dd id="paymentRecipient"></dd></div><div><dt>IBAN</dt><dd id="paymentIban"></dd></div><div><dt>Призначення</dt><dd id="paymentPurpose"></dd></div></dl><button class="btn btn-primary btn-block" id="copyPaymentBtn" type="button">Скопіювати реквізити</button><p aria-live="polite" class="copy-status" id="copyStatus" role="status"></p></section>
+<section class="order-panel payment-panel" hidden id="codPanel"><p class="eyebrow">Оплата</p><h2>При отриманні</h2><p class="text-muted">Ви сплатите замовлення у відділенні або поштоматі Нової пошти під час отримання.</p></section>
+</div>
+<div class="order-success__note"><p id="paymentNote">Після надходження оплати ми підтвердимо замовлення. Відправка Новою поштою — протягом 1–2 робочих днів.</p><p>Питання щодо замовлення: <a href="tel:+380953919569">+38 (095) 391-9569</a> або <a href="mailto:vahome.aroma@gmail.com">vahome.aroma@gmail.com</a>.</p></div>
+<div class="thank-actions"><a class="btn btn-primary" href="account.html">Перейти в кабінет</a><a class="btn btn-secondary" href="catalog.html">Продовжити покупки</a></div>
+</div>
+</section>
 </main>
-<div id="site-footer" data-root=""></div>
-<script src="js/config.js"></script>
-<script src="js/thank-you.js" defer></script>
-<script src="js/main.js" defer></script>
+<div data-root="" id="site-footer"></div>
+<script defer="" src="js/config.js"></script>
+<script defer="" src="js/thank-you.js"></script>
+<script defer="" src="js/main.js"></script>
+<script defer="" src="js/motion.js"></script>
+<script defer src="js/production-qa.js"></script>
 </body>
 </html>

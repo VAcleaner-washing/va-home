@@ -1,7 +1,7 @@
 (function(){"use strict";
 const cfg=window.SITE_CONFIG.supabase;
 const sb=window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-const statusLabels={new:"Нове",awaiting_payment:"Очікує оплату",paid:"Оплачено",shipped:"Відправлено",completed:"Виконано",cancelled:"Скасовано"};
+const statusLabels={new:"Нове",pending:"Очікує підтвердження",awaiting_payment:"Очікує оплату",paid:"Оплачено",shipped:"Відправлено",completed:"Виконано",cancelled:"Скасовано"};
 let orders=[],reviews=[],activeOrder=null;
 const $=s=>document.querySelector(s);const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));const money=v=>`${Number(v||0).toLocaleString("uk-UA",{maximumFractionDigits:2})} грн`;const date=v=>new Intl.DateTimeFormat("uk-UA",{dateStyle:"medium",timeStyle:"short"}).format(new Date(v));
 function toast(text){const el=document.createElement("div");el.className="admin-toast";el.textContent=text;document.body.appendChild(el);setTimeout(()=>el.remove(),2800)}

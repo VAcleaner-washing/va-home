@@ -18,7 +18,7 @@ function cors(req: Request) {
 function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...cors(req), "Content-Type": "application/json", "Cache-Control": "public, max-age=120" },
+    headers: { ...cors(req), "Content-Type": "application/json", "Cache-Control": "no-store" },
   });
 }
 

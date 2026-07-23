@@ -14,8 +14,8 @@
   // Non-catalog items sellable from the cart (Discovery Set variants).
   // Keep this list in sync with the buttons on discovery-set.html.
   const SPECIAL_ITEMS = {
-    "discovery-6": { name: "Discovery Set — 6 ароматів", price: 150, volume: "6 пробників", image: "images/discovery/discovery-set.webp" },
-    "discovery-17": { name: "Discovery Set — 18 ароматів", price: 450, volume: "18 пробників", image: "images/discovery/discovery-set.webp" }
+    "discovery-6": { name: "Discovery Set — 6 ароматів", price: 150, volume: "6 тестерів", image: "images/discovery/discovery-set.webp" },
+    "discovery-17": { name: "Discovery Set — 18 ароматів", price: 450, volume: "18 тестерів", image: "images/discovery/discovery-set.webp" }
   };
 
   function readRaw() {
@@ -156,6 +156,41 @@
     return `${n}\u00A0грн`;
   }
 
+  function itemWord(count) {
+    const mod10 = count % 10;
+    const mod100 = count % 100;
+    if (mod10 === 1 && mod100 !== 11) return "товар";
+    if ([2, 3, 4].includes(mod10) && ![12, 13, 14].includes(mod100)) return "товари";
+    return "товарів";
+  }
+
+  function updatePremiumCheckoutUI(items, total) {
+    const count = items.reduce((sum, item) => sum + item.quantity, 0);
+    const countLabel = document.getElementById("cartItemCountLabel");
+    if (countLabel) countLabel.textContent = `${count} ${itemWord(count)}`;
+
+    [document.getElementById("checkoutButtonTotal"), document.getElementById("checkoutMobileTotal")].forEach((el) => {
+      if (el) el.textContent = formatUAH(total);
+    });
+
+    const threshold = 2000;
+    const remaining = Math.max(0, threshold - total);
+    const progress = Math.min(100, (total / threshold) * 100);
+    const progressWrap = document.getElementById("shippingProgress");
+    const progressBar = document.getElementById("shippingProgressBar");
+    const progressText = document.getElementById("shippingProgressText");
+    const progressValue = document.getElementById("shippingProgressValue");
+    if (progressBar) progressBar.style.width = `${progress}%`;
+    if (progressWrap) progressWrap.classList.toggle("is-complete", remaining === 0);
+    if (progressText) progressText.textContent = remaining === 0 ? "Безкоштовна доставка активована" : "До безкоштовної доставки залишилося";
+    if (progressValue) progressValue.textContent = remaining === 0 ? "Готово" : formatUAH(remaining);
+    const deliveryLabel = document.getElementById("cartDeliveryLabel");
+    if (deliveryLabel) deliveryLabel.textContent = remaining === 0 ? "Безкоштовно" : "За тарифами НП";
+
+    const mobileBar = document.getElementById("checkoutMobileBar");
+    if (mobileBar) mobileBar.hidden = !items.length;
+  }
+
   function renderCartPage() {
     const itemsList = document.getElementById("cartItemsList");
     if (!itemsList) return; // not on cart.html
@@ -167,11 +202,17 @@
     if (!items.length) {
       if (emptyState) emptyState.hidden = false;
       if (filledState) filledState.hidden = true;
+      const progress = document.querySelector(".checkout-progress");
+      if (progress) progress.hidden = true;
+      const mobileBar = document.getElementById("checkoutMobileBar");
+      if (mobileBar) mobileBar.hidden = true;
       return;
     }
 
     if (emptyState) emptyState.hidden = true;
     if (filledState) filledState.hidden = false;
+    const progress = document.querySelector(".checkout-progress");
+    if (progress) progress.hidden = false;
 
     const upsell = document.getElementById("cartDiscoveryUpsell");
     if (upsell) {
@@ -210,6 +251,7 @@
     const total = getTotal();
     if (subtotalEl) subtotalEl.textContent = formatUAH(total);
     if (totalEl) totalEl.textContent = formatUAH(total);
+    updatePremiumCheckoutUI(items, total);
 
     refreshCountBadge();
   }
@@ -333,7 +375,7 @@
             warehouse.focus();
           });
         } catch (error) {
-          console.warn("Nova Poshta city lookup unavailable", error);
+          
           manualMode();
         } finally {
           city.closest(".np-combobox")?.classList.remove("is-loading");
@@ -365,7 +407,7 @@
             closeList(warehouse, warehouseList);
           });
         } catch (error) {
-          console.warn("Nova Poshta warehouse lookup unavailable", error);
+          
           manualMode();
         } finally {
           warehouse.closest(".np-combobox")?.classList.remove("is-loading");
@@ -425,15 +467,23 @@
       consent.setAttribute("aria-invalid", "false");
       if (consentError) consentError.style.display = "none";
     }
+    if (!valid) {
+      const firstInvalid = form.querySelector('[aria-invalid="true"]');
+      if (firstInvalid) {
+        firstInvalid.focus({ preventScroll: true });
+        firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
     return valid;
   }
 
   function buildOrderPayload(form) {
     const items = getItems();
-    let checkoutRequestId = sessionStorage.getItem("vahome_checkout_request_id");
+    let checkoutRequestId = "";
+    try { checkoutRequestId = sessionStorage.getItem("vahome_checkout_request_id") || ""; } catch (_) {}
     if (!checkoutRequestId) {
-      checkoutRequestId = crypto.randomUUID();
-      sessionStorage.setItem("vahome_checkout_request_id", checkoutRequestId);
+      checkoutRequestId = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      try { sessionStorage.setItem("vahome_checkout_request_id", checkoutRequestId); } catch (_) {}
     }
     return {
       checkout_request_id: checkoutRequestId,
@@ -455,7 +505,10 @@
   function setCheckoutState(button, status, message, isError) {
     if (button) {
       button.disabled = status === "loading";
-      button.textContent = status === "loading" ? "Оформлюємо…" : "Оформити замовлення";
+      button.classList.toggle("is-loading", status === "loading");
+      const label = button.querySelector("span");
+      if (label) label.textContent = status === "loading" ? "Оформлюємо…" : "Оформити замовлення";
+      else button.textContent = status === "loading" ? "Оформлюємо…" : "Оформити замовлення";
     }
     const statusEl = document.getElementById("checkoutStatus");
     if (statusEl) {
@@ -479,14 +532,18 @@
       CHECKOUT_AUTH_ERROR: "Сервіс замовлень потребує повторного налаштування доступу. Кошик збережено.",
       CHECKOUT_FUNCTION_MISSING: "Сервіс оформлення ще не опублікований. Кошик збережено.",
       CHECKOUT_TIMEOUT: "Сервіс відповідає надто довго. Кошик збережено — повторіть спробу.",
-      NETWORK_ERROR: "Не вдалося з’єднатися із сервісом замовлень. Перевірте інтернет і повторіть спробу."
+      NETWORK_ERROR: "Не вдалося з’єднатися із сервісом замовлень. Перевірте інтернет і повторіть спробу.",
+      RATE_LIMITED: "Забагато спроб оформлення за короткий час. Зачекайте 10 хвилин і повторіть."
     };
     const message = messages[code] || "Замовлення не збережено. Кошик залишився без змін — повторіть спробу.";
     const requestId = error && error.requestId ? ` Код звернення: ${error.requestId}.` : "";
     return `${message}${requestId}`;
   }
 
+  let checkoutSubmitting = false;
+
   async function placeOrder(form, button) {
+    if (checkoutSubmitting) return;
     const currentItems = getItems();
     if (!currentItems.length) {
       if (window.VAHome) window.VAHome.showToast("Кошик порожній");
@@ -508,6 +565,9 @@
     }
 
     const payload = buildOrderPayload(form);
+    checkoutSubmitting = true;
+    const mobileAction = document.getElementById("checkoutMobileAction");
+    if (mobileAction) mobileAction.disabled = true;
     setCheckoutState(button, "loading", "Зберігаємо ваше замовлення…", false);
 
     try {
@@ -526,12 +586,16 @@
       };
       sessionStorage.setItem("vahome_last_order", JSON.stringify(confirmation));
       sessionStorage.removeItem("vahome_checkout_request_id");
+      sessionStorage.removeItem("vahome_checkout_draft_v65");
 
       clear();
       window.location.href = "thank-you.html";
     } catch (error) {
-      console.error("Order creation failed", error);
+      
       setCheckoutState(button, "idle", orderErrorMessage(error), true);
+    } finally {
+      checkoutSubmitting = false;
+      if (mobileAction) mobileAction.disabled = false;
     }
   }
 
@@ -547,12 +611,78 @@
     }
   }
 
+  function initPaymentCards(form) {
+    const select = form.elements.paymentMethod;
+    const cards = Array.from(form.querySelectorAll('.payment-option'));
+    if (!select || !cards.length) return;
+    const sync = (value) => {
+      select.value = value;
+      const hint = document.getElementById('paymentMethodHint');
+      if (hint) hint.textContent = value === 'cash_on_delivery'
+        ? 'Нова пошта додатково стягує комісію за переказ коштів за чинними тарифами.'
+        : 'Реквізити для оплати надійдуть після підтвердження замовлення менеджером.';
+      cards.forEach((card) => {
+        const radio = card.querySelector('input[type="radio"]');
+        const selected = radio && radio.value === value;
+        if (radio) radio.checked = selected;
+        card.classList.toggle('is-selected', selected);
+      });
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+    cards.forEach((card) => card.addEventListener('click', () => {
+      const radio = card.querySelector('input[type="radio"]');
+      if (radio) sync(radio.value);
+    }));
+    sync(select.value || 'bank_transfer');
+  }
+
+  function initCheckoutDraft(form) {
+    const key = 'vahome_checkout_draft_v65';
+    const names = ['customerName','customerPhone','customerEmail','customerCity','deliveryDetails','paymentMethod','customerComment'];
+    let draft = {};
+    try { draft = JSON.parse(sessionStorage.getItem(key) || '{}'); } catch (_) { draft = {}; }
+    names.forEach((name) => {
+      const field = form.elements[name];
+      if (field && draft[name] && (name === 'paymentMethod' || !field.value)) field.value = draft[name];
+    });
+    const save = () => {
+      const next = {};
+      names.forEach((name) => { const field = form.elements[name]; if (field) next[name] = field.value; });
+      sessionStorage.setItem(key, JSON.stringify(next));
+    };
+    form.addEventListener('input', save);
+    form.addEventListener('change', save);
+  }
+
+  function initMobileCheckoutAction() {
+    const action = document.getElementById('checkoutMobileAction');
+    const form = document.getElementById('checkoutForm');
+    if (!action || !form) return;
+    let checkoutReady = false;
+    action.addEventListener('click', () => {
+      if (checkoutReady) {
+        form.requestSubmit();
+        return;
+      }
+      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.setTimeout(() => form.elements.customerName?.focus({ preventScroll: true }), 550);
+    });
+    const observer = new IntersectionObserver(([entry]) => {
+      checkoutReady = entry.isIntersecting && entry.intersectionRatio >= 0.6;
+      action.textContent = checkoutReady ? 'Оформити замовлення' : 'До оформлення';
+    }, { threshold: [0, .6] });
+    observer.observe(form);
+  }
+
   function initCheckoutForm() {
     const form = document.getElementById("checkoutForm");
     if (!form) return;
     const button = document.getElementById("placeOrderBtn");
     initNovaPoshtaCheckout(form);
     prefillCheckoutFromSaved(form);
+    initCheckoutDraft(form);
+    initPaymentCards(form);
+    initMobileCheckoutAction();
 
     form.addEventListener("submit", (event) => {
       event.preventDefault();

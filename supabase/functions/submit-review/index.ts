@@ -27,6 +27,8 @@ function clean(value: unknown, max: number) {
   return String(value ?? "").trim().replace(/[\u0000-\u001f\u007f]/g, "").slice(0, max);
 }
 const PHOTO_TYPES: Record<string,string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
+const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
+const MAX_PHOTO_BASE64_CHARS = Math.ceil(MAX_PHOTO_BYTES / 3) * 4 + 4;
 async function sha256(value: string) {
   const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
   return Array.from(new Uint8Array(bytes)).map(byte => byte.toString(16).padStart(2, "0")).join("");
@@ -50,7 +52,7 @@ Deno.serve(async req => {
     if (customerName.length < 2 || customerName.length > 50) return json(req, { error: "INVALID_NAME" }, 400);
     if (reviewText.length < 10 || reviewText.length > 1000) return json(req, { error: "INVALID_REVIEW" }, 400);
     if (!Number.isInteger(rating) || rating < 1 || rating > 5) return json(req, { error: "INVALID_RATING" }, 400);
-    if (photoData && (!PHOTO_TYPES[photoType] || photoData.length > 2_850_000 || !/^[A-Za-z0-9+/=]+$/.test(photoData))) return json(req, { error: "INVALID_PHOTO" }, 400);
+    if (photoData && (!PHOTO_TYPES[photoType] || photoData.length > MAX_PHOTO_BASE64_CHARS || !/^[A-Za-z0-9+/=]+$/.test(photoData))) return json(req, { error: "INVALID_PHOTO" }, 400);
 
     const service = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
     const bearer = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
@@ -64,8 +66,10 @@ Deno.serve(async req => {
       };
     }
 
-    const forwarded = req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
-    const fingerprint = await sha256(`${Deno.env.get("REVIEW_RATE_LIMIT_SECRET") || "vahome-review"}:${forwarded}`);
+    const rateLimitSecret = Deno.env.get("REVIEW_RATE_LIMIT_SECRET");
+    if (!rateLimitSecret) return json(req, { error: "SERVICE_NOT_CONFIGURED" }, 503);
+    const forwarded = req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const fingerprint = await sha256(`${rateLimitSecret}:${forwarded}`);
     const since = new Date(Date.now() - 5 * 60 * 1000).toISOString();
     const { count } = await service.from("reviews").select("id", { count: "exact", head: true })
       .eq("submission_fingerprint", fingerprint).gte("created_at", since);
@@ -99,7 +103,13 @@ Deno.serve(async req => {
     let photoPath: string | null = null;
     if (photoData) {
       const bytes = Uint8Array.from(atob(photoData), c => c.charCodeAt(0));
-      if (bytes.byteLength > 5 * 1024 * 1024) return json(req, { error: "PHOTO_TOO_LARGE" }, 400);
+      if (bytes.byteLength > MAX_PHOTO_BYTES) return json(req, { error: "PHOTO_TOO_LARGE" }, 400);
+      const isJpeg = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+      const isPng = bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47;
+      const isWebp = bytes.length > 12 && String.fromCharCode(...bytes.slice(0, 4)) === "RIFF" && String.fromCharCode(...bytes.slice(8, 12)) === "WEBP";
+      if ((photoType === "image/jpeg" && !isJpeg) || (photoType === "image/png" && !isPng) || (photoType === "image/webp" && !isWebp)) {
+        return json(req, { error: "INVALID_PHOTO" }, 400);
+      }
       photoPath = `${productSlug}/${crypto.randomUUID()}.${PHOTO_TYPES[photoType]}`;
       const uploaded = await service.storage.from("review-photos").upload(photoPath, bytes, { contentType: photoType, upsert: false });
       if (uploaded.error) throw uploaded.error;

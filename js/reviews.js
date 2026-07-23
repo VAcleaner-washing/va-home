@@ -93,7 +93,7 @@
     } catch (error) {
       const empty = document.getElementById("reviewsEmpty");
       if (empty) { empty.hidden = false; empty.textContent = "Не вдалося завантажити відгуки. Спробуйте трохи пізніше."; }
-      console.warn("VA HOME reviews unavailable", error);
+      
     } finally {
       if (loading) loading.hidden = true;
     }
@@ -166,7 +166,7 @@
         if (counter) counter.textContent = `0/${MAX_TEXT}`;
         setMessage(result?.verified_purchase ? "Дякуємо! Покупку підтверджено автоматично. Відгук з’явиться після модерації." : "Дякуємо! Відгук отримано й з’явиться на сайті після перевірки.", "success");
       } catch (error) {
-        console.warn("Review submit failed", error);
+        
         if (error?.status === 409) setMessage("Ви вже залишили відгук про цей аромат. Після модерації він з’явиться на сайті.", "error");
         else if (error?.status === 429) setMessage("Забагато спроб. Зачекайте кілька хвилин.", "error");
         else setMessage("Не вдалося надіслати відгук. Перевірте інтернет і спробуйте ще раз.", "error");

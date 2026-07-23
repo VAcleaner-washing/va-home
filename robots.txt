@@ -1,6 +1,10 @@
 User-agent: *
 Allow: /
-Disallow: /404.html
 Disallow: /admin/
+Disallow: /account.html
+Disallow: /cart.html
+Disallow: /order-status.html
+Disallow: /thank-you.html
 
 Sitemap: https://vahome.com.ua/sitemap.xml
+Sitemap: https://vahome.com.ua/image-sitemap.xml

@@ -8,6 +8,13 @@
   "use strict";
 
   const PAGE_SIZE = 12;
+  const RETURN_STATE_KEY = "vahome:catalog-return-state";
+
+  const ALLOWED = {
+    character: new Set(["all", "fresh", "woody", "clean", "fruity", "spa", "hotel", "warm", "evening", "molecular"]),
+    collection: new Set(["all", "entry", "signature", "premium", "noir"]),
+    sort: new Set(["recommended", "price-asc", "price-desc", "new"])
+  };
 
   const state = {
     character: "all", // all | fresh | woody | clean | fruity | spa | hotel | warm | evening | molecular
@@ -17,6 +24,82 @@
     sort: "recommended", // recommended | price-asc | price-desc | new
     visibleCount: PAGE_SIZE
   };
+
+
+  function readSafeParam(params, key, fallback, allowedSet) {
+    const value = params.get(key);
+    if (!value) return fallback;
+    return !allowedSet || allowedSet.has(value) ? value : fallback;
+  }
+
+  function syncStateToUrl() {
+    const url = new URL(window.location.href);
+    const values = {
+      character: state.character,
+      collection: state.collection,
+      room: state.room,
+      mood: state.mood,
+      sort: state.sort
+    };
+
+    Object.entries(values).forEach(([key, value]) => {
+      if (!value || value === "all" || (key === "sort" && value === "recommended")) {
+        url.searchParams.delete(key);
+      } else {
+        url.searchParams.set(key, value);
+      }
+    });
+
+    if (state.visibleCount > PAGE_SIZE) {
+      url.searchParams.set("shown", String(state.visibleCount));
+    } else {
+      url.searchParams.delete("shown");
+    }
+
+    window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+  }
+
+  function saveReturnPosition() {
+    try {
+      sessionStorage.setItem(
+        RETURN_STATE_KEY,
+        JSON.stringify({
+          catalogUrl: window.location.href,
+          scrollY: Math.max(0, Math.round(window.scrollY)),
+          savedAt: Date.now()
+        })
+      );
+    } catch (_) {
+      // Storage can be unavailable in private/restricted browsing.
+    }
+  }
+
+  function restoreReturnPosition() {
+    try {
+      const raw = sessionStorage.getItem(RETURN_STATE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      const sameCatalog = saved.catalogUrl === window.location.href;
+      const stillFresh = Date.now() - Number(saved.savedAt || 0) < 30 * 60 * 1000;
+      if (!sameCatalog || !stillFresh) return;
+
+      sessionStorage.removeItem(RETURN_STATE_KEY);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => window.scrollTo(0, Number(saved.scrollY) || 0));
+      });
+    } catch (_) {
+      // Ignore malformed or unavailable storage.
+    }
+  }
+
+  function initProductReturnTracking() {
+    const grid = document.getElementById("catalogGrid");
+    if (!grid) return;
+    grid.addEventListener("click", (event) => {
+      const link = event.target.closest('a[href*="products/"]');
+      if (link) saveReturnPosition();
+    });
+  }
 
   function matchesCharacter(product, value) {
     if (value === "all") return true;
@@ -121,6 +204,7 @@
       state[stateKey] = chip.getAttribute("data-value");
       state.visibleCount = PAGE_SIZE;
       setActiveChip(groupSelector, state[stateKey]);
+      syncStateToUrl();
       render();
     });
   }
@@ -131,6 +215,7 @@
     el.addEventListener("change", () => {
       state[stateKey] = el.value;
       state.visibleCount = PAGE_SIZE;
+      syncStateToUrl();
       render();
     });
   }
@@ -140,6 +225,7 @@
     if (!el) return;
     el.addEventListener("change", () => {
       state.sort = el.value;
+      syncStateToUrl();
       render();
     });
   }
@@ -149,6 +235,7 @@
     if (!btn) return;
     btn.addEventListener("click", () => {
       state.visibleCount += PAGE_SIZE;
+      syncStateToUrl();
       render();
     });
   }
@@ -172,6 +259,7 @@
       if (roomSelect) roomSelect.value = "all";
       if (moodSelect) moodSelect.value = "all";
       if (sortSelect) sortSelect.value = "recommended";
+      syncStateToUrl();
       render();
     };
     btn.addEventListener("click", doReset);
@@ -236,16 +324,39 @@
 
   function initFromQueryString() {
     const params = new URLSearchParams(window.location.search);
-    const character = params.get("character");
-    const collection = params.get("collection");
-    if (character) {
-      state.character = character;
-      setActiveChip("#characterChips", character);
+
+    state.character = readSafeParam(params, "character", "all", ALLOWED.character);
+    state.collection = readSafeParam(params, "collection", "all", ALLOWED.collection);
+    state.room = readSafeParam(params, "room", "all");
+    state.mood = readSafeParam(params, "mood", "all");
+    state.sort = readSafeParam(params, "sort", "recommended", ALLOWED.sort);
+
+    const shown = Number.parseInt(params.get("shown") || "", 10);
+    state.visibleCount = Number.isFinite(shown) && shown >= PAGE_SIZE
+      ? Math.ceil(shown / PAGE_SIZE) * PAGE_SIZE
+      : PAGE_SIZE;
+
+    setActiveChip("#characterChips", state.character);
+    setActiveChip("#collectionChips", state.collection);
+
+    const roomSelect = document.getElementById("roomSelect");
+    const moodSelect = document.getElementById("moodSelect");
+    const sortSelect = document.getElementById("catalogSort");
+
+    if (roomSelect && Array.from(roomSelect.options).some((option) => option.value === state.room)) {
+      roomSelect.value = state.room;
+    } else {
+      state.room = "all";
     }
-    if (collection) {
-      state.collection = collection;
-      setActiveChip("#collectionChips", collection);
+
+    if (moodSelect && Array.from(moodSelect.options).some((option) => option.value === state.mood)) {
+      moodSelect.value = state.mood;
+    } else {
+      state.mood = "all";
     }
+
+    if (sortSelect) sortSelect.value = state.sort;
+    syncStateToUrl();
   }
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -259,6 +370,8 @@
     initLoadMore();
     initReset();
     initMobileFilterSheet();
+    initProductReturnTracking();
     render();
+    restoreReturnPosition();
   });
 })();

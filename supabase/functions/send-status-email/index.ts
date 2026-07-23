@@ -4,7 +4,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const FROM_EMAIL = "VA HOME <orders@vahome.com.ua>";
 const SHOP_EMAIL = "vahome.aroma@gmail.com";
 const ALLOWED = new Set(["https://vahome.com.ua","https://www.vahome.com.ua"]);
-const labels: Record<string,string> = {new:"Замовлення отримано",awaiting_payment:"Очікуємо оплату",paid:"Оплату підтверджено",shipped:"Замовлення відправлено",completed:"Замовлення виконано",cancelled:"Замовлення скасовано"};
+const labels: Record<string,string> = {new:"Замовлення отримано",pending:"Очікуємо підтвердження",awaiting_payment:"Очікуємо оплату",paid:"Оплату підтверджено",shipped:"Замовлення відправлено",completed:"Замовлення виконано",cancelled:"Замовлення скасовано"};
 const PRODUCT_NAMES: Record<string,string> = {
   "signature-relax":"Signature Relax","forbidden-fruit":"Forbidden Fruit","doux-moment":"DOUX Moment",
   "wild-berry-way":"Wild Berry Way","hotel-spring":"Hotel Spring","evening-ritual":"Evening Ritual",

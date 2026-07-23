@@ -14,8 +14,7 @@ const SITE_CONFIG = {
     url: "https://instagram.com/va_home.aroma"
   },
 
-  // Orders are sent as a prefilled Telegram deep link:
-  // https://t.me/<username>?text=<encoded order text>
+  // Telegram remains available as a customer contact channel.
   telegram: {
     username: "vahome_aroma",
     url: "https://t.me/vahome_aroma"

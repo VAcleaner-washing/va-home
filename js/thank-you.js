@@ -32,6 +32,12 @@
         document.getElementById("orderSuccessLead").textContent = "Замовлення успішно збережено. Підтверджувальний лист може надійти із затримкою — збережіть номер замовлення.";
       }
     }
+    const copyOrderButton = document.getElementById("copyOrderNumberBtn");
+    if (copyOrderButton) copyOrderButton.addEventListener("click", function () {
+      const value = document.getElementById("orderNumber").textContent.trim();
+      copyText(value).then(function () { document.getElementById("copyOrderStatus").textContent = "Номер скопійовано"; })
+        .catch(function () { document.getElementById("copyOrderStatus").textContent = "Не вдалося скопіювати"; });
+    });
     const isCod = Boolean(order && order.paymentMethod === "cash_on_delivery");
     if (order) {
       document.getElementById("paymentPanel").hidden = isCod;

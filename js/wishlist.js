@@ -48,14 +48,16 @@
       card.querySelector(".product-card__media")?.append(button);
     });
     const productId = location.pathname.match(/\/products\/([^/]+)\.html$/)?.[1];
-    const purchase = document.querySelector(".product-purchase-row");
-    if (productId && purchase && !purchase.querySelector("[data-wishlist]")) {
-      const button = document.createElement("button");
+    const slot = document.getElementById("productWishlistSlot");
+    if (productId && slot) {
+      const existing = Array.from(document.querySelectorAll(`.product-wishlist[data-wishlist="${productId}"]`));
+      const button = existing.shift() || document.createElement("button");
+      existing.forEach((duplicate) => duplicate.remove());
       button.type = "button";
       button.className = "product-wishlist";
       button.dataset.wishlist = productId;
       button.setAttribute("aria-label", "Додати аромат у список бажань");
-      purchase.insertAdjacentElement("afterend", button);
+      if (!slot.contains(button)) slot.replaceChildren(button);
     }
     updateButtons();
   }

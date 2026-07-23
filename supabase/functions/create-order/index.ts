@@ -111,6 +111,9 @@ Deno.serve(async req => {
   try {
     const body = await req.json();
     const checkoutRequestId = text(body.checkout_request_id, 80);
+    if (checkoutRequestId && !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(checkoutRequestId)) {
+      return json(req, { error: "INVALID_REQUEST_ID" }, 400);
+    }
     const name = text(body.customer_name, 100);
     let phone = text(body.customer_phone, 30).replace(/[\s()\-]/g, "");
     if (/^0\d{9}$/.test(phone)) phone = `+38${phone}`;
@@ -170,11 +173,14 @@ Deno.serve(async req => {
     if (checkoutRequestId) {
       const { data: existing, error: existingError } = await supabase
         .from("orders")
-        .select("client_order_id,customer_name,customer_email,payment_method,items,total_amount,confirmation_email_status")
+        .select("client_order_id,customer_name,customer_phone,customer_email,payment_method,items,total_amount,confirmation_email_status")
         .eq("checkout_request_id", checkoutRequestId)
         .maybeSingle();
       if (existingError) throw existingError;
       if (existing) {
+        const sameCustomer = existing.customer_phone === phone && String(existing.customer_email || "").toLowerCase() === email;
+        const sameOrder = Number(existing.total_amount) === total && JSON.stringify(existing.items || []) === JSON.stringify(items);
+        if (!sameCustomer || !sameOrder) return json(req, { error: "REQUEST_ID_CONFLICT" }, 409);
         return json(req, {
           order: {
             client_order_id: existing.client_order_id,
@@ -205,8 +211,38 @@ Deno.serve(async req => {
         items, total_amount: total, status: "new", payment_status: "unpaid", source: "website",
       };
       const { data, error } = await supabase.from("orders").insert(payload).select("*").single();
-      if (!error) order = data;
-      else if (error.code !== "23505") throw error;
+      if (!error) {
+        order = data;
+      } else if (error.code === "23505" && checkoutRequestId) {
+        // Two fast submissions can race before the first request is visible to
+        // the pre-insert lookup. Re-read the idempotent order instead of
+        // reporting a false failure to the customer.
+        const { data: racedOrder, error: racedError } = await supabase
+          .from("orders")
+          .select("*")
+          .eq("checkout_request_id", checkoutRequestId)
+          .maybeSingle();
+        if (racedError) throw racedError;
+        if (racedOrder) {
+          const sameCustomer = racedOrder.customer_phone === phone && String(racedOrder.customer_email || "").toLowerCase() === email;
+          const sameOrder = Number(racedOrder.total_amount) === total && JSON.stringify(racedOrder.items || []) === JSON.stringify(items);
+          if (!sameCustomer || !sameOrder) return json(req, { error: "REQUEST_ID_CONFLICT" }, 409);
+          return json(req, {
+            order: {
+              client_order_id: racedOrder.client_order_id,
+              customer_name: racedOrder.customer_name,
+              customer_email: racedOrder.customer_email,
+              payment_method: racedOrder.payment_method,
+              items: racedOrder.items,
+              total_amount: racedOrder.total_amount,
+            },
+            email_status: racedOrder.confirmation_email_status || "pending",
+            duplicate_prevented: true,
+          }, 200);
+        }
+      } else if (error.code !== "23505") {
+        throw error;
+      }
     }
     if (!order) throw new Error("ORDER_ID_COLLISION");
 
@@ -365,7 +401,7 @@ Deno.serve(async req => {
       message: error instanceof Error ? error.message : String(error),
       code: error && typeof error === "object" && "code" in error ? String((error as { code?: unknown }).code || "") : "",
     });
-    const validationErrors = new Set(["INVALID_ITEM", "INVALID_DISCOVERY_SELECTION"]);
+    const validationErrors = new Set(["INVALID_ITEM", "INVALID_DISCOVERY_SELECTION", "INVALID_REQUEST_ID"]);
     const serviceErrors = new Set(["NOVA_POSHTA_NOT_CONFIGURED", "NOVA_POSHTA_UNAVAILABLE"]);
     const message = error instanceof Error ? error.message : "";
     const code = validationErrors.has(message) ? message : serviceErrors.has(message) ? "DELIVERY_VALIDATION_UNAVAILABLE" : "ORDER_CREATION_FAILED";
