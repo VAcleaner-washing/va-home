@@ -33,51 +33,6 @@
     return `${root}${src}`;
   }
 
-  function canLoad(src) {
-    return new Promise((resolve) => {
-      const image = new Image();
-      image.onload = () => resolve(true);
-      image.onerror = () => resolve(false);
-      image.src = src;
-    });
-  }
-
-  function makeAutomaticCandidates(product, root) {
-    const productId = product?.id;
-    if (!productId) return [];
-    const candidates = [];
-
-    // New unified nine-image product story. These four files also power the hero gallery.
-    const storyBase = `${root}images/product-story/${productId}/`;
-    [
-      ["hero", ["hero.webp"]],
-      ["interior", ["interior.webp"]],
-      ["macro", ["macro.webp"]],
-      ["detail", ["detail.webp"]]
-    ].forEach(([type, filenames], index) => {
-      filenames.forEach((filename) => {
-        candidates.push({
-          type,
-          label: TYPE_LABELS[type] || `Фото ${index + 1}`,
-          src: `${storyBase}${filename}`,
-          automatic: true,
-          source: "product-story"
-        });
-      });
-    });
-
-    // Dedicated catalog image. Used only as a safe fallback when a product-story slot is absent.
-    candidates.push({
-      type: "hero",
-      label: TYPE_LABELS.hero,
-      src: `${root}images/product-gallery/${productId}/hero.webp`,
-      automatic: true,
-      source: "product-gallery"
-    });
-
-    return candidates;
-  }
-
   function normalizeProvidedItems(items, root) {
     return (Array.isArray(items) ? items : [])
       .filter((item) => item && item.src)
@@ -90,12 +45,11 @@
   }
 
   async function resolveGallery(product, items, root) {
-    // Product data is generated from files that actually exist. Missing story slots
-    // already point to product-gallery/<id>/hero.webp, so no runtime probing or 404 requests are needed.
+    // Product pages use only dedicated product-story assets. No catalog fallback.
     return normalizeProvidedItems(items, root);
   }
 
-  async function mount({ product, items, root = "", fallbackSrc = "" }) {
+  async function mount({ product, items, root = "" }) {
     const media = document.getElementById("productMedia");
     let mainImage = document.getElementById("productMainImage");
     const strip = document.getElementById("productGalleryThumbs");
@@ -240,9 +194,11 @@
         if (failedIndex !== -1 && gallery.length > 1) {
           gallery.splice(failedIndex, 1);
           current = Math.min(current, gallery.length - 1);
-          mount({ product, items: gallery.map((entry) => ({ ...entry, src: entry.src.replace(root, "") })), root, fallbackSrc });
-        } else if (fallbackSrc) {
-          mainImage.src = fallbackSrc;
+          mount({ product, items: gallery.map((entry) => ({ ...entry, src: entry.src.replace(root, "") })), root });
+        } else {
+          mainImage.removeAttribute("src");
+          mainImage.style.visibility = "hidden";
+          media.dataset.storyEmpty = "true";
         }
       };
       preload.src = item.src;
