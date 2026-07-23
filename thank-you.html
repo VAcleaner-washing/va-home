@@ -11,7 +11,7 @@
   <meta name="robots" content="noindex, nofollow, noarchive"/>
   <meta name="theme-color" content="#0b0a08"/>
   <meta name="format-detection" content="telephone=no"/>
-  <meta name="va-home-release" content="12.0.5 Thank You Rebuild"/>
+  <meta name="va-home-release" content="12.1 Thank You Experience"/>
   <link rel="icon" href="favicon/favicon.ico" sizes="any"/>
   <link rel="icon" href="favicon/favicon.svg" type="image/svg+xml"/>
   <link rel="apple-touch-icon" href="favicon/apple-touch-icon.png"/>
@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="css/responsive.css"/>
   <link rel="stylesheet" href="css/motion.css"/>
   <link rel="stylesheet" href="css/thank-you.css"/>
+<link rel="stylesheet" href="css/v12-1-site-audit.css">
 </head>
 <body>
   <div id="site-header" data-root data-active=""></div>
@@ -35,16 +36,19 @@
             <svg viewBox="0 0 48 48" role="img"><circle cx="24" cy="24" r="22"></circle><path d="m15 24 6 6 13-14"></path></svg>
           </div>
           <p class="ty-kicker">Замовлення прийнято</p>
-          <h1 id="tyTitle">Дякуємо.</h1>
-          <p class="ty-intro__statement">Атмосфера вже готується до подорожі у ваш дім.</p>
+          <h1 id="tyTitle">Ваш аромат<br/>уже в дорозі.</h1>
+          <p class="ty-intro__statement">Дякуємо за вибір VA HOME.</p>
           <p class="ty-intro__lead" id="orderSuccessLead">Ми отримали замовлення та надіслали підтвердження на вашу електронну пошту.</p>
         </div>
 
-        <aside class="ty-order-id" aria-label="Номер замовлення">
+        <aside class="ty-intro__visual" aria-label="Замовлення VA HOME">
+          <img src="images/pages/delivery-cta.webp" alt="Преміальне пакування VA HOME" loading="eager" decoding="auto" fetchpriority="high"/>
+          <div class="ty-order-id" aria-label="Номер замовлення">
           <span class="ty-order-id__label">Номер замовлення</span>
           <strong id="orderNumber">—</strong>
           <button id="copyOrderNumberBtn" type="button" class="ty-text-button">Скопіювати номер</button>
           <small id="copyOrderStatus" aria-live="polite"></small>
+          </div>
         </aside>
       </div>
     </section>
