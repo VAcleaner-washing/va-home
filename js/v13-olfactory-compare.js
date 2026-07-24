@@ -8,13 +8,9 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]').filter(Boolean).slice(0,3)}catch{return[]}};
 const productById=id=>(window.PRODUCTS||[]).find(p=>p.id===id);
 const coll=p=>typeof window.getCollection==='function'?window.getCollection(p.collection):null;
-const imageCandidates=p=>[
-  `images/product-story/${p.id}/macro.webp`,
-  p?.images?.main,
-  `images/product-gallery/${p.id}/hero.webp`
-].filter(Boolean);
+const imageCandidates=p=>{const gallery=Array.isArray(p?.images?.gallery)?p.images.gallery:[];const macro=gallery.find(item=>item?.type==='macro'&&item.src)?.src;const main=p?.images?.main||`images/product-gallery/${p.id}/hero.webp`;return [...new Set([macro,main].filter(Boolean))]};
 const tags=p=>(p.character||[]).slice(0,4).map(x=>`<span class="oc-tag">${esc(chars[x]||x)}</span>`).join('');
-const scale=(p,k)=>{const v=Math.max(0,Math.min(10,Number(p.scales?.[k])||0));return `<div class="oc-scale-wrap"><div class="oc-scale">${Array.from({length:10},(_,i)=>`<i class="${i<v?'on':''}"></i>`).join('')}</div><span class="oc-scale-value">${v}/10</span></div>`};
+const scale=(p,k)=>{const raw=p.scales?.[k];if(raw===null||raw===undefined||raw==='')return '<span class="oc-scale-empty">—</span>';const v=Math.max(0,Math.min(10,Number(raw)));return `<div class="oc-scale-wrap"><div class="oc-scale">${Array.from({length:10},(_,i)=>`<i class="${i<v?'on':''}"></i>`).join('')}</div><span class="oc-scale-value">${v}/10</span></div>`};
 const names=p=>(p.room||[]).slice(0,3).map(x=>rooms[x]||x).join(' · ')||'Універсальний простір';
 const allNotes=p=>[...(p.notes?.top||[]),...(p.notes?.heart||[]),...(p.notes?.base||[])].slice(0,6).join(' · ')||'—';
 function strongest(p){return Object.entries(p.scales||{}).filter(([k])=>scaleLabels[k]).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>`${scaleLabels[k].toLowerCase()} ${v}/10`)}
@@ -23,7 +19,7 @@ function productHead(p,i){const c=coll(p)||{};const candidates=imageCandidates(p
 function row(label,products,render,extra=''){return `<div class="oc-row"><div class="oc-row__label">${label}</div>${products.map(p=>`<div class="oc-cell ${extra}" data-product="${esc(p.name)}">${render(p)}</div>`).join('')}</div>`}
 function render(){const host=document.getElementById('olfactoryCompare');if(!host)return;const ps=read().map(productById).filter(Boolean);if(ps.length<2){host.innerHTML=`<section class="oc-empty"><h2>Оберіть щонайменше два аромати.</h2><p>Додайте композиції в каталозі — і поверніться до порівняння.</p><a href="catalog.html">Перейти до каталогу</a></section>`;return}
  host.style.setProperty('--oc-count',ps.length);
- host.innerHTML=`<section class="oc-products" style="--oc-count:${ps.length}">${ps.map(productHead).join('')}</section>
+ host.innerHTML=`<section class="oc-products">${ps.map(productHead).join('')}</section>
  <section class="oc-matrix">
  ${['freshness','warmth','woodiness','intensity','cleanliness','sweetness'].map(k=>row(scaleLabels[k],ps,p=>scale(p,k))).join('')}
  ${row('Атмосфера',ps,p=>esc(p.insights?.aura||p.shortDescription),'oc-cell--serif')}

@@ -1,8 +1,6 @@
 /* ==========================================================================
-   VA HOME v7.3.12 — Automatic product gallery
-   Automatically discovers predictable files in images/product-gallery/<id>/
-   and safely falls back to the existing gallery data when files are absent.
-   Static hosting cannot list directories, so filenames are probed by pattern.
+   VA HOME — Deterministic product story gallery
+   Product pages use only images/product-story/<id>/. No image fallbacks.
    ========================================================================== */
 (function () {
   "use strict";
@@ -66,15 +64,6 @@
       });
     });
 
-    // Dedicated catalog image. Used only as a safe fallback when a product-story slot is absent.
-    candidates.push({
-      type: "hero",
-      label: TYPE_LABELS.hero,
-      src: `${root}images/product-gallery/${productId}/hero.webp`,
-      automatic: true,
-      source: "product-gallery"
-    });
-
     return candidates;
   }
 
@@ -90,33 +79,11 @@
   }
 
   async function resolveGallery(product, items, root) {
-    // Prefer product-story per gallery slot. When a specific story image is absent,
-    // immediately keep the legacy item for that same slot instead of leaving it blank.
-    const storyCandidates = makeAutomaticCandidates(product, root)
-      .filter((item) => item.source === "product-story");
-    const provided = normalizeProvidedItems(items, root);
-    const typeOrder = ["hero", "macro", "interior", "detail"];
-
-    const availability = await Promise.all(storyCandidates.map((item) => canLoad(item.src)));
-    const availableStory = storyCandidates.filter((_, index) => availability[index]);
-    const selected = [];
-
-    typeOrder.forEach((type) => {
-      const storyItem = availableStory.find((item) => item.type === type);
-      const legacyItem = provided.find((item) => item.type === type);
-      const chosen = storyItem || legacyItem;
-      if (chosen && !selected.some((item) => item.src === chosen.src)) selected.push(chosen);
-    });
-
-    // Preserve any extra legacy gallery items after the four primary slots.
-    provided.forEach((item) => {
-      if (!selected.some((selectedItem) => selectedItem.src === item.src)) selected.push(item);
-    });
-
-    return selected;
+    // The declared product-story files are authoritative. Missing files remain visible content errors.
+    return normalizeProvidedItems(items, root);
   }
 
-  async function mount({ product, items, root = "", fallbackSrc = "" }) {
+  async function mount({ product, items, root = "" }) {
     const media = document.getElementById("productMedia");
     let mainImage = document.getElementById("productMainImage");
     const strip = document.getElementById("productGalleryThumbs");
@@ -256,8 +223,15 @@
         }, 900);
       };
       preload.onerror = () => {
-        // A previously verified file may disappear after deployment. Skip it safely.
-        const failedIndex = gallery.findIndex((entry) => entry.src === item.src);
+        // A story slot may be added later. Until then use the dedicated catalog hero
+        // without removing the product or leaving an empty image.
+        if (item.fallbackSrc && item.src !== item.fallbackSrc && !item.fallbackAttempted) {
+          item.fallbackAttempted = true;
+          item.src = item.fallbackSrc;
+          show(current, false);
+          return;
+        }
+        const failedIndex = gallery.findIndex((entry) => entry === item);
         if (failedIndex !== -1 && gallery.length > 1) {
           gallery.splice(failedIndex, 1);
           current = Math.min(current, gallery.length - 1);

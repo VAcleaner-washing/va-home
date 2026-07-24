@@ -214,15 +214,8 @@
 
 
   function compareImage(product) {
-    return `images/product-story/${product.id}/macro.webp`;
-  }
-
-  function compareImageAlt(product) {
-    return product?.images?.main || `images/product-gallery/${product.id}/hero.webp`;
-  }
-
-  function compareImageFallback(product) {
-    return `images/product-gallery/${product.id}/hero.webp`;
+    const gallery = Array.isArray(product?.images?.gallery) ? product.images.gallery : [];
+    return gallery.find((item) => item?.type === "macro" && item.src)?.src || "";
   }
 
   function compactRooms(product) {
@@ -252,7 +245,7 @@
             </div>
           </div>
           <figure class="va-compare-card__portrait">
-            <img class="va-compare-card__portrait-image" src="${root}${esc(compareImage(product))}" data-alt-src="${root}${esc(compareImageAlt(product))}" data-fallback-src="${root}${esc(compareImageFallback(product))}" alt="Макродеталь ${esc(product.name)}" loading="eager" decoding="auto" fetchpriority="low">
+            <img class="va-compare-card__portrait-image" src="${root}${esc(compareImage(product))}" alt="Макродеталь ${esc(product.name)}" loading="eager" decoding="auto" fetchpriority="low">
             <figcaption>OLFACTIVE PORTRAIT</figcaption>
           </figure>
         </div>
@@ -310,22 +303,6 @@
     }
 
     box.innerHTML = `<div class="va-compare-grid" style="--compare-count:${chosen.length}">${chosen.map(card).join('')}</div>`;
-
-    box.querySelectorAll('.va-compare-card__portrait-image').forEach((image) => {
-      image.addEventListener('error', () => {
-        const alt = image.dataset.altSrc;
-        const fallback = image.dataset.fallbackSrc;
-        if (!image.dataset.triedAlt && alt && image.src !== alt) {
-          image.dataset.triedAlt = '1';
-          image.src = alt;
-          return;
-        }
-        if (!image.dataset.triedFallback && fallback && image.src !== fallback) {
-          image.dataset.triedFallback = '1';
-          image.src = fallback;
-        }
-      });
-    });
 
     box.querySelectorAll('[data-remove]').forEach((button) => {
       button.addEventListener('click', () => {

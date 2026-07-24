@@ -1,29 +1,11 @@
 {
-  "version": "13.2.0-rebuilt",
-  "cssBundles": [
-    "site-404.css",
-    "site-about.css",
-    "site-account.css",
-    "site-admin.css",
-    "site-article.css",
-    "site-cart.css",
-    "site-catalog.css",
-    "site-collections.css",
-    "site-compare.css",
-    "site-discovery.css",
-    "site-home.css",
-    "site-info.css",
-    "site-journal.css",
-    "site-legal.css",
-    "site-order-status.css",
-    "site-product.css",
-    "site-scent-guide.css",
-    "site-thank-you.css"
-  ],
-  "productionQaRemoved": true,
-  "assetNaming": "lowercase",
-  "designChanged": false,
-  "name": "TECHNICAL CLEAN — CATALOG IMAGE ROUTING FIX",
-  "base": "13.1.4",
-  "catalogImageRule": "product-story/<slug>/hero.webp when present, otherwise product-gallery/<slug>/hero.webp"
+  "version": "13.5.1.2",
+  "name": "CORRECT PHOTO ROUTING + CACHE BUST",
+  "date": "2026-07-24",
+  "changes": [
+    "Catalog prefers product-story/<slug>/hero.webp and falls back to product-gallery/<slug>/hero.webp",
+    "Updated all CSS and JavaScript cache-busting query versions to 13.5.1",
+    "Fixed stale cached product data preventing Mineral Salt images from loading",
+    "Preserved existing design and CSS structure"
+  ]
 }

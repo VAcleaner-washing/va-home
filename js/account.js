@@ -96,7 +96,7 @@
     if (!safeItems.length) return "";
     const thumbs = safeItems.map((item) => {
       const hasProductPage = item.id && !String(item.id).startsWith("discovery-");
-      const src = hasProductPage ? productImage(String(item.id)) : "images/discovery/discovery-set.webp";
+      const src = hasProductPage ? `images/product-gallery/${esc(item.id)}/hero.webp` : "images/discovery/discovery-set.webp";
       return `<span class="account-order__preview-thumb"><img src="${src}" alt="" loading="lazy" onerror="this.parentElement.remove()"></span>`;
     }).join("");
     const extra = Math.max(0, (Array.isArray(items) ? items.length : 0) - safeItems.length);
@@ -120,7 +120,7 @@
     if (!winner || winner[1].count < 2) { block.hidden = true; return; }
     const [id, info] = winner;
     $("#signatureScentName").textContent = info.name;
-    $("#signatureScentImage").src = productImage(id);
+    $("#signatureScentImage").src = `images/product-gallery/${id}/hero.webp`;
     $("#signatureScentImage").alt = `${info.name} — ваш signature scent`;
     $("#signatureScentLink").href = `products/${id}.html`;
     block.hidden = false;
@@ -131,7 +131,7 @@
       const chosen = Array.isArray(item.selections) ? item.selections : [];
       const hasProductPage = item.id && !item.id.startsWith("discovery-");
       const imgSrc = hasProductPage
-        ? productImage(String(item.id))
+        ? `images/product-gallery/${esc(item.id)}/hero.webp`
         : "images/discovery/discovery-set.webp";
       const thumbHtml = `<img class="account-order__item-thumb" src="${imgSrc}" alt="" loading="lazy" onerror="this.remove()">`;
       const nameHtml = hasProductPage

@@ -1,5 +1,3 @@
-VA HOME v13.2.0 REBUILT — CATALOG IMAGE ROUTING
-
 dark-bloom: images/product-story/dark-bloom/hero.webp
 doux-moment: images/product-gallery/doux-moment/hero.webp
 evening-ritual: images/product-gallery/evening-ritual/hero.webp

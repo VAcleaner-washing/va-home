@@ -95,8 +95,7 @@
 
   async function submitOrder(payload) {
     if (!configured()) throw new Error("Supabase is not configured");
-    const uuid = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-    const requestId = `checkout-${Date.now().toString(36)}-${uuid.slice(0, 12)}`;
+    const requestId = String(payload && payload.checkout_request_id || (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`));
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 25000);
     let response;
