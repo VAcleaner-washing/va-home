@@ -1,5 +1,5 @@
 {
-  "version": "13.2.0-technical-clean",
+  "version": "13.2.0-rebuilt",
   "cssBundles": [
     "site-404.css",
     "site-about.css",
@@ -22,5 +22,8 @@
   ],
   "productionQaRemoved": true,
   "assetNaming": "lowercase",
-  "designChanged": false
+  "designChanged": false,
+  "name": "TECHNICAL CLEAN — CATALOG IMAGE ROUTING FIX",
+  "base": "13.1.4",
+  "catalogImageRule": "product-story/<slug>/hero.webp when present, otherwise product-gallery/<slug>/hero.webp"
 }

@@ -731,7 +731,7 @@ const PRODUCTS = [
     "badges": [],
     "popularity": null,
     "images": {
-      "main": "images/product-gallery/old-money/hero.webp",
+      "main": "images/product-story/old-money/hero.webp",
       "gallery": [
         { "type": "hero", "label": "Hero", "src": "images/product-gallery/old-money/hero.webp" },
         { "type": "macro", "label": "Macro", "src": "images/product-gallery/old-money/hero.webp" },
@@ -799,7 +799,7 @@ const PRODUCTS = [
     "badges": [],
     "popularity": null,
     "images": {
-      "main": "images/product-gallery/linstinct/hero.webp",
+      "main": "images/product-story/linstinct/hero.webp",
       "gallery": [
         { "type": "hero", "label": "Hero", "src": "images/product-gallery/linstinct/hero.webp" },
         { "type": "macro", "label": "Macro", "src": "images/product-gallery/linstinct/hero.webp" },
@@ -866,7 +866,7 @@ const PRODUCTS = [
     ],
     "popularity": null,
     "images": {
-      "main": "images/product-gallery/mineral-salt/hero.webp",
+      "main": "images/product-story/mineral-salt/hero.webp",
       "gallery": [
         { "type": "hero", "label": "Hero", "src": "images/product-gallery/mineral-salt/hero.webp" },
         { "type": "macro", "label": "Macro", "src": "images/product-gallery/mineral-salt/hero.webp" },
@@ -934,7 +934,7 @@ const PRODUCTS = [
     ],
     "popularity": null,
     "images": {
-      "main": "images/product-gallery/pure-imagination/hero.webp",
+      "main": "images/product-story/pure-imagination/hero.webp",
       "gallery": [
         { "type": "hero", "label": "Hero", "src": "images/product-gallery/pure-imagination/hero.webp" },
         { "type": "macro", "label": "Macro", "src": "images/product-gallery/pure-imagination/hero.webp" },
@@ -1007,7 +1007,7 @@ const PRODUCTS = [
     "badges": [],
     "popularity": null,
     "images": {
-      "main": "images/product-gallery/silk-molecule/hero.webp",
+      "main": "images/product-story/silk-molecule/hero.webp",
       "gallery": [
         { "type": "hero", "label": "Hero", "src": "images/product-gallery/silk-molecule/hero.webp" },
         { "type": "macro", "label": "Macro", "src": "images/product-gallery/silk-molecule/hero.webp" },
@@ -1077,7 +1077,7 @@ const PRODUCTS = [
     "badges": [],
     "popularity": null,
     "images": {
-      "main": "images/product-gallery/the-archive/hero.webp",
+      "main": "images/product-story/the-archive/hero.webp",
       "gallery": [
         { "type": "hero", "label": "Hero", "src": "images/product-gallery/the-archive/hero.webp" },
         { "type": "macro", "label": "Macro", "src": "images/product-gallery/the-archive/hero.webp" },
@@ -1149,7 +1149,7 @@ const PRODUCTS = [
     ],
     "popularity": null,
     "images": {
-      "main": "images/product-gallery/silent-temple/hero.webp",
+      "main": "images/product-story/silent-temple/hero.webp",
       "gallery": [
         { "type": "hero", "label": "Hero", "src": "images/product-gallery/silent-temple/hero.webp" },
         { "type": "macro", "label": "Macro", "src": "images/product-gallery/silent-temple/hero.webp" },
@@ -1218,7 +1218,7 @@ const PRODUCTS = [
     ],
     "popularity": null,
     "images": {
-      "main": "images/product-gallery/moss-and-shadow/hero.webp",
+      "main": "images/product-story/moss-and-shadow/hero.webp",
       "gallery": [
         { "type": "hero", "label": "Hero", "src": "images/product-gallery/moss-and-shadow/hero.webp" },
         { "type": "macro", "label": "Macro", "src": "images/product-gallery/moss-and-shadow/hero.webp" },
@@ -1288,7 +1288,7 @@ const PRODUCTS = [
     ],
     "popularity": null,
     "images": {
-      "main": "images/product-gallery/dark-bloom/hero.webp",
+      "main": "images/product-story/dark-bloom/hero.webp",
       "gallery": [
         { "type": "hero", "label": "Hero", "src": "images/product-gallery/dark-bloom/hero.webp" },
         { "type": "macro", "label": "Macro", "src": "images/product-gallery/dark-bloom/hero.webp" },

@@ -67,6 +67,11 @@
     return dashboardPromise;
   }
 
+  function productImage(id) {
+    const product = (window.PRODUCTS || []).find((item) => item.id === id);
+    return product?.images?.main || `images/product-gallery/${id}/hero.webp`;
+  }
+
   function orderProgressHtml(status) {
     if (status === "cancelled") {
       return `<div class="account-order__progress account-order__progress--cancelled"><span>Замовлення скасовано</span></div>`;
@@ -91,7 +96,7 @@
     if (!safeItems.length) return "";
     const thumbs = safeItems.map((item) => {
       const hasProductPage = item.id && !String(item.id).startsWith("discovery-");
-      const src = hasProductPage ? `images/products/${esc(item.id)}.webp` : "images/discovery/discovery-set.webp";
+      const src = hasProductPage ? productImage(String(item.id)) : "images/discovery/discovery-set.webp";
       return `<span class="account-order__preview-thumb"><img src="${src}" alt="" loading="lazy" onerror="this.parentElement.remove()"></span>`;
     }).join("");
     const extra = Math.max(0, (Array.isArray(items) ? items.length : 0) - safeItems.length);
@@ -115,7 +120,7 @@
     if (!winner || winner[1].count < 2) { block.hidden = true; return; }
     const [id, info] = winner;
     $("#signatureScentName").textContent = info.name;
-    $("#signatureScentImage").src = `images/products/${id}.webp`;
+    $("#signatureScentImage").src = productImage(id);
     $("#signatureScentImage").alt = `${info.name} — ваш signature scent`;
     $("#signatureScentLink").href = `products/${id}.html`;
     block.hidden = false;
@@ -126,7 +131,7 @@
       const chosen = Array.isArray(item.selections) ? item.selections : [];
       const hasProductPage = item.id && !item.id.startsWith("discovery-");
       const imgSrc = hasProductPage
-        ? `images/products/${esc(item.id)}.webp`
+        ? productImage(String(item.id))
         : "images/discovery/discovery-set.webp";
       const thumbHtml = `<img class="account-order__item-thumb" src="${imgSrc}" alt="" loading="lazy" onerror="this.remove()">`;
       const nameHtml = hasProductPage

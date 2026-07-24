@@ -218,7 +218,7 @@
   }
 
   function compareImageAlt(product) {
-    return `images/products/${product.id}.webp`;
+    return product?.images?.main || `images/product-gallery/${product.id}/hero.webp`;
   }
 
   function compareImageFallback(product) {

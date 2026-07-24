@@ -10,7 +10,7 @@ const productById=id=>(window.PRODUCTS||[]).find(p=>p.id===id);
 const coll=p=>typeof window.getCollection==='function'?window.getCollection(p.collection):null;
 const imageCandidates=p=>[
   `images/product-story/${p.id}/macro.webp`,
-  `images/products/${p.id}.webp`,
+  p?.images?.main,
   `images/product-gallery/${p.id}/hero.webp`
 ].filter(Boolean);
 const tags=p=>(p.character||[]).slice(0,4).map(x=>`<span class="oc-tag">${esc(chars[x]||x)}</span>`).join('');
