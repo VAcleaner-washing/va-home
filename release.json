@@ -1,0 +1,11 @@
+{
+  "version": "13.5.1.6",
+  "name": "Critical gallery fixes",
+  "date": "2026-07-24",
+  "changes": [
+    "Removed undefined gallery fallbackSrc reference",
+    "Product gallery now uses product-story assets only",
+    "Missing story images are marked missing instead of substituted",
+    "Catalog remains product-gallery only and compare remains macro only"
+  ]
+}

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+
+<html lang="uk">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<link as="font" crossorigin="" href="fonts/cormorant-garamond-cyrillic-500-normal.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="fonts/manrope-cyrillic-400-normal.woff2" rel="preload" type="font/woff2"/>
+<meta content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://yweluzclearwrazdkahu.supabase.co; font-src 'self'; connect-src 'self' https://yweluzclearwrazdkahu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';" http-equiv="Content-Security-Policy"/>
+<title>Замовлення прийнято — VA HOME</title>
+<meta content="Підтвердження оформлення замовлення VA HOME." name="description"/>
+<meta content="noindex, nofollow, noarchive" name="robots"/>
+<meta content="#0b0a08" name="theme-color"/>
+<meta content="telephone=no" name="format-detection"/>
+<meta content="12.1 Thank You Experience" name="va-home-release"/>
+<link href="favicon/favicon.ico" rel="icon" sizes="any"/>
+<link href="favicon/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="favicon/apple-touch-icon.png" rel="apple-touch-icon"/>
+<link href="css/core.css?v=13.5.1.6" rel="stylesheet"/><link href="css/site-thank-you.css?v=13.5.1.6" rel="stylesheet"/>
+</head>
+<body>
+<div data-active="" data-root="" id="site-header"></div>
+<main class="ty-page" id="main-content">
+<section aria-labelledby="tyTitle" class="ty-intro">
+<div class="container ty-intro__grid">
+<div class="ty-intro__copy">
+<div aria-hidden="true" class="ty-success-mark">
+<svg role="img" viewbox="0 0 48 48"><circle cx="24" cy="24" r="22"></circle><path d="m15 24 6 6 13-14"></path></svg>
+</div>
+<p class="ty-kicker">Замовлення прийнято</p>
+<h1 id="tyTitle">Ваш аромат<br/>уже в дорозі.</h1>
+<p class="ty-intro__statement">Дякуємо за вибір VA HOME.</p>
+<p class="ty-intro__lead" id="orderSuccessLead">Ми отримали замовлення та надіслали підтвердження на вашу електронну пошту.</p>
+</div>
+<aside aria-label="Замовлення VA HOME" class="ty-intro__visual">
+<img alt="Преміальне пакування VA HOME" decoding="auto" fetchpriority="high" height="941" loading="eager" src="images/pages/delivery-cta.webp" width="1672"/>
+<div aria-label="Номер замовлення" class="ty-order-id">
+<span class="ty-order-id__label">Номер замовлення</span>
+<strong id="orderNumber">—</strong>
+<button class="ty-text-button" id="copyOrderNumberBtn" type="button">Скопіювати номер</button>
+<small aria-live="polite" id="copyOrderStatus"></small>
+</div>
+</aside>
+</div>
+</section>
+<section class="ty-content">
+<div class="container">
+<div class="ty-primary-grid">
+<section aria-labelledby="paymentTitle" class="ty-card ty-card--payment" id="paymentPanel">
+<div class="ty-card__header">
+<p class="ty-kicker">Оплата</p>
+<h2 id="paymentTitle">Реквізити</h2>
+<p>Скопіюйте дані одним натисканням. Призначення платежу вже сформовано.</p>
+</div>
+<dl class="ty-payment-list">
+<div><dt>Отримувач</dt><dd id="paymentRecipient"></dd></div>
+<div><dt>IBAN</dt><dd id="paymentIban"></dd></div>
+<div><dt>Призначення</dt><dd id="paymentPurpose"></dd></div>
+</dl>
+<button class="btn btn-primary btn-block" id="copyPaymentBtn" type="button">Скопіювати реквізити</button>
+<p aria-live="polite" class="ty-copy-status" id="copyStatus" role="status"></p>
+</section>
+<section aria-labelledby="codTitle" class="ty-card ty-card--payment" hidden="" id="codPanel">
+<div class="ty-card__header">
+<p class="ty-kicker">Оплата</p>
+<h2 id="codTitle">При отриманні</h2>
+<p>Сплатіть замовлення у відділенні або поштоматі Нової пошти під час отримання.</p>
+</div>
+<div aria-hidden="true" class="ty-cod-mark">01</div>
+</section>
+<section aria-labelledby="orderTitle" class="ty-card ty-card--order">
+<div class="ty-card__header">
+<p class="ty-kicker">Ваш вибір</p>
+<h2 id="orderTitle">Замовлення</h2>
+</div>
+<div class="ty-order-lines" id="orderItems"></div>
+<div class="ty-order-total"><span>До оплати</span><strong id="orderTotal">—</strong></div>
+</section>
+</div>
+<section aria-labelledby="journeyTitle" class="ty-journey">
+<div class="ty-journey__heading">
+<p class="ty-kicker">Далі</p>
+<h2 id="journeyTitle">Що відбудеться після замовлення</h2>
+</div>
+<ol class="ty-steps">
+<li class="is-active"><span>01</span><div><strong>Підтвердження</strong><p>Деталі замовлення вже збережені.</p></div></li>
+<li><span>02</span><div><strong>Комплектація</strong><p>Ми перевіримо й акуратно підготуємо кожну позицію.</p></div></li>
+<li><span>03</span><div><strong>Відправлення</strong><p>Передамо замовлення Новій пошті протягом 1–2 робочих днів.</p></div></li>
+<li><span>04</span><div><strong>Атмосфера вдома</strong><p>Відкрийте аромат і налаштуйте інтенсивність кількістю паличок.</p></div></li>
+</ol>
+</section>
+<section class="ty-footer-card">
+<div>
+<p id="paymentNote">Після надходження оплати ми підтвердимо замовлення.</p>
+<p>Питання: <a href="tel:+380953919569">+38 (095) 391-9569</a> · <a href="mailto:vahome.aroma@gmail.com">vahome.aroma@gmail.com</a></p>
+</div>
+<div class="ty-actions">
+<a class="btn btn-primary" href="account.html">Перейти в кабінет</a>
+<a class="btn btn-secondary" href="catalog.html">До каталогу</a>
+</div>
+</section>
+</div>
+</section>
+</main>
+<div data-root="" id="site-footer"></div>
+<script defer="" src="js/config.js?v=13.5.1.6"></script>
+<script defer="" src="js/thank-you.js?v=13.5.1.6"></script>
+<script defer="" src="js/main.js?v=13.5.1.6"></script>
+<script defer="" src="js/motion.js?v=13.5.1.6"></script>
+</body>
+</html>
