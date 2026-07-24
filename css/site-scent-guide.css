@@ -1368,7 +1368,7 @@
 .scent-experience__hero--consultation .scent-experience__hero-media img{filter:saturate(.78) contrast(1.05)}
 
 
-@media(max-width:700px){.scent-experience__index{display:none}.scent-experience__hero--consultation .scent-experience__hero-content{margin-left:0;padding-left:0;border-left:0}}
+@media(max-width:700px){.scent-experience__index{display:none}.scent-experience__hero--consultation .scent-experience__hero-content{margin-left:0;padding-left:32px;padding-right:24px;border-left:0;box-sizing:border-box}.scent-experience__hero--consultation h1{max-width:9.2ch;font-size:clamp(3.7rem,15vw,4.9rem);line-height:.91}.scent-experience__hero--consultation .scent-experience__hero-copy{max-width:32rem}}
 
 
 
