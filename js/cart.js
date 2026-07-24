@@ -173,7 +173,7 @@
       if (el) el.textContent = formatUAH(total);
     });
 
-    const threshold = 2000;
+    const threshold = 1500;
     const remaining = Math.max(0, threshold - total);
     const progress = Math.min(100, (total / threshold) * 100);
     const progressWrap = document.getElementById("shippingProgress");

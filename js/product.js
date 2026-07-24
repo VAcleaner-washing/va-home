@@ -226,7 +226,7 @@
 
     const reassurance = document.createElement("div");
     reassurance.className = "product-purchase-support";
-    reassurance.innerHTML = `<div><span class="product-support-icon" aria-hidden="true">✓</span><p><strong>Відправка 1–2 дні</strong><span>Товар є в наявності</span></p></div><div><span class="product-support-icon" aria-hidden="true">◇</span><p><strong>Безкоштовно від 2000 грн</strong><span>Доставка Новою поштою</span></p></div><div><span class="product-support-icon" aria-hidden="true">○</span><p><strong>Зручна оплата</strong><span>На рахунок або при отриманні</span></p></div><a href="../delivery.html#returns">Доставка, оплата та повернення →</a>`;
+    reassurance.innerHTML = `<div><span class="product-support-icon" aria-hidden="true">✓</span><p><strong>Відправка 1–2 дні</strong><span>Товар є в наявності</span></p></div><div><span class="product-support-icon" aria-hidden="true">◇</span><p><strong>Безкоштовно від 1500 грн</strong><span>Доставка Новою поштою</span></p></div><div><span class="product-support-icon" aria-hidden="true">○</span><p><strong>Зручна оплата</strong><span>На рахунок або при отриманні</span></p></div><a href="../delivery.html#returns">Доставка, оплата та повернення →</a>`;
     const hero = document.querySelector(".product-hero");
     if (hero) {
       reassurance.classList.add("product-purchase-support--full");

@@ -3016,3 +3016,10 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
   .product-card__actions { gap: 8px; }
   .product-card__actions .btn { padding-inline: 10px; }
 }
+
+
+/* v13.5.4.1 — Discovery Credit */
+.discovery-credit{padding:0 0 clamp(56px,8vw,112px)}
+.discovery-credit__box{border:1px solid var(--border-hairline);padding:clamp(28px,5vw,64px);background:linear-gradient(135deg,rgba(184,135,70,.08),rgba(255,255,255,.015));max-width:1100px;margin:0 auto}
+.discovery-credit__box h2{max-width:14ch;margin:0 0 18px}
+.discovery-credit__box>p:not(.eyebrow){max-width:66ch;margin-bottom:10px}
