@@ -1,0 +1,12 @@
+{
+  "version": "13.5.2.0",
+  "name": "RELEASE — single product-story image source",
+  "date": "2026-07-24",
+  "changes": [
+    "Removed images/product-gallery",
+    "Catalog, homepage, collections, account and product cards use images/product-story/<slug>/hero.webp",
+    "Added complete WebP product-story sets for Hotel Spring and Wild Berry Way",
+    "Validated all 18 product-story folders and local image routes",
+    "Updated image sitemap for the single-source image architecture"
+  ]
+}
