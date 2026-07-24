@@ -104,7 +104,7 @@
 
     const gallery = getProductGallery(product);
     if (window.VAHomeGallery) {
-      window.VAHomeGallery.mount({ product, items: gallery, root: "../" });
+      window.VAHomeGallery.mount({ product, items: gallery, root: "../", fallbackSrc: `../${product.images?.main || ""}` });
     }
     const badges = document.getElementById("productBadges");
     if (badges) badges.innerHTML = (product.badges || []).map((badge) => `<span class="badge badge--${escapeHtml(badge)}">${badge === "bestseller" ? "Bestseller" : badge === "new" ? "Новинка" : "Limited"}</span>`).join("");
@@ -272,18 +272,22 @@
     const atmosphereImage = product.images.atmosphere || `images/atmosphere/${product.id}.webp`;
     const atmosphereFallback = (collection && collection.heroImage) || product.images.main;
     const galleryItems = getProductGallery(product);
-    const byType = (type) => galleryItems.find((item) => item.type === type)?.src || "";
+    const byType = (type, fallback) => galleryItems.find((item) => item.type === type)?.src || fallback;
     const storyMap = product.images.story || {};
-    const storyAsset = (name) => storyMap[name] || "";
-    const heroStoryImage = storyAsset("hero") || byType("hero");
-    const atmosphereStoryImage = storyAsset("atmosphere");
-    const interiorStoryImage = storyAsset("interior") || byType("interior");
-    const macroStoryImage = storyAsset("macro") || byType("macro");
-    const detailStoryImage = storyAsset("detail") || byType("detail");
-    const topStoryImage = storyAsset("top");
-    const heartStoryImage = storyAsset("heart");
-    const baseStoryImage = storyAsset("base");
-    const discoveryStoryImage = storyAsset("discovery");
+    const storyAsset = (name, fallback = catalogHeroFallback) => storyMap[name] || fallback;
+    const catalogHeroFallback = product.images.main;
+    const interiorFallback = byType("interior", catalogHeroFallback);
+    const macroFallback = byType("macro", catalogHeroFallback);
+    const detailFallback = byType("detail", catalogHeroFallback);
+    const heroStoryImage = storyAsset("hero", catalogHeroFallback);
+    const atmosphereStoryImage = storyAsset("atmosphere", catalogHeroFallback);
+    const interiorStoryImage = storyAsset("interior", interiorFallback);
+    const macroStoryImage = storyAsset("macro", macroFallback);
+    const detailStoryImage = storyAsset("detail", detailFallback);
+    const topStoryImage = storyAsset("top", interiorFallback);
+    const heartStoryImage = storyAsset("heart", macroFallback);
+    const baseStoryImage = storyAsset("base", detailFallback);
+    const discoveryStoryImage = storyAsset("discovery", "images/discovery/discovery-set.webp");
     const quote = insight.aura || product.shortDescription || "Аромат, що змінює відчуття простору.";
     const labels = {
       freshness: "Свіжість",

@@ -1,6 +1,6 @@
 {
-  "version": "13.5.2",
-  "name": "NO IMAGE FALLBACKS",
+  "version": "13.5.0",
+  "name": "ABOUT + SCENT GUIDE CSS CLEANUP",
   "date": "2026-07-23",
   "changes": [
     "Removed unrelated product, compare, checkout and legacy patch selectors from 404 page CSS",

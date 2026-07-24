@@ -214,7 +214,10 @@
 
 
   function compareImage(product) {
-    return `images/product-story/${product.id}/macro.webp`;
+    const gallery = Array.isArray(product?.images?.gallery) ? product.images.gallery : [];
+    return gallery.find((item) => item?.type === "macro" && item.src)?.src
+      || product?.images?.main
+      || `images/product-gallery/${product.id}/hero.webp`;
   }
 
   function compactRooms(product) {
@@ -305,8 +308,9 @@
 
     box.querySelectorAll('.va-compare-card__portrait-image').forEach((image) => {
       image.addEventListener('error', () => {
-        image.closest('.va-compare-card__portrait')?.classList.add('is-missing');
-        image.remove();
+        image.onerror = null;
+        const id = image.closest('[data-product-id]')?.dataset.productId;
+        if (id) image.src = `${root}images/product-gallery/${id}/hero.webp`;
       }, { once: true });
     });
 

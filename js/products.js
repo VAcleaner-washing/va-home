@@ -120,10 +120,10 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/signature-relax/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/signature-relax/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/signature-relax/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/signature-relax/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/signature-relax/detail.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/signature-relax/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/signature-relax/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/signature-relax/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/signature-relax/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -190,10 +190,10 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/forbidden-fruit/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/forbidden-fruit/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/forbidden-fruit/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/forbidden-fruit/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/forbidden-fruit/detail.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/forbidden-fruit/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/forbidden-fruit/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/forbidden-fruit/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/forbidden-fruit/hero.webp" }
       ]
     },
     "quickFacts": "2–3 палички для старту",
@@ -258,10 +258,10 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/doux-moment/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/doux-moment/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/doux-moment/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/doux-moment/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/doux-moment/detail.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/doux-moment/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/doux-moment/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/doux-moment/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/doux-moment/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -325,10 +325,10 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/wild-berry-way/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/wild-berry-way/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/wild-berry-way/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/wild-berry-way/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/wild-berry-way/detail.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/wild-berry-way/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/wild-berry-way/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/wild-berry-way/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/wild-berry-way/hero.webp" }
       ]
     },
     "quickFacts": "2–3 палички для старту",
@@ -390,10 +390,10 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/hotel-spring/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/hotel-spring/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/hotel-spring/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/hotel-spring/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/hotel-spring/detail.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/hotel-spring/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/hotel-spring/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/hotel-spring/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/hotel-spring/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -456,10 +456,10 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/evening-ritual/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/evening-ritual/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/evening-ritual/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/evening-ritual/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/evening-ritual/detail.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/evening-ritual/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/evening-ritual/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/evening-ritual/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/evening-ritual/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -523,10 +523,10 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/velvet-spa/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/velvet-spa/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/velvet-spa/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/velvet-spa/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/velvet-spa/detail.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/velvet-spa/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/velvet-spa/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/velvet-spa/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/velvet-spa/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -593,10 +593,10 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/pure-zen/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/pure-zen/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/pure-zen/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/pure-zen/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/pure-zen/detail.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/pure-zen/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/pure-zen/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/pure-zen/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/pure-zen/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
@@ -665,10 +665,10 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/hotel-luxe/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/hotel-luxe/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/hotel-luxe/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/hotel-luxe/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/hotel-luxe/detail.webp" }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/hotel-luxe/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/hotel-luxe/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/hotel-luxe/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/hotel-luxe/hero.webp" }
       ]
     },
     "quickFacts": "3–4 палички для старту",
