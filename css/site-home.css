@@ -2679,3 +2679,23 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
   .product-card__actions { gap: 8px; }
   .product-card__actions .btn { padding-inline: 10px; }
 }
+
+
+/* v13.5.1.4 — mobile home hero headline rhythm */
+@media (max-width: 760px) {
+  .home-page .hero.hero--editorial .hero-slide:first-child .hero-slide__title {
+    max-width: 11.2ch !important;
+    font-size: clamp(2.45rem, 11.5vw, 3.35rem) !important;
+    line-height: 0.99 !important;
+    letter-spacing: -0.025em !important;
+    text-wrap: initial;
+  }
+  .home-page .hero.hero--editorial .hero-slide:first-child .hero-slide__title br {
+    display: block !important;
+  }
+}
+@media (max-width: 390px) {
+  .home-page .hero.hero--editorial .hero-slide:first-child .hero-slide__title {
+    font-size: clamp(2.3rem, 10.8vw, 2.85rem) !important;
+  }
+}
