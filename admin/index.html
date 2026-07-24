@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html lang="uk">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<link as="font" crossorigin="" href="../fonts/cormorant-garamond-cyrillic-500-normal.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../fonts/manrope-cyrillic-400-normal.woff2" rel="preload" type="font/woff2"/>
+<meta content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://yweluzclearwrazdkahu.supabase.co; font-src 'self'; connect-src 'self' https://yweluzclearwrazdkahu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';" http-equiv="Content-Security-Policy"/>
+<title>VA HOME Admin</title>
+<meta content="noindex, nofollow, noarchive" name="robots"/>
+<link href="../favicon/favicon.ico" rel="icon" sizes="any"/>
+<link href="../css/core-admin.css?v=13.5.1.7" rel="stylesheet"/><link href="../css/site-admin.css?v=13.5.1.7" rel="stylesheet"/>
+<meta content="Службова панель керування VA HOME." name="description"/><meta content="11.7 SEO &amp; Launch Audit" name="va-home-release"/>
+</head>
+<body class="admin-body">
+<main class="admin-shell">
+<header class="admin-topbar">
+<a class="site-logo" href="../index.html">VA<span>HOME</span></a>
+<div class="admin-topbar__actions">
+<span class="admin-identity" id="adminIdentity"></span>
+<button class="btn btn-secondary btn-small" hidden="" id="logoutBtn" type="button">Вийти</button>
+</div>
+</header>
+<section class="admin-login" id="loginView">
+<div class="admin-login__card">
+<p class="eyebrow">VA HOME</p>
+<h1>Панель керування</h1>
+<p class="text-muted">Вхід лише для адміністратора магазину.</p>
+<form class="admin-form" id="loginForm">
+<label>Email<input autocomplete="username" name="email" required="" type="email" value="vahome.aroma@gmail.com"/></label>
+<label>Пароль<input autocomplete="current-password" name="password" required="" type="password"/></label>
+<button class="btn btn-primary btn-block" type="submit">Увійти</button>
+<p class="admin-message" id="loginMessage" role="status"></p>
+</form>
+</div>
+</section>
+<section hidden="" id="dashboardView">
+<div class="admin-heading">
+<div><p class="eyebrow">VA HOME</p><h2>Керування магазином</h2></div>
+<button class="btn btn-secondary btn-small" id="refreshBtn" type="button">Оновити</button>
+</div>
+<nav aria-label="Розділи адмін-панелі" class="admin-tabs">
+<button class="is-active" data-tab="orders" type="button">Замовлення <span id="ordersBadge"></span></button>
+<button data-tab="reviews" type="button">Відгуки <span id="reviewsBadge"></span></button>
+</nav>
+<section class="admin-tab-panel" id="ordersTab">
+<div class="admin-period-stats" id="periodStats"></div>
+<section aria-labelledby="salesChartTitle" class="admin-chart-card">
+<div class="admin-chart-card__head"><div><p class="eyebrow">Аналітика</p><h2 id="salesChartTitle">Продажі за 30 днів</h2></div><strong id="chartTotal"></strong></div>
+<div aria-label="Графік продажів за останні 30 днів" class="admin-chart" id="salesChart" role="img"></div>
+</section>
+<div class="admin-toolbar">
+<input aria-label="Пошук замовлень" id="orderSearch" placeholder="Номер, ім'я, телефон, email…" type="search"/>
+<select aria-label="Фільтр статусу замовлень" id="orderStatusFilter">
+<option value="">Усі статуси</option>
+<option value="new">Нове</option>
+<option value="awaiting_payment">Очікує оплату</option>
+<option value="paid">Оплачено</option>
+<option value="shipped">Відправлено</option>
+<option value="completed">Виконано</option>
+<option value="cancelled">Скасовано</option>
+</select>
+</div>
+<div class="admin-stats" id="ordersStats"></div>
+<div class="admin-list" id="ordersList"></div>
+<p class="admin-empty" hidden="" id="ordersEmpty">Замовлень не знайдено.</p>
+</section>
+<section class="admin-tab-panel" hidden="" id="reviewsTab">
+<div class="admin-toolbar">
+<input aria-label="Пошук відгуків" id="reviewSearch" placeholder="Аромат, ім'я або текст…" type="search"/>
+<select aria-label="Фільтр статусу відгуків" id="reviewStatusFilter">
+<option value="pending">Очікують перевірки</option>
+<option value="approved">Схвалені</option>
+<option value="rejected">Відхилені</option>
+<option value="">Усі</option>
+</select>
+</div>
+<div class="admin-list" id="reviewsAdminList"></div>
+<p class="admin-empty" hidden="" id="reviewsAdminEmpty">Відгуків не знайдено.</p>
+</section>
+</section>
+</main>
+<dialog class="admin-dialog" id="orderDialog">
+<form method="dialog"><button aria-label="Закрити" class="admin-dialog__close" type="button">×</button></form>
+<div id="orderDialogContent"></div>
+</dialog>
+<script defer="" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer="" src="../js/config.js?v=13.5.1.7"></script>
+<script defer="" src="../js/admin.js?v=13.5.1.7"></script>
+<script defer="" src="../js/motion.js?v=13.5.1.7"></script>
+</body>
+</html>

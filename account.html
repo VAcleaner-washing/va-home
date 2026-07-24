@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+
+<html lang="uk">
+<head>
+<script>document.documentElement.classList.add('va-hero-fonts-loading');</script>
+<link as="font" crossorigin="" href="fonts/cormorant-garamond-cyrillic-500-normal.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="fonts/manrope-cyrillic-400-normal.woff2" rel="preload" type="font/woff2"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<meta content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://yweluzclearwrazdkahu.supabase.co; font-src 'self'; connect-src 'self' https://yweluzclearwrazdkahu.supabase.co https://www.google-analytics.com https://www.googletagmanager.com https://region1.google-analytics.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';" http-equiv="Content-Security-Policy"/>
+<title>Мій кабінет — VA HOME</title>
+<meta content="noindex, nofollow, noarchive" name="robots"/>
+<link href="favicon/favicon.ico" rel="icon"/>
+<link href="css/core.css?v=13.5.1.7" rel="stylesheet"/><link href="css/site-account.css?v=13.5.1.7" rel="stylesheet"/>
+<meta content="Особистий кабінет VA HOME: замовлення, адреси доставки, список бажань і налаштування профілю." name="description"/><meta content="12.0.3 STABLE Ukrainian Auth" name="va-home-release"/><meta content="#15130f" name="theme-color"/><meta content="telephone=no" name="format-detection"/>
+<script defer="" src="js/hero-font-reveal.js?v=13.5.1.7"></script>
+</head>
+<body>
+<div data-active="account" data-root="" id="site-header">
+</div>
+<main class="account-page" id="main-content">
+<div class="container">
+<div aria-live="polite" class="account-loading" id="accountLoading" role="status">
+<span class="account-loading__mark">VA</span>
+<span>Відкриваємо ваш кабінет…</span>
+</div>
+<section class="account-auth" hidden="" id="accountAuth">
+<div>
+<p class="eyebrow">VA HOME</p>
+<h1>Особистий кабінет</h1>
+<p>Швидше оформлення, історія замовлень і улюблені аромати — у вашому персональному просторі VA HOME.</p>
+</div>
+<form class="account-form" id="accountForm">
+<button aria-describedby="googleAuthHint" class="account-google" id="accountGoogle" type="button">
+<svg aria-hidden="true" class="account-google__icon" height="20" viewbox="0 0 24 24" width="20"><path d="M21.35 12.2c0-.7-.06-1.38-.18-2.03H12v3.84h5.24a4.48 4.48 0 0 1-1.94 2.94v2.49h3.14c1.84-1.7 2.91-4.2 2.91-7.24Z" fill="#4285F4"></path><path d="M12 21.7c2.62 0 4.82-.87 6.44-2.36l-3.14-2.49c-.87.58-1.99.93-3.3.93-2.53 0-4.67-1.71-5.44-4.01H3.31v2.57A9.73 9.73 0 0 0 12 21.7Z" fill="#34A853"></path><path d="M6.56 13.77A5.85 5.85 0 0 1 6.25 12c0-.61.11-1.21.31-1.77V7.66H3.31A9.7 9.7 0 0 0 2.27 12c0 1.57.38 3.06 1.04 4.34l3.25-2.57Z" fill="#FBBC05"></path><path d="M12 6.22c1.43 0 2.71.49 3.72 1.45l2.79-2.79C16.82 3.31 14.62 2.3 12 2.3a9.73 9.73 0 0 0-8.69 5.36l3.25 2.57c.77-2.3 2.91-4.01 5.44-4.01Z" fill="#EA4335"></path></svg>
+<span>Продовжити з Google</span>
+</button>
+<p class="account-google-hint" id="googleAuthHint">Без окремої реєстрації.</p>
+<div aria-hidden="true" class="account-auth-divider"><span>або</span></div>
+<label>Електронна пошта<input autocomplete="email" name="email" required="" type="email"/>
+</label>
+<label>Пароль<div class="password-field"><input autocomplete="current-password" minlength="8" name="password" required="" type="password"/><button aria-label="Показати пароль" class="password-toggle" type="button">Показати</button></div><small>Мінімум 8 символів</small>
+</label>
+<button class="btn btn-primary btn-block" id="accountSubmit" type="submit">Увійти</button>
+<div class="account-auth-actions">
+<button class="account-reset" id="accountResetPassword" type="button">Забули пароль?</button>
+<p class="account-mode-prompt"><span id="accountModePrompt">Немає акаунта?</span> <button data-auth-mode="signup" id="accountModeToggle" type="button">Створити акаунт</button></p>
+</div>
+<p class="account-message" id="accountMessage" role="status">
+</p>
+</form>
+<form class="account-form" hidden="" id="accountRecoveryForm">
+<h2>Новий пароль</h2>
+<label>Новий пароль<div class="password-field"><input autocomplete="new-password" minlength="8" name="newPassword" required="" type="password"/><button aria-label="Показати пароль" class="password-toggle" type="button">Показати</button></div></label>
+<button class="btn btn-primary btn-block" type="submit">Зберегти новий пароль</button>
+<p class="account-message" id="accountRecoveryMessage" role="status"></p>
+</form>
+</section>
+<section hidden="" id="accountDashboard">
+<div class="account-head">
+<div>
+<p class="eyebrow">VA HOME</p>
+<h2 class="account-dashboard-title">Ваш простір</h2>
+<p id="accountEmail">
+</p>
+</div>
+<button class="btn btn-secondary" id="accountLogout" type="button">Вийти</button>
+</div>
+<nav aria-label="Розділи кабінету" class="account-tabs">
+<button class="is-active" data-account-tab="orders" type="button">Замовлення</button>
+<button data-account-tab="wishlist" type="button">Обране</button>
+<button data-account-tab="settings" type="button">Профіль</button>
+</nav>
+<section id="accountOrders">
+<div class="signature-scent" hidden="" id="signatureScent"><div class="signature-scent__media"><img alt="" decoding="async" id="signatureScentImage" loading="eager"/></div><div class="signature-scent__copy"><p class="eyebrow">YOUR SIGNATURE SCENT</p><h2 id="signatureScentName">—</h2><p>Аромат, до якого ви повертаєтесь найчастіше. Ваш особистий характер простору.</p><a class="btn btn-secondary btn-small" href="catalog.html" id="signatureScentLink">Замовити ще</a></div></div>
+<div class="account-list" id="accountOrdersList">
+</div>
+<div class="account-empty" hidden="" id="accountOrdersEmpty"><h3>Ваш перший аромат ще попереду</h3><p>Перегляньте колекції або пройдіть короткий гід, щоб знайти композицію для свого простору.</p><div class="account-empty__actions"><a class="btn btn-primary" href="catalog.html">Перейти в каталог</a><a class="btn btn-secondary" href="scent-guide.html">Підібрати аромат</a></div></div>
+</section>
+<section hidden="" id="accountWishlist">
+<div class="wishlist-intro"><div><p class="eyebrow">Ваш вибір</p><h2>Збережені аромати</h2><p>Додавайте композиції через сердечко в каталозі або на сторінці аромату.</p></div><a class="btn btn-secondary" href="catalog.html">Переглянути каталог</a></div>
+<p class="account-message" id="wishlistMessage" role="status"></p>
+<div class="wishlist-grid" id="accountWishlistList">
+</div>
+<div class="account-empty" hidden="" id="accountWishlistEmpty"><h3>Тут з’являться ваші фаворити</h3><p>Зберігайте аромати, які хочеться порівняти або замовити пізніше.</p><a class="btn btn-primary" href="catalog.html">Переглянути аромати</a></div>
+</section>
+<section hidden="" id="accountSettings">
+<div class="account-settings-block">
+<h2>Дані для доставки</h2>
+<p class="account-settings-block__hint">Збережіть дані один раз — вони автоматично підставляться в форму замовлення наступного разу.</p>
+<form class="account-form" id="accountDeliveryForm">
+<label for="savedName">Ім'я та прізвище</label>
+<input autocomplete="name" id="savedName" name="savedName" type="text"/>
+<label for="savedPhone">Телефон</label>
+<input autocomplete="tel" id="savedPhone" name="savedPhone" placeholder="+380XXXXXXXXX" type="tel"/>
+<label for="savedCity">Місто</label>
+<input autocomplete="address-level2" id="savedCity" name="savedCity" type="text"/>
+<label for="savedWarehouse">Відділення Нової пошти</label>
+<input id="savedWarehouse" name="savedWarehouse" type="text"/>
+<button class="btn btn-primary" type="submit">Зберегти дані доставки</button>
+<p class="account-message" id="accountDeliveryMessage" role="status"></p>
+</form>
+</div>
+<div class="account-settings-block">
+<h2>Змінити пароль</h2>
+<form class="account-form" id="accountPasswordForm">
+<label for="newPassword">Новий пароль</label>
+<div class="password-field"><input autocomplete="new-password" id="newPassword" minlength="8" name="newPassword" required="" type="password"/><button aria-label="Показати пароль" class="password-toggle" type="button">Показати</button></div>
+<label for="newPasswordConfirm">Повторіть новий пароль</label>
+<div class="password-field"><input autocomplete="new-password" id="newPasswordConfirm" minlength="8" name="newPasswordConfirm" required="" type="password"/><button aria-label="Показати пароль" class="password-toggle" type="button">Показати</button></div>
+<button class="btn btn-primary" type="submit">Змінити пароль</button>
+<p class="account-message" id="accountPasswordMessage" role="status"></p>
+</form>
+</div>
+</section>
+</section>
+</div>
+</main>
+<div data-root="" id="site-footer">
+</div>
+<script defer="" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+<script src="js/config.js?v=13.5.1.7">
+</script>
+<script src="js/products.js?v=13.5.1.7">
+</script>
+<script src="js/cart.js?v=13.5.1.7">
+</script>
+<script defer="" src="js/main.js?v=13.5.1.7">
+</script>
+<script defer="" src="js/account.js?v=13.5.1.7">
+</script>
+<script defer="" src="js/motion.js?v=13.5.1.7"></script>
+</body>
+</html>
