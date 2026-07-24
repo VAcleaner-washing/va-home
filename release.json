@@ -1,11 +1,11 @@
 {
-  "version": "13.5.1.6",
-  "name": "Critical gallery fixes",
+  "version": "13.5.1.8",
+  "name": "SEO sitemap and canonical validation",
   "date": "2026-07-24",
   "changes": [
-    "Removed undefined gallery fallbackSrc reference",
-    "Product gallery now uses product-story assets only",
-    "Missing story images are marked missing instead of substituted",
-    "Catalog remains product-gallery only and compare remains macro only"
+    "Regenerated sitemap.xml from actual indexable pages and absolute canonical URLs",
+    "Regenerated image-sitemap.xml using current product-gallery and product-story architecture",
+    "Removed obsolete image sitemap references to legacy images/products paths",
+    "Validated that no noindex utility page is present in sitemap.xml"
   ]
 }

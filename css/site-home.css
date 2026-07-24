@@ -2700,7 +2700,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
   }
 }
 
-/* v13.5.1.6 — mobile Discovery Set hero typography */
+/* v13.5.1.7 — mobile Discovery Set hero typography */
 @media (max-width: 760px) {
   .home-page .hero.hero--editorial .hero-slide:nth-child(2) .hero-slide__title {
     max-width: 12.5ch !important;
