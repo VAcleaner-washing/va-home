@@ -223,22 +223,26 @@
         }, 900);
       };
       preload.onerror = () => {
-        // A story slot may be added later. Until then use the dedicated catalog hero
-        // without removing the product or leaving an empty image.
-        if (item.fallbackSrc && item.src !== item.fallbackSrc && !item.fallbackAttempted) {
-          item.fallbackAttempted = true;
-          item.src = item.fallbackSrc;
-          show(current, false);
+        const failedIndex = gallery.findIndex((entry) => entry === item);
+        if (failedIndex !== -1) gallery.splice(failedIndex, 1);
+
+        if (gallery.length) {
+          current = Math.min(current, gallery.length - 1);
+          mount({
+            product,
+            items: gallery.map((entry) => ({
+              ...entry,
+              src: entry.src.startsWith(root) ? entry.src.slice(root.length) : entry.src
+            })),
+            root
+          });
           return;
         }
-        const failedIndex = gallery.findIndex((entry) => entry === item);
-        if (failedIndex !== -1 && gallery.length > 1) {
-          gallery.splice(failedIndex, 1);
-          current = Math.min(current, gallery.length - 1);
-          mount({ product, items: gallery.map((entry) => ({ ...entry, src: entry.src.replace(root, "") })), root, fallbackSrc });
-        } else if (fallbackSrc) {
-          mainImage.src = fallbackSrc;
-        }
+
+        mainImage.removeAttribute("src");
+        mainImage.alt = `${product.name} — фото тимчасово відсутнє`;
+        mainImage.closest(".product-gallery")?.classList.add("product-gallery--missing");
+        strip.replaceChildren();
       };
       preload.src = item.src;
     }

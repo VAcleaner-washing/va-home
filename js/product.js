@@ -39,9 +39,6 @@
         ? { type: index === 0 ? "hero" : "detail", label: `Фото ${index + 1}`, src: item }
         : item)
       .filter((item) => item && item.src);
-    if (!normalized.length && product?.images?.main) {
-      normalized.push({ type: "hero", label: "Hero", src: product.images.main });
-    }
     return normalized;
   }
 
@@ -104,7 +101,7 @@
 
     const gallery = getProductGallery(product);
     if (window.VAHomeGallery) {
-      window.VAHomeGallery.mount({ product, items: gallery, root: "../", fallbackSrc: `../${product.images?.main || ""}` });
+      window.VAHomeGallery.mount({ product, items: gallery, root: "../" });
     }
     const badges = document.getElementById("productBadges");
     if (badges) badges.innerHTML = (product.badges || []).map((badge) => `<span class="badge badge--${escapeHtml(badge)}">${badge === "bestseller" ? "Bestseller" : badge === "new" ? "Новинка" : "Limited"}</span>`).join("");
@@ -269,25 +266,17 @@
 
     const collection = typeof getCollection === "function" ? getCollection(product.collection) : null;
     const insight = product.insights || {};
-    const atmosphereImage = product.images.atmosphere || `images/atmosphere/${product.id}.webp`;
-    const atmosphereFallback = (collection && collection.heroImage) || product.images.main;
-    const galleryItems = getProductGallery(product);
-    const byType = (type, fallback) => galleryItems.find((item) => item.type === type)?.src || fallback;
     const storyMap = product.images.story || {};
-    const storyAsset = (name, fallback = catalogHeroFallback) => storyMap[name] || fallback;
-    const catalogHeroFallback = product.images.main;
-    const interiorFallback = byType("interior", catalogHeroFallback);
-    const macroFallback = byType("macro", catalogHeroFallback);
-    const detailFallback = byType("detail", catalogHeroFallback);
-    const heroStoryImage = storyAsset("hero", catalogHeroFallback);
-    const atmosphereStoryImage = storyAsset("atmosphere", catalogHeroFallback);
-    const interiorStoryImage = storyAsset("interior", interiorFallback);
-    const macroStoryImage = storyAsset("macro", macroFallback);
-    const detailStoryImage = storyAsset("detail", detailFallback);
-    const topStoryImage = storyAsset("top", interiorFallback);
-    const heartStoryImage = storyAsset("heart", macroFallback);
-    const baseStoryImage = storyAsset("base", detailFallback);
-    const discoveryStoryImage = storyAsset("discovery", "images/discovery/discovery-set.webp");
+    const storyAsset = (name) => storyMap[name] || "";
+    const heroStoryImage = storyAsset("hero");
+    const atmosphereStoryImage = storyAsset("atmosphere");
+    const interiorStoryImage = storyAsset("interior");
+    const macroStoryImage = storyAsset("macro");
+    const detailStoryImage = storyAsset("detail");
+    const topStoryImage = storyAsset("top");
+    const heartStoryImage = storyAsset("heart");
+    const baseStoryImage = storyAsset("base");
+    const discoveryStoryImage = storyAsset("discovery") || "images/discovery/discovery-set.webp";
     const quote = insight.aura || product.shortDescription || "Аромат, що змінює відчуття простору.";
     const labels = {
       freshness: "Свіжість",
@@ -350,7 +339,7 @@
     story.className = "product-editorial-story product-story-v10";
     story.innerHTML = `
       <section class="story-cinema" aria-labelledby="storyQuoteTitle">
-        <img src="../${atmosphereStoryImage}" alt="${escapeHtml(product.name)} в інтер’єрі" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../${atmosphereImage}';this.onerror=()=>{this.onerror=null;this.closest('section,figure,article')?.classList.add('story-media-missing');this.remove()}">
+        <img src="../${atmosphereStoryImage}" alt="${escapeHtml(product.name)} в інтер’єрі" loading="lazy" decoding="async" onerror="this.onerror=null;this.closest('section,figure,article')?.classList.add('story-media-missing');this.remove()">
         <div class="story-cinema__shade"></div>
         <div class="container story-cinema__copy">
           <p class="eyebrow">Відчуття у просторі</p>
@@ -367,7 +356,7 @@
           <a href="../scent-guide.html">Дізнатися більше про аромат →</a>
         </div>
         <figure class="story-composition__macro">
-          <img src="../${macroStoryImage}" alt="Деталь флакону ${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../${macroFallback}';this.onerror=()=>{this.onerror=null;this.closest('section,figure,article')?.classList.add('story-media-missing');this.remove()}">
+          <img src="../${macroStoryImage}" alt="Деталь флакону ${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.closest('section,figure,article')?.classList.add('story-media-missing');this.remove()">
         </figure>
         <div class="story-dna">
           <p class="eyebrow">DNA аромату</p>
@@ -383,15 +372,15 @@
         <div class="story-notes__label"><p class="eyebrow">Ноти аромату</p><h2 id="storyNotesTitle">Три фази звучання</h2></div>
         <div class="story-notes__grid">
           <article>
-            <img src="../${topStoryImage}" alt="Верхні ноти ${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../${interiorFallback}';this.onerror=()=>{this.onerror=null;this.closest('article')?.classList.add('story-media-missing');this.remove()}">
+            <img src="../${topStoryImage}" alt="Верхні ноти ${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.closest('article')?.classList.add('story-media-missing');this.remove()">
             <div><span>Верхні ноти</span><h3>${escapeHtml(product.notes.top.join(", "))}</h3><p>перший дотик</p></div>
           </article>
           <article>
-            <img src="../${heartStoryImage}" alt="Серце аромату ${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../${macroFallback}';this.onerror=()=>{this.onerror=null;this.closest('section,figure,article')?.classList.add('story-media-missing');this.remove()}">
+            <img src="../${heartStoryImage}" alt="Серце аромату ${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.closest('section,figure,article')?.classList.add('story-media-missing');this.remove()">
             <div><span>Серце</span><h3>${escapeHtml(product.notes.heart.join(", "))}</h3><p>через кілька хвилин</p></div>
           </article>
           <article>
-            <img src="../${baseStoryImage}" alt="База аромату ${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../${detailFallback}';this.onerror=()=>{this.onerror=null;this.closest('article')?.classList.add('story-media-missing');this.remove()}">
+            <img src="../${baseStoryImage}" alt="База аромату ${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.closest('article')?.classList.add('story-media-missing');this.remove()">
             <div><span>База</span><h3>${escapeHtml(product.notes.base.join(", "))}</h3><p>довгий післясмак</p></div>
           </article>
         </div>
@@ -412,7 +401,7 @@
             <div class="story-ritual__icon" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="17"/><path d="M24 13v12l8 5"/></svg></div>
             <div><span>03</span><h3>Дайте аромату час</h3><p>Через 24–48 годин композиція розкриється.</p></div>
           </article>
-          <figure><img src="../${interiorStoryImage}" alt="${escapeHtml(product.name)} у просторі" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../${interiorFallback}';this.onerror=()=>{this.onerror=null;this.src='../${atmosphereImage}'}"></figure>
+          <figure><img src="../${interiorStoryImage}" alt="${escapeHtml(product.name)} у просторі" loading="lazy" decoding="async" onerror="this.onerror=null;this.closest('figure')?.classList.add('story-media-missing');this.remove()"></figure>
         </div>
         <div class="container"><details class="story-ritual__details"><summary>Комплектація та безпечне використання</summary><div><p><strong>У комплекті:</strong> флакон 100 мл і 4 чорні палички.</p><p><strong>Тривалість:</strong> орієнтовно 8–12 тижнів.</p><p>Не ковтати. Уникайте контакту рідини зі шкірою, очима, меблями та текстилем. Тримайте подалі від дітей, домашніх тварин, вогню й джерел тепла.</p></div></details></div>
       </section>
@@ -420,7 +409,7 @@
       <section class="story-discovery">
         <div class="container story-discovery__inner">
           <div><p class="eyebrow">Не можете обрати один?</p><h2>Спробуйте Discovery Set</h2><p>6 композицій по 5 мл для знайомства з колекцією.</p><a class="btn btn-outline" href="../discovery-set.html">Дізнатися більше</a></div>
-          <img src="../${discoveryStoryImage}" alt="Discovery Set ${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../images/discovery/discovery-set.webp'">
+          <img src="../${discoveryStoryImage}" alt="Discovery Set ${escapeHtml(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.closest('section,figure,article')?.classList.add('story-media-missing');this.remove()">
         </div>
       </section>`;
 
