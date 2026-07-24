@@ -1,11 +1,26 @@
 {
-  "version": "13.5.0",
-  "name": "ABOUT + SCENT GUIDE CSS CLEANUP",
-  "date": "2026-07-23",
-  "changes": [
-    "Removed unrelated product, compare, checkout and legacy patch selectors from 404 page CSS",
-    "Removed unrelated product and legacy selectors from legal page CSS",
-    "Removed unrelated product, compare and legacy selectors from delivery/contact page CSS",
-    "Preserved core.css and all high-risk commerce/product styles unchanged"
-  ]
+  "version": "13.2.0-technical-clean",
+  "cssBundles": [
+    "site-404.css",
+    "site-about.css",
+    "site-account.css",
+    "site-admin.css",
+    "site-article.css",
+    "site-cart.css",
+    "site-catalog.css",
+    "site-collections.css",
+    "site-compare.css",
+    "site-discovery.css",
+    "site-home.css",
+    "site-info.css",
+    "site-journal.css",
+    "site-legal.css",
+    "site-order-status.css",
+    "site-product.css",
+    "site-scent-guide.css",
+    "site-thank-you.css"
+  ],
+  "productionQaRemoved": true,
+  "assetNaming": "lowercase",
+  "designChanged": false
 }

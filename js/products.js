@@ -733,21 +733,11 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/old-money/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/old-money/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/old-money/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/old-money/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/old-money/detail.webp" }
-      ],
-      "story": {
-        "atmosphere": "images/product-story/old-money/atmosphere.webp",
-        "base": "images/product-story/old-money/base.webp",
-        "detail": "images/product-story/old-money/detail.webp",
-        "heart": "images/product-story/old-money/heart.webp",
-        "hero": "images/product-story/old-money/hero.webp",
-        "interior": "images/product-story/old-money/interior.webp",
-        "macro": "images/product-story/old-money/macro.webp",
-        "top": "images/product-story/old-money/top.webp"
-      }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/old-money/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/old-money/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/old-money/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/old-money/hero.webp" }
+      ]
     },
     "quickFacts": "3–4 палички для старту",
     "suitFor": "Підійде, якщо шукаєте теплий деревний аромат з готельним характером для вітальні, кабінету чи передпокою.",
@@ -811,21 +801,11 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/linstinct/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/linstinct/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/linstinct/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/linstinct/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/linstinct/detail.webp" }
-      ],
-      "story": {
-        "atmosphere": "images/product-story/linstinct/atmosphere.webp",
-        "base": "images/product-story/linstinct/base.webp",
-        "detail": "images/product-story/linstinct/detail.webp",
-        "heart": "images/product-story/linstinct/heart.webp",
-        "hero": "images/product-story/linstinct/hero.webp",
-        "interior": "images/product-story/linstinct/interior.webp",
-        "macro": "images/product-story/linstinct/macro.webp",
-        "top": "images/product-story/linstinct/top.webp"
-      }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/linstinct/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/linstinct/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/linstinct/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/linstinct/hero.webp" }
+      ]
     },
     "quickFacts": "3–4 палички для старту",
     "suitFor": "Підійде, якщо любите свіжо-деревні композиції з готельним характером для кабінету, передпокою чи вітальні.",
@@ -888,21 +868,11 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/mineral-salt/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/mineral-salt/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/mineral-salt/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/mineral-salt/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/mineral-salt/detail.webp" }
-      ],
-      "story": {
-        "atmosphere": "images/product-story/mineral-salt/atmosphere.webp",
-        "base": "images/product-story/mineral-salt/base.webp",
-        "detail": "images/product-story/mineral-salt/detail.webp",
-        "heart": "images/product-story/mineral-salt/heart.webp",
-        "hero": "images/product-story/mineral-salt/hero.webp",
-        "interior": "images/product-story/mineral-salt/interior.webp",
-        "macro": "images/product-story/mineral-salt/macro.webp",
-        "top": "images/product-story/mineral-salt/top.webp"
-      }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/mineral-salt/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/mineral-salt/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/mineral-salt/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/mineral-salt/hero.webp" }
+      ]
     },
     "quickFacts": "3–4 палички для старту",
     "suitFor": "Підійде, якщо шукаєте чисту спа-свіжість для спокою у ванній кімнаті чи спальні.",
@@ -966,22 +936,11 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/pure-imagination/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/pure-imagination/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/pure-imagination/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/pure-imagination/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/pure-imagination/detail.webp" }
-      ],
-      "story": {
-        "atmosphere": "images/product-story/pure-imagination/atmosphere.webp",
-        "base": "images/product-story/pure-imagination/base.webp",
-        "detail": "images/product-story/pure-imagination/detail.webp",
-        "discovery": "images/product-story/pure-imagination/discovery.webp",
-        "heart": "images/product-story/pure-imagination/heart.webp",
-        "hero": "images/product-story/pure-imagination/hero.webp",
-        "interior": "images/product-story/pure-imagination/interior.webp",
-        "macro": "images/product-story/pure-imagination/macro.webp",
-        "top": "images/product-story/pure-imagination/top.webp"
-      }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/pure-imagination/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/pure-imagination/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/pure-imagination/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/pure-imagination/hero.webp" }
+      ]
     },
     "quickFacts": "3–4 палички для старту",
     "suitFor": "Підійде, якщо цікавлять молекулярні, чисто-свіжі композиції з готельним характером для вітальні чи кабінету.",
@@ -1050,22 +1009,11 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/silk-molecule/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/silk-molecule/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/silk-molecule/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/silk-molecule/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/silk-molecule/detail.webp" }
-      ],
-      "story": {
-        "atmosphere": "images/product-story/silk-molecule/atmosphere.webp",
-        "base": "images/product-story/silk-molecule/base.webp",
-        "detail": "images/product-story/silk-molecule/detail.webp",
-        "discovery": "images/product-story/silk-molecule/discovery.webp",
-        "heart": "images/product-story/silk-molecule/heart.webp",
-        "hero": "images/product-story/silk-molecule/hero.webp",
-        "interior": "images/product-story/silk-molecule/interior.webp",
-        "macro": "images/product-story/silk-molecule/macro.webp",
-        "top": "images/product-story/silk-molecule/top.webp"
-      }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/silk-molecule/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/silk-molecule/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/silk-molecule/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/silk-molecule/hero.webp" }
+      ]
     },
     "quickFacts": "3–4 палички для старту",
     "suitFor": "Підійде, якщо любите молекулярні, теплі аромати для вечірньої атмосфери у спальні чи вітальні.",
@@ -1131,22 +1079,11 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/the-archive/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/the-archive/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/the-archive/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/the-archive/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/the-archive/detail.webp" }
-      ],
-      "story": {
-        "atmosphere": "images/product-story/the-archive/atmosphere.webp",
-        "base": "images/product-story/the-archive/base.webp",
-        "detail": "images/product-story/the-archive/detail.webp",
-        "discovery": "images/product-story/the-archive/discovery.webp",
-        "heart": "images/product-story/the-archive/heart.webp",
-        "hero": "images/product-story/the-archive/hero.webp",
-        "interior": "images/product-story/the-archive/interior.webp",
-        "macro": "images/product-story/the-archive/macro.webp",
-        "top": "images/product-story/the-archive/top.webp"
-      }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/the-archive/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/the-archive/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/the-archive/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/the-archive/hero.webp" }
+      ]
     },
     "quickFacts": "3–4 палички для старту",
     "suitFor": "Підійде, якщо шукаєте молекулярно-деревну композицію з готельним характером для кабінету чи вітальні.",
@@ -1214,21 +1151,11 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/silent-temple/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/silent-temple/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/silent-temple/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/silent-temple/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/silent-temple/detail.webp" }
-      ],
-      "story": {
-        "atmosphere": "images/product-story/silent-temple/atmosphere.webp",
-        "base": "images/product-story/silent-temple/base.webp",
-        "detail": "images/product-story/silent-temple/detail.webp",
-        "heart": "images/product-story/silent-temple/heart.webp",
-        "hero": "images/product-story/silent-temple/hero.webp",
-        "interior": "images/product-story/silent-temple/interior.webp",
-        "macro": "images/product-story/silent-temple/macro.webp",
-        "top": "images/product-story/silent-temple/top.webp"
-      }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/silent-temple/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/silent-temple/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/silent-temple/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/silent-temple/hero.webp" }
+      ]
     },
     "quickFacts": "3–4 палички для старту",
     "suitFor": "Підійде, якщо любите молекулярно-деревну свіжість для спокою в кабінеті, спальні чи ванній кімнаті.",
@@ -1293,21 +1220,11 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/moss-and-shadow/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/moss-and-shadow/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/moss-and-shadow/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/moss-and-shadow/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/moss-and-shadow/detail.webp" }
-      ],
-      "story": {
-        "atmosphere": "images/product-story/moss-and-shadow/atmosphere.webp",
-        "base": "images/product-story/moss-and-shadow/base.webp",
-        "detail": "images/product-story/moss-and-shadow/detail.webp",
-        "heart": "images/product-story/moss-and-shadow/heart.webp",
-        "hero": "images/product-story/moss-and-shadow/hero.webp",
-        "interior": "images/product-story/moss-and-shadow/interior.webp",
-        "macro": "images/product-story/moss-and-shadow/macro.webp",
-        "top": "images/product-story/moss-and-shadow/top.webp"
-      }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/moss-and-shadow/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/moss-and-shadow/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/moss-and-shadow/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/moss-and-shadow/hero.webp" }
+      ]
     },
     "quickFacts": "3–4 палички для старту",
     "suitFor": "Підійде, якщо шукаєте молекулярно-деревну свіжість для вечірньої атмосфери у вітальні чи кабінеті.",
@@ -1373,21 +1290,11 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-gallery/dark-bloom/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/dark-bloom/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/dark-bloom/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/dark-bloom/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/dark-bloom/detail.webp" }
-      ],
-      "story": {
-        "atmosphere": "images/product-story/dark-bloom/atmosphere.webp",
-        "base": "images/product-story/dark-bloom/base.webp",
-        "detail": "images/product-story/dark-bloom/detail.webp",
-        "heart": "images/product-story/dark-bloom/heart.webp",
-        "hero": "images/product-story/dark-bloom/hero.webp",
-        "interior": "images/product-story/dark-bloom/interior.webp",
-        "macro": "images/product-story/dark-bloom/macro.webp",
-        "top": "images/product-story/dark-bloom/top.webp"
-      }
+        { "type": "hero", "label": "Hero", "src": "images/product-gallery/dark-bloom/hero.webp" },
+        { "type": "macro", "label": "Macro", "src": "images/product-gallery/dark-bloom/hero.webp" },
+        { "type": "interior", "label": "Interior", "src": "images/product-gallery/dark-bloom/hero.webp" },
+        { "type": "detail", "label": "Detail", "src": "images/product-gallery/dark-bloom/hero.webp" }
+      ]
     },
     "quickFacts": "3–4 палички для старту",
     "suitFor": "Підійде, якщо любите теплі молекулярні композиції для вечора у спальні чи вітальні.",

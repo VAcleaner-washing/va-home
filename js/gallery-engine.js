@@ -90,9 +90,30 @@
   }
 
   async function resolveGallery(product, items, root) {
-    // Product data is generated from files that actually exist. Missing story slots
-    // already point to product-gallery/<id>/hero.webp, so no runtime probing or 404 requests are needed.
-    return normalizeProvidedItems(items, root);
+    // Prefer product-story per gallery slot. When a specific story image is absent,
+    // immediately keep the legacy item for that same slot instead of leaving it blank.
+    const storyCandidates = makeAutomaticCandidates(product, root)
+      .filter((item) => item.source === "product-story");
+    const provided = normalizeProvidedItems(items, root);
+    const typeOrder = ["hero", "macro", "interior", "detail"];
+
+    const availability = await Promise.all(storyCandidates.map((item) => canLoad(item.src)));
+    const availableStory = storyCandidates.filter((_, index) => availability[index]);
+    const selected = [];
+
+    typeOrder.forEach((type) => {
+      const storyItem = availableStory.find((item) => item.type === type);
+      const legacyItem = provided.find((item) => item.type === type);
+      const chosen = storyItem || legacyItem;
+      if (chosen && !selected.some((item) => item.src === chosen.src)) selected.push(chosen);
+    });
+
+    // Preserve any extra legacy gallery items after the four primary slots.
+    provided.forEach((item) => {
+      if (!selected.some((selectedItem) => selectedItem.src === item.src)) selected.push(item);
+    });
+
+    return selected;
   }
 
   async function mount({ product, items, root = "", fallbackSrc = "" }) {
