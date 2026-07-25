@@ -1,4 +1,4 @@
-VA HOME v13.7.0-rc.9
+VA HOME v13.7.0-rc.10
 PWA Release Candidate validation — 2026-07-25
 
 PASS  52 HTML pages parsed: 51 site pages plus offline fallback
@@ -13,7 +13,7 @@ PASS  Public HTML uses fresh network navigation with an offline fallback
 PASS  Account, cart, thank-you, order-status and admin routes remain network-only
 PASS  Supabase, configuration, checkout, account and review files remain network-only
 PASS  Versioned static cache removes previous VA HOME caches on activation
-PASS  Resource query version synchronized to 13.7.0-rc9
+PASS  Resource query version synchronized to 13.7.0-rc10
 PASS  No stale rc5 or rc6 resource versions remain
 PASS  18 product pages found
 PASS  18 product-to-Journal proof links found
@@ -27,6 +27,7 @@ PASS  Discovery Set guide CTA spans the full information grid
 PASS  One About-to-Journal bridge is placed inside Molecular Architecture
 PASS  Empty catalog ratings reserve layout height without displaying fake review text
 PASS  About mobile text insets and global glass header preserved from RC6
+PASS  Mobile checkout CTA hides once the checkout form enters the viewport in Safari, PWA and other mobile browsers
 
 LIVE RELEASE GATE
 - Supabase create-order version 19 is ACTIVE and exactly matches this RC.

@@ -662,20 +662,42 @@
     const action = document.getElementById('checkoutMobileAction');
     const form = document.getElementById('checkoutForm');
     if (!action || !form) return;
-    let checkoutReady = false;
-    action.addEventListener('click', () => {
-      if (checkoutReady) {
-        form.requestSubmit();
+
+    let raf = 0;
+    const syncCheckoutZone = () => {
+      raf = 0;
+      if (window.innerWidth > 800) {
+        document.body.classList.remove('va-checkout-form-active');
         return;
       }
+
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const formTop = form.getBoundingClientRect().top + window.scrollY;
+      const viewportBottom = window.scrollY + viewportHeight;
+      const checkoutStarted = viewportBottom >= formTop + 48;
+      document.body.classList.toggle('va-checkout-form-active', checkoutStarted);
+    };
+
+    const scheduleSync = () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(syncCheckoutZone);
+    };
+
+    action.addEventListener('click', () => {
       form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.body.classList.add('va-checkout-form-active');
       window.setTimeout(() => form.elements.customerName?.focus({ preventScroll: true }), 550);
     });
-    const observer = new IntersectionObserver(([entry]) => {
-      checkoutReady = entry.isIntersecting && entry.intersectionRatio >= 0.6;
-      action.textContent = checkoutReady ? 'Оформити замовлення' : 'До оформлення';
-    }, { threshold: [0, .6] });
-    observer.observe(form);
+
+    form.addEventListener('focusin', () => {
+      document.body.classList.add('va-checkout-form-active');
+    });
+
+    window.addEventListener('scroll', scheduleSync, { passive: true });
+    window.addEventListener('resize', scheduleSync);
+    window.visualViewport?.addEventListener('resize', scheduleSync);
+    window.visualViewport?.addEventListener('scroll', scheduleSync);
+    scheduleSync();
   }
 
   function initIOSKeyboardGuard() {

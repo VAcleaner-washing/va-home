@@ -2307,3 +2307,17 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 .cart-page .site-footer--editorial {
   padding-top: 0;
 }
+
+
+/* VA HOME v13.7.0 RC10 — hide the mobile CTA throughout checkout entry */
+@media (max-width: 800px) {
+  body.va-checkout-form-active .checkout-mobile-bar,
+  body.va-keyboard-open .checkout-mobile-bar {
+    display: none !important;
+  }
+
+  body.va-checkout-form-active:has(.checkout-mobile-bar:not([hidden])),
+  body.va-keyboard-open:has(.checkout-mobile-bar:not([hidden])) {
+    padding-bottom: 24px !important;
+  }
+}
