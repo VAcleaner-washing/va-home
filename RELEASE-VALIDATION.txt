@@ -1,10 +1,10 @@
-VA HOME v13.7.0-rc.3
+VA HOME v13.7.0-rc.4
 Release Candidate validation — 2026-07-25
 
 PASS  51 HTML pages parsed
 PASS  18 product pages found
 PASS  18 product-to-Journal proof links found
-PASS  1,755 local links, anchors and assets checked
+PASS  1,756 local links, anchors and assets checked
 PASS  JSON-LD blocks parsed
 PASS  Journal image dimensions present
 PASS  JavaScript syntax checked
@@ -13,11 +13,12 @@ PASS  Canonical discovery-18 ID sent by the new cart
 PASS  Legacy discovery-17 accepted only as an inbound compatibility alias
 PASS  Public IBAN and tax ID values absent from static files
 PASS  Four-stick, duration and reed-flipping copy is consistent
-PASS  Resource query version synchronized to 13.7.0-rc3
+PASS  Resource query version synchronized to 13.7.0-rc4
 PASS  Discovery Set guide CTA spans the full information grid
+PASS  One About-to-Journal bridge is placed inside Molecular Architecture
 
 LIVE RELEASE GATE
-- Deploy supabase/functions/create-order/index.ts.
+- Supabase create-order version 19 is ACTIVE and exactly matches this RC.
 - Test bank transfer checkout.
 - Test cash-on-delivery checkout.
 - Verify customer email, admin email, order row and thank-you page.

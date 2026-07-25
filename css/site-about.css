@@ -2539,3 +2539,51 @@ button, input, select, textarea, a{ min-width: 0; }
   .product-card__actions{ gap: 8px; }
   .product-card__actions .btn{ padding-inline: 10px; }
 }
+
+/* v13.7 RC4 — quiet About-to-Journal editorial bridge */
+.about-journal-bridge{
+  width:min(100%,50ch);
+  margin-top:clamp(1.8rem,3.4vw,2.8rem);
+  padding-top:1rem;
+  border-top:1px solid rgba(185,145,92,.28);
+}
+.about-journal-bridge__label{
+  display:block;
+  margin-bottom:.55rem;
+  color:var(--color-gold,#b9915c);
+  font-size:.58rem;
+  line-height:1;
+  letter-spacing:.17em;
+  text-transform:uppercase;
+}
+.about-journal-bridge a{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  color:var(--text-primary,#f3eee7);
+  text-decoration:none;
+}
+.about-journal-bridge__title{
+  font-family:var(--font-display);
+  font-size:clamp(1.15rem,1.7vw,1.45rem);
+  font-weight:500;
+  line-height:1.16;
+}
+.about-journal-bridge__arrow{
+  flex:0 0 auto;
+  color:var(--color-gold,#b9915c);
+  font-size:1rem;
+  transition:transform .25s ease;
+}
+@media(hover:hover){
+  .about-journal-bridge a:hover .about-journal-bridge__arrow{transform:translateX(4px)}
+}
+@media(max-width:600px){
+  .about-journal-bridge{
+    width:100%;
+    margin-top:2rem;
+    padding-top:.9rem;
+  }
+  .about-journal-bridge__title{font-size:1.22rem}
+}
