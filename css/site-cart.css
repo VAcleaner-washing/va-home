@@ -2249,7 +2249,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 
 
 /* ==========================================================================
-   VA HOME v13.7.0 RC14 — clean sticky checkout bar + zero horizontal overflow
+   VA HOME v13.7.0 RC15 — clean sticky checkout bar + zero horizontal overflow
    One authoritative mobile bar definition. No legacy flex/grid competition,
    no fixed compositor layer, and no page-level bottom reserve.
    ========================================================================== */
@@ -2381,3 +2381,73 @@ body.cart-page .checkout-submit-panel {
   }
 }
 
+
+/* ========================================================================== 
+   VA HOME v13.7.0 RC15 — mobile cart viewport lock
+   The cart is a vertical flow: no child may create a page-wide horizontal pan.
+   ========================================================================== */
+@media (max-width: 900px) {
+  html,
+  body.cart-page {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    overscroll-behavior-x: none;
+  }
+
+  body.cart-page {
+    position: relative;
+    touch-action: pan-y;
+  }
+
+  body.cart-page #main-content,
+  body.cart-page #main-content > *,
+  body.cart-page .section,
+  body.cart-page .container,
+  body.cart-page #cartFilledState,
+  body.cart-page .cart-layout,
+  body.cart-page .cart-items,
+  body.cart-page .cart-item,
+  body.cart-page .cart-summary,
+  body.cart-page .checkout-form,
+  body.cart-page .checkout-fields-grid,
+  body.cart-page .checkout-fieldset,
+  body.cart-page .checkout-submit-panel,
+  body.cart-page .checkout-actions,
+  body.cart-page .checkout-mobile-bar {
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  body.cart-page #main-content,
+  body.cart-page .section,
+  body.cart-page #cartFilledState,
+  body.cart-page .cart-layout,
+  body.cart-page .checkout-form {
+    overflow-x: hidden !important;
+  }
+
+  /* This strip used to retain an old horizontal carousel rule. */
+  body.cart-page .checkout-trust-strip__grid {
+    width: auto !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    overscroll-behavior-x: none;
+    touch-action: pan-y;
+    white-space: normal !important;
+  }
+
+  body.cart-page .checkout-progress {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  body.cart-page input,
+  body.cart-page select,
+  body.cart-page textarea,
+  body.cart-page button {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+}

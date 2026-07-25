@@ -20,7 +20,7 @@ FIX
 - Visibility switch is the native [hidden] attribute only.
 - Legacy classes/inline padding cleared on load for returning sessions.
 - body.cart-page uses overflow-x:clip so overflow-x:hidden cannot break sticky.
-- Asset version bumped to 13.7.0-rc14 (service worker cache invalidation).
+- Asset version bumped to 13.7.0-rc15 (service worker cache invalidation).
 
 TEST
 1. Hard reload / remove the PWA from the home screen and re-add it.
@@ -44,4 +44,4 @@ RC13 CLEANUP (technical debt removed, not just overridden)
 - Both body:has(.checkout-mobile-bar:not([hidden])) reserves (82px and
   96px + safe-area) deleted from the file.
 - All asset version queries synced: 662 references across 51 files are now
-  13.7.0-rc14. No page still points at rc11 or rc12.
+  13.7.0-rc15. No page still points at rc11 or rc12.
