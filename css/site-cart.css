@@ -2301,3 +2301,9 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
   body.va-keyboard-open textarea:focus,
   body.va-keyboard-open select:focus { scroll-margin-block: 28vh; }
 }
+
+
+/* VA HOME v13.7.0 RC9 — remove the empty footer gap after checkout */
+.cart-page .site-footer--editorial {
+  padding-top: 0;
+}

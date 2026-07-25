@@ -1,4 +1,4 @@
-VA HOME v13.7.0-rc.8
+VA HOME v13.7.0-rc.9
 PWA Release Candidate validation — 2026-07-25
 
 PASS  52 HTML pages parsed: 51 site pages plus offline fallback
@@ -13,7 +13,7 @@ PASS  Public HTML uses fresh network navigation with an offline fallback
 PASS  Account, cart, thank-you, order-status and admin routes remain network-only
 PASS  Supabase, configuration, checkout, account and review files remain network-only
 PASS  Versioned static cache removes previous VA HOME caches on activation
-PASS  Resource query version synchronized to 13.7.0-rc8
+PASS  Resource query version synchronized to 13.7.0-rc9
 PASS  No stale rc5 or rc6 resource versions remain
 PASS  18 product pages found
 PASS  18 product-to-Journal proof links found
@@ -43,3 +43,5 @@ NOT PART OF THIS RC
 - Static review prerender and AggregateRating.
 - Transactional category landing pages.
 - Refills.
+
+Cart footer gap: removed the inherited editorial footer top padding on cart.html.
