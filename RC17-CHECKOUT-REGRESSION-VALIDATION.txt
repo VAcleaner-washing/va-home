@@ -1,0 +1,11 @@
+VA HOME v13.7.0 RC17
+
+Acceptance criteria:
+- CTA visible above checkout on mobile with cart items
+- CTA hidden as soon as checkout form enters viewport
+- CTA hidden on focus and keyboard open
+- no duplicate CTA beside the in-form submit button
+- no body/main bottom reserve when CTA is hidden
+- no horizontal document overflow
+- no backdrop-filter, box-shadow, transform or will-change on CTA
+- site-cart.css is network-only in service worker

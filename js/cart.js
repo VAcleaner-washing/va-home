@@ -672,6 +672,9 @@
     if (!action || !form || !mobileBar) return;
 
     let raf = 0;
+    let suppressUntil = 0;
+
+    const viewportHeight = () => window.visualViewport?.height || window.innerHeight;
 
     const isEditing = () => {
       const node = document.activeElement;
@@ -680,7 +683,12 @@
 
     const isKeyboardOpen = () => {
       const vv = window.visualViewport;
-      return Boolean(vv && window.innerHeight - vv.height > 120);
+      return Boolean(vv && isEditing() && window.innerHeight - vv.height > 120);
+    };
+
+    const hasReachedCheckout = () => {
+      const formTop = form.getBoundingClientRect().top;
+      return formTop <= viewportHeight() - 24;
     };
 
     const setVisible = (visible) => {
@@ -692,9 +700,14 @@
 
     const sync = () => {
       raf = 0;
+      const reachedCheckout = hasReachedCheckout();
+      const temporarilySuppressed = performance.now() < suppressUntil;
+
       const shouldShow = Boolean(
         window.innerWidth <= 800 &&
         mobileBar.dataset.hasItems === 'true' &&
+        !temporarilySuppressed &&
+        !reachedCheckout &&
         !isEditing() &&
         !isKeyboardOpen()
       );
@@ -709,22 +722,21 @@
     window.VASyncMobileCheckoutBar = schedule;
 
     action.addEventListener('click', () => {
+      suppressUntil = performance.now() + 1200;
       setVisible(false);
       form.scrollIntoView({ behavior: 'smooth', block: 'start' });
       window.setTimeout(() => form.elements.customerName?.focus({ preventScroll: true }), 550);
     });
 
     form.addEventListener('focusin', () => setVisible(false));
-    form.addEventListener('focusout', () => {
-      window.setTimeout(() => {
-        if (!isEditing() && !isKeyboardOpen()) schedule();
-      }, 300);
-    });
+    form.addEventListener('focusout', () => window.setTimeout(schedule, 300));
 
+    window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
     window.addEventListener('orientationchange', () => window.setTimeout(schedule, 180));
     window.addEventListener('pageshow', schedule);
     window.visualViewport?.addEventListener('resize', schedule);
+    window.visualViewport?.addEventListener('scroll', schedule);
     schedule();
   }
 

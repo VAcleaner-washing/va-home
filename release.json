@@ -1,5 +1,5 @@
 {
-  "version": "13.7.0-rc.16",
+  "version": "13.7.0-rc.17",
   "name": "PWA RELEASE CANDIDATE",
   "date": "2026-07-25",
   "base": "13.6.10-NOIR-LIGHT-RECIPIENT-FIX",
@@ -11,7 +11,7 @@
     "Reserved the product rating line while asynchronous reviews load",
     "Converted the orphaned Discovery Set guide card into a full-width CTA",
     "Refined product Journal links into quiet inline editorial notes",
-    "Updated resource query versions to 13.7.0-rc16",
+    "Updated resource query versions to 13.7.0-rc17",
     "Added one restrained About-to-Journal bridge inside Molecular Architecture",
     "Reserved the catalog rating slot when a product has no approved reviews",
     "Aligned price, compare control and product actions across reviewed and unreviewed cards",
@@ -39,6 +39,11 @@
     "Removed sticky-flow behavior that made the CTA disappear before its DOM position",
     "Moved the visible-bar content reserve from body to main to prevent a root black gap",
     "Kept the iPhone safe area painted by the CTA while it is visible",
-    "Retained the RC15 radio-width horizontal overflow fix"
+    "Retained the RC15 radio-width horizontal overflow fix",
+    "Shows the mobile До оформлення CTA only above the checkout form",
+    "Hides the CTA for the entire checkout zone, on field focus and while the keyboard is open",
+    "Removes every body and main bottom reserve so a hidden CTA cannot leave a black gap",
+    "Keeps the RC15 radio-width horizontal overflow fix",
+    "Marks checkout CSS network-only in the service worker to prevent stale mobile layouts"
   ]
 }

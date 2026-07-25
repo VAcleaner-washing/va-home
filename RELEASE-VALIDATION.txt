@@ -13,7 +13,7 @@ PASS  Public HTML uses fresh network navigation with an offline fallback
 PASS  Account, cart, thank-you, order-status and admin routes remain network-only
 PASS  Supabase, configuration, checkout, account and review files remain network-only
 PASS  Versioned static cache removes previous VA HOME caches on activation
-PASS  Resource query version synchronized to 13.7.0-rc16
+PASS  Resource query version synchronized to 13.7.0-rc17
 PASS  No stale rc5 or rc6 resource versions remain
 PASS  18 product pages found
 PASS  18 product-to-Journal proof links found
