@@ -1,0 +1,30 @@
+VA HOME v13.7.0-rc.3
+Release Candidate validation — 2026-07-25
+
+PASS  51 HTML pages parsed
+PASS  18 product pages found
+PASS  18 product-to-Journal proof links found
+PASS  1,755 local links, anchors and assets checked
+PASS  JSON-LD blocks parsed
+PASS  Journal image dimensions present
+PASS  JavaScript syntax checked
+PASS  Product Story structure checked for all 18 fragrances
+PASS  Canonical discovery-18 ID sent by the new cart
+PASS  Legacy discovery-17 accepted only as an inbound compatibility alias
+PASS  Public IBAN and tax ID values absent from static files
+PASS  Four-stick, duration and reed-flipping copy is consistent
+PASS  Resource query version synchronized to 13.7.0-rc3
+PASS  Discovery Set guide CTA spans the full information grid
+
+LIVE RELEASE GATE
+- Deploy supabase/functions/create-order/index.ts.
+- Test bank transfer checkout.
+- Test cash-on-delivery checkout.
+- Verify customer email, admin email, order row and thank-you page.
+- Verify “ФОП Невідома Анна Сергіївна” renders without replacement characters.
+
+NOT PART OF THIS RC
+- Automated mono acquiring/API/webhook.
+- Static review prerender and AggregateRating.
+- Transactional category landing pages.
+- Refills.

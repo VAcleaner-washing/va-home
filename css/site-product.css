@@ -3811,3 +3811,48 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
   .product-card__actions { gap: 8px; }
   .product-card__actions .btn { padding-inline: 10px; }
 }
+
+/* v13.7 RC — product-to-Journal proof bridge */
+.product-rating-compact.is-loading{visibility:hidden}
+.product-journal-proof{
+  margin-top:16px;
+  padding:12px 0 11px;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  gap:8px 16px;
+  align-items:center;
+  border-top:1px solid rgba(185,145,92,.24);
+}
+.product-journal-proof__label{
+  color:var(--color-gold,#b9915c);
+  font-size:8px;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+}
+.product-journal-proof>a{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  color:var(--text-primary,#f3eee7);
+  text-decoration:none;
+}
+.product-journal-proof__title{
+  font-family:var(--font-display);
+  font-size:clamp(16px,1.35vw,20px);
+  font-weight:500;
+  line-height:1.16;
+}
+.product-journal-proof__arrow{
+  flex:0 0 auto;
+  color:var(--color-gold,#b9915c);
+  font-size:15px;
+  transition:transform .25s ease;
+}
+@media(hover:hover){
+  .product-journal-proof>a:hover .product-journal-proof__arrow{transform:translateX(4px)}
+}
+@media(max-width:620px){
+  .product-journal-proof{grid-template-columns:1fr;gap:5px;padding-block:11px}
+  .product-journal-proof__title{font-size:18px}
+}

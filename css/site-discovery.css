@@ -843,8 +843,24 @@
 .discovery-info{padding:clamp(70px,9vw,130px) 0}
 .discovery-page .info-block-grid{grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border-hairline);border:1px solid var(--border-hairline)}
 .discovery-page .info-block{min-height:240px;background:#11100e;padding:34px}
+.discovery-page .info-block--guide{
+  grid-column:1/-1;
+  min-height:190px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:32px;
+  align-items:end;
+  background:linear-gradient(110deg,#11100e 0%,#17130d 62%,#241a0d 100%);
+}
+.discovery-page .info-block--guide h3{
+  font-family:var(--font-display);
+  font-size:clamp(30px,3vw,44px);
+  font-weight:500;
+}
+.discovery-page .info-block--guide p{max-width:620px}
+.discovery-page .info-block--guide .link-arrow{align-self:end;white-space:nowrap}
 @media(max-width:900px){.discovery-variants,.discovery-ritual,.discovery-variants-section__head{grid-template-columns:1fr}.discovery-ritual__media{min-height:460px}.discovery-page .info-block-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:640px){.discovery-hero{min-height:690px;align-items:flex-end}.discovery-hero::before{background-position:58% center}.discovery-hero::after{background:linear-gradient(0deg,rgba(5,5,4,.97),rgba(5,5,4,.45))}.discovery-hero__content{padding:150px 0 60px}.discovery-hero h1{font-size:3.6rem}.discovery-variant-card{min-height:430px}.discovery-page .info-block-grid{grid-template-columns:1fr}.discovery-ritual__media{min-height:340px}}
+@media(max-width:640px){.discovery-hero{min-height:690px;align-items:flex-end}.discovery-hero::before{background-position:58% center}.discovery-hero::after{background:linear-gradient(0deg,rgba(5,5,4,.97),rgba(5,5,4,.45))}.discovery-hero__content{padding:150px 0 60px}.discovery-hero h1{font-size:3.6rem}.discovery-variant-card{min-height:430px}.discovery-page .info-block-grid{grid-template-columns:1fr}.discovery-page .info-block--guide{grid-template-columns:1fr;gap:18px}.discovery-ritual__media{min-height:340px}}
 
 /* v11.8.9 — stable Discovery Set interactions */
 .discovery-variant-card,

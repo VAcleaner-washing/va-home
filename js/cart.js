@@ -501,7 +501,7 @@
       payment_method: form.elements.paymentMethod.value,
       customer_comment: form.elements.customerComment ? form.elements.customerComment.value.trim() || null : null,
       // Transitional alias keeps checkout compatible with the previously deployed Edge Function.
-      items: items.map((item) => ({ id: item.id === "discovery-18" ? "discovery-17" : item.id, quantity: item.quantity, selections: item.selections }))
+      items: items.map((item) => ({ id: item.id, quantity: item.quantity, selections: item.selections }))
     };
   }
 

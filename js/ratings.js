@@ -45,6 +45,7 @@
     const data = map[PRODUCT_ID];
     const compact = document.getElementById("productRatingCompact");
     if (!compact) return;
+    compact.classList.remove("is-loading");
     if (data && data.count) {
       compact.innerHTML = `<span aria-hidden="true">★★★★★</span> <strong>${data.average.toFixed(1)}</strong> <a href="#reviews">${data.count} ${reviewsLabel(data.count)}</a>`;
     } else {

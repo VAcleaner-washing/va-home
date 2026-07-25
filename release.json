@@ -1,19 +1,17 @@
 {
-  "version": "13.6.9",
-  "name": "JOURNAL EDITORIAL BALANCE",
-  "date": "2026-07-24",
+  "version": "13.7.0-rc.3",
+  "name": "RELEASE CANDIDATE",
+  "date": "2026-07-25",
+  "base": "13.6.10-NOIR-LIGHT-RECIPIENT-FIX",
   "changes": [
-    "Removed public tax ID and bank details from static pages and configuration",
-    "Moved payment details in the order function to protected environment variables",
-    "Aligned diffuser stick guidance and added the returns anchor",
-    "Migrated the 18-fragrance Discovery Set to a canonical discovery-18 ID with legacy compatibility",
-    "Reserved intrinsic dimensions for static images and synchronized resource versions",
-    "Hidden empty catalog ratings until verified reviews exist",
-    "Replaced all 15 Journal visuals with a cohesive VA HOME editorial series",
-    "Balanced home atmosphere, architecture, sensory still life and restrained process imagery",
-    "Unified Journal image dimensions at 1672 × 941 and synchronized article hero imagery",
-    "Rebalanced the Journal to 11 atmosphere/process covers without products and 4 product-led covers",
-    "Reserved bottles for articles where the product is integral to the subject",
-    "Rebuilt formula and molecular covers from the visual language of the VA HOME About page"
+    "Added a contextual VA HOME Journal proof bridge to all 18 product pages",
+    "Linked each product to one relevant editorial guide in static HTML",
+    "Removed the legacy discovery-18 to discovery-17 outbound conversion",
+    "Kept server-side discovery-17 compatibility for previously saved carts",
+    "Reserved the product rating line while asynchronous reviews load",
+    "Converted the orphaned Discovery Set guide card into a full-width CTA",
+    "Refined product Journal links into quiet inline editorial notes",
+    "Updated CSS and JavaScript query versions to 13.7.0-rc3",
+    "Excluded refills and incomplete online payment integration from release scope"
   ]
 }
