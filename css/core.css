@@ -2911,3 +2911,31 @@ html { }
       );
   }
 }
+
+
+/* ==========================================================================
+   VA HOME v13.7.0 RC16 — sticky footer / no bottom black band
+   Root cause: body was min-height:100dvh but not a flex column, and
+   #main-content had no growth rule. On any page shorter than the viewport
+   the body ended at content height and the dark body background filled the
+   remaining space down to 100dvh — a large black band at the bottom, most
+   visible in the installed standalone PWA (taller viewport + #0b0a08 theme).
+   Fix: make body a flex column and let #main-content grow so #site-footer
+   is always pinned to the bottom. The fixed header is out of flow and
+   unaffected; cart/checkout RC15 logic is untouched.
+   ========================================================================== */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+body > #main-content,
+body > main {
+  flex: 1 0 auto;
+}
+
+body > #site-footer,
+body > .site-footer,
+body > footer {
+  flex-shrink: 0;
+}

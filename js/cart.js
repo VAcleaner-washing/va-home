@@ -196,7 +196,6 @@
       const checkoutActive = document.body.classList.contains('va-checkout-form-active');
       const shouldShow = hasItems && window.innerWidth <= 800 && !checkoutActive;
       mobileBar.hidden = !shouldShow;
-      document.body.classList.toggle('va-mobile-checkout-bar-visible', shouldShow);
     }
   }
 
@@ -684,15 +683,28 @@
       const shouldShowBar = Boolean(isMobile && hasItems && !checkoutActive);
 
       document.body.classList.toggle('va-checkout-form-active', checkoutActive);
-      document.body.classList.toggle('va-mobile-checkout-bar-visible', shouldShowBar);
 
-      // Use the native hidden state, not only CSS. On iOS this fully removes the
-      // fixed compositing layer and prevents the stale black rectangle after focus.
+      // RC13: the bar is a normal sticky element in flow. No fixed compositing
+      // layer, no body padding reserve, so hiding it can never leave a stale
+      // black rectangle behind on iOS.
       mobileBar.hidden = !shouldShowBar;
+    };
+
+    // RC13: while a field is focused or the keyboard is open, the page must not
+    // change its layout at all. Re-flowing during the viewport transition is what
+    // left the unpainted strip at the bottom of the screen.
+    const isEditing = () => {
+      const node = document.activeElement;
+      return Boolean(node && form.contains(node) && node.matches('input, select, textarea'));
+    };
+    const isKeyboardOpen = () => {
+      const vv = window.visualViewport;
+      return Boolean(vv && window.innerHeight - vv.height > 120);
     };
 
     const syncCheckoutZone = () => {
       raf = 0;
+      if (isEditing() || isKeyboardOpen()) return;
       if (window.innerWidth > 800) {
         setCheckoutActive(false);
         return;
@@ -715,75 +727,17 @@
       window.setTimeout(() => form.elements.customerName?.focus({ preventScroll: true }), 550);
     });
 
+    // Hide once on focus, then stay frozen until the keyboard is fully gone.
     form.addEventListener('focusin', () => setCheckoutActive(true));
+    form.addEventListener('focusout', () => {
+      window.setTimeout(() => { if (!isEditing() && !isKeyboardOpen()) scheduleSync(); }, 300);
+    });
 
     window.addEventListener('scroll', scheduleSync, { passive: true });
     window.addEventListener('resize', scheduleSync);
     window.visualViewport?.addEventListener('resize', scheduleSync);
     window.addEventListener('pageshow', scheduleSync);
     scheduleSync();
-  }
-
-  function initIOSKeyboardGuard() {
-    if (!window.visualViewport) return;
-    const viewport = window.visualViewport;
-    let raf = 0;
-    let keyboardWasOpen = false;
-    let stableViewportHeight = Math.max(window.innerHeight, viewport.height);
-
-    const repairViewportAfterKeyboard = () => {
-      const y = window.scrollY;
-      const root = document.documentElement;
-
-      // iOS Safari/PWA can keep a shortened visual viewport after the keyboard
-      // closes. A tiny scroll + compositor reflow forces WebKit to repaint the
-      // full screen without moving the user to another part of the form.
-      root.classList.add('va-ios-viewport-repair');
-      void root.offsetHeight;
-      requestAnimationFrame(() => {
-        window.scrollTo(0, Math.max(0, y - 1));
-        requestAnimationFrame(() => {
-          window.scrollTo(0, y);
-          root.classList.remove('va-ios-viewport-repair');
-        });
-      });
-    };
-
-    const update = () => {
-      raf = 0;
-      const focused = document.activeElement?.matches?.('input, textarea, select');
-      if (!focused) {
-        stableViewportHeight = Math.max(stableViewportHeight, window.innerHeight, viewport.height);
-      }
-
-      const keyboardOpen = Boolean(
-        focused && stableViewportHeight - viewport.height > 110
-      );
-      document.body.classList.toggle('va-keyboard-open', keyboardOpen);
-
-      if (keyboardWasOpen && !keyboardOpen) {
-        window.setTimeout(repairViewportAfterKeyboard, 40);
-      }
-      keyboardWasOpen = keyboardOpen;
-    };
-
-    const schedule = () => {
-      if (raf) cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(update);
-    };
-
-    viewport.addEventListener('resize', schedule);
-    document.addEventListener('focusin', schedule);
-    document.addEventListener('focusout', () => {
-      window.setTimeout(() => {
-        schedule();
-        const stillEditing = document.activeElement?.matches?.('input, textarea, select');
-        if (!stillEditing) repairViewportAfterKeyboard();
-      }, 180);
-    });
-    window.addEventListener('orientationchange', () => window.setTimeout(repairViewportAfterKeyboard, 180));
-    window.addEventListener('pageshow', () => window.setTimeout(repairViewportAfterKeyboard, 40));
-    schedule();
   }
 
   function initCheckoutForm() {
@@ -794,6 +748,7 @@
     prefillCheckoutFromSaved(form);
     initCheckoutDraft(form);
     initPaymentCards(form);
+    initMobileCheckoutAction();
 
     form.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -807,59 +762,14 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
+    // RC13: clear every legacy RC9-RC12 flag and inline reserve.
+    document.documentElement.classList.remove('va-ios-viewport-repair');
+    document.documentElement.style.removeProperty('transform');
+    document.body.classList.remove('va-mobile-checkout-bar-visible', 'va-rc12-checkout-active', 'va-keyboard-open');
+    document.body.style.removeProperty('padding-bottom');
     refreshCountBadge();
     renderCartPage();
     initCartItemControls();
     initCheckoutForm();
-    document.documentElement.classList.add('va-cart-document');
-    document.getElementById('checkoutMobileBar')?.remove();
   });
-})();
-
-
-/* VA HOME v13.7.0 RC13 — checkout without fixed viewport layers */
-;(() => {
-  'use strict';
-
-  const initCartViewportMode = () => {
-    if (!document.body?.classList.contains('cart-page')) return;
-
-    document.documentElement.classList.add('va-cart-document');
-    document.getElementById('checkoutMobileBar')?.remove();
-    document.body.classList.remove(
-      'va-mobile-checkout-bar-visible',
-      'va-checkout-form-active',
-      'va-keyboard-open',
-      'va-rc12-checkout-active'
-    );
-    document.body.style.removeProperty('padding-bottom');
-    document.documentElement.classList.remove('va-ios-viewport-repair');
-    document.documentElement.style.removeProperty('transform');
-    document.documentElement.style.removeProperty('height');
-    document.documentElement.style.removeProperty('min-height');
-
-    const clearLegacyViewportClasses = () => {
-      document.body.classList.remove(
-        'va-mobile-checkout-bar-visible',
-        'va-checkout-form-active',
-        'va-keyboard-open',
-        'va-rc12-checkout-active'
-      );
-      document.body.style.removeProperty('padding-bottom');
-      document.documentElement.classList.remove('va-ios-viewport-repair');
-      document.documentElement.style.removeProperty('transform');
-    };
-
-    const form = document.getElementById('checkoutForm');
-    form?.addEventListener('focusin', clearLegacyViewportClasses);
-    form?.addEventListener('focusout', () => window.setTimeout(clearLegacyViewportClasses, 80));
-    window.addEventListener('pageshow', clearLegacyViewportClasses);
-    window.addEventListener('orientationchange', () => window.setTimeout(clearLegacyViewportClasses, 120));
-  };
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCartViewportMode, { once: true });
-  } else {
-    initCartViewportMode();
-  }
 })();

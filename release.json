@@ -1,8 +1,8 @@
 {
-  "version": "13.7.0-rc.13",
+  "version": "13.7.0-rc.16",
   "name": "PWA RELEASE CANDIDATE",
   "date": "2026-07-25",
-  "base": "13.6.10-NOIR-LIGHT-RECIPIENT-FIX",
+  "base": "13.7.0-rc.15-MOBILE-CART-VIEWPORT-LOCK",
   "changes": [
     "Added a contextual VA HOME Journal proof bridge to all 18 product pages",
     "Linked each product to one relevant editorial guide in static HTML",
@@ -11,7 +11,7 @@
     "Reserved the product rating line while asynchronous reviews load",
     "Converted the orphaned Discovery Set guide card into a full-width CTA",
     "Refined product Journal links into quiet inline editorial notes",
-    "Updated resource query versions to 13.7.0-rc13",
+    "Updated resource query versions to 13.7.0-rc16",
     "Added one restrained About-to-Journal bridge inside Molecular Architecture",
     "Reserved the catalog rating slot when a product has no approved reviews",
     "Aligned price, compare control and product actions across reviewed and unreviewed cards",
@@ -28,10 +28,14 @@
     "Removed the large empty black gap between the checkout form and the editorial footer scene",
     "Hidden the mobile checkout CTA for the entire checkout-entry zone in both PWA and mobile browsers",
     "Removed the iOS fixed/backdrop checkout layer after entering the form and repaired the visual viewport after keyboard dismissal",
-    "Removed the mobile fixed checkout CTA from cart.html instead of hiding it after focus",
-    "Changed the mobile cart header from fixed to sticky to avoid iOS visual viewport compositor residue",
-    "Disabled inactive full-screen compare and mobile-menu fixed layers on the checkout page",
-    "Removed dynamic viewport and legacy keyboard-repair state from the mobile checkout page",
-    "Kept the real order submit button inside the normal document flow"
+    "Physically detaches the mobile checkout CTA while the checkout form is active",
+    "Restores the CTA only after scrolling back above the checkout form",
+    "Disables the old iOS root compositor repaint transform that could leave a black lower strip",
+    "Clears all mobile bottom reserve while entering checkout data",
+    "Removed all legacy mobile checkout bar width, flex and grid declarations",
+    "Rebuilt the sticky checkout bar as one contained two-column grid",
+    "Fixed horizontal page scrolling and the vertically wrapped total label",
+    "Locked the mobile cart to vertical panning and removed the remaining horizontal checkout overflow source",
+    "Fixed the large black band at the bottom of every screen in the installed PWA by pinning the footer with a sticky-footer flex layout"
   ]
 }
