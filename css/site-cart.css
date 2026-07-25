@@ -295,6 +295,9 @@
 @media(max-width:800px){
   .checkout-progress li{min-height:58px;justify-content:center;text-align:center}.checkout-progress li strong{display:none}.checkout-progress li.is-current strong{display:block;font-size:.72rem}.checkout-progress li.is-complete::after{display:none}
   .cart-summary{position:static}.checkout-fieldset legend{position:sticky;top:var(--header-height-mobile);z-index:4;margin-inline:-22px;padding:12px 22px;background:rgba(13,12,10,.96);backdrop-filter:blur(12px)}
+  .checkout-mobile-bar{position:fixed;z-index:95;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px max(16px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));border-top:1px solid var(--border-hairline-strong);background:rgba(8,8,7,.96);backdrop-filter:blur(16px);box-shadow:0 -16px 38px rgba(0,0,0,.42)}
+  .checkout-mobile-bar[hidden]{display:none}.checkout-mobile-bar>div:first-child{min-width:0;flex-shrink:1}.checkout-mobile-bar small{display:block;color:var(--text-secondary);font-size:.68rem}.checkout-mobile-bar strong{font-family:var(--font-display);font-size:1.25rem}.checkout-mobile-bar .btn{flex-shrink:0;min-height:46px;padding:10px 16px}
+  body:has(.checkout-mobile-bar:not([hidden])){padding-bottom:82px}
 }
 @media(max-width:430px){.checkout-progress li{padding-inline:5px}.checkout-progress li.is-current strong{max-width:88px}.checkout-form{margin-inline:calc(var(--container-pad)*-1);border-left:0;border-right:0}.payment-option{padding:14px}.cart-summary__trust{display:none}}
 
@@ -396,6 +399,25 @@
     backdrop-filter: none;
   }
 
+  .checkout-mobile-bar {
+    gap: 12px;
+    min-height: 76px;
+    padding: 11px max(16px,env(safe-area-inset-right)) calc(11px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+  }
+  .checkout-mobile-bar > div {
+    flex: 0 0 auto;
+    min-width: 76px;
+  }
+  .checkout-mobile-bar .btn {
+    flex: 0 0 auto;
+    min-width: 152px;
+    min-height: 50px;
+    padding-inline: 20px;
+    white-space: nowrap;
+  }
+  body:has(.checkout-mobile-bar:not([hidden])) {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
+  }
 }
 
 @media (max-width: 560px) {
@@ -404,6 +426,10 @@
 
 @media (max-width: 380px) {
   .checkout-progress li strong { font-size: .6rem; }
+  .checkout-mobile-bar .btn {
+    min-width: 138px;
+    padding-inline: 15px;
+  }
 }
 
 /* v11.8.20 — true small-screen cart containment (320–430 px) */
@@ -430,10 +456,35 @@
   .checkout-trust-strip__grid strong { font-size: clamp(.52rem, 2.2vw, .62rem); line-height: 1.25; }
   .checkout-trust-strip__grid span { margin-top: 2px; font-size: clamp(.48rem, 1.85vw, .58rem); line-height: 1.3; }
 
+  .checkout-mobile-bar {
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(62px, .55fr) minmax(0, 1.45fr);
+    gap: 10px;
+  }
+  .checkout-mobile-bar > div,
+  .checkout-mobile-bar > div:first-child {
+    min-width: 0;
+    width: auto;
+  }
+  .checkout-mobile-bar strong { white-space: nowrap; font-size: clamp(1rem, 5vw, 1.25rem); }
+  .checkout-mobile-bar .btn {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0 !important;
+    padding-inline: 10px;
+    font-size: clamp(.67rem, 3.1vw, .82rem);
+    letter-spacing: .035em;
+    white-space: nowrap;
+  }
 }
 @media (max-width: 360px) {
   .checkout-trust-strip__grid span { display: none; }
   .checkout-trust-strip__grid div { display:flex; min-height:28px; align-items:center; justify-content:center; padding-inline:3px; text-align:center; }
+  .checkout-mobile-bar { grid-template-columns: minmax(58px, .5fr) minmax(0, 1.5fr); gap:8px; padding-left:12px; padding-right:12px; }
+  .checkout-mobile-bar .btn { min-height:46px; padding-inline:7px; font-size:.66rem; }
 }
 
 
@@ -2248,148 +2299,115 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* ==========================================================================
-   VA HOME v13.7.0 RC17 — single mobile checkout CTA controller
-   The CTA is fixed only above checkout. It has no root/body reserve and is
-   removed as soon as the checkout form enters the viewport.
-   ========================================================================== */
+/* VA HOME v13.7.0 RC11 — iOS viewport + fixed checkout layer hard reset */
 @media (max-width: 800px) {
-  body.cart-page,
-  body.cart-page.va-checkout-form-active,
-  body.cart-page.va-keyboard-open,
-  body.cart-page.va-mobile-checkout-bar-visible,
-  body.cart-page.va-rc12-checkout-active {
-    padding-bottom: 0 !important;
+  /* Reserve space only while the pre-checkout CTA is genuinely visible. */
+  body.cart-page { padding-bottom: 0 !important; }
+  body.cart-page.va-mobile-checkout-bar-visible {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom)) !important;
   }
 
-  body.cart-page #main-content {
-    padding-bottom: 0 !important;
+  /* A solid layer is more reliable than backdrop-filter in iOS Safari/PWA. */
+  .checkout-mobile-bar {
+    background: #080807;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  body.va-checkout-form-active .checkout-mobile-bar,
+  body.va-keyboard-open .checkout-mobile-bar,
+  .checkout-mobile-bar[hidden] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: static !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  body.va-keyboard-open input:focus,
+  body.va-keyboard-open textarea:focus,
+  body.va-keyboard-open select:focus {
+    scroll-margin-block: 24vh;
   }
 
   html.va-ios-viewport-repair {
-    transform: none !important;
+    transform: translateZ(0);
+  }
+}
+
+
+/* VA HOME v13.7.0 RC13 — iOS/Chrome checkout viewport architecture */
+@media (max-width: 800px) {
+  /* Dynamic viewport units and fixed compositing layers are intentionally
+     avoided on the checkout page. This prevents the keyboard-sized black
+     area that iOS Chrome/Safari can leave after dismissing the keyboard. */
+  html.va-cart-document,
+  html.va-cart-document body {
     height: auto !important;
-    min-height: 0 !important;
+    min-height: 100% !important;
   }
 
-  .checkout-mobile-bar {
-    position: fixed !important;
-    z-index: 95 !important;
-    inset-inline: 0 !important;
-    bottom: 0 !important;
-    display: grid;
-    grid-template-columns: minmax(86px, auto) minmax(0, 1fr);
-    align-items: center;
-    gap: 12px;
-    width: auto !important;
-    max-width: none !important;
-    min-width: 0 !important;
-    min-height: 74px;
-    margin: 0 !important;
-    padding: 11px max(14px, env(safe-area-inset-right))
-             calc(11px + env(safe-area-inset-bottom))
-             max(14px, env(safe-area-inset-left)) !important;
-    border: 0;
-    border-top: 1px solid var(--border-hairline-strong);
-    background: #0b0a08;
-    box-sizing: border-box;
-    box-shadow: none !important;
+  html.va-cart-document body.cart-page {
+    min-height: 100svh !important;
+    padding-bottom: 0 !important;
+    overflow-x: clip !important;
+  }
+
+  /* On checkout the header stays visually pinned using sticky positioning,
+     but does not create a fixed iOS visual-viewport compositor. */
+  body.cart-page #site-header {
+    position: relative !important;
+    z-index: var(--z-header);
+  }
+
+  body.cart-page .site-header {
+    position: sticky !important;
+    position: -webkit-sticky !important;
+    top: 0 !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+    background: #080807 !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
-    transform: none !important;
-    will-change: auto !important;
-    filter: none !important;
+    box-shadow: none !important;
   }
 
-  .checkout-mobile-bar[hidden] {
+  /* Sticky participates in document flow, therefore fixed-header
+     compensation must be removed on this page only. */
+  body.cart-page #main-content {
+    padding-top: 0 !important;
+  }
+
+  /* The mobile checkout CTA is deliberately removed. The genuine submit
+     button remains at the end of the form. */
+  body.cart-page .checkout-mobile-bar {
     display: none !important;
   }
 
-  .checkout-mobile-bar > div,
-  .checkout-mobile-bar > div:first-child {
-    min-width: 86px !important;
-    width: auto !important;
-    max-width: none !important;
+  body.cart-page {
+    --checkout-mobile-bar-height: 0px !important;
   }
 
-  .checkout-mobile-bar small,
-  .checkout-mobile-bar strong {
-    display: block;
-    white-space: nowrap !important;
-    overflow-wrap: normal !important;
-    word-break: normal !important;
+  /* Hidden full-screen/fixed UI must be display:none, not merely translated
+     or transparent, so WebKit cannot retain an off-screen black layer. */
+  body.cart-page .mobile-menu:not(.is-open),
+  body.cart-page .va-compare-dock,
+  body.cart-page .va-compare-modal {
+    display: none !important;
   }
 
-  .checkout-mobile-bar small {
-    color: var(--text-secondary);
-    font-size: .68rem;
+  body.cart-page .mobile-menu.is-open {
+    display: flex !important;
   }
 
-  .checkout-mobile-bar strong {
-    font-family: var(--font-display);
-    font-size: clamp(1rem, 5vw, 1.25rem);
+  html.va-cart-document.va-ios-viewport-repair {
+    transform: none !important;
   }
-
-  .checkout-mobile-bar .btn {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    min-height: 50px;
-    padding-inline: 14px;
-    font-size: clamp(.72rem, 3.1vw, .86rem);
-    letter-spacing: .035em;
-    white-space: nowrap;
-    box-sizing: border-box;
-  }
-
-  .checkout-fieldset input:focus,
-  .checkout-fieldset select:focus,
-  .checkout-fieldset textarea:focus {
-    scroll-margin-block-end: 24px;
-  }
-}
-
-@media (max-width: 360px) {
-  .checkout-mobile-bar {
-    grid-template-columns: minmax(78px, auto) minmax(0, 1fr);
-    gap: 8px;
-    padding-left: 12px !important;
-    padding-right: 12px !important;
-  }
-  .checkout-mobile-bar > div,
-  .checkout-mobile-bar > div:first-child {
-    min-width: 78px !important;
-  }
-  .checkout-mobile-bar .btn {
-    min-height: 46px;
-    padding-inline: 9px;
-    font-size: .68rem;
-  }
-}
-
-
-/* ==========================================================================
-   VA HOME v13.7.0 RC15 — remove checkout horizontal page overflow at source
-   The visually hidden payment radios inherited width:100% from .form-field
-   input and, while absolutely positioned, extended the document to the right.
-   ========================================================================== */
-.payment-option {
-  position: relative;
-}
-
-.payment-option input[type="radio"] {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  min-width: 1px !important;
-  max-width: 1px !important;
-  min-height: 1px !important;
-  max-height: 1px !important;
-  margin: -1px !important;
-  padding: 0 !important;
-  border: 0 !important;
-  overflow: hidden !important;
-  clip: rect(0 0 0 0) !important;
-  clip-path: inset(50%) !important;
-  white-space: nowrap !important;
 }

@@ -1,5 +1,5 @@
 {
-  "version": "13.7.0-rc.17",
+  "version": "13.7.0-rc.13",
   "name": "PWA RELEASE CANDIDATE",
   "date": "2026-07-25",
   "base": "13.6.10-NOIR-LIGHT-RECIPIENT-FIX",
@@ -11,7 +11,7 @@
     "Reserved the product rating line while asynchronous reviews load",
     "Converted the orphaned Discovery Set guide card into a full-width CTA",
     "Refined product Journal links into quiet inline editorial notes",
-    "Updated resource query versions to 13.7.0-rc17",
+    "Updated resource query versions to 13.7.0-rc13",
     "Added one restrained About-to-Journal bridge inside Molecular Architecture",
     "Reserved the catalog rating slot when a product has no approved reviews",
     "Aligned price, compare control and product actions across reviewed and unreviewed cards",
@@ -28,22 +28,10 @@
     "Removed the large empty black gap between the checkout form and the editorial footer scene",
     "Hidden the mobile checkout CTA for the entire checkout-entry zone in both PWA and mobile browsers",
     "Removed the iOS fixed/backdrop checkout layer after entering the form and repaired the visual viewport after keyboard dismissal",
-    "Physically detaches the mobile checkout CTA while the checkout form is active",
-    "Restores the CTA only after scrolling back above the checkout form",
-    "Disables the old iOS root compositor repaint transform that could leave a black lower strip",
-    "Clears all mobile bottom reserve while entering checkout data",
-    "Removed all legacy mobile checkout bar width, flex and grid declarations",
-    "Rebuilt the sticky checkout bar as one contained two-column grid",
-    "Fixed horizontal page scrolling and the vertically wrapped total label",
-    "Restored the mobile До оформлення CTA as one simple fixed opaque bar",
-    "Removed sticky-flow behavior that made the CTA disappear before its DOM position",
-    "Moved the visible-bar content reserve from body to main to prevent a root black gap",
-    "Kept the iPhone safe area painted by the CTA while it is visible",
-    "Retained the RC15 radio-width horizontal overflow fix",
-    "Shows the mobile До оформлення CTA only above the checkout form",
-    "Hides the CTA for the entire checkout zone, on field focus and while the keyboard is open",
-    "Removes every body and main bottom reserve so a hidden CTA cannot leave a black gap",
-    "Keeps the RC15 radio-width horizontal overflow fix",
-    "Marks checkout CSS network-only in the service worker to prevent stale mobile layouts"
+    "Removed the mobile fixed checkout CTA from cart.html instead of hiding it after focus",
+    "Changed the mobile cart header from fixed to sticky to avoid iOS visual viewport compositor residue",
+    "Disabled inactive full-screen compare and mobile-menu fixed layers on the checkout page",
+    "Removed dynamic viewport and legacy keyboard-repair state from the mobile checkout page",
+    "Kept the real order submit button inside the normal document flow"
   ]
 }

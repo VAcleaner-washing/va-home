@@ -1,4 +1,4 @@
-const VERSION = '13.7.0-rc17';
+const VERSION = '13.7.0-rc13';
 const CACHE_PREFIX = 'vahome-';
 const STATIC_CACHE = `${CACHE_PREFIX}static-${VERSION}`;
 
@@ -22,6 +22,7 @@ const PRIVATE_ROUTES = [
 
 const LIVE_FILES = new Set([
   '/css/site-cart.css',
+  '/js/pwa.js',
   '/release.json',
   '/js/config.js',
   '/js/supabase-api.js',

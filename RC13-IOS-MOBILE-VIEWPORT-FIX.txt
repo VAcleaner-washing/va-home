@@ -1,0 +1,12 @@
+VA HOME v13.7.0 RC13
+
+ROOT CAUSE ADDRESSED
+- The black lower area was not body padding or the CTA itself.
+- iOS Chrome/Safari retained a shortened visual viewport while fixed layers remained.
+
+ARCHITECTURE CHANGE
+- Mobile checkout CTA removed from cart.html.
+- Cart header uses sticky instead of fixed on screens up to 800px.
+- Closed mobile menu and compare overlays are display:none on cart.
+- No visualViewport keyboard repair is initialized on checkout.
+- Real submit button remains in normal form flow.

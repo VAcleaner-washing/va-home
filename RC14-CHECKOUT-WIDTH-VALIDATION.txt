@@ -1,9 +1,0 @@
-VA HOME v13.7.0 RC15
-
-FIXED
-- removed every legacy .checkout-mobile-bar declaration except the desktop hidden base
-- one authoritative sticky grid definition on mobile
-- total label cannot collapse into vertical letters
-- checkout button cannot make the row wider than its container
-- horizontal page overflow removed at the source
-- service worker and HTML asset query versions bumped to rc14
