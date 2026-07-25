@@ -2293,31 +2293,50 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* VA HOME v13.7.0 RC8 — iOS PWA keyboard guard */
-@media (max-width: 800px) {
-  body.va-keyboard-open .checkout-mobile-bar { display: none !important; }
-  body.va-keyboard-open:has(.checkout-mobile-bar:not([hidden])) { padding-bottom: 24px; }
-  body.va-keyboard-open input:focus,
-  body.va-keyboard-open textarea:focus,
-  body.va-keyboard-open select:focus { scroll-margin-block: 28vh; }
-}
-
-
 /* VA HOME v13.7.0 RC9 — remove the empty footer gap after checkout */
 .cart-page .site-footer--editorial {
   padding-top: 0;
 }
 
 
-/* VA HOME v13.7.0 RC10 — hide the mobile CTA throughout checkout entry */
+/* VA HOME v13.7.0 RC11 — iOS viewport + fixed checkout layer hard reset */
 @media (max-width: 800px) {
-  body.va-checkout-form-active .checkout-mobile-bar,
-  body.va-keyboard-open .checkout-mobile-bar {
-    display: none !important;
+  /* Reserve space only while the pre-checkout CTA is genuinely visible. */
+  body.cart-page { padding-bottom: 0 !important; }
+  body.cart-page.va-mobile-checkout-bar-visible {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom)) !important;
   }
 
-  body.va-checkout-form-active:has(.checkout-mobile-bar:not([hidden])),
-  body.va-keyboard-open:has(.checkout-mobile-bar:not([hidden])) {
-    padding-bottom: 24px !important;
+  /* A solid layer is more reliable than backdrop-filter in iOS Safari/PWA. */
+  .checkout-mobile-bar {
+    background: #080807;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  body.va-checkout-form-active .checkout-mobile-bar,
+  body.va-keyboard-open .checkout-mobile-bar,
+  .checkout-mobile-bar[hidden] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: static !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  body.va-keyboard-open input:focus,
+  body.va-keyboard-open textarea:focus,
+  body.va-keyboard-open select:focus {
+    scroll-margin-block: 24vh;
+  }
+
+  html.va-ios-viewport-repair {
+    transform: translateZ(0);
   }
 }

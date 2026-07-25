@@ -1,4 +1,4 @@
-VA HOME v13.7.0-rc.10
+VA HOME v13.7.0-rc.11
 PWA Release Candidate validation — 2026-07-25
 
 PASS  52 HTML pages parsed: 51 site pages plus offline fallback
@@ -13,7 +13,7 @@ PASS  Public HTML uses fresh network navigation with an offline fallback
 PASS  Account, cart, thank-you, order-status and admin routes remain network-only
 PASS  Supabase, configuration, checkout, account and review files remain network-only
 PASS  Versioned static cache removes previous VA HOME caches on activation
-PASS  Resource query version synchronized to 13.7.0-rc10
+PASS  Resource query version synchronized to 13.7.0-rc11
 PASS  No stale rc5 or rc6 resource versions remain
 PASS  18 product pages found
 PASS  18 product-to-Journal proof links found
@@ -46,3 +46,6 @@ NOT PART OF THIS RC
 - Refills.
 
 Cart footer gap: removed the inherited editorial footer top padding on cart.html.
+
+PASS  RC11 removes the fixed checkout compositing layer with the native hidden state and clears all mobile body reserve while checkout is active
+PASS  iOS visual viewport receives a repaint nudge after keyboard dismissal to prevent the persistent black lower strip

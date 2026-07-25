@@ -190,7 +190,14 @@
     if (deliveryLabel) deliveryLabel.textContent = remaining === 0 ? "Безкоштовно" : "За тарифами НП";
 
     const mobileBar = document.getElementById("checkoutMobileBar");
-    if (mobileBar) mobileBar.hidden = !items.length;
+    if (mobileBar) {
+      const hasItems = Boolean(items.length);
+      mobileBar.dataset.hasItems = hasItems ? 'true' : 'false';
+      const checkoutActive = document.body.classList.contains('va-checkout-form-active');
+      const shouldShow = hasItems && window.innerWidth <= 800 && !checkoutActive;
+      mobileBar.hidden = !shouldShow;
+      document.body.classList.toggle('va-mobile-checkout-bar-visible', shouldShow);
+    }
   }
 
   function renderCartPage() {
@@ -207,7 +214,11 @@
       const progress = document.querySelector(".checkout-progress");
       if (progress) progress.hidden = true;
       const mobileBar = document.getElementById("checkoutMobileBar");
-      if (mobileBar) mobileBar.hidden = true;
+      if (mobileBar) {
+        mobileBar.dataset.hasItems = 'false';
+        mobileBar.hidden = true;
+      }
+      document.body.classList.remove('va-mobile-checkout-bar-visible', 'va-checkout-form-active');
       return;
     }
 
@@ -661,21 +672,36 @@
   function initMobileCheckoutAction() {
     const action = document.getElementById('checkoutMobileAction');
     const form = document.getElementById('checkoutForm');
-    if (!action || !form) return;
+    const mobileBar = document.getElementById('checkoutMobileBar');
+    if (!action || !form || !mobileBar) return;
 
     let raf = 0;
+
+    const setCheckoutActive = (active) => {
+      const isMobile = window.innerWidth <= 800;
+      const hasItems = mobileBar.dataset.hasItems === 'true';
+      const checkoutActive = Boolean(isMobile && active);
+      const shouldShowBar = Boolean(isMobile && hasItems && !checkoutActive);
+
+      document.body.classList.toggle('va-checkout-form-active', checkoutActive);
+      document.body.classList.toggle('va-mobile-checkout-bar-visible', shouldShowBar);
+
+      // Use the native hidden state, not only CSS. On iOS this fully removes the
+      // fixed compositing layer and prevents the stale black rectangle after focus.
+      mobileBar.hidden = !shouldShowBar;
+    };
+
     const syncCheckoutZone = () => {
       raf = 0;
       if (window.innerWidth > 800) {
-        document.body.classList.remove('va-checkout-form-active');
+        setCheckoutActive(false);
         return;
       }
 
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      const formTop = form.getBoundingClientRect().top + window.scrollY;
-      const viewportBottom = window.scrollY + viewportHeight;
-      const checkoutStarted = viewportBottom >= formTop + 48;
-      document.body.classList.toggle('va-checkout-form-active', checkoutStarted);
+      const formTop = form.getBoundingClientRect().top;
+      const checkoutStarted = formTop <= viewportHeight - 48;
+      setCheckoutActive(checkoutStarted);
     };
 
     const scheduleSync = () => {
@@ -684,19 +710,17 @@
     };
 
     action.addEventListener('click', () => {
+      setCheckoutActive(true);
       form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      document.body.classList.add('va-checkout-form-active');
       window.setTimeout(() => form.elements.customerName?.focus({ preventScroll: true }), 550);
     });
 
-    form.addEventListener('focusin', () => {
-      document.body.classList.add('va-checkout-form-active');
-    });
+    form.addEventListener('focusin', () => setCheckoutActive(true));
 
     window.addEventListener('scroll', scheduleSync, { passive: true });
     window.addEventListener('resize', scheduleSync);
     window.visualViewport?.addEventListener('resize', scheduleSync);
-    window.visualViewport?.addEventListener('scroll', scheduleSync);
+    window.addEventListener('pageshow', scheduleSync);
     scheduleSync();
   }
 
@@ -704,15 +728,43 @@
     if (!window.visualViewport) return;
     const viewport = window.visualViewport;
     let raf = 0;
+    let keyboardWasOpen = false;
+    let stableViewportHeight = Math.max(window.innerHeight, viewport.height);
+
+    const repairViewportAfterKeyboard = () => {
+      const y = window.scrollY;
+      const root = document.documentElement;
+
+      // iOS Safari/PWA can keep a shortened visual viewport after the keyboard
+      // closes. A tiny scroll + compositor reflow forces WebKit to repaint the
+      // full screen without moving the user to another part of the form.
+      root.classList.add('va-ios-viewport-repair');
+      void root.offsetHeight;
+      requestAnimationFrame(() => {
+        window.scrollTo(0, Math.max(0, y - 1));
+        requestAnimationFrame(() => {
+          window.scrollTo(0, y);
+          root.classList.remove('va-ios-viewport-repair');
+        });
+      });
+    };
 
     const update = () => {
       raf = 0;
       const focused = document.activeElement?.matches?.('input, textarea, select');
-      const keyboardOpen = Boolean(focused && viewport.height < window.innerHeight * 0.82);
-      document.body.classList.toggle('va-keyboard-open', keyboardOpen);
-      if (keyboardOpen && document.activeElement) {
-        window.setTimeout(() => document.activeElement?.scrollIntoView?.({ block: 'center', inline: 'nearest' }), 80);
+      if (!focused) {
+        stableViewportHeight = Math.max(stableViewportHeight, window.innerHeight, viewport.height);
       }
+
+      const keyboardOpen = Boolean(
+        focused && stableViewportHeight - viewport.height > 110
+      );
+      document.body.classList.toggle('va-keyboard-open', keyboardOpen);
+
+      if (keyboardWasOpen && !keyboardOpen) {
+        window.setTimeout(repairViewportAfterKeyboard, 40);
+      }
+      keyboardWasOpen = keyboardOpen;
     };
 
     const schedule = () => {
@@ -721,9 +773,16 @@
     };
 
     viewport.addEventListener('resize', schedule);
-    viewport.addEventListener('scroll', schedule);
     document.addEventListener('focusin', schedule);
-    document.addEventListener('focusout', () => window.setTimeout(schedule, 120));
+    document.addEventListener('focusout', () => {
+      window.setTimeout(() => {
+        schedule();
+        const stillEditing = document.activeElement?.matches?.('input, textarea, select');
+        if (!stillEditing) repairViewportAfterKeyboard();
+      }, 180);
+    });
+    window.addEventListener('orientationchange', () => window.setTimeout(repairViewportAfterKeyboard, 180));
+    window.addEventListener('pageshow', () => window.setTimeout(repairViewportAfterKeyboard, 40));
     schedule();
   }
 

@@ -1,5 +1,5 @@
 {
-  "version": "13.7.0-rc.10",
+  "version": "13.7.0-rc.11",
   "name": "PWA RELEASE CANDIDATE",
   "date": "2026-07-25",
   "base": "13.6.10-NOIR-LIGHT-RECIPIENT-FIX",
@@ -11,7 +11,7 @@
     "Reserved the product rating line while asynchronous reviews load",
     "Converted the orphaned Discovery Set guide card into a full-width CTA",
     "Refined product Journal links into quiet inline editorial notes",
-    "Updated resource query versions to 13.7.0-rc10",
+    "Updated resource query versions to 13.7.0-rc11",
     "Added one restrained About-to-Journal bridge inside Molecular Architecture",
     "Reserved the catalog rating slot when a product has no approved reviews",
     "Aligned price, compare control and product actions across reviewed and unreviewed cards",
@@ -26,6 +26,7 @@
     "Hidden the sticky checkout action while the iOS keyboard is open",
     "Kept focused checkout fields inside the reduced visual viewport",
     "Removed the large empty black gap between the checkout form and the editorial footer scene",
-    "Hidden the mobile checkout CTA for the entire checkout-entry zone in both PWA and mobile browsers"
+    "Hidden the mobile checkout CTA for the entire checkout-entry zone in both PWA and mobile browsers",
+    "Removed the iOS fixed/backdrop checkout layer after entering the form and repaired the visual viewport after keyboard dismissal"
   ]
 }
