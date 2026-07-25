@@ -2451,3 +2451,28 @@ body.cart-page .checkout-submit-panel {
     max-width: 100% !important;
   }
 }
+
+
+/* ==========================================================================
+   VA HOME v13.7.0 RC19 — restore the mobile "До оформлення" CTA bar
+   The bar sits after the checkout form in the DOM. RC15 made it
+   position:sticky, so it only surfaced near the very end of the page — at the
+   top of the cart (where items are browsed) it was off-screen and read as
+   "gone". Pin it to the viewport bottom with position:fixed so it is visible
+   while browsing the cart. The JS still sets [hidden] (→ display:none) once
+   the checkout form scrolls into view, so nothing residual is left behind and
+   no page-level bottom reserve returns.
+   ========================================================================== */
+@media (max-width: 900px) {
+  .checkout-mobile-bar {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    margin: 0 !important;
+    z-index: 90 !important;
+  }
+  .checkout-mobile-bar[hidden] {
+    display: none !important;
+  }
+}

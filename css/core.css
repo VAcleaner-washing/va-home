@@ -231,7 +231,7 @@ html {
   }
 }
 
-html, body {
+html {
   height: 100%;
 }
 
@@ -2496,7 +2496,14 @@ select:-webkit-autofill {
   --motion-slow: 1200ms;
 }
 
-html { }
+/* The webview canvas (html) must carry the brand background so that in an
+   installed standalone PWA no uncovered area — the home-indicator safe zone,
+   or any gap where 100dvh underruns the physical screen — shows the webview's
+   own pure black. html is height:100% (= full screen in viewport-fit:cover),
+   so this paints the entire device surface the same near-black as the body. */
+html {
+  background: var(--bg-primary);
+}
 
 /* Header transition: transparent hero state → calm solid state. */
 .site-header {

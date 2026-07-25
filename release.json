@@ -1,5 +1,5 @@
 {
-  "version": "13.7.0-rc.18",
+  "version": "13.7.0-rc.20",
   "name": "PWA RELEASE CANDIDATE",
   "date": "2026-07-25",
   "base": "13.7.0-rc.15-MOBILE-CART-VIEWPORT-LOCK",
@@ -11,7 +11,7 @@
     "Reserved the product rating line while asynchronous reviews load",
     "Converted the orphaned Discovery Set guide card into a full-width CTA",
     "Refined product Journal links into quiet inline editorial notes",
-    "Updated resource query versions to 13.7.0-rc18",
+    "Updated resource query versions to 13.7.0-rc20",
     "Added one restrained About-to-Journal bridge inside Molecular Architecture",
     "Reserved the catalog rating slot when a product has no approved reviews",
     "Aligned price, compare control and product actions across reviewed and unreviewed cards",

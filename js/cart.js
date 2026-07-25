@@ -710,6 +710,15 @@
         return;
       }
 
+      // If the checkout form is not actually rendered (empty cart, or the
+      // filled state is still hidden) its rect collapses to top:0, which used
+      // to be read as "checkout started" and permanently suppressed the
+      // mobile bar. A hidden form means checkout has not started.
+      if (form.offsetParent === null) {
+        setCheckoutActive(false);
+        return;
+      }
+
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
       const formTop = form.getBoundingClientRect().top;
       const checkoutStarted = formTop <= viewportHeight - 48;
@@ -765,7 +774,7 @@
     // RC13: clear every legacy RC9-RC12 flag and inline reserve.
     document.documentElement.classList.remove('va-ios-viewport-repair');
     document.documentElement.style.removeProperty('transform');
-    document.body.classList.remove('va-mobile-checkout-bar-visible', 'va-rc12-checkout-active', 'va-keyboard-open');
+    document.body.classList.remove('va-mobile-checkout-bar-visible', 'va-rc12-checkout-active', 'va-keyboard-open', 'va-checkout-form-active');
     document.body.style.removeProperty('padding-bottom');
     refreshCountBadge();
     renderCartPage();
