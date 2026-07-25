@@ -6,4 +6,4 @@ FIXED
 - total label cannot collapse into vertical letters
 - checkout button cannot make the row wider than its container
 - horizontal page overflow removed at the source
-- service worker and HTML asset query versions bumped to rc15
+- service worker and HTML asset query versions bumped to rc14

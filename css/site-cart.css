@@ -2249,13 +2249,11 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 
 
 /* ==========================================================================
-   VA HOME v13.7.0 RC15 — clean sticky checkout bar + zero horizontal overflow
-   One authoritative mobile bar definition. No legacy flex/grid competition,
-   no fixed compositor layer, and no page-level bottom reserve.
+   VA HOME v13.7.0 RC16 — stable mobile checkout CTA
+   One fixed, opaque layer. No backdrop-filter, shadow, transform or body reserve.
+   The content reserve lives on main only while the bar is actually visible.
    ========================================================================== */
-html,
-body.cart-page {
-  width: 100%;
+html, body {
   max-width: 100%;
   overflow-x: clip;
 }
@@ -2264,9 +2262,11 @@ body.cart-page,
 body.cart-page main,
 body.cart-page .container,
 body.cart-page #cartFilledState,
+body.cart-page .cart-layout,
 body.cart-page .checkout-form,
 body.cart-page .checkout-submit-panel {
   min-width: 0;
+  max-width: 100%;
 }
 
 @media (max-width: 900px) {
@@ -2284,19 +2284,25 @@ body.cart-page .checkout-submit-panel {
     min-height: 0 !important;
   }
 
+  body.cart-page.va-mobile-checkout-bar-visible #main-content {
+    padding-bottom: calc(86px + env(safe-area-inset-bottom));
+  }
+
   .checkout-mobile-bar {
-    position: sticky !important;
-    inset: auto auto 0 auto !important;
-    z-index: 5 !important;
+    position: fixed !important;
+    z-index: 95 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
     display: grid;
     grid-template-columns: minmax(86px, auto) minmax(0, 1fr);
     align-items: center;
     gap: 12px;
     width: 100% !important;
-    max-width: 100% !important;
+    max-width: 100vw !important;
     min-width: 0 !important;
     min-height: 74px;
-    margin: 18px 0 0 !important;
+    margin: 0 !important;
     padding: 11px max(14px, env(safe-area-inset-right))
              calc(11px + env(safe-area-inset-bottom))
              max(14px, env(safe-area-inset-left)) !important;
@@ -2311,7 +2317,7 @@ body.cart-page .checkout-submit-panel {
     will-change: auto !important;
     filter: none !important;
     isolation: auto !important;
-    overflow: clip;
+    overflow: hidden;
   }
 
   .checkout-mobile-bar[hidden] {
@@ -2382,72 +2388,28 @@ body.cart-page .checkout-submit-panel {
 }
 
 
-/* ========================================================================== 
-   VA HOME v13.7.0 RC15 — mobile cart viewport lock
-   The cart is a vertical flow: no child may create a page-wide horizontal pan.
+/* ==========================================================================
+   VA HOME v13.7.0 RC15 — remove checkout horizontal page overflow at source
+   The visually hidden payment radios inherited width:100% from .form-field
+   input and, while absolutely positioned, extended the document to the right.
    ========================================================================== */
-@media (max-width: 900px) {
-  html,
-  body.cart-page {
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: hidden !important;
-    overscroll-behavior-x: none;
-  }
+.payment-option {
+  position: relative;
+}
 
-  body.cart-page {
-    position: relative;
-    touch-action: pan-y;
-  }
-
-  body.cart-page #main-content,
-  body.cart-page #main-content > *,
-  body.cart-page .section,
-  body.cart-page .container,
-  body.cart-page #cartFilledState,
-  body.cart-page .cart-layout,
-  body.cart-page .cart-items,
-  body.cart-page .cart-item,
-  body.cart-page .cart-summary,
-  body.cart-page .checkout-form,
-  body.cart-page .checkout-fields-grid,
-  body.cart-page .checkout-fieldset,
-  body.cart-page .checkout-submit-panel,
-  body.cart-page .checkout-actions,
-  body.cart-page .checkout-mobile-bar {
-    max-width: 100% !important;
-    min-width: 0 !important;
-  }
-
-  body.cart-page #main-content,
-  body.cart-page .section,
-  body.cart-page #cartFilledState,
-  body.cart-page .cart-layout,
-  body.cart-page .checkout-form {
-    overflow-x: hidden !important;
-  }
-
-  /* This strip used to retain an old horizontal carousel rule. */
-  body.cart-page .checkout-trust-strip__grid {
-    width: auto !important;
-    max-width: 100% !important;
-    overflow-x: hidden !important;
-    overscroll-behavior-x: none;
-    touch-action: pan-y;
-    white-space: normal !important;
-  }
-
-  body.cart-page .checkout-progress {
-    width: 100%;
-    max-width: 100%;
-    overflow: hidden;
-  }
-
-  body.cart-page input,
-  body.cart-page select,
-  body.cart-page textarea,
-  body.cart-page button {
-    min-width: 0 !important;
-    max-width: 100% !important;
-  }
+.payment-option input[type="radio"] {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  min-width: 1px !important;
+  max-width: 1px !important;
+  min-height: 1px !important;
+  max-height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
 }

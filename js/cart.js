@@ -191,11 +191,8 @@
 
     const mobileBar = document.getElementById("checkoutMobileBar");
     if (mobileBar) {
-      const hasItems = Boolean(items.length);
-      mobileBar.dataset.hasItems = hasItems ? 'true' : 'false';
-      const checkoutActive = document.body.classList.contains('va-checkout-form-active');
-      const shouldShow = hasItems && window.innerWidth <= 800 && !checkoutActive;
-      mobileBar.hidden = !shouldShow;
+      mobileBar.dataset.hasItems = items.length ? 'true' : 'false';
+      window.VASyncMobileCheckoutBar?.();
     }
   }
 
@@ -676,68 +673,59 @@
 
     let raf = 0;
 
-    const setCheckoutActive = (active) => {
-      const isMobile = window.innerWidth <= 800;
-      const hasItems = mobileBar.dataset.hasItems === 'true';
-      const checkoutActive = Boolean(isMobile && active);
-      const shouldShowBar = Boolean(isMobile && hasItems && !checkoutActive);
-
-      document.body.classList.toggle('va-checkout-form-active', checkoutActive);
-
-      // RC13: the bar is a normal sticky element in flow. No fixed compositing
-      // layer, no body padding reserve, so hiding it can never leave a stale
-      // black rectangle behind on iOS.
-      mobileBar.hidden = !shouldShowBar;
-    };
-
-    // RC13: while a field is focused or the keyboard is open, the page must not
-    // change its layout at all. Re-flowing during the viewport transition is what
-    // left the unpainted strip at the bottom of the screen.
     const isEditing = () => {
       const node = document.activeElement;
       return Boolean(node && form.contains(node) && node.matches('input, select, textarea'));
     };
+
     const isKeyboardOpen = () => {
       const vv = window.visualViewport;
       return Boolean(vv && window.innerHeight - vv.height > 120);
     };
 
-    const syncCheckoutZone = () => {
+    const setVisible = (visible) => {
+      const show = Boolean(visible);
+      mobileBar.hidden = !show;
+      mobileBar.toggleAttribute('aria-hidden', !show);
+      document.body.classList.toggle('va-mobile-checkout-bar-visible', show);
+    };
+
+    const sync = () => {
       raf = 0;
-      if (isEditing() || isKeyboardOpen()) return;
-      if (window.innerWidth > 800) {
-        setCheckoutActive(false);
-        return;
-      }
-
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      const formTop = form.getBoundingClientRect().top;
-      const checkoutStarted = formTop <= viewportHeight - 48;
-      setCheckoutActive(checkoutStarted);
+      const shouldShow = Boolean(
+        window.innerWidth <= 800 &&
+        mobileBar.dataset.hasItems === 'true' &&
+        !isEditing() &&
+        !isKeyboardOpen()
+      );
+      setVisible(shouldShow);
     };
 
-    const scheduleSync = () => {
+    const schedule = () => {
       if (raf) cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(syncCheckoutZone);
+      raf = requestAnimationFrame(sync);
     };
+
+    window.VASyncMobileCheckoutBar = schedule;
 
     action.addEventListener('click', () => {
-      setCheckoutActive(true);
+      setVisible(false);
       form.scrollIntoView({ behavior: 'smooth', block: 'start' });
       window.setTimeout(() => form.elements.customerName?.focus({ preventScroll: true }), 550);
     });
 
-    // Hide once on focus, then stay frozen until the keyboard is fully gone.
-    form.addEventListener('focusin', () => setCheckoutActive(true));
+    form.addEventListener('focusin', () => setVisible(false));
     form.addEventListener('focusout', () => {
-      window.setTimeout(() => { if (!isEditing() && !isKeyboardOpen()) scheduleSync(); }, 300);
+      window.setTimeout(() => {
+        if (!isEditing() && !isKeyboardOpen()) schedule();
+      }, 300);
     });
 
-    window.addEventListener('scroll', scheduleSync, { passive: true });
-    window.addEventListener('resize', scheduleSync);
-    window.visualViewport?.addEventListener('resize', scheduleSync);
-    window.addEventListener('pageshow', scheduleSync);
-    scheduleSync();
+    window.addEventListener('resize', schedule);
+    window.addEventListener('orientationchange', () => window.setTimeout(schedule, 180));
+    window.addEventListener('pageshow', schedule);
+    window.visualViewport?.addEventListener('resize', schedule);
+    schedule();
   }
 
   function initCheckoutForm() {

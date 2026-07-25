@@ -1,0 +1,9 @@
+VA HOME v13.7.0 RC16
+
+- Mobile checkout CTA is fixed and visible before form focus.
+- No backdrop-filter, box-shadow, transform or will-change on the CTA.
+- No padding-bottom reserve on body.
+- Reserve is applied to #main-content only while CTA is visible.
+- CTA fills env(safe-area-inset-bottom) in standalone PWA.
+- One JavaScript controller owns hidden state and visibility class.
+- RC15 radio input width fix retained.
