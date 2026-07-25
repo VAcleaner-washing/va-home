@@ -295,9 +295,8 @@
 @media(max-width:800px){
   .checkout-progress li{min-height:58px;justify-content:center;text-align:center}.checkout-progress li strong{display:none}.checkout-progress li.is-current strong{display:block;font-size:.72rem}.checkout-progress li.is-complete::after{display:none}
   .cart-summary{position:static}.checkout-fieldset legend{position:sticky;top:var(--header-height-mobile);z-index:4;margin-inline:-22px;padding:12px 22px;background:rgba(13,12,10,.96);backdrop-filter:blur(12px)}
-  .checkout-mobile-bar{position:fixed;z-index:95;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px max(16px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));border-top:1px solid var(--border-hairline-strong);background:rgba(8,8,7,.96);backdrop-filter:blur(16px);box-shadow:0 -16px 38px rgba(0,0,0,.42)}
+  .checkout-mobile-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid var(--border-hairline-strong);background:#0b0a08}
   .checkout-mobile-bar[hidden]{display:none}.checkout-mobile-bar>div:first-child{min-width:0;flex-shrink:1}.checkout-mobile-bar small{display:block;color:var(--text-secondary);font-size:.68rem}.checkout-mobile-bar strong{font-family:var(--font-display);font-size:1.25rem}.checkout-mobile-bar .btn{flex-shrink:0;min-height:46px;padding:10px 16px}
-  body:has(.checkout-mobile-bar:not([hidden])){padding-bottom:82px}
 }
 @media(max-width:430px){.checkout-progress li{padding-inline:5px}.checkout-progress li.is-current strong{max-width:88px}.checkout-form{margin-inline:calc(var(--container-pad)*-1);border-left:0;border-right:0}.payment-option{padding:14px}.cart-summary__trust{display:none}}
 
@@ -414,9 +413,6 @@
     min-height: 50px;
     padding-inline: 20px;
     white-space: nowrap;
-  }
-  body:has(.checkout-mobile-bar:not([hidden])) {
-    padding-bottom: calc(96px + env(safe-area-inset-bottom));
   }
 }
 
@@ -2299,65 +2295,90 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* VA HOME v13.7.0 RC11 — iOS viewport + fixed checkout layer hard reset */
-@media (max-width: 800px) {
-  /* Reserve space only while the pre-checkout CTA is genuinely visible. */
-  body.cart-page { padding-bottom: 0 !important; }
-  body.cart-page.va-mobile-checkout-bar-visible {
-    padding-bottom: calc(96px + env(safe-area-inset-bottom)) !important;
+/* ==========================================================================
+   VA HOME v13.7.0 RC13 — mobile checkout bar: sticky in flow
+   Root cause of the black strip: the bar was position:fixed with
+   backdrop-filter + box-shadow (a hardware compositing layer) and the page
+   reserved 96px + safe-area of body padding for it. Hiding, transforming or
+   removing that layer left an unpainted rectangle filled with the root
+   background (--color-black, #080807) and the reserve stayed behind it.
+   RC13 removes the fixed layer and the reserve completely.
+   ========================================================================== */
+/* body{overflow-x:hidden} turns the body into a scroll container and can break
+   position:sticky. overflow:clip prevents the horizontal overflow without it. */
+@supports (overflow: clip) {
+  body.cart-page { overflow-x: clip; }
+}
+
+@media (max-width: 900px) {
+  /* No page-level reserve. Ever. */
+  body.cart-page,
+  body.cart-page.va-checkout-form-active,
+  body.cart-page.va-keyboard-open,
+  body.cart-page.va-mobile-checkout-bar-visible,
+  body.cart-page.va-rc12-checkout-active {
+    padding-bottom: 0 !important;
   }
 
-  /* A solid layer is more reliable than backdrop-filter in iOS Safari/PWA. */
+  /* No root-level compositor hacks. */
+  html.va-ios-viewport-repair {
+    transform: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
   .checkout-mobile-bar {
-    background: #080807;
+    position: sticky !important;
+    inset: auto auto 0 auto !important;
+    z-index: 5 !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: auto !important;
+    min-height: 74px;
+    margin-top: 18px;
+    margin-inline: 0 !important;
+    padding: 11px max(14px, env(safe-area-inset-right))
+             calc(11px + env(safe-area-inset-bottom))
+             max(14px, env(safe-area-inset-left)) !important;
+    border: 0;
+    border-top: 1px solid var(--border-hairline-strong);
+    background: #0b0a08;
+    box-shadow: none !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
+    transform: none !important;
+    will-change: auto !important;
+    filter: none !important;
+    isolation: auto !important;
   }
 
-  body.va-checkout-form-active .checkout-mobile-bar,
-  body.va-keyboard-open .checkout-mobile-bar,
+  /* The single visibility switch: the native hidden attribute. */
   .checkout-mobile-bar[hidden] {
     display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-    position: static !important;
-    height: 0 !important;
-    min-height: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    transform: none !important;
   }
 
-  body.va-keyboard-open input:focus,
-  body.va-keyboard-open textarea:focus,
-  body.va-keyboard-open select:focus {
-    scroll-margin-block: 24vh;
+  .checkout-mobile-bar > div {
+    flex: 0 0 auto;
+    min-width: 76px;
+  }
+  .checkout-mobile-bar .btn {
+    flex: 0 0 auto;
+    min-width: 152px;
+    min-height: 50px;
+    padding-inline: 20px;
+    white-space: nowrap;
   }
 
-  html.va-ios-viewport-repair {
-    transform: translateZ(0);
+  /* Keep the focused field clear of the sticky bar without moving the page. */
+  .checkout-fieldset input:focus,
+  .checkout-fieldset select:focus,
+  .checkout-fieldset textarea:focus {
+    scroll-margin-block-end: 96px;
   }
 }
 
-
-/* VA HOME v13.7.0 RC12 — mobile checkout bar physical detach */
-@media (max-width:800px){
-  html.va-ios-viewport-repair{transform:none!important;}
-  body.cart-page.va-checkout-form-active,
-  body.cart-page.va-keyboard-open,
-  body.cart-page.va-rc12-checkout-active{padding-bottom:0!important;}
-  body.cart-page.va-checkout-form-active .checkout-mobile-bar,
-  body.cart-page.va-keyboard-open .checkout-mobile-bar,
-  body.cart-page.va-rc12-checkout-active .checkout-mobile-bar,
-  .checkout-mobile-bar[hidden],
-  .checkout-mobile-bar[data-va-detached="true"]{
-    display:none!important;position:fixed!important;inset:auto 0 0!important;
-    width:0!important;height:0!important;min-height:0!important;max-height:0!important;
-    margin:0!important;padding:0!important;border:0!important;background:transparent!important;
-    box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;
-    opacity:0!important;visibility:hidden!important;pointer-events:none!important;overflow:hidden!important;
-    transform:translate3d(0,140%,0)!important;
-  }
+@media (max-width: 380px) {
+  .checkout-mobile-bar .btn { min-width: 138px; padding-inline: 14px; }
 }
