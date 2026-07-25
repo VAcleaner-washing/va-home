@@ -2877,3 +2877,37 @@ html { }
   transform: none !important;
   will-change: auto;
 }
+
+/* VA HOME v13.7.0 RC6 — globally legible glass header */
+.site-header {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(8, 8, 7, .78) 0%,
+      rgba(8, 8, 7, .62) 100%
+    );
+  -webkit-backdrop-filter: blur(18px) saturate(112%);
+  backdrop-filter: blur(18px) saturate(112%);
+  border-bottom-color: rgba(184, 138, 75, .18);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .16);
+}
+
+.site-header.is-scrolled,
+.site-header.is-solid {
+  background: rgba(8, 8, 7, .88);
+  -webkit-backdrop-filter: blur(20px) saturate(112%);
+  backdrop-filter: blur(20px) saturate(112%);
+  border-bottom-color: rgba(184, 138, 75, .24);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, .22);
+}
+
+@media (max-width: 1023px) {
+  .site-header {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(8, 8, 7, .82) 0%,
+        rgba(8, 8, 7, .66) 100%
+      );
+  }
+}

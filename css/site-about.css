@@ -2587,3 +2587,44 @@ button, input, select, textarea, a{ min-width: 0; }
   }
   .about-journal-bridge__title{font-size:1.22rem}
 }
+
+/* VA HOME v13.7.0 RC6 — restore the intended mobile editorial inset.
+   Earlier rules targeted .about-editorial-page, while about.html uses
+   .brand-world-page, leaving these two text blocks flush with the viewport. */
+@media (max-width: 760px) {
+  .brand-world-page .about-editorial-image__caption {
+    padding-left: max(24px, calc(env(safe-area-inset-left) + 18px)) !important;
+    padding-right: max(24px, calc(env(safe-area-inset-right) + 18px)) !important;
+    box-sizing: border-box;
+  }
+
+  .brand-world-page .about-molecules__copy {
+    padding:
+      64px
+      max(24px, calc(env(safe-area-inset-right) + 18px))
+      72px
+      max(24px, calc(env(safe-area-inset-left) + 18px)) !important;
+    align-items: flex-start;
+    box-sizing: border-box;
+  }
+
+  .brand-world-page .about-molecules__copy .eyebrow,
+  .brand-world-page .about-molecules__copy h2,
+  .brand-world-page .about-molecules__copy p:not(.eyebrow),
+  .brand-world-page .about-journal-bridge {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .brand-world-page .about-editorial-image__caption {
+    padding-left: max(20px, calc(env(safe-area-inset-left) + 16px)) !important;
+    padding-right: max(20px, calc(env(safe-area-inset-right) + 16px)) !important;
+  }
+
+  .brand-world-page .about-molecules__copy {
+    padding-left: max(20px, calc(env(safe-area-inset-left) + 16px)) !important;
+    padding-right: max(20px, calc(env(safe-area-inset-right) + 16px)) !important;
+  }
+}
