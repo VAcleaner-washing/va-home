@@ -1,6 +1,6 @@
 {
-  "version": "13.6.7",
-  "name": "HARDENING AND PRODUCTION SYNC",
+  "version": "13.6.9",
+  "name": "JOURNAL EDITORIAL BALANCE",
   "date": "2026-07-24",
   "changes": [
     "Removed public tax ID and bank details from static pages and configuration",
@@ -8,6 +8,12 @@
     "Aligned diffuser stick guidance and added the returns anchor",
     "Migrated the 18-fragrance Discovery Set to a canonical discovery-18 ID with legacy compatibility",
     "Reserved intrinsic dimensions for static images and synchronized resource versions",
-    "Hidden empty catalog ratings until verified reviews exist"
+    "Hidden empty catalog ratings until verified reviews exist",
+    "Replaced all 15 Journal visuals with a cohesive VA HOME editorial series",
+    "Balanced home atmosphere, architecture, sensory still life and restrained process imagery",
+    "Unified Journal image dimensions at 1672 × 941 and synchronized article hero imagery",
+    "Rebalanced the Journal to 11 atmosphere/process covers without products and 4 product-led covers",
+    "Reserved bottles for articles where the product is integral to the subject",
+    "Rebuilt formula and molecular covers from the visual language of the VA HOME About page"
   ]
 }
