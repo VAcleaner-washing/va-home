@@ -2939,3 +2939,33 @@ body > .site-footer,
 body > footer {
   flex-shrink: 0;
 }
+
+
+/* ==========================================================================
+   VA HOME v13.7.0 RC18 — mobile menu: scrollable, no nav/footer overlap
+   Root cause: .mobile-menu__nav used flex:1 (basis 0, shrinkable). When the
+   eight large nav items plus the contact footer were taller than the screen,
+   the nav box shrank below its own content, so the links overflowed their box
+   and collided with the pinned contact block (and could ghost near the top on
+   iOS during the open transition). The panel also never scrolled, so the last
+   contact row (Email / Instagram) was clipped on shorter screens.
+   Fix: let the panel scroll, stop the nav shrinking below its content, and
+   keep the footer as a non-shrinking block after the nav. Centering still
+   applies when the content is shorter than the viewport.
+   ========================================================================== */
+@media (max-width: 1023px) {
+  .mobile-menu {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-menu__nav {
+    flex: 1 0 auto;
+    min-height: 0;
+  }
+
+  .mobile-menu__footer {
+    flex-shrink: 0;
+  }
+}
