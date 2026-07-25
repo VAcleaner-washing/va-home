@@ -26,7 +26,7 @@
     }
     const special = {
       "discovery-6": ["Discovery Set — 6 ароматів", 150],
-      "discovery-17": ["Discovery Set — 18 ароматів", 450]
+      "discovery-18": ["Discovery Set — 18 ароматів", 450]
     }[id];
     return special ? { item_id: id, item_name: special[0], item_brand: "VA HOME", item_category: "Discovery Set", price: special[1], quantity } : null;
   }

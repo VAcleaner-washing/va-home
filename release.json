@@ -1,12 +1,13 @@
 {
-  "version": "13.6.6",
-  "name": "MOLECULAR PERCEPTION ARTICLE AND SITEMAP SYNC",
+  "version": "13.6.7",
+  "name": "HARDENING AND PRODUCTION SYNC",
   "date": "2026-07-24",
   "changes": [
-    "Reframed olfactory adaptation article around honest molecular architecture",
-    "Updated article title, metadata, schema and cross-links",
-    "Added lastmod to seven new Journal pages",
-    "Added seven missing Journal pages and images to image-sitemap.xml",
-    "Sitemap coverage synchronized with all indexable pages"
+    "Removed public tax ID and bank details from static pages and configuration",
+    "Moved payment details in the order function to protected environment variables",
+    "Aligned diffuser stick guidance and added the returns anchor",
+    "Migrated the 18-fragrance Discovery Set to a canonical discovery-18 ID with legacy compatibility",
+    "Reserved intrinsic dimensions for static images and synchronized resource versions",
+    "Hidden empty catalog ratings until verified reviews exist"
   ]
 }

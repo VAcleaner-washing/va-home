@@ -28,12 +28,6 @@ const SITE_CONFIG = {
 
   legalEntity: "ФОП Невідома Анна Сергіївна",
 
-  payment: {
-    iban: "UA523220010000026006370119233",
-    recipient: "ФОП Невідома Анна Сергіївна",
-    taxId: "3314215243"
-  },
-
   analytics: {
     // Add the GA4 Measurement ID, for example: G-ABC1234567.
     // Analytics stays fully disabled while this value is empty.

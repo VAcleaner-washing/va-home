@@ -69,8 +69,7 @@
     const grid = document.querySelector(".ty-primary-grid");
     const paymentPanel = document.getElementById("paymentPanel");
     const codPanel = document.getElementById("codPanel");
-    const cfg = window.SITE_CONFIG || {};
-    const payment = cfg.payment || {};
+    const payment = order && (order.paymentDetails || order.payment_details);
 
     if (order) renderOrder(order);
     else renderEmptyState();
@@ -99,8 +98,16 @@
     if (order && !isCod) {
       const number = order.orderNumber || order.client_order_id || "номер замовлення";
       const purpose = `Оплата замовлення ${number}`;
-      const recipient = payment.recipient || "ФОП Невідома Анна Сергіївна";
-      const iban = payment.iban || "";
+      const recipient = payment && payment.recipient;
+      const iban = payment && payment.iban;
+      const details = document.getElementById("paymentDetails");
+      if (!recipient || !iban) {
+        if (details) details.hidden = true;
+        return;
+      }
+      setText("paymentTitle", "Реквізити");
+      setText("paymentIntro", "Скопіюйте дані одним натисканням. Призначення платежу вже сформовано.");
+      if (details) details.hidden = false;
       setText("paymentRecipient", recipient);
       setText("paymentIban", iban);
       setText("paymentPurpose", purpose);

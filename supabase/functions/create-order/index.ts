@@ -24,7 +24,7 @@ const PRODUCTS: Record<string, { name: string; price: number }> = {
   "moss-and-shadow": { name: "Moss & Shadow", price: 1199 },
   "dark-bloom": { name: "Dark Bloom", price: 1199 },
   "discovery-6": { name: "Discovery Set — 6 ароматів", price: 150 },
-  "discovery-17": { name: "Discovery Set — 18 ароматів", price: 450 },
+  "discovery-18": { name: "Discovery Set — 18 ароматів", price: 450 },
 };
 const FRAGRANCE_IDS = Object.keys(PRODUCTS).filter(id => !id.startsWith("discovery-"));
 
@@ -154,7 +154,8 @@ Deno.serve(async req => {
     if (rawItems.length < 1 || rawItems.length > 30) return json(req, { error: "INVALID_ITEMS" }, 400);
 
     const items = rawItems.map((raw: Record<string, unknown>) => {
-      const id = text(raw.id, 80);
+      const submittedId = text(raw.id, 80);
+      const id = submittedId === "discovery-17" ? "discovery-18" : submittedId;
       const product = PRODUCTS[id];
       const quantity = Math.trunc(Number(raw.quantity));
       if (!product || !Number.isInteger(quantity) || quantity < 1 || quantity > 10) throw new Error("INVALID_ITEM");
@@ -252,6 +253,8 @@ Deno.serve(async req => {
       try {
         const orderIdEscaped = escapeHtml(order.client_order_id);
         const cod = paymentMethod === "cash_on_delivery";
+        const paymentRecipient = text(Deno.env.get("PAYMENT_RECIPIENT"), 160);
+        const paymentIban = text(Deno.env.get("PAYMENT_IBAN"), 50);
 
         // Рендеринг списку товарів для листа адміністратора (Темна тема)
         const rowsForAdmin = items.map(item => `
@@ -328,19 +331,21 @@ Deno.serve(async req => {
                 </td>
               </tr>
             </table>`
-          : `<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FBF9F6; border-radius: 3px; border: 1px solid #C8A27C;">
+          : paymentRecipient && paymentIban
+          ? `<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FBF9F6; border-radius: 3px; border: 1px solid #C8A27C;">
               <tr>
                 <td style="padding: 24px;">
                   <h2 style="font-family: 'Georgia', serif; font-size: 18px; color: #171717; margin: 0 0 16px 0; font-weight: normal; letter-spacing: 0.5px;">Реквізити для оплати замовлення</h2>
-                  <p style="font-size: 14px; margin: 0 0 12px 0; color: #404040; line-height: 1.5;"><strong style="color: #171717;">Отримувач:</strong><br>ФОП Невідома Анна Сергіївна</p>
-                  <p style="font-size: 14px; margin: 0 0 12px 0; color: #404040; line-height: 1.5;"><strong style="color: #171717;">IBAN рахунок:</strong><br><span style="font-family: monospace; font-size: 14px; background: #EAE8E2; padding: 4px 8px; display: inline-block; margin-top: 4px; border-radius: 2px; letter-spacing: 0.5px; color: #171717;">UA523220010000026006370119233</span></p>
+                  <p style="font-size: 14px; margin: 0 0 12px 0; color: #404040; line-height: 1.5;"><strong style="color: #171717;">Отримувач:</strong><br>${escapeHtml(paymentRecipient)}</p>
+                  <p style="font-size: 14px; margin: 0 0 12px 0; color: #404040; line-height: 1.5;"><strong style="color: #171717;">IBAN рахунок:</strong><br><span style="font-family: monospace; font-size: 14px; background: #EAE8E2; padding: 4px 8px; display: inline-block; margin-top: 4px; border-radius: 2px; letter-spacing: 0.5px; color: #171717;">${escapeHtml(paymentIban)}</span></p>
                   <p style="font-size: 14px; margin: 0 0 16px 0; color: #404040; line-height: 1.5;"><strong style="color: #171717;">Призначення платежу:</strong><br>Оплата замовлення ${orderIdEscaped}</p>
                   <div style="font-size: 13px; color: #737373; line-height: 1.5; border-top: 1px solid #EAE8E2; padding-top: 12px;">
                     Будь ласка, надішліть квитанцію про оплату в наш Instagram або менеджеру. Відправка здійснюється протягом 1–2 робочих днів після зарахування коштів.
                   </div>
                 </td>
               </tr>
-            </table>`;
+            </table>`
+          : `<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FBF9F6; border-radius: 3px; border: 1px solid #C8A27C;"><tr><td style="padding: 24px;"><h2 style="font-family: 'Georgia', serif; font-size: 18px; color: #171717; margin: 0 0 12px 0; font-weight: normal;">Оплата замовлення</h2><p style="font-size: 14px; margin: 0; color: #525252; line-height: 1.6;">Реквізити надійдуть окремим повідомленням. Якщо повідомлення затримається, менеджер зв’яжеться з вами.</p></td></tr></table>`;
 
         const clientHtml = `
           <div style="background-color: #F9F8F6; padding: 40px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
@@ -394,7 +399,13 @@ Deno.serve(async req => {
       }
     }
     await supabase.from("orders").update({ confirmation_email_status: emailStatus }).eq("id", order.id);
-    return json(req, { order: { client_order_id: order.client_order_id, customer_name: name, customer_email: email, payment_method: paymentMethod, items, total_amount: total }, email_status: emailStatus }, 201);
+    const paymentDetails = paymentMethod === "bank_transfer"
+      ? {
+          recipient: text(Deno.env.get("PAYMENT_RECIPIENT"), 160) || null,
+          iban: text(Deno.env.get("PAYMENT_IBAN"), 50) || null,
+        }
+      : null;
+    return json(req, { order: { client_order_id: order.client_order_id, customer_name: name, customer_email: email, payment_method: paymentMethod, items, total_amount: total }, email_status: emailStatus, payment_details: paymentDetails?.recipient && paymentDetails?.iban ? paymentDetails : null }, 201);
   } catch (error) {
     console.error("create-order failed", {
       requestId,

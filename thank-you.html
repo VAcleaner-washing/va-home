@@ -12,11 +12,11 @@
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <meta content="#0b0a08" name="theme-color"/>
 <meta content="telephone=no" name="format-detection"/>
-<meta content="12.1 Thank You Experience" name="va-home-release"/>
+<meta content="13.6.7 Hardening" name="va-home-release"/>
 <link href="favicon/favicon.ico" rel="icon" sizes="any"/>
 <link href="favicon/favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="favicon/apple-touch-icon.png" rel="apple-touch-icon"/>
-<link href="css/core.css?v=13.5.2.0" rel="stylesheet"/><link href="css/site-thank-you.css?v=13.5.2.0" rel="stylesheet"/>
+<link href="css/core.css?v=13.6.7" rel="stylesheet"/><link href="css/site-thank-you.css?v=13.6.7" rel="stylesheet"/>
 </head>
 <body>
 <div data-active="" data-root="" id="site-header"></div>
@@ -49,9 +49,10 @@
 <section aria-labelledby="paymentTitle" class="ty-card ty-card--payment" id="paymentPanel">
 <div class="ty-card__header">
 <p class="ty-kicker">Оплата</p>
-<h2 id="paymentTitle">Реквізити</h2>
-<p>Скопіюйте дані одним натисканням. Призначення платежу вже сформовано.</p>
+<h2 id="paymentTitle">Реквізити надіслано</h2>
+<p id="paymentIntro">Перевірте лист-підтвердження. Якщо він не з’явиться, менеджер зв’яжеться з вами.</p>
 </div>
+<div hidden="" id="paymentDetails">
 <dl class="ty-payment-list">
 <div><dt>Отримувач</dt><dd id="paymentRecipient"></dd></div>
 <div><dt>IBAN</dt><dd id="paymentIban"></dd></div>
@@ -59,6 +60,7 @@
 </dl>
 <button class="btn btn-primary btn-block" id="copyPaymentBtn" type="button">Скопіювати реквізити</button>
 <p aria-live="polite" class="ty-copy-status" id="copyStatus" role="status"></p>
+</div>
 </section>
 <section aria-labelledby="codTitle" class="ty-card ty-card--payment" hidden="" id="codPanel">
 <div class="ty-card__header">
@@ -103,9 +105,9 @@
 </section>
 </main>
 <div data-root="" id="site-footer"></div>
-<script defer="" src="js/config.js?v=13.5.2.0"></script>
-<script defer="" src="js/thank-you.js?v=13.5.2.0"></script>
-<script defer="" src="js/main.js?v=13.5.2.0"></script>
-<script defer="" src="js/motion.js?v=13.5.2.0"></script>
+<script defer="" src="js/config.js?v=13.6.7"></script>
+<script defer="" src="js/thank-you.js?v=13.6.7"></script>
+<script defer="" src="js/main.js?v=13.6.7"></script>
+<script defer="" src="js/motion.js?v=13.6.7"></script>
 </body>
 </html>

@@ -15,10 +15,6 @@
     return map;
   }
 
-  function ratingText(data) {
-    return data && data.count ? `${data.average.toFixed(1)} · ${data.count}` : "Без відгуків";
-  }
-
   function reviewsLabel(count) {
     const value = Math.abs(Number(count) || 0);
     const mod100 = value % 100;
@@ -35,10 +31,12 @@
       const el = card.querySelector("[data-product-rating]");
       if (!el) return;
       const data = map[id];
-      el.textContent = data && data.count
+      const hasRating = Boolean(data && data.count);
+      el.hidden = !hasRating;
+      el.textContent = hasRating
         ? `★ ${data.average.toFixed(1)} · ${data.count} ${reviewsLabel(data.count)}`
-        : "Без відгуків";
-      el.classList.toggle("has-rating", Boolean(data && data.count));
+        : "";
+      el.classList.toggle("has-rating", hasRating);
     });
   }
 

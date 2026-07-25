@@ -1597,7 +1597,7 @@ function getSimilarProducts(product) {
           <span class="product-card__collection">${collection ? collection.name : ""}</span>
           <a href="${root}${href}"><h3 class="product-card__name">${product.name}</h3></a>
           <p class="product-card__desc">${product.shortDescription}</p>
-          <div class="product-card__rating" data-product-rating aria-label="Рейтинг товару">Без відгуків</div>
+          <div class="product-card__rating" data-product-rating aria-label="Рейтинг товару" hidden></div>
           <div class="product-card__meta">
             <span>${volume || ""}</span>
             ${

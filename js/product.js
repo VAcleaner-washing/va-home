@@ -328,6 +328,9 @@
 
     const existingFormula = document.querySelector(".product-formula-proof");
     const formulaIntent = existingFormula?.querySelector(".product-formula-proof__intent")?.innerHTML || `<strong>Задум композиції.</strong> ${escapeHtml(product.formulaIntent || product.shortDescription)}`;
+    const recommendedSticks = (String(product.quickFacts || "").match(/\d\s*[–-]\s*\d/) || ["3–4"])[0]
+      .replace(/\s/g, "")
+      .replace("-", "–");
 
     info.querySelectorAll(".product-detail-section, .product-formula-proof, .product-accordion").forEach((node) => node.remove());
     document.querySelector(".product-substance")?.remove();
@@ -395,7 +398,7 @@
           </article>
           <article>
             <div class="story-ritual__icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M17 38h14M19 24h10l2 14H17zM21 24 15 5M24 24V4M27 24 34 6"/></svg></div>
-            <div><span>02</span><h3>Додайте 3–4 палички</h3><p>Регулюйте кількість під бажану інтенсивність.</p></div>
+            <div><span>02</span><h3>Додайте ${recommendedSticks} палички</h3><p>Регулюйте кількість під бажану інтенсивність.</p></div>
           </article>
           <article>
             <div class="story-ritual__icon" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="17"/><path d="M24 13v12l8 5"/></svg></div>

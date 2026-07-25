@@ -15,14 +15,16 @@
   // Keep this list in sync with the buttons on discovery-set.html.
   const SPECIAL_ITEMS = {
     "discovery-6": { name: "Discovery Set — 6 ароматів", price: 150, volume: "6 тестерів", image: "images/discovery/discovery-set.webp" },
-    "discovery-17": { name: "Discovery Set — 18 ароматів", price: 450, volume: "18 тестерів", image: "images/discovery/discovery-set.webp" }
+    "discovery-18": { name: "Discovery Set — 18 ароматів", price: 450, volume: "18 тестерів", image: "images/discovery/discovery-set.webp" }
   };
 
   function readRaw() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       const parsed = raw ? JSON.parse(raw) : [];
-      return Array.isArray(parsed) ? parsed : [];
+      return Array.isArray(parsed)
+        ? parsed.map((item) => item && item.productId === "discovery-17" ? { ...item, productId: "discovery-18" } : item)
+        : [];
     } catch (e) {
       return [];
     }
@@ -498,7 +500,8 @@
       delivery_details: form.elements.deliveryDetails.value.trim(),
       payment_method: form.elements.paymentMethod.value,
       customer_comment: form.elements.customerComment ? form.elements.customerComment.value.trim() || null : null,
-      items: items.map((item) => ({ id: item.id, quantity: item.quantity, selections: item.selections }))
+      // Transitional alias keeps checkout compatible with the previously deployed Edge Function.
+      items: items.map((item) => ({ id: item.id === "discovery-18" ? "discovery-17" : item.id, quantity: item.quantity, selections: item.selections }))
     };
   }
 
@@ -582,6 +585,7 @@
         items: order.items,
         total: order.total_amount,
         emailStatus: result.email_status,
+        paymentDetails: result.payment_details || null,
         createdAt: new Date().toISOString()
       };
       sessionStorage.setItem("vahome_last_order", JSON.stringify(confirmation));
