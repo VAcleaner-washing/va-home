@@ -812,6 +812,77 @@
     renderCartPage();
     initCartItemControls();
     initCheckoutForm();
-    initIOSKeyboardGuard();
+    // RC12: old iOS compositor repaint guard disabled.
   });
+})();
+
+
+/* VA HOME v13.7.0 RC12 — physically detach the iOS fixed checkout layer */
+;(() => {
+  'use strict';
+  const init = () => {
+    const body = document.body;
+    const form = document.getElementById('checkoutForm');
+    const bar = document.getElementById('checkoutMobileBar');
+    if (!body?.classList.contains('cart-page') || !form || !bar) return;
+    const anchor = document.createComment('va-checkout-mobile-bar-anchor');
+    bar.parentNode?.insertBefore(anchor, bar);
+    let detached = false;
+    let raf = 0;
+    const clearRepair = () => {
+      const root = document.documentElement;
+      root.classList.remove('va-ios-viewport-repair');
+      root.style.removeProperty('transform');
+      root.style.removeProperty('height');
+      root.style.removeProperty('min-height');
+    };
+    const detach = () => {
+      body.classList.add('va-rc12-checkout-active','va-checkout-form-active');
+      body.classList.remove('va-mobile-checkout-bar-visible');
+      body.style.setProperty('padding-bottom','0px','important');
+      bar.hidden = true;
+      bar.setAttribute('aria-hidden','true');
+      bar.dataset.vaDetached = 'true';
+      if (bar.isConnected) { bar.remove(); detached = true; }
+      clearRepair();
+    };
+    const restore = () => {
+      body.classList.remove('va-rc12-checkout-active','va-checkout-form-active');
+      body.style.removeProperty('padding-bottom');
+      clearRepair();
+      if (detached && anchor.parentNode) { anchor.parentNode.insertBefore(bar, anchor.nextSibling); detached = false; }
+      bar.dataset.vaDetached = 'false';
+      const shouldShow = window.innerWidth <= 800 && bar.dataset.hasItems === 'true';
+      bar.hidden = !shouldShow;
+      bar.toggleAttribute('aria-hidden', !shouldShow);
+      body.classList.toggle('va-mobile-checkout-bar-visible', shouldShow);
+    };
+    const editing = () => {
+      const active = document.activeElement;
+      return Boolean(active && form.contains(active) && active.matches('input,textarea,select'));
+    };
+    const activeZone = () => {
+      if (window.innerWidth > 800) return false;
+      if (editing()) return true;
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      return form.getBoundingClientRect().top <= viewportHeight - 48;
+    };
+    const sync = () => { raf = 0; activeZone() ? detach() : restore(); };
+    const schedule = () => { if (raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(sync); };
+    const observer = new MutationObserver(() => {
+      if (document.documentElement.classList.contains('va-ios-viewport-repair')) clearRepair();
+    });
+    observer.observe(document.documentElement,{attributes:true,attributeFilter:['class','style']});
+    form.addEventListener('focusin',detach);
+    form.addEventListener('focusout',()=>window.setTimeout(schedule,220));
+    window.addEventListener('scroll',schedule,{passive:true});
+    window.addEventListener('resize',schedule);
+    window.addEventListener('orientationchange',()=>window.setTimeout(schedule,180));
+    window.addEventListener('pageshow',schedule);
+    window.visualViewport?.addEventListener('resize',schedule);
+    window.visualViewport?.addEventListener('scroll',schedule);
+    schedule();
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded',init,{once:true});
+  else init();
 })();

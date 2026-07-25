@@ -1,0 +1,8 @@
+VA HOME v13.7.0 RC12
+
+FIXED:
+- the mobile 'Разом / До оформлення' CTA remains available above checkout
+- once checkout enters the viewport or a field receives focus, the CTA is physically removed from DOM
+- all mobile bottom reserve is cleared while entering data
+- the old iOS compositor repaint transform is disabled
+- the CTA is restored only after returning above the checkout form

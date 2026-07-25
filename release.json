@@ -1,5 +1,5 @@
 {
-  "version": "13.7.0-rc.11",
+  "version": "13.7.0-rc.12",
   "name": "PWA RELEASE CANDIDATE",
   "date": "2026-07-25",
   "base": "13.6.10-NOIR-LIGHT-RECIPIENT-FIX",
@@ -27,6 +27,10 @@
     "Kept focused checkout fields inside the reduced visual viewport",
     "Removed the large empty black gap between the checkout form and the editorial footer scene",
     "Hidden the mobile checkout CTA for the entire checkout-entry zone in both PWA and mobile browsers",
-    "Removed the iOS fixed/backdrop checkout layer after entering the form and repaired the visual viewport after keyboard dismissal"
+    "Removed the iOS fixed/backdrop checkout layer after entering the form and repaired the visual viewport after keyboard dismissal",
+    "Physically detaches the mobile checkout CTA while the checkout form is active",
+    "Restores the CTA only after scrolling back above the checkout form",
+    "Disables the old iOS root compositor repaint transform that could leave a black lower strip",
+    "Clears all mobile bottom reserve while entering checkout data"
   ]
 }

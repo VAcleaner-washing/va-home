@@ -2340,3 +2340,24 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
     transform: translateZ(0);
   }
 }
+
+
+/* VA HOME v13.7.0 RC12 — mobile checkout bar physical detach */
+@media (max-width:800px){
+  html.va-ios-viewport-repair{transform:none!important;}
+  body.cart-page.va-checkout-form-active,
+  body.cart-page.va-keyboard-open,
+  body.cart-page.va-rc12-checkout-active{padding-bottom:0!important;}
+  body.cart-page.va-checkout-form-active .checkout-mobile-bar,
+  body.cart-page.va-keyboard-open .checkout-mobile-bar,
+  body.cart-page.va-rc12-checkout-active .checkout-mobile-bar,
+  .checkout-mobile-bar[hidden],
+  .checkout-mobile-bar[data-va-detached="true"]{
+    display:none!important;position:fixed!important;inset:auto 0 0!important;
+    width:0!important;height:0!important;min-height:0!important;max-height:0!important;
+    margin:0!important;padding:0!important;border:0!important;background:transparent!important;
+    box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+    opacity:0!important;visibility:hidden!important;pointer-events:none!important;overflow:hidden!important;
+    transform:translate3d(0,140%,0)!important;
+  }
+}
