@@ -1,6 +1,6 @@
 {
-  "version": "13.7.0-rc.5",
-  "name": "RELEASE CANDIDATE",
+  "version": "13.7.0-rc.7",
+  "name": "PWA RELEASE CANDIDATE",
   "date": "2026-07-25",
   "base": "13.6.10-NOIR-LIGHT-RECIPIENT-FIX",
   "changes": [
@@ -11,10 +11,16 @@
     "Reserved the product rating line while asynchronous reviews load",
     "Converted the orphaned Discovery Set guide card into a full-width CTA",
     "Refined product Journal links into quiet inline editorial notes",
-    "Updated resource query versions to 13.7.0-rc5",
+    "Updated resource query versions to 13.7.0-rc7",
     "Added one restrained About-to-Journal bridge inside Molecular Architecture",
     "Reserved the catalog rating slot when a product has no approved reviews",
     "Aligned price, compare control and product actions across reviewed and unreviewed cards",
+    "Restored the intended mobile inset for Molecular Architecture and the editorial design caption",
+    "Added a globally legible dark glass header over light imagery",
+    "Added an installable VA HOME PWA for iPhone and Android",
+    "Added branded 192, 512, maskable and Apple touch icons",
+    "Added a restrained offline page and versioned static asset cache",
+    "Kept account, cart, order, admin, Supabase and live commerce files network-only",
     "Excluded refills and incomplete online payment integration from release scope"
   ]
 }

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport">
+  <meta content="#0b0a08" name="theme-color">
+  <meta content="noindex, nofollow" name="robots">
+  <title>VA HOME — немає з’єднання</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0a08;
+      --panel: #11100d;
+      --text: #eee8df;
+      --muted: #a89f94;
+      --gold: #be9253;
+      --line: rgba(190, 146, 83, .28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding:
+        max(28px, env(safe-area-inset-top))
+        max(24px, env(safe-area-inset-right))
+        max(28px, env(safe-area-inset-bottom))
+        max(24px, env(safe-area-inset-left));
+      background:
+        radial-gradient(circle at 50% 0%, rgba(190, 146, 83, .09), transparent 42%),
+        var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    main {
+      width: min(100%, 560px);
+      padding: clamp(32px, 8vw, 58px);
+      border: 1px solid var(--line);
+      background: rgba(17, 16, 13, .92);
+      text-align: center;
+    }
+
+    .mark {
+      display: inline-grid;
+      place-items: center;
+      width: 76px;
+      aspect-ratio: 1;
+      margin-bottom: 34px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--gold);
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 32px;
+      letter-spacing: -.04em;
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: var(--gold);
+      font-size: 11px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(38px, 10vw, 62px);
+      font-weight: 400;
+      line-height: .98;
+    }
+
+    p {
+      margin: 24px auto 0;
+      max-width: 390px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    a {
+      display: inline-flex;
+      min-height: 50px;
+      margin-top: 32px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 28px;
+      border: 1px solid var(--gold);
+      color: var(--text);
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div aria-hidden="true" class="mark">VA</div>
+    <p class="eyebrow">Invisible Luxury Atmosphere</p>
+    <h1>Потрібне з’єднання</h1>
+    <p>VA HOME зараз поза мережею. Відновіть інтернет — і поверніться до світу ароматів.</p>
+    <a href="/">Спробувати знову</a>
+  </main>
+  <script>
+    window.addEventListener('online', () => window.location.replace('/'));
+  </script>
+</body>
+</html>
