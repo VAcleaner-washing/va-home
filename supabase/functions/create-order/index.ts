@@ -53,6 +53,15 @@ function text(value: unknown, max: number) {
   return String(value ?? "").trim().slice(0, max);
 }
 
+const DEFAULT_PAYMENT_RECIPIENT = "\u0424\u041E\u041F \u041D\u0435\u0432\u0456\u0434\u043E\u043C\u0430 \u0410\u043D\u043D\u0430 \u0421\u0435\u0440\u0433\u0456\u0457\u0432\u043D\u0430";
+
+function getPaymentRecipient() {
+  const configured = text(Deno.env.get("PAYMENT_RECIPIENT"), 160).normalize("NFC");
+  return configured && !configured.includes("\uFFFD")
+    ? configured
+    : DEFAULT_PAYMENT_RECIPIENT;
+}
+
 function escapeHtml(value: unknown) {
   return String(value ?? "").replace(/[&<>'"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[c]!));
 }
@@ -253,7 +262,7 @@ Deno.serve(async req => {
       try {
         const orderIdEscaped = escapeHtml(order.client_order_id);
         const cod = paymentMethod === "cash_on_delivery";
-        const paymentRecipient = text(Deno.env.get("PAYMENT_RECIPIENT"), 160);
+        const paymentRecipient = getPaymentRecipient();
         const paymentIban = text(Deno.env.get("PAYMENT_IBAN"), 50);
 
         // Рендеринг списку товарів для листа адміністратора (Темна тема)
@@ -401,7 +410,7 @@ Deno.serve(async req => {
     await supabase.from("orders").update({ confirmation_email_status: emailStatus }).eq("id", order.id);
     const paymentDetails = paymentMethod === "bank_transfer"
       ? {
-          recipient: text(Deno.env.get("PAYMENT_RECIPIENT"), 160) || null,
+          recipient: getPaymentRecipient(),
           iban: text(Deno.env.get("PAYMENT_IBAN"), 50) || null,
         }
       : null;

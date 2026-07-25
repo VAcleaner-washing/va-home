@@ -2,6 +2,7 @@
   "use strict";
 
   const STORAGE_KEY = "vahome_last_order";
+  const DEFAULT_PAYMENT_RECIPIENT = "\u0424\u041E\u041F \u041D\u0435\u0432\u0456\u0434\u043E\u043C\u0430 \u0410\u043D\u043D\u0430 \u0421\u0435\u0440\u0433\u0456\u0457\u0432\u043D\u0430";
 
   function formatUAH(value) {
     return `${Number(value || 0).toLocaleString("uk-UA")}\u00A0грн`;
@@ -34,6 +35,13 @@
   function setText(id, value) {
     const node = document.getElementById(id);
     if (node) node.textContent = value;
+  }
+
+  function normalizePaymentRecipient(value) {
+    const recipient = String(value || "").trim().normalize("NFC");
+    return recipient && !recipient.includes("\uFFFD")
+      ? recipient
+      : DEFAULT_PAYMENT_RECIPIENT;
   }
 
   function renderEmptyState() {
@@ -98,7 +106,7 @@
     if (order && !isCod) {
       const number = order.orderNumber || order.client_order_id || "номер замовлення";
       const purpose = `Оплата замовлення ${number}`;
-      const recipient = payment && payment.recipient;
+      const recipient = normalizePaymentRecipient(payment && payment.recipient);
       const iban = payment && payment.iban;
       const details = document.getElementById("paymentDetails");
       if (!recipient || !iban) {
