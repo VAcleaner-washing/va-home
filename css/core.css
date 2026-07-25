@@ -1951,6 +1951,10 @@ body.menu-open {
   color:var(--color-text-muted,#746f68);
   letter-spacing:.02em;
 }
+.product-card__rating[hidden]{
+  display:block;
+  visibility:hidden;
+}
 .product-card__rating.has-rating{color:#8c6b30}
 .product-card__rating + .product-card__meta{margin-top:0}
 

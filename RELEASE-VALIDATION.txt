@@ -1,4 +1,4 @@
-VA HOME v13.7.0-rc.4
+VA HOME v13.7.0-rc.5
 Release Candidate validation — 2026-07-25
 
 PASS  51 HTML pages parsed
@@ -13,9 +13,10 @@ PASS  Canonical discovery-18 ID sent by the new cart
 PASS  Legacy discovery-17 accepted only as an inbound compatibility alias
 PASS  Public IBAN and tax ID values absent from static files
 PASS  Four-stick, duration and reed-flipping copy is consistent
-PASS  Resource query version synchronized to 13.7.0-rc4
+PASS  Resource query version synchronized to 13.7.0-rc5
 PASS  Discovery Set guide CTA spans the full information grid
 PASS  One About-to-Journal bridge is placed inside Molecular Architecture
+PASS  Empty catalog ratings reserve layout height without displaying fake review text
 
 LIVE RELEASE GATE
 - Supabase create-order version 19 is ACTIVE and exactly matches this RC.

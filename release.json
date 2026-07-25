@@ -1,5 +1,5 @@
 {
-  "version": "13.7.0-rc.4",
+  "version": "13.7.0-rc.5",
   "name": "RELEASE CANDIDATE",
   "date": "2026-07-25",
   "base": "13.6.10-NOIR-LIGHT-RECIPIENT-FIX",
@@ -11,8 +11,10 @@
     "Reserved the product rating line while asynchronous reviews load",
     "Converted the orphaned Discovery Set guide card into a full-width CTA",
     "Refined product Journal links into quiet inline editorial notes",
-    "Updated the About page resource query version to 13.7.0-rc4",
+    "Updated resource query versions to 13.7.0-rc5",
     "Added one restrained About-to-Journal bridge inside Molecular Architecture",
+    "Reserved the catalog rating slot when a product has no approved reviews",
+    "Aligned price, compare control and product actions across reviewed and unreviewed cards",
     "Excluded refills and incomplete online payment integration from release scope"
   ]
 }
