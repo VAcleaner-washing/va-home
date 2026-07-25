@@ -251,9 +251,28 @@
     return true;
   }
 
+  function isIOSStandalone() {
+    const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const standalone = window.matchMedia?.("(display-mode: standalone)")?.matches || navigator.standalone === true;
+    return ios && standalone;
+  }
+
+  function configureGoogleAuthForPWA() {
+    if (!isIOSStandalone()) return;
+    const button = $("#accountGoogle");
+    const hint = $("#googleAuthHint");
+    if (!button) return;
+    button.dataset.pwaUnsupported = "true";
+    if (hint) hint.textContent = "На iPhone в установленому застосунку Google блокує безпечний вхід. Використайте email і пароль або відкрийте сайт у Safari.";
+  }
+
   async function signInWithGoogle() {
     const button = $("#accountGoogle");
     if (!button || button.disabled) return;
+    if (button.dataset.pwaUnsupported === "true") {
+      return message("Google-вхід недоступний усередині PWA на iPhone. Увійдіть через email або відкрийте vahome.com.ua у Safari.");
+    }
     setBusy(button, true, "Переходимо до Google…");
     message("");
     let result;
@@ -390,6 +409,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
+    configureGoogleAuthForPWA();
     if (!window.supabase?.createClient) {
       finishLoading();
       $("#accountAuth").hidden = false;

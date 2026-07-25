@@ -678,6 +678,33 @@
     observer.observe(form);
   }
 
+  function initIOSKeyboardGuard() {
+    if (!window.visualViewport) return;
+    const viewport = window.visualViewport;
+    let raf = 0;
+
+    const update = () => {
+      raf = 0;
+      const focused = document.activeElement?.matches?.('input, textarea, select');
+      const keyboardOpen = Boolean(focused && viewport.height < window.innerHeight * 0.82);
+      document.body.classList.toggle('va-keyboard-open', keyboardOpen);
+      if (keyboardOpen && document.activeElement) {
+        window.setTimeout(() => document.activeElement?.scrollIntoView?.({ block: 'center', inline: 'nearest' }), 80);
+      }
+    };
+
+    const schedule = () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+    };
+
+    viewport.addEventListener('resize', schedule);
+    viewport.addEventListener('scroll', schedule);
+    document.addEventListener('focusin', schedule);
+    document.addEventListener('focusout', () => window.setTimeout(schedule, 120));
+    schedule();
+  }
+
   function initCheckoutForm() {
     const form = document.getElementById("checkoutForm");
     if (!form) return;
@@ -704,5 +731,6 @@
     renderCartPage();
     initCartItemControls();
     initCheckoutForm();
+    initIOSKeyboardGuard();
   });
 })();

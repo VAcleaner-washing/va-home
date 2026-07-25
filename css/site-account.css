@@ -1852,3 +1852,8 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
   .product-card__actions { gap: 8px; }
   .product-card__actions .btn { padding-inline: 10px; }
 }
+
+
+/* VA HOME v13.7.0 RC8 — iOS standalone OAuth notice */
+.account-google[data-pwa-unsupported="true"] { opacity: .72; }
+.account-google[data-pwa-unsupported="true"] + .account-google-hint { max-width: 46ch; color: var(--text-secondary); line-height: 1.55; }
