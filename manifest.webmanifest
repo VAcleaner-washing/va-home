@@ -1,0 +1,54 @@
+{
+  "id": "/",
+  "name": "VA HOME — Invisible Luxury Atmosphere",
+  "short_name": "VA HOME",
+  "description": "Преміальні молекулярні аромадифузори та атмосфера для дому.",
+  "lang": "uk",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b0a08",
+  "theme_color": "#0b0a08",
+  "categories": [
+    "shopping",
+    "lifestyle"
+  ],
+  "icons": [
+    {
+      "src": "/pwa/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Каталог ароматів",
+      "short_name": "Каталог",
+      "url": "/catalog"
+    },
+    {
+      "name": "Підбір аромату",
+      "short_name": "Гід ароматів",
+      "url": "/scent-guide"
+    },
+    {
+      "name": "Discovery Set",
+      "short_name": "Discovery Set",
+      "url": "/discovery-set"
+    }
+  ]
+}

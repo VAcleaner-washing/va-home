@@ -1,0 +1,51 @@
+VA HOME v13.7.0-rc.11
+PWA Release Candidate validation — 2026-07-25
+
+PASS  52 HTML pages parsed: 51 site pages plus offline fallback
+PASS  PWA metadata and registration present exactly once on all 51 site pages
+PASS  1,700 local links, anchors and assets checked
+PASS  79 JSON-LD blocks parsed
+PASS  manifest.webmanifest fields and standalone display validated
+PASS  Manifest served as application/manifest+json over local HTTP
+PASS  Service Worker and all site JavaScript passed syntax checks
+PASS  192×192, 512×512, maskable and Apple icon dimensions validated
+PASS  Public HTML uses fresh network navigation with an offline fallback
+PASS  Account, cart, thank-you, order-status and admin routes remain network-only
+PASS  Supabase, configuration, checkout, account and review files remain network-only
+PASS  Versioned static cache removes previous VA HOME caches on activation
+PASS  Resource query version synchronized to 13.7.0-rc15
+PASS  No stale rc5 or rc6 resource versions remain
+PASS  18 product pages found
+PASS  18 product-to-Journal proof links found
+PASS  Journal image dimensions present
+PASS  Product Story structure checked for all 18 fragrances
+PASS  Canonical discovery-18 ID sent by the new cart
+PASS  Legacy discovery-17 accepted only as an inbound compatibility alias
+PASS  Public IBAN and tax ID values absent from static files
+PASS  Four-stick, duration and reed-flipping copy is consistent
+PASS  Discovery Set guide CTA spans the full information grid
+PASS  One About-to-Journal bridge is placed inside Molecular Architecture
+PASS  Empty catalog ratings reserve layout height without displaying fake review text
+PASS  About mobile text insets and global glass header preserved from RC6
+PASS  Mobile checkout CTA hides once the checkout form enters the viewport in Safari, PWA and other mobile browsers
+
+LIVE RELEASE GATE
+- Supabase create-order version 19 is ACTIVE and exactly matches this RC.
+- Install from Safari on a real iPhone and open from the Home Screen.
+- Install from Chrome on a real Android and open in standalone mode.
+- With DevTools offline mode, verify the public offline page and network-only checkout failure.
+- Test bank transfer checkout.
+- Test cash-on-delivery checkout.
+- Verify customer email, admin email, order row and thank-you page.
+- Verify “ФОП Невідома Анна Сергіївна” renders without replacement characters.
+
+NOT PART OF THIS RC
+- Automated mono acquiring/API/webhook.
+- Static review prerender and AggregateRating.
+- Transactional category landing pages.
+- Refills.
+
+Cart footer gap: removed the inherited editorial footer top padding on cart.html.
+
+PASS  RC11 removes the fixed checkout compositing layer with the native hidden state and clears all mobile body reserve while checkout is active
+PASS  iOS visual viewport receives a repaint nudge after keyboard dismissal to prevent the persistent black lower strip
