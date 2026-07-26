@@ -336,6 +336,7 @@
     let cityController = null;
     let warehouseController = null;
     let activeList = null;
+    let activeInput = null;
     let warehouseItems = [];
     let warehouseLoading = false;
     form.dataset.npCityManual = "false";
@@ -364,13 +365,17 @@
     let sheetViewportRaf = 0;
     const clearSheetGeometry = (list) => {
       list.style.removeProperty("--np-sheet-top");
+      list.style.removeProperty("--np-sheet-left");
+      list.style.removeProperty("--np-sheet-width");
       list.style.removeProperty("--np-sheet-max-height");
+      delete list.dataset.npPlacement;
     };
     const syncSheetViewport = () => {
       window.cancelAnimationFrame(sheetViewportRaf);
       sheetViewportRaf = window.requestAnimationFrame(() => {
         const list = activeList;
-        if (!isMobileSheet() || !list || list.hidden) {
+        const input = activeInput;
+        if (!isMobileSheet() || !list || list.hidden || !input) {
           clearSheetGeometry(cityList);
           clearSheetGeometry(warehouseList);
           document.body.classList.remove("np-keyboard-open");
@@ -378,17 +383,37 @@
         }
 
         const vv = window.visualViewport;
-        const scrollTop = window.scrollY || window.pageYOffset || 0;
-        const viewportTop = scrollTop + Math.max(0, Number(vv?.offsetTop || 0));
-        const viewportHeight = Math.max(240, Number(vv?.height || window.innerHeight || 0));
-        const keyboardInset = Math.max(0, Number(window.innerHeight || viewportHeight) - viewportHeight);
+        const visualTop = Math.max(0, Number(vv?.offsetTop || 0));
+        const visualHeight = Math.max(240, Number(vv?.height || window.innerHeight || 0));
+        const visualBottom = visualTop + visualHeight;
+        const keyboardInset = Math.max(0, Number(window.innerHeight || visualHeight) - visualHeight);
         const keyboardOpen = keyboardInset > 110;
-        const preferredHeight = keyboardOpen ? viewportHeight - 16 : Math.min(viewportHeight * 0.62, 540);
-        const maxHeight = Math.max(210, Math.min(preferredHeight, viewportHeight - 12));
-        const top = Math.max(viewportTop + 6, viewportTop + viewportHeight - maxHeight);
+        const rect = input.getBoundingClientRect();
+        const gap = 8;
+        const edge = 10;
+        const minUsefulHeight = 150;
+        const desiredHeight = input === warehouse ? 360 : 330;
+        const spaceBelow = Math.max(0, visualBottom - rect.bottom - gap - edge);
+        const spaceAbove = Math.max(0, rect.top - visualTop - gap - edge);
+        const placeBelow = spaceBelow >= minUsefulHeight || spaceBelow >= spaceAbove;
+        const available = placeBelow ? spaceBelow : spaceAbove;
+        const maxHeight = Math.max(132, Math.min(desiredHeight, available));
+        let top = placeBelow ? rect.bottom + gap : rect.top - gap - maxHeight;
+        top = Math.max(visualTop + edge, Math.min(top, visualBottom - maxHeight - edge));
+
+        const viewportWidth = Math.max(320, Number(vv?.width || window.innerWidth || 0));
+        const visualLeft = Math.max(0, Number(vv?.offsetLeft || 0));
+        const horizontalEdge = 12;
+        const width = Math.min(Math.max(rect.width, 280), viewportWidth - horizontalEdge * 2);
+        const minLeft = visualLeft + horizontalEdge;
+        const maxLeft = visualLeft + viewportWidth - width - horizontalEdge;
+        const left = Math.max(minLeft, Math.min(rect.left, maxLeft));
 
         list.style.setProperty("--np-sheet-top", `${Math.round(top)}px`);
+        list.style.setProperty("--np-sheet-left", `${Math.round(left)}px`);
+        list.style.setProperty("--np-sheet-width", `${Math.round(width)}px`);
         list.style.setProperty("--np-sheet-max-height", `${Math.round(maxHeight)}px`);
+        list.dataset.npPlacement = placeBelow ? "below" : "above";
         document.body.classList.toggle("np-keyboard-open", keyboardOpen);
       });
     };
@@ -429,12 +454,16 @@
       list.hidden = false;
       input.setAttribute("aria-expanded", "true");
       activeList = list;
+      activeInput = input;
       syncBackdrop();
     };
     const closeList = (input, list) => {
       list.hidden = true;
       input.setAttribute("aria-expanded", "false");
-      if (activeList === list) activeList = null;
+      if (activeList === list) {
+        activeList = null;
+        activeInput = null;
+      }
       restoreList(list);
       syncBackdrop();
     };
@@ -457,7 +486,15 @@
       list.innerHTML = `<div class="np-suggestions__head"><strong>${escapeText(title)}</strong><button aria-label="Закрити" class="np-suggestions__close" type="button">×</button></div><div class="np-suggestions__body">${items.map((item, index) => `<button class="np-suggestion" type="button" role="option" data-index="${index}"><span>${escapeText(item.label)}</span><small>${escapeText(item.shortAddress || item.area || "")}</small></button>`).join("")}</div>`;
       list.querySelector(".np-suggestions__close")?.addEventListener("click", () => closeList(input, list));
       list.querySelectorAll("[data-index]").forEach((button) => button.addEventListener("click", () => select(items[Number(button.dataset.index)])));
+      const body = list.querySelector(".np-suggestions__body");
+      if (body) body.scrollTop = 0;
+      list.scrollTop = 0;
       openList(input, list);
+      window.requestAnimationFrame(() => {
+        if (body) body.scrollTop = 0;
+        list.scrollTop = 0;
+        syncSheetViewport();
+      });
     };
     const activateManualCity = () => {
       cityRef.value = "";
@@ -594,6 +631,7 @@
       form.dataset.npWarehouseManual = "false";
       if (cityHint) cityHint.textContent = "Населений пункт вибрано.";
       closeList(city, cityList);
+      if (isMobileSheet()) city.blur();
       preloadWarehouses();
       city.dispatchEvent(new Event("change", { bubbles: true }));
     }
@@ -608,12 +646,39 @@
           : "Відділення вибрано.";
       }
       closeList(warehouse, warehouseList);
+      if (isMobileSheet()) warehouse.blur();
       warehouse.dispatchEvent(new Event("change", { bubbles: true }));
     }
 
     function renderWarehouseMatches(query) {
       const needle = normalize(query);
-      const matches = warehouseItems.filter((item) => !needle || normalize(`${item.number || ""} ${item.label || ""} ${item.shortAddress || ""}`).includes(needle)).slice(0, 40);
+      const numericNeedle = /^\d+$/.test(needle);
+      const scoreMatch = (item) => {
+        if (!needle) return 0;
+        const number = normalize(item.number || "").replace(/^№/, "");
+        const label = normalize(item.label || "");
+        const address = normalize(item.shortAddress || "");
+        if (numericNeedle) {
+          if (number === needle) return 0;
+          if (number.startsWith(needle)) return 1;
+          if (label.startsWith(`відділення №${needle}`) || label.startsWith(`поштомат \"нова пошта\" №${needle}`)) return 2;
+          if (number.includes(needle)) return 3;
+          if (label.includes(needle)) return 4;
+          if (address.includes(needle)) return 5;
+          return 99;
+        }
+        if (label.startsWith(needle)) return 0;
+        if (address.startsWith(needle)) return 1;
+        if (label.includes(needle)) return 2;
+        if (address.includes(needle)) return 3;
+        return 99;
+      };
+      const matches = warehouseItems
+        .map((item, index) => ({ item, index, score: scoreMatch(item) }))
+        .filter((entry) => !needle || entry.score < 99)
+        .sort((a, b) => a.score - b.score || a.index - b.index)
+        .slice(0, 40)
+        .map((entry) => entry.item);
       if (matches.length) {
         renderItems(warehouse, warehouseList, matches, selectWarehouse, needle ? "Знайдені відділення" : "Оберіть відділення");
       } else if (warehouseLoading) {
