@@ -192,13 +192,26 @@ Deno.serve(async req => {
       return { id, name: product.name, quantity, unit_price: product.price, line_total: product.price * quantity, selections: [] };
     });
     const subtotal = items.reduce((sum, item) => sum + item.line_total, 0);
-    const promoEligible = promoCode === "test" && items.some(item => FRAGRANCE_IDS.includes(item.id));
-    if (promoCode && !promoEligible) return json(req, { error: "INVALID_PROMO" }, 400);
-    const discountAmount = promoEligible ? Math.min(100, subtotal) : 0;
+    let promo: Record<string, unknown> | null = null;
+    let discountAmount = 0;
+    let promoFreeShipping = false;
+    if (promoCode) {
+      const { data: promoRow, error: promoError } = await supabase.from("promo_codes").select("*").ilike("code", promoCode).maybeSingle();
+      if (promoError) throw promoError;
+      const now = Date.now();
+      const validTime = promoRow && (!promoRow.starts_at || new Date(promoRow.starts_at).getTime() <= now) && (!promoRow.ends_at || new Date(promoRow.ends_at).getTime() >= now);
+      const withinLimit = promoRow && (!promoRow.usage_limit || Number(promoRow.usage_count || 0) < Number(promoRow.usage_limit));
+      const eligibleItems = promoRow && (promoRow.applies_to === "all" || (promoRow.applies_to === "fragrances" && items.some(item => FRAGRANCE_IDS.includes(item.id))) || (promoRow.applies_to === "products" && items.some(item => (promoRow.product_ids || []).includes(item.id))));
+      if (!promoRow || !promoRow.active || !validTime || !withinLimit || subtotal < Number(promoRow.min_order_amount || 0) || !eligibleItems) return json(req, { error: "INVALID_PROMO" }, 400);
+      promo = promoRow;
+      if (promoRow.discount_type === "fixed") discountAmount = Math.min(subtotal, Number(promoRow.discount_value || 0));
+      if (promoRow.discount_type === "percent") discountAmount = Math.min(subtotal, Math.round(subtotal * Number(promoRow.discount_value || 0)) / 100);
+      if (promoRow.discount_type === "free_shipping") promoFreeShipping = true;
+    }
     const total = subtotal - discountAmount;
     const preferenceLines = [
       doNotCall ? "Не телефонувати для підтвердження — всі дані заповнені." : "",
-      promoEligible ? `Промокод TEST: знижка ${discountAmount} грн.` : "",
+      promo ? `Промокод ${String(promo.code).toUpperCase()}: ${promoFreeShipping ? "безкоштовна доставка" : `знижка ${discountAmount} грн.`}` : "",
       rawComment,
     ].filter(Boolean);
     const comment = preferenceLines.join("\n") || null;
@@ -229,7 +242,7 @@ Deno.serve(async req => {
           },
           email_status: existing.confirmation_email_status || "pending",
           discount_amount: discountAmount,
-          promo_code: promoEligible ? "test" : null,
+          promo_code: promo ? String(promo.code).toLowerCase() : null,
           duplicate_prevented: true,
         }, 200);
       }
@@ -247,7 +260,7 @@ Deno.serve(async req => {
         nova_poshta_settlement_ref: novaPoshtaSettlementRef,
         nova_poshta_warehouse_ref: novaPoshtaWarehouseRef,
         payment_method: paymentMethod, customer_comment: comment,
-        items, total_amount: total, status: "new", payment_status: "unpaid", source: "website",
+        items, total_amount: total, discount_amount: discountAmount, promo_code: promo ? String(promo.code).toLowerCase() : null, status: "new", payment_status: "unpaid", source: "website",
       };
       const { data, error } = await supabase.from("orders").insert(payload).select("*").single();
       if (!error) {
@@ -277,7 +290,7 @@ Deno.serve(async req => {
             },
             email_status: racedOrder.confirmation_email_status || "pending",
             discount_amount: discountAmount,
-            promo_code: promoEligible ? "test" : null,
+            promo_code: promo ? String(promo.code).toLowerCase() : null,
             duplicate_prevented: true,
           }, 200);
         }
@@ -286,6 +299,11 @@ Deno.serve(async req => {
       }
     }
     if (!order) throw new Error("ORDER_ID_COLLISION");
+    if (promo) {
+      const { error: redemptionError } = await supabase.from("promo_redemptions").insert({ promo_code_id: promo.id, order_id: order.id, customer_email: email, customer_phone: phone, discount_amount: discountAmount });
+      if (redemptionError) console.error("Promo redemption insert failed", redemptionError);
+      else await supabase.from("promo_codes").update({ usage_count: Number(promo.usage_count || 0) + 1, updated_at: new Date().toISOString() }).eq("id", promo.id).eq("usage_count", Number(promo.usage_count || 0));
+    }
 
     let emailStatus = "pending";
     const resendKey = Deno.env.get("RESEND_API_KEY");
@@ -339,7 +357,7 @@ Deno.serve(async req => {
                   
                   <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 24px;">
                     ${rowsForAdmin}
-                    ${discountAmount ? `<tr><td style="padding: 14px 0 0 0; font-size: 14px; color: #A3A3A3;">Промокод TEST</td><td style="padding: 14px 0 0 0; text-align: right; font-size: 14px; color: #C8A27C;">−${money(discountAmount)}</td></tr>` : ""}
+                    ${discountAmount ? `<tr><td style="padding: 14px 0 0 0; font-size: 14px; color: #A3A3A3;">Промокод ${escapeHtml(String(promo?.code || "").toUpperCase())}</td><td style="padding: 14px 0 0 0; text-align: right; font-size: 14px; color: #C8A27C;">−${money(discountAmount)}</td></tr>` : ""}
                     <tr>
                       <td style="padding: 24px 0 0 0; font-size: 16px; color: #A3A3A3;">Всього до сплати:</td>
                       <td style="padding: 24px 0 0 0; text-align: right; font-size: 20px; color: #C8A27C; font-weight: 600; font-family: 'Georgia', serif;">${money(total)}</td>
@@ -405,7 +423,7 @@ Deno.serve(async req => {
                   <h3 style="font-size: 12px; letter-spacing: 1.5px; color: #737373; text-transform: uppercase; margin: 0 0 12px 0; font-weight: 600; border-bottom: 1px solid #171717; padding-bottom: 6px;">Перелік обраного</h3>
                   <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 24px;">
                     ${rowsForClient}
-                    ${discountAmount ? `<tr><td style="padding: 12px 0 0 0; font-size: 14px; color: #737373;">Промокод TEST</td><td style="padding: 12px 0 0 0; text-align: right; font-size: 14px; color: #8A6334;">−${money(discountAmount)}</td></tr>` : ""}
+                    ${discountAmount ? `<tr><td style="padding: 12px 0 0 0; font-size: 14px; color: #737373;">Промокод ${escapeHtml(String(promo?.code || "").toUpperCase())}</td><td style="padding: 12px 0 0 0; text-align: right; font-size: 14px; color: #8A6334;">−${money(discountAmount)}</td></tr>` : ""}
                     <tr>
                       <td style="padding: 20px 0 0 0; font-size: 15px; color: #525252; font-weight: 500;">Разом до сплати:</td>
                       <td style="padding: 20px 0 0 0; text-align: right; font-size: 18px; color: #171717; font-weight: 600; font-family: 'Georgia', serif;">${money(total)}</td>
@@ -447,7 +465,7 @@ Deno.serve(async req => {
           iban: text(Deno.env.get("PAYMENT_IBAN"), 50) || null,
         }
       : null;
-    return json(req, { order: { client_order_id: order.client_order_id, customer_name: name, customer_email: email, payment_method: paymentMethod, items, total_amount: total, discount_amount: discountAmount, promo_code: promoEligible ? "test" : null }, email_status: emailStatus, discount_amount: discountAmount, promo_code: promoEligible ? "test" : null, payment_details: paymentDetails?.recipient && paymentDetails?.iban ? paymentDetails : null }, 201);
+    return json(req, { order: { client_order_id: order.client_order_id, customer_name: name, customer_email: email, payment_method: paymentMethod, items, total_amount: total, discount_amount: discountAmount, promo_code: promo ? String(promo.code).toLowerCase() : null }, email_status: emailStatus, discount_amount: discountAmount, promo_code: promo ? String(promo.code).toLowerCase() : null, payment_details: paymentDetails?.recipient && paymentDetails?.iban ? paymentDetails : null }, 201);
   } catch (error) {
     console.error("create-order failed", {
       requestId,

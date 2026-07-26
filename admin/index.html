@@ -10,7 +10,7 @@
 <title>VA HOME Admin</title>
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <link href="../favicon/favicon.ico" rel="icon" sizes="any"/>
-<link href="../css/core-admin.css?v=13.7.0-rc26" rel="stylesheet"/><link href="../css/site-admin.css?v=13.7.0-rc26" rel="stylesheet"/>
+<link href="../css/core-admin.css?v=13.7.0-rc31" rel="stylesheet"/><link href="../css/site-admin.css?v=13.7.0-rc31" rel="stylesheet"/>
 <meta content="Службова панель керування VA HOME." name="description"/><meta content="13.7.0 Release Candidate" name="va-home-release"/>
 <link href="/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
@@ -52,6 +52,7 @@
 <nav aria-label="Розділи адмін-панелі" class="admin-tabs">
 <button class="is-active" data-tab="orders" type="button">Замовлення <span id="ordersBadge"></span></button>
 <button data-tab="reviews" type="button">Відгуки <span id="reviewsBadge"></span></button>
+<button data-tab="promos" type="button">Промокоди <span id="promosBadge"></span></button>
 </nav>
 <section class="admin-tab-panel" id="ordersTab">
 <div class="admin-period-stats" id="periodStats"></div>
@@ -88,16 +89,33 @@
 <div class="admin-list" id="reviewsAdminList"></div>
 <p class="admin-empty" hidden="" id="reviewsAdminEmpty">Відгуків не знайдено.</p>
 </section>
+<section class="admin-tab-panel" hidden="" id="promosTab">
+<div class="admin-promo-head"><div><p class="eyebrow">Маркетинг</p><h2>Промокоди</h2></div><button class="btn btn-primary btn-small" id="newPromoBtn" type="button">Створити промокод</button></div>
+<div class="admin-toolbar"><input aria-label="Пошук промокодів" id="promoSearch" placeholder="Код або назва…" type="search"/><select id="promoStatusFilter"><option value="">Усі</option><option value="active">Активні</option><option value="inactive">Вимкнені</option></select></div>
+<div class="admin-list" id="promosList"></div><p class="admin-empty" hidden="" id="promosEmpty">Промокодів ще немає.</p>
+</section>
 </section>
 </main>
 <dialog class="admin-dialog" id="orderDialog">
 <form method="dialog"><button aria-label="Закрити" class="admin-dialog__close" type="button">×</button></form>
 <div id="orderDialogContent"></div>
 </dialog>
+
+<dialog class="admin-dialog" id="promoDialog"><form method="dialog"><button aria-label="Закрити" class="admin-dialog__close" type="button">×</button></form><div class="admin-dialog__body"><p class="eyebrow">Промокод</p><h2 id="promoDialogTitle">Новий промокод</h2><form class="admin-promo-form" id="promoForm">
+<input type="hidden" name="id">
+<label>Код<input name="code" maxlength="40" required placeholder="WELCOME100"></label>
+<label>Назва кампанії<input name="name" maxlength="120" placeholder="Вітальна знижка"></label>
+<div class="admin-promo-grid"><label>Тип знижки<select name="discount_type"><option value="fixed">Фіксована сума</option><option value="percent">Відсоток</option><option value="free_shipping">Безкоштовна доставка</option></select></label><label>Значення<input name="discount_value" type="number" min="0" step="1" value="100"></label></div>
+<div class="admin-promo-grid"><label>Мінімальна сума<input name="min_order_amount" type="number" min="0" step="1" value="0"></label><label>Ліміт використань<input name="usage_limit" type="number" min="1" step="1" placeholder="Без ліміту"></label></div>
+<div class="admin-promo-grid"><label>Початок<input name="starts_at" type="datetime-local"></label><label>Завершення<input name="ends_at" type="datetime-local"></label></div>
+<label>Діє на<select name="applies_to"><option value="all">Усі товари</option><option value="fragrances">Повноцінні аромадифузори</option><option value="products">Обрані товари</option></select></label>
+<label>ID товарів через кому<input name="product_ids" placeholder="silk-molecule, mineral-salt"></label>
+<label class="checkout-consent"><input name="active" type="checkbox" checked><span>Промокод активний</span></label>
+<p class="admin-message" id="promoFormMessage"></p><div class="admin-actions__buttons"><button class="btn btn-primary" type="submit">Зберегти</button><button class="btn btn-secondary" id="deletePromoBtn" type="button" hidden>Видалити</button></div></form></div></dialog>
 <script defer="" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer="" src="../js/config.js?v=13.7.0-rc26"></script>
-<script defer="" src="../js/admin.js?v=13.7.0-rc26"></script>
-<script defer="" src="../js/motion.js?v=13.7.0-rc26"></script>
-<script defer="" src="/js/pwa.js?v=13.7.0-rc26"></script>
+<script defer="" src="../js/config.js?v=13.7.0-rc31"></script>
+<script defer="" src="../js/admin.js?v=13.7.0-rc31"></script>
+<script defer="" src="../js/motion.js?v=13.7.0-rc31"></script>
+<script defer="" src="/js/pwa.js?v=13.7.0-rc31"></script>
 </body>
 </html>

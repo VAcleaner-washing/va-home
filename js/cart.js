@@ -12,24 +12,19 @@
   const STORAGE_KEY = (window.SITE_CONFIG && window.SITE_CONFIG.cartStorageKey) || "vahome_cart_v1";
   const FREE_SHIPPING_THRESHOLD = 1500;
   const PROMO_STORAGE_KEY = "vahome_checkout_promo_v1";
-  const PROMO_CODE = "test";
-  const PROMO_DISCOUNT = 100;
 
   function normalizePromoCode(value) {
     return String(value || "").trim().toLocaleLowerCase("uk-UA");
   }
 
-  function readAppliedPromoCode() {
-    try { return normalizePromoCode(sessionStorage.getItem(PROMO_STORAGE_KEY) || ""); } catch (_) { return ""; }
+  function readAppliedPromo() {
+    try { const raw=sessionStorage.getItem(PROMO_STORAGE_KEY); const parsed=raw?JSON.parse(raw):null; return parsed&&parsed.code?parsed:null; } catch (_) { return null; }
   }
-
-  function writeAppliedPromoCode(value) {
-    try {
-      const code = normalizePromoCode(value);
-      if (code) sessionStorage.setItem(PROMO_STORAGE_KEY, code);
-      else sessionStorage.removeItem(PROMO_STORAGE_KEY);
-    } catch (_) {}
+  function readAppliedPromoCode(){ return normalizePromoCode(readAppliedPromo()?.code || ""); }
+  function writeAppliedPromo(value) {
+    try { if(value&&value.code) sessionStorage.setItem(PROMO_STORAGE_KEY,JSON.stringify(value)); else sessionStorage.removeItem(PROMO_STORAGE_KEY); } catch (_) {}
   }
+  function writeAppliedPromoCode(value){ if(!value) writeAppliedPromo(null); }
 
   function resetCheckoutRequestId() {
     try { sessionStorage.removeItem("vahome_checkout_request_id"); } catch (_) {}
@@ -38,10 +33,10 @@
   function pricingFor(items) {
     const safeItems = Array.isArray(items) ? items : [];
     const subtotal = safeItems.reduce((sum, item) => sum + Number(item.lineTotal || 0), 0);
-    const promoCode = readAppliedPromoCode();
-    const promoEligible = promoCode === PROMO_CODE && safeItems.some((item) => !String(item.id || "").startsWith("discovery-"));
-    const discount = promoEligible ? Math.min(PROMO_DISCOUNT, subtotal) : 0;
-    return { subtotal, promoCode: promoEligible ? promoCode : "", discount, total: Math.max(0, subtotal - discount) };
+    const promo = readAppliedPromo();
+    const promoCode = normalizePromoCode(promo?.code || "");
+    const discount = promoCode ? Math.min(Number(promo.discount_amount || 0), subtotal) : 0;
+    return { subtotal, promoCode, discount, total: Math.max(0, subtotal - discount), freeShipping: Boolean(promo?.free_shipping) };
   }
 
   // Non-catalog items sellable from the cart (Discovery Set variants).
@@ -1242,67 +1237,11 @@
   }
 
   function initPromoCode(form) {
-    const input = document.getElementById("promoCode");
-    const button = document.getElementById("applyPromoCode");
-    const status = document.getElementById("promoStatus");
-    const details = document.getElementById("promoDetails");
-    if (!input || !button || !status) return;
-
-    const showCurrent = () => {
-      const code = readAppliedPromoCode();
-      const pricing = pricingFor(getItems());
-      if (code) input.value = code.toUpperCase();
-      if (pricing.discount) {
-        status.textContent = `Промокод застосовано: −${formatUAH(pricing.discount)}`;
-        status.className = "promo-status is-success";
-        if (details) details.open = true;
-      } else if (code) {
-        writeAppliedPromoCode("");
-        resetCheckoutRequestId();
-        status.textContent = "Промокод діє на повноцінний аромадифузор.";
-        status.className = "promo-status is-error";
-      }
-    };
-
-    const apply = () => {
-      const code = normalizePromoCode(input.value);
-      if (!code) {
-        writeAppliedPromoCode("");
-        resetCheckoutRequestId();
-        status.textContent = "Промокод прибрано.";
-        status.className = "promo-status";
-        renderCartPage();
-        return;
-      }
-      if (code !== PROMO_CODE) {
-        writeAppliedPromoCode("");
-        resetCheckoutRequestId();
-        status.textContent = "Промокод не знайдено.";
-        status.className = "promo-status is-error";
-        renderCartPage();
-        return;
-      }
-      const eligible = getItems().some((item) => !String(item.id || "").startsWith("discovery-"));
-      if (!eligible) {
-        writeAppliedPromoCode("");
-        resetCheckoutRequestId();
-        status.textContent = "Промокод діє на повноцінний аромадифузор.";
-        status.className = "promo-status is-error";
-        renderCartPage();
-        return;
-      }
-      writeAppliedPromoCode(code);
-      resetCheckoutRequestId();
-      status.textContent = `Промокод застосовано: −${formatUAH(PROMO_DISCOUNT)}`;
-      status.className = "promo-status is-success";
-      renderCartPage();
-    };
-
-    button.addEventListener("click", apply);
-    input.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") { event.preventDefault(); apply(); }
-    });
-    showCurrent();
+    const input=document.getElementById("promoCode"),button=document.getElementById("applyPromoCode"),status=document.getElementById("promoStatus"),details=document.getElementById("promoDetails");
+    if(!input||!button||!status)return;
+    const showCurrent=()=>{const promo=readAppliedPromo();if(promo?.code){input.value=String(promo.code).toUpperCase();status.textContent=promo.free_shipping?"Промокод застосовано: безкоштовна доставка":`Промокод застосовано: −${formatUAH(promo.discount_amount||0)}`;status.className="promo-status is-success";if(details)details.open=true;}};
+    const apply=async()=>{const code=normalizePromoCode(input.value);if(!code){writeAppliedPromo(null);resetCheckoutRequestId();status.textContent="Промокод прибрано.";status.className="promo-status";renderCartPage();return;}button.disabled=true;status.textContent="Перевіряємо промокод…";status.className="promo-status";try{const items=getItems().map(i=>({id:i.id,quantity:i.quantity,line_total:i.lineTotal}));const subtotal=items.reduce((sum,i)=>sum+Number(i.line_total||0),0);const response=await fetch(`${window.SITE_CONFIG.supabase.url}/functions/v1/validate-promo`,{method:"POST",headers:{"Content-Type":"application/json","apikey":window.SITE_CONFIG.supabase.publishableKey,"Authorization":`Bearer ${window.SITE_CONFIG.supabase.publishableKey}`},body:JSON.stringify({code,items,subtotal})});const data=await response.json().catch(()=>({}));if(!response.ok||!data.valid){writeAppliedPromo(null);status.textContent=data.message||"Промокод не знайдено або він уже не діє.";status.className="promo-status is-error";renderCartPage();return;}writeAppliedPromo(data.promo);resetCheckoutRequestId();status.textContent=data.promo.free_shipping?"Промокод застосовано: безкоштовна доставка":`Промокод застосовано: −${formatUAH(data.promo.discount_amount||0)}`;status.className="promo-status is-success";renderCartPage();}catch(_){status.textContent="Не вдалося перевірити промокод. Спробуйте ще раз.";status.className="promo-status is-error";}finally{button.disabled=false;}};
+    button.addEventListener("click",apply);input.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();apply();}});showCurrent();
   }
 
   function initMobileCheckoutAction() {

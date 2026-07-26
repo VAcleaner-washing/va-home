@@ -1,13 +1,13 @@
 {
-  "version": "13.7.0-rc.30",
-  "name": "IOS FIRST-OPEN NOVA POSHTA VIEWPORT FIX",
+  "version": "13.7.0-rc.31",
+  "name": "ADMIN PROMO CODE MANAGEMENT",
   "date": "2026-07-26",
-  "base": "13.7.0-rc.29-CHECKOUT-CONVERSION-UX-FINAL",
+  "base": "13.7.0-rc.30-IOS-FIRST-OPEN-PICKER-FIX",
   "changes": [
-    "Locks checkout scroll before opening the mobile Nova Poshta picker",
-    "Pins the full-screen picker to the live iOS visual viewport above the keyboard",
-    "Prevents the first city or warehouse selection screen from sliding upward",
-    "Preserves RC29 checkout, promo and delivery logic",
-    "Bumps checkout assets and PWA cache to RC30"
+    "Adds promo code CRUD management to the admin panel",
+    "Supports fixed, percentage and free-shipping promotions",
+    "Supports dates, minimum order, usage limits and product eligibility",
+    "Validates promo codes through a dedicated Supabase Edge Function",
+    "Performs final server-side validation and redemption tracking in create-order"
   ]
 }
