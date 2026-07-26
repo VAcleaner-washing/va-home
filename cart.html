@@ -13,10 +13,10 @@
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <link href="favicon/favicon.ico" rel="icon" sizes="any"/>
 <link href="favicon/favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="css/core.css?v=13.7.0-rc28" rel="stylesheet"/><link href="css/site-cart.css?v=13.7.0-rc28" rel="stylesheet"/>
+<link href="css/core.css?v=13.7.0-rc29" rel="stylesheet"/><link href="css/site-cart.css?v=13.7.0-rc29" rel="stylesheet"/>
 <link as="image" fetchpriority="high" href="images/home/hero-discovery.webp" rel="preload"/>
 <meta content="13.7.0 Release Candidate" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
-<script defer="" src="js/hero-font-reveal.js?v=13.7.0-rc28"></script>
+<script defer="" src="js/hero-font-reveal.js?v=13.7.0-rc29"></script>
 <link href="/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
 
@@ -71,11 +71,15 @@
 <span>Доставка</span>
 <span id="cartDeliveryLabel">За тарифами НП</span>
 </div>
+<div class="cart-summary__row cart-summary__discount" hidden="" id="cartPromoRow">
+<span>Промокод <strong id="cartPromoCodeLabel"></strong></span>
+<span id="cartPromoDiscount">−0 грн</span>
+</div>
 <div class="cart-summary__total">
 <span>До сплати</span>
 <span id="cartTotal">0 грн</span>
 </div>
-<p class="cart-summary__note">Доставка Новою поштою — за тарифами перевізника. Для замовлень від 1500 грн — за наш рахунок.</p>
+<p class="cart-summary__note" id="cartShippingNote">Для замовлень від 1500 грн доставка у відділення або поштомат — за наш рахунок.</p>
 <div aria-live="polite" class="shipping-progress" id="shippingProgress">
 <div class="shipping-progress__copy"><span id="shippingProgressText">До безкоштовної доставки залишилося</span><strong id="shippingProgressValue">0 грн</strong></div>
 <div aria-hidden="true" class="shipping-progress__track"><span id="shippingProgressBar"></span></div>
@@ -88,10 +92,16 @@
 </aside>
 </div>
 <!-- Апсейл Discovery Set: показується лише якщо в кошику ще немає жодного варіанту набору -->
-<div class="discovery-variant-card" hidden="" id="cartDiscoveryUpsell" style="margin-bottom: var(--space-4);">
-<p style="font-weight:700; margin-bottom: 0.3em;">Ще не впевнені у виборі?</p>
-<p class="text-muted" style="margin-bottom: var(--space-2);">Спробуйте Discovery Set — 6 ароматів за 150 грн, щоб протестувати композиції вдома.</p>
-<a class="btn btn-secondary" href="discovery-set.html">Переглянути Discovery Set</a>
+<div class="discovery-variant-card discovery-variant-card--compact" hidden="" id="cartDiscoveryUpsell">
+<div>
+<p class="eyebrow">Discovery Set</p>
+<p class="discovery-variant-card__title">Додайте знайомство з ароматами до замовлення</p>
+<p class="text-muted">Оберіть 6 композицій за 150 грн або додайте повний сет без виходу з кошика.</p>
+</div>
+<div class="discovery-variant-card__actions">
+<a class="btn btn-secondary" href="discovery-set.html">Обрати 6 ароматів · 150 грн</a>
+<button class="btn btn-primary" id="quickAddDiscovery18" type="button">Додати повний сет · 450 грн</button>
+</div>
 </div>
 <!-- ============ CHECKOUT FORM ============ -->
 <div class="checkout-form">
@@ -107,13 +117,17 @@
 <div class="form-field">
 <label for="customerName">Ім’я та прізвище *</label>
 <input aria-describedby="err-customerName" autocomplete="name" id="customerName" name="customerName" placeholder="Вікторія Петренко" required="" type="text"/>
-<p class="form-error" id="err-customerName">Вкажіть ім’я та прізвище.</p>
+<p class="form-error" id="err-customerName">Вкажіть ім’я та прізвище, як для отримання посилки.</p>
 </div>
 <div class="form-field">
 <label for="customerPhone">Номер телефону *</label>
 <input aria-describedby="err-customerPhone" autocomplete="tel" id="customerPhone" inputmode="tel" name="customerPhone" placeholder="+38 (095) 123-45-67" required="" type="tel"/>
 <p class="form-error" id="err-customerPhone">Вкажіть, будь ласка, номер телефону.</p>
 </div>
+<label class="checkout-preference" for="doNotCall">
+<input id="doNotCall" name="doNotCall" type="checkbox"/>
+<span><strong>Не телефонувати для підтвердження</strong><small>Якщо всі дані заповнені правильно, надішлемо підтвердження на email.</small></span>
+</label>
 <div class="form-field">
 <label for="customerEmail">Email для підтвердження *</label>
 <input aria-describedby="err-customerEmail" autocomplete="email" id="customerEmail" name="customerEmail" placeholder="name@example.com" required="" type="email"/>
@@ -141,12 +155,12 @@
 <label class="delivery-option is-selected">
 <input checked="" name="deliveryChoice" type="radio" value="nova_poshta_branch"/>
 <span aria-hidden="true" class="delivery-option__mark"></span>
-<span><strong>Відділення або поштомат</strong><small>Оберіть з актуального списку Нової пошти.</small></span>
+<span><strong>Відділення або поштомат</strong><small>Безкоштовно для замовлень від 1500 грн.</small></span>
 </label>
 <label class="delivery-option">
 <input name="deliveryChoice" type="radio" value="nova_poshta_courier"/>
 <span aria-hidden="true" class="delivery-option__mark"></span>
-<span><strong>Кур’єрська доставка</strong><small>Нова пошта доставить замовлення за вашою адресою.</small></span>
+<span><strong>Кур’єрська доставка</strong><small>За тарифами Нової пошти незалежно від суми замовлення.</small></span>
 </label>
 </div>
 <p class="form-error" id="err-deliveryMethod">Оберіть спосіб доставки.</p>
@@ -203,11 +217,20 @@
 <p class="form-hint" id="paymentMethodHint">Реквізити для оплати надійдуть після підтвердження замовлення менеджером.</p>
 </div>
 <details class="checkout-comment">
-<summary>+ Додати коментар до замовлення</summary>
+<summary>Додати коментар до замовлення</summary>
 <div class="form-field">
 <label for="customerComment">Коментар до замовлення</label>
 <textarea id="customerComment" name="customerComment" placeholder="Побажання до замовлення або доставки"></textarea>
 </div>
+</details>
+<details class="checkout-comment checkout-promo" id="promoDetails">
+<summary>Є промокод?</summary>
+<div class="promo-entry">
+<label class="sr-only" for="promoCode">Промокод</label>
+<input autocomplete="off" id="promoCode" inputmode="text" name="promoCode" placeholder="Введіть промокод" type="text"/>
+<button class="btn btn-secondary" id="applyPromoCode" type="button">Застосувати</button>
+</div>
+<p aria-live="polite" class="promo-status" id="promoStatus"></p>
 </details>
 </fieldset>
 </div>
@@ -220,7 +243,7 @@
 <p class="form-error checkout-consent-error" id="err-checkoutConsent">Підтвердьте згоду для оформлення замовлення.</p>
 <div aria-label="Умови оформлення" class="checkout-reassurance">
 <p><strong>Відправка:</strong> протягом 1–2 робочих днів.</p>
-<p><strong>Доставка:</strong> сплачується отримувачем за тарифами Нової пошти.</p>
+<p id="checkoutDeliveryCopy"><strong>Доставка:</strong> у відділення або поштомат — безкоштовно від 1500 грн.</p>
 <p><strong>Підтримка:</strong> щодня 09:00–19:00 · <a href="tel:+380953919569">+38 (095) 391-9569</a></p>
 </div>
 </div>
@@ -231,7 +254,6 @@
 </div>
 <p aria-live="polite" class="checkout-status" id="checkoutStatus" role="status"></p>
 </form>
-<div class="np-sheet-backdrop" hidden="" id="npSheetBackdrop"></div>
 </div>
 <div class="checkout-mobile-bar" hidden="" id="checkoutMobileBar">
 <div><small>Разом</small><strong id="checkoutMobileTotal">0 грн</strong></div>
@@ -242,14 +264,14 @@
 </section>
 </main>
 <div data-root="" id="site-footer"></div>
-<script defer="" src="js/config.js?v=13.7.0-rc28"></script>
-<script defer="" src="js/supabase-api.js?v=13.7.0-rc28"></script>
-<script defer="" src="js/products.js?v=13.7.0-rc28"></script>
-<script defer="" src="js/compare.js?v=13.7.0-rc28"></script>
-<script defer="" src="js/cart.js?v=13.7.0-rc28"></script>
-<script defer="" src="js/ratings.js?v=13.7.0-rc28"></script>
-<script defer="" src="js/main.js?v=13.7.0-rc28"></script>
-<script defer="" src="js/motion.js?v=13.7.0-rc28"></script>
-<script defer="" src="/js/pwa.js?v=13.7.0-rc28"></script>
+<script defer="" src="js/config.js?v=13.7.0-rc29"></script>
+<script defer="" src="js/supabase-api.js?v=13.7.0-rc29"></script>
+<script defer="" src="js/products.js?v=13.7.0-rc29"></script>
+<script defer="" src="js/compare.js?v=13.7.0-rc29"></script>
+<script defer="" src="js/cart.js?v=13.7.0-rc29"></script>
+<script defer="" src="js/ratings.js?v=13.7.0-rc29"></script>
+<script defer="" src="js/main.js?v=13.7.0-rc29"></script>
+<script defer="" src="js/motion.js?v=13.7.0-rc29"></script>
+<script defer="" src="/js/pwa.js?v=13.7.0-rc29"></script>
 </body>
 </html>

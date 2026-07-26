@@ -1,14 +1,14 @@
 {
-  "version": "13.7.0-rc.28",
-  "name": "MOBILE CHROME FULLSCREEN NOVA POSHTA PICKER FIX",
+  "version": "13.7.0-rc.29",
+  "name": "CONVERSION CHECKOUT AND UNIFIED NOVA POSHTA PICKER",
   "date": "2026-07-26",
-  "base": "13.7.0-rc.27-FULLSCREEN-NOVA-POSHTA-PICKER",
+  "base": "13.7.0-rc.28-MOBILE-CHROME-FULLSCREEN-PICKER-FIX",
   "changes": [
-    "Opens the full-screen city and warehouse picker directly from tap/click instead of relying on focus of a readonly field",
-    "Supports mobile Chrome, installed Chrome PWA and narrow touch devices up to 900px",
-    "Prevents document click handling from immediately closing the full-screen picker",
-    "Keeps the search input interactive while the original checkout field remains readonly",
-    "Adds dialog semantics and Escape handling",
-    "Bumps checkout asset URLs and PWA cache to RC28"
+    "Replaces layered mobile Nova Poshta suggestions with one full-screen city/warehouse picker",
+    "Keeps email required while validating first and last name as two words",
+    "Adds do-not-call preference, promo code TEST, synchronized shipping copy and courier tariff messaging",
+    "Makes product names/images clickable, adds Discovery Set editing, quick add and undo removal",
+    "Applies promo discount server-side and displays it in confirmation emails and thank-you page",
+    "Bumps checkout assets and PWA cache to RC29"
   ]
 }

@@ -57,13 +57,16 @@
   function renderOrder(order) {
     setText("orderNumber", order.orderNumber || order.client_order_id || "—");
     const items = Array.isArray(order.items) ? order.items : [];
+    const discountLine = Number(order.discount || 0) > 0
+      ? `<div class="ty-order-line ty-order-line--discount"><span>Промокод ${String(order.promoCode || "").toUpperCase()}</span><span>−${formatUAH(order.discount)}</span></div>`
+      : "";
     document.getElementById("orderItems").innerHTML = items.length
       ? items.map(function (item) {
           const selections = Array.isArray(item.selections) && item.selections.length
             ? `<small>Обрано: ${item.selections.join(" · ")}</small>`
             : "";
           return `<div class="ty-order-line"><span>${item.name || "Товар"} × ${item.quantity || 1}${selections}</span><span>${formatUAH(item.line_total)}</span></div>`;
-        }).join("")
+        }).join("") + discountLine
       : '<p class="ty-empty">Склад замовлення буде доступний у листі-підтвердженні.</p>';
     setText("orderTotal", formatUAH(order.total));
 

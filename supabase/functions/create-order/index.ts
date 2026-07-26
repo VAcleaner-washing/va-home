@@ -144,10 +144,13 @@ Deno.serve(async req => {
       : submittedDeliveryDetails;
     const deliveryLabel = isCourier ? "Нова пошта — кур’єр" : "Нова пошта — відділення / поштомат";
     const paymentMethod = text(body.payment_method, 30);
-    const comment = text(body.customer_comment, 1000) || null;
+    const doNotCall = Boolean(body.do_not_call);
+    const promoCode = text(body.promo_code, 40).toLocaleLowerCase("uk-UA");
+    const rawComment = text(body.customer_comment, 900);
     const rawItems = Array.isArray(body.items) ? body.items : [];
 
-    if (name.length < 2 || !/^\+?380\d{9}$/.test(phone) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    const nameParts = name.split(/\s+/).filter(part => part.length >= 2);
+    if (nameParts.length < 2 || !/^\+?380\d{9}$/.test(phone) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return json(req, { error: "INVALID_CONTACTS" }, 400);
     }
     if (!city || (!isBranch && !isCourier)) return json(req, { error: "INVALID_DELIVERY" }, 400);
@@ -188,7 +191,17 @@ Deno.serve(async req => {
       }
       return { id, name: product.name, quantity, unit_price: product.price, line_total: product.price * quantity, selections: [] };
     });
-    const total = items.reduce((sum, item) => sum + item.line_total, 0);
+    const subtotal = items.reduce((sum, item) => sum + item.line_total, 0);
+    const promoEligible = promoCode === "test" && items.some(item => FRAGRANCE_IDS.includes(item.id));
+    if (promoCode && !promoEligible) return json(req, { error: "INVALID_PROMO" }, 400);
+    const discountAmount = promoEligible ? Math.min(100, subtotal) : 0;
+    const total = subtotal - discountAmount;
+    const preferenceLines = [
+      doNotCall ? "Не телефонувати для підтвердження — всі дані заповнені." : "",
+      promoEligible ? `Промокод TEST: знижка ${discountAmount} грн.` : "",
+      rawComment,
+    ].filter(Boolean);
+    const comment = preferenceLines.join("\n") || null;
     if (total <= 0) return json(req, { error: "INVALID_TOTAL" }, 400);
 
     if (checkoutRequestId) {
@@ -215,6 +228,8 @@ Deno.serve(async req => {
             total_amount: existing.total_amount,
           },
           email_status: existing.confirmation_email_status || "pending",
+          discount_amount: discountAmount,
+          promo_code: promoEligible ? "test" : null,
           duplicate_prevented: true,
         }, 200);
       }
@@ -261,6 +276,8 @@ Deno.serve(async req => {
               total_amount: racedOrder.total_amount,
             },
             email_status: racedOrder.confirmation_email_status || "pending",
+            discount_amount: discountAmount,
+            promo_code: promoEligible ? "test" : null,
             duplicate_prevented: true,
           }, 200);
         }
@@ -322,6 +339,7 @@ Deno.serve(async req => {
                   
                   <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 24px;">
                     ${rowsForAdmin}
+                    ${discountAmount ? `<tr><td style="padding: 14px 0 0 0; font-size: 14px; color: #A3A3A3;">Промокод TEST</td><td style="padding: 14px 0 0 0; text-align: right; font-size: 14px; color: #C8A27C;">−${money(discountAmount)}</td></tr>` : ""}
                     <tr>
                       <td style="padding: 24px 0 0 0; font-size: 16px; color: #A3A3A3;">Всього до сплати:</td>
                       <td style="padding: 24px 0 0 0; text-align: right; font-size: 20px; color: #C8A27C; font-weight: 600; font-family: 'Georgia', serif;">${money(total)}</td>
@@ -387,6 +405,7 @@ Deno.serve(async req => {
                   <h3 style="font-size: 12px; letter-spacing: 1.5px; color: #737373; text-transform: uppercase; margin: 0 0 12px 0; font-weight: 600; border-bottom: 1px solid #171717; padding-bottom: 6px;">Перелік обраного</h3>
                   <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 24px;">
                     ${rowsForClient}
+                    ${discountAmount ? `<tr><td style="padding: 12px 0 0 0; font-size: 14px; color: #737373;">Промокод TEST</td><td style="padding: 12px 0 0 0; text-align: right; font-size: 14px; color: #8A6334;">−${money(discountAmount)}</td></tr>` : ""}
                     <tr>
                       <td style="padding: 20px 0 0 0; font-size: 15px; color: #525252; font-weight: 500;">Разом до сплати:</td>
                       <td style="padding: 20px 0 0 0; text-align: right; font-size: 18px; color: #171717; font-weight: 600; font-family: 'Georgia', serif;">${money(total)}</td>
@@ -428,7 +447,7 @@ Deno.serve(async req => {
           iban: text(Deno.env.get("PAYMENT_IBAN"), 50) || null,
         }
       : null;
-    return json(req, { order: { client_order_id: order.client_order_id, customer_name: name, customer_email: email, payment_method: paymentMethod, items, total_amount: total }, email_status: emailStatus, payment_details: paymentDetails?.recipient && paymentDetails?.iban ? paymentDetails : null }, 201);
+    return json(req, { order: { client_order_id: order.client_order_id, customer_name: name, customer_email: email, payment_method: paymentMethod, items, total_amount: total, discount_amount: discountAmount, promo_code: promoEligible ? "test" : null }, email_status: emailStatus, discount_amount: discountAmount, promo_code: promoEligible ? "test" : null, payment_details: paymentDetails?.recipient && paymentDetails?.iban ? paymentDetails : null }, 201);
   } catch (error) {
     console.error("create-order failed", {
       requestId,

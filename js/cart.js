@@ -10,6 +10,39 @@
   "use strict";
 
   const STORAGE_KEY = (window.SITE_CONFIG && window.SITE_CONFIG.cartStorageKey) || "vahome_cart_v1";
+  const FREE_SHIPPING_THRESHOLD = 1500;
+  const PROMO_STORAGE_KEY = "vahome_checkout_promo_v1";
+  const PROMO_CODE = "test";
+  const PROMO_DISCOUNT = 100;
+
+  function normalizePromoCode(value) {
+    return String(value || "").trim().toLocaleLowerCase("uk-UA");
+  }
+
+  function readAppliedPromoCode() {
+    try { return normalizePromoCode(sessionStorage.getItem(PROMO_STORAGE_KEY) || ""); } catch (_) { return ""; }
+  }
+
+  function writeAppliedPromoCode(value) {
+    try {
+      const code = normalizePromoCode(value);
+      if (code) sessionStorage.setItem(PROMO_STORAGE_KEY, code);
+      else sessionStorage.removeItem(PROMO_STORAGE_KEY);
+    } catch (_) {}
+  }
+
+  function resetCheckoutRequestId() {
+    try { sessionStorage.removeItem("vahome_checkout_request_id"); } catch (_) {}
+  }
+
+  function pricingFor(items) {
+    const safeItems = Array.isArray(items) ? items : [];
+    const subtotal = safeItems.reduce((sum, item) => sum + Number(item.lineTotal || 0), 0);
+    const promoCode = readAppliedPromoCode();
+    const promoEligible = promoCode === PROMO_CODE && safeItems.some((item) => !String(item.id || "").startsWith("discovery-"));
+    const discount = promoEligible ? Math.min(PROMO_DISCOUNT, subtotal) : 0;
+    return { subtotal, promoCode: promoEligible ? promoCode : "", discount, total: Math.max(0, subtotal - discount) };
+  }
 
   // Non-catalog items sellable from the cart (Discovery Set variants).
   // Keep this list in sync with the buttons on discovery-set.html.
@@ -33,6 +66,7 @@
   function writeRaw(items) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      resetCheckoutRequestId();
       return true;
     } catch (e) {
       return false;
@@ -166,34 +200,77 @@
     return "товарів";
   }
 
-  function updatePremiumCheckoutUI(items, total) {
+  function syncShippingCopy(pricing) {
+    const method = document.getElementById("deliveryMethod")?.value || "nova_poshta_branch";
+    const courier = method === "nova_poshta_courier";
+    const branchFree = !courier && pricing.subtotal >= FREE_SHIPPING_THRESHOLD;
+    const deliveryLabel = document.getElementById("cartDeliveryLabel");
+    const summaryNote = document.getElementById("cartShippingNote");
+    const methodHint = document.getElementById("deliveryMethodHint");
+    const reassurance = document.getElementById("checkoutDeliveryCopy");
+
+    if (deliveryLabel) deliveryLabel.textContent = branchFree ? "Безкоштовно" : "За тарифами НП";
+    if (summaryNote) {
+      summaryNote.textContent = courier
+        ? "Кур’єрська доставка оплачується за тарифами Нової пошти незалежно від суми замовлення."
+        : branchFree
+          ? "Безкоштовна доставка у відділення або поштомат активована."
+          : "Для замовлень від 1500 грн доставка у відділення або поштомат — за наш рахунок.";
+    }
+    if (methodHint) {
+      methodHint.textContent = courier
+        ? "Кур’єрська доставка оплачується за тарифами Нової пошти незалежно від суми замовлення."
+        : branchFree
+          ? "Безкоштовна доставка у відділення або поштомат активована."
+          : "Доставка у відділення або поштомат — за тарифами Нової пошти. Від 1500 грн — за наш рахунок.";
+    }
+    if (reassurance) {
+      reassurance.innerHTML = courier
+        ? "<strong>Доставка:</strong> кур’єром — за тарифами Нової пошти."
+        : branchFree
+          ? "<strong>Доставка:</strong> у відділення або поштомат — безкоштовно."
+          : "<strong>Доставка:</strong> у відділення або поштомат — безкоштовно від 1500 грн.";
+    }
+  }
+
+  function updatePremiumCheckoutUI(items) {
     const count = items.reduce((sum, item) => sum + item.quantity, 0);
     const countLabel = document.getElementById("cartItemCountLabel");
     if (countLabel) countLabel.textContent = `${count} ${itemWord(count)}`;
 
+    const pricing = pricingFor(items);
+    const subtotalEl = document.getElementById("cartSubtotal");
+    const totalEl = document.getElementById("cartTotal");
+    if (subtotalEl) subtotalEl.textContent = formatUAH(pricing.subtotal);
+    if (totalEl) totalEl.textContent = formatUAH(pricing.total);
     [document.getElementById("checkoutButtonTotal"), document.getElementById("checkoutMobileTotal")].forEach((el) => {
-      if (el) el.textContent = formatUAH(total);
+      if (el) el.textContent = formatUAH(pricing.total);
     });
 
-    const threshold = 1500;
-    const remaining = Math.max(0, threshold - total);
-    const progress = Math.min(100, (total / threshold) * 100);
+    const promoRow = document.getElementById("cartPromoRow");
+    const promoLabel = document.getElementById("cartPromoCodeLabel");
+    const promoDiscount = document.getElementById("cartPromoDiscount");
+    if (promoRow) promoRow.hidden = !pricing.discount;
+    if (promoLabel) promoLabel.textContent = pricing.promoCode ? pricing.promoCode.toUpperCase() : "";
+    if (promoDiscount) promoDiscount.textContent = pricing.discount ? `−${formatUAH(pricing.discount)}` : "−0 грн";
+
+    const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - pricing.subtotal);
+    const progress = Math.min(100, (pricing.subtotal / FREE_SHIPPING_THRESHOLD) * 100);
     const progressWrap = document.getElementById("shippingProgress");
     const progressBar = document.getElementById("shippingProgressBar");
     const progressText = document.getElementById("shippingProgressText");
     const progressValue = document.getElementById("shippingProgressValue");
     if (progressBar) progressBar.style.width = `${progress}%`;
     if (progressWrap) progressWrap.classList.toggle("is-complete", remaining === 0);
-    if (progressText) progressText.textContent = remaining === 0 ? "Безкоштовна доставка активована" : "До безкоштовної доставки залишилося";
+    if (progressText) progressText.textContent = remaining === 0 ? "Безкоштовна доставка у відділення активована" : "До безкоштовної доставки у відділення";
     if (progressValue) progressValue.textContent = remaining === 0 ? "Готово" : formatUAH(remaining);
-    const deliveryLabel = document.getElementById("cartDeliveryLabel");
-    if (deliveryLabel) deliveryLabel.textContent = remaining === 0 ? "Безкоштовно" : "За тарифами НП";
+    syncShippingCopy(pricing);
 
     const mobileBar = document.getElementById("checkoutMobileBar");
     if (mobileBar) {
       const hasItems = Boolean(items.length);
-      mobileBar.dataset.hasItems = hasItems ? 'true' : 'false';
-      const checkoutActive = document.body.classList.contains('va-checkout-form-active');
+      mobileBar.dataset.hasItems = hasItems ? "true" : "false";
+      const checkoutActive = document.body.classList.contains("va-checkout-form-active");
       const shouldShow = hasItems && window.innerWidth <= 800 && !checkoutActive;
       mobileBar.hidden = !shouldShow;
     }
@@ -234,16 +311,23 @@
 
     itemsList.innerHTML = items
       .map((item) => {
-        const media = item.image
+        const detailUrl = item.url || (String(item.id).startsWith("discovery-") ? "discovery-set.html" : "");
+        const image = item.image
           ? `<img class="fill-img" src="${item.image}" alt="${item.name}" loading="lazy" onerror="this.parentElement.classList.add('placeholder-media');this.remove();">`
           : `<span>${item.name}</span>`;
+        const media = detailUrl ? `<a href="${detailUrl}" aria-label="Переглянути ${item.name}">${image}</a>` : image;
+        const name = detailUrl ? `<a href="${detailUrl}">${item.name}</a>` : item.name;
+        const editDiscovery = String(item.id).startsWith("discovery-")
+          ? `<a class="cart-item__edit" href="discovery-set.html">Змінити набір</a>`
+          : "";
         return `
         <div class="cart-item" data-cart-item="${item.id}">
           <div class="cart-item__media${item.image ? "" : " placeholder-media"}">${media}</div>
           <div>
-            <p class="cart-item__name">${item.name}</p>
+            <p class="cart-item__name">${name}</p>
             <p class="cart-item__meta">${item.volume || ""}</p>
             ${item.selections.length ? `<p class="cart-item__selection"><strong>Обрані аромати:</strong> ${item.selections.map(id=>{const p=typeof getProduct==="function"?getProduct(id):null;return p?p.name:id}).join(" · ")}</p>` : ""}
+            ${editDiscovery}
             <div class="cart-item__controls">
               <div class="qty-stepper">
                 <button type="button" class="cart-qty-minus" aria-label="Зменшити кількість">−</button>
@@ -258,47 +342,82 @@
       })
       .join("");
 
-    const totalEl = document.getElementById("cartTotal");
-    const subtotalEl = document.getElementById("cartSubtotal");
-    const total = getTotal();
-    if (subtotalEl) subtotalEl.textContent = formatUAH(total);
-    if (totalEl) totalEl.textContent = formatUAH(total);
-    updatePremiumCheckoutUI(items, total);
+    updatePremiumCheckoutUI(items);
 
     refreshCountBadge();
+  }
+
+  let undoTimer = 0;
+
+  function showUndoRemoval(entry, label) {
+    if (!entry) return;
+    let toast = document.getElementById("cartUndoToast");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.id = "cartUndoToast";
+      toast.className = "cart-undo-toast";
+      toast.setAttribute("role", "status");
+      toast.innerHTML = `<span></span><button type="button">Повернути</button>`;
+      document.body.appendChild(toast);
+    }
+    clearTimeout(undoTimer);
+    toast.querySelector("span").textContent = `${label || "Товар"} видалено`;
+    toast.hidden = false;
+    toast.classList.add("is-visible");
+    const restore = () => {
+      const current = readRaw();
+      if (!current.some((item) => item.productId === entry.productId)) current.push(entry);
+      writeRaw(current);
+      window.VAAnalytics?.addToCart?.(entry.productId, entry.quantity || 1);
+      toast.classList.remove("is-visible");
+      toast.hidden = true;
+      renderCartPage();
+    };
+    const button = toast.querySelector("button");
+    button.onclick = restore;
+    undoTimer = window.setTimeout(() => {
+      toast.classList.remove("is-visible");
+      window.setTimeout(() => { toast.hidden = true; }, 180);
+    }, 6500);
   }
 
   function initCartItemControls() {
     const itemsList = document.getElementById("cartItemsList");
     if (!itemsList) return;
 
-    itemsList.addEventListener("click", (e) => {
-      const row = e.target.closest("[data-cart-item]");
+    itemsList.addEventListener("click", (event) => {
+      const row = event.target.closest("[data-cart-item]");
       if (!row) return;
       const id = row.getAttribute("data-cart-item");
 
-      if (e.target.closest(".cart-qty-minus")) {
+      if (event.target.closest(".cart-qty-minus")) {
         const input = row.querySelector(".cart-qty-input");
-        const newQty = clamp(parseInt(input.value, 10) - 1);
-        updateQty(id, newQty);
+        updateQty(id, clamp(parseInt(input.value, 10) - 1));
         renderCartPage();
-      } else if (e.target.closest(".cart-qty-plus")) {
+      } else if (event.target.closest(".cart-qty-plus")) {
         const input = row.querySelector(".cart-qty-input");
-        const newQty = clamp(parseInt(input.value, 10) + 1);
-        updateQty(id, newQty);
+        updateQty(id, clamp(parseInt(input.value, 10) + 1));
         renderCartPage();
-      } else if (e.target.closest(".cart-item__remove")) {
+      } else if (event.target.closest(".cart-item__remove")) {
+        const entry = readRaw().find((item) => item.productId === id);
+        const info = getItemInfo(id);
         remove(id);
         renderCartPage();
+        showUndoRemoval(entry, info?.name);
       }
     });
 
-    itemsList.addEventListener("change", (e) => {
-      if (!e.target.classList.contains("cart-qty-input")) return;
-      const row = e.target.closest("[data-cart-item]");
-      const id = row.getAttribute("data-cart-item");
-      updateQty(id, clamp(parseInt(e.target.value, 10)));
+    itemsList.addEventListener("change", (event) => {
+      if (!event.target.classList.contains("cart-qty-input")) return;
+      const row = event.target.closest("[data-cart-item]");
+      updateQty(row.getAttribute("data-cart-item"), clamp(parseInt(event.target.value, 10)));
       renderCartPage();
+    });
+
+    document.getElementById("quickAddDiscovery18")?.addEventListener("click", () => {
+      add("discovery-18", 1);
+      renderCartPage();
+      window.VAHome?.showToast("Повний Discovery Set додано до кошика");
     });
   }
 
@@ -313,599 +432,438 @@
     const warehouseList = document.getElementById("npWarehouseSuggestions");
     const cityHint = document.getElementById("npCityHint");
     const warehouseHint = document.getElementById("npWarehouseHint");
-    const backdrop = document.getElementById("npSheetBackdrop");
     if (!city || !warehouse || !cityRef || !warehouseRef || !cityList || !warehouseList) return;
 
-    // Keep mobile suggestion sheets outside form/fieldset stacking contexts.
-    // Installed iOS/Chrome PWAs can otherwise paint the backdrop above the
-    // fixed sheet, leaving the user on a darkened screen with no visible list.
-    const listAnchors = new Map();
-    [cityList, warehouseList].forEach((list) => {
-      const anchor = document.createComment(`np-sheet-anchor-${list.id}`);
-      list.parentNode?.insertBefore(anchor, list);
-      listAnchors.set(list, anchor);
-    });
-    if (backdrop && backdrop.parentNode !== document.body) document.body.appendChild(backdrop);
-
-    const CITY_CACHE_KEY = "vahome_np_city_cache_v2";
-    const WAREHOUSE_CACHE_KEY = "vahome_np_warehouse_cache_v2";
+    const CITY_CACHE_KEY = "vahome_np_city_cache_v3";
+    const WAREHOUSE_CACHE_KEY = "vahome_np_warehouse_cache_v3";
     const CITY_TTL = 24 * 60 * 60 * 1000;
     const WAREHOUSE_TTL = 6 * 60 * 60 * 1000;
+    const POPULAR_CITIES = ["Київ", "Харків", "Дніпро", "Одеса", "Львів", "Полтава"];
+    const apiReady = Boolean(window.VAHomeSupabase?.configured?.() && typeof window.VAHomeSupabase.novaPoshtaLookup === "function");
     let cityTimer = 0;
     let warehouseTimer = 0;
     let cityController = null;
     let warehouseController = null;
-    let activeList = null;
-    let activeInput = null;
     let warehouseItems = [];
-    let warehouseLoading = false;
-
-    // RC27: full-screen mobile picker. Search and results live in one dedicated view,
-    // instead of competing with Safari's keyboard inside the checkout layout.
-    const mobilePicker = document.createElement("section");
-    mobilePicker.className = "np-mobile-picker";
-    mobilePicker.hidden = true;
-    mobilePicker.setAttribute("role", "dialog");
-    mobilePicker.setAttribute("aria-modal", "true");
-    mobilePicker.setAttribute("aria-label", "Вибір доставки Нової пошти");
-    mobilePicker.innerHTML = `
-      <div class="np-mobile-picker__bar">
-        <button type="button" class="np-mobile-picker__back" aria-label="Повернутися">‹</button>
-        <strong class="np-mobile-picker__title">Місто</strong>
-        <button type="button" class="np-mobile-picker__done" aria-label="Закрити">×</button>
-      </div>
-      <div class="np-mobile-picker__search-wrap">
-        <span aria-hidden="true" class="np-mobile-picker__search-icon"></span>
-        <input class="np-mobile-picker__search" type="search" autocomplete="off" enterkeyhint="search" />
-      </div>
-      <div class="np-mobile-picker__results"></div>`;
-    document.body.appendChild(mobilePicker);
-    const mobilePickerTitle = mobilePicker.querySelector(".np-mobile-picker__title");
-    const mobilePickerSearch = mobilePicker.querySelector(".np-mobile-picker__search");
-    const mobilePickerResults = mobilePicker.querySelector(".np-mobile-picker__results");
-    let mobilePickerInput = null;
-    let mobilePickerList = null;
-
-    const isMobilePickerMode = () => window.matchMedia("(max-width: 900px), (pointer: coarse)").matches;
-    const syncMobileReadonly = () => {
-      const mobile = isMobilePickerMode();
-      [city, warehouse].forEach((input) => {
-        if (!input) return;
-        input.setAttribute("aria-haspopup", "dialog");
-        if (mobile) input.setAttribute("readonly", "readonly");
-        else input.removeAttribute("readonly");
-      });
-    };
-    syncMobileReadonly();
-
-    const closeMobilePicker = () => {
-      if (mobilePicker.hidden) return;
-      mobilePicker.hidden = true;
-      document.body.classList.remove("np-mobile-picker-open");
-      if (mobilePickerList) {
-        mobilePickerList.hidden = true;
-        const anchor = listAnchors.get(mobilePickerList);
-        if (anchor?.parentNode) anchor.parentNode.insertBefore(mobilePickerList, anchor.nextSibling);
-      }
-      if (mobilePickerInput) mobilePickerInput.setAttribute("aria-expanded", "false");
-      mobilePickerInput = null;
-      mobilePickerList = null;
-      mobilePickerResults.innerHTML = "";
-    };
-
-    const openMobilePicker = (input, list) => {
-      mobilePickerInput = input;
-      mobilePickerList = list;
-      mobilePickerTitle.textContent = input === city ? "Місто" : "Відділення або поштомат";
-      mobilePickerSearch.placeholder = input === city ? "Назва міста або поштовий індекс" : "Номер або частина адреси";
-      mobilePickerSearch.value = input.value || "";
-      mobilePickerResults.innerHTML = "";
-      mobilePickerResults.appendChild(list);
-      list.hidden = false;
-      input.setAttribute("aria-expanded", "true");
-      mobilePicker.hidden = false;
-      document.body.classList.add("np-mobile-picker-open");
-      requestAnimationFrame(() => {
-        mobilePickerSearch.focus({ preventScroll: true });
-        mobilePickerSearch.setSelectionRange(mobilePickerSearch.value.length, mobilePickerSearch.value.length);
-      });
-    };
-
-    mobilePickerSearch.addEventListener("input", () => {
-      if (!mobilePickerInput) return;
-      mobilePickerInput.value = mobilePickerSearch.value;
-      mobilePickerInput.dispatchEvent(new Event("input", { bubbles: true }));
-    });
-    mobilePicker.querySelector(".np-mobile-picker__back")?.addEventListener("click", closeMobilePicker);
-    mobilePicker.querySelector(".np-mobile-picker__done")?.addEventListener("click", closeMobilePicker);
-    mobilePicker.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") closeMobilePicker();
-    });
+    let pickerMode = "";
+    let requestSerial = 0;
 
     form.dataset.npCityManual = "false";
     form.dataset.npWarehouseManual = "false";
 
-    const escapeText = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
     const normalize = (value) => String(value || "").toLocaleLowerCase("uk-UA").replace(/[’']/g, "'").replace(/\s+/g, " ").trim();
-    const readCache = (key) => {
-      try { return JSON.parse(localStorage.getItem(key) || "{}"); } catch (_) { return {}; }
-    };
-    const writeCache = (key, value) => {
-      try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) {}
-    };
+    const escapeText = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
+    const readCache = (key) => { try { return JSON.parse(localStorage.getItem(key) || "{}"); } catch (_) { return {}; } };
     const getCached = (key, id, ttl) => {
-      const cache = readCache(key);
-      const entry = cache[id];
+      const entry = readCache(key)[id];
       return entry && Date.now() - Number(entry.savedAt || 0) < ttl && Array.isArray(entry.items) ? entry.items : null;
     };
-    const putCached = (key, id, items, maxEntries) => {
-      const cache = readCache(key);
-      cache[id] = { savedAt: Date.now(), items };
-      Object.keys(cache).sort((a, b) => Number(cache[b]?.savedAt || 0) - Number(cache[a]?.savedAt || 0)).slice(maxEntries).forEach((oldKey) => delete cache[oldKey]);
-      writeCache(key, cache);
+    const putCached = (key, id, items, maxEntries = 20) => {
+      try {
+        const cache = readCache(key);
+        cache[id] = { savedAt: Date.now(), items };
+        Object.keys(cache).sort((a, b) => Number(cache[b]?.savedAt || 0) - Number(cache[a]?.savedAt || 0)).slice(maxEntries).forEach((oldKey) => delete cache[oldKey]);
+        localStorage.setItem(key, JSON.stringify(cache));
+      } catch (_) {}
     };
-    const isMobileSheet = () => isMobilePickerMode();
-    let sheetViewportRaf = 0;
-    const clearSheetGeometry = (list) => {
-      list.style.removeProperty("--np-sheet-top");
-      list.style.removeProperty("--np-sheet-left");
-      list.style.removeProperty("--np-sheet-width");
-      list.style.removeProperty("--np-sheet-max-height");
-      delete list.dataset.npPlacement;
-    };
-    const syncSheetViewport = () => {
-      window.cancelAnimationFrame(sheetViewportRaf);
-      sheetViewportRaf = window.requestAnimationFrame(() => {
-        const list = activeList;
-        const input = activeInput;
-        if (!isMobileSheet() || !list || list.hidden || !input) {
-          clearSheetGeometry(cityList);
-          clearSheetGeometry(warehouseList);
-          document.body.classList.remove("np-keyboard-open");
-          return;
+    const isMobile = () => window.matchMedia("(max-width: 900px), (pointer: coarse)").matches;
+
+    const picker = document.createElement("section");
+    picker.className = "np-mobile-picker np-mobile-picker--rc29";
+    picker.hidden = true;
+    picker.setAttribute("role", "dialog");
+    picker.setAttribute("aria-modal", "true");
+    picker.innerHTML = `
+      <header class="np-mobile-picker__bar">
+        <button type="button" class="np-mobile-picker__back" aria-label="Повернутися">←</button>
+        <strong class="np-mobile-picker__title">Місто</strong>
+        <span aria-hidden="true"></span>
+      </header>
+      <div class="np-mobile-picker__search-wrap">
+        <span aria-hidden="true" class="np-mobile-picker__search-icon"></span>
+        <input class="np-mobile-picker__search" type="search" autocomplete="off" autocapitalize="sentences" enterkeyhint="search" />
+      </div>
+      <p class="np-mobile-picker__context" hidden></p>
+      <div class="np-mobile-picker__results" role="listbox"></div>`;
+    document.body.appendChild(picker);
+    const pickerTitle = picker.querySelector(".np-mobile-picker__title");
+    const pickerSearch = picker.querySelector(".np-mobile-picker__search");
+    const pickerContext = picker.querySelector(".np-mobile-picker__context");
+    const pickerResults = picker.querySelector(".np-mobile-picker__results");
+
+    const syncReadonly = () => {
+      const mobile = isMobile();
+      [city, warehouse].forEach((input) => {
+        input.setAttribute("aria-haspopup", mobile ? "dialog" : "listbox");
+        if (mobile) {
+          input.readOnly = true;
+          input.setAttribute("inputmode", "none");
+          if (input === city) input.placeholder = "Оберіть місто або населений пункт";
+          else input.placeholder = city.value ? "Оберіть відділення або поштомат" : "Спочатку оберіть місто";
+        } else {
+          input.readOnly = false;
+          input.removeAttribute("inputmode");
+          if (input === city) input.placeholder = "Введіть щонайменше 3 літери";
+          else input.placeholder = city.value ? "Номер або частина адреси" : "Спочатку оберіть місто";
         }
-
-        const vv = window.visualViewport;
-        const visualTop = Math.max(0, Number(vv?.offsetTop || 0));
-        const visualHeight = Math.max(240, Number(vv?.height || window.innerHeight || 0));
-        const visualBottom = visualTop + visualHeight;
-        const keyboardInset = Math.max(0, Number(window.innerHeight || visualHeight) - visualHeight);
-        const keyboardOpen = keyboardInset > 110;
-        const rect = input.getBoundingClientRect();
-        const gap = 8;
-        const edge = 10;
-        const minUsefulHeight = 150;
-        const desiredHeight = input === warehouse ? 360 : 330;
-        const spaceBelow = Math.max(0, visualBottom - rect.bottom - gap - edge);
-        const spaceAbove = Math.max(0, rect.top - visualTop - gap - edge);
-        const placeBelow = spaceBelow >= minUsefulHeight || spaceBelow >= spaceAbove;
-        const available = placeBelow ? spaceBelow : spaceAbove;
-        const maxHeight = Math.max(132, Math.min(desiredHeight, available));
-        let top = placeBelow ? rect.bottom + gap : rect.top - gap - maxHeight;
-        top = Math.max(visualTop + edge, Math.min(top, visualBottom - maxHeight - edge));
-
-        const viewportWidth = Math.max(320, Number(vv?.width || window.innerWidth || 0));
-        const visualLeft = Math.max(0, Number(vv?.offsetLeft || 0));
-        const horizontalEdge = 12;
-        const width = Math.min(Math.max(rect.width, 280), viewportWidth - horizontalEdge * 2);
-        const minLeft = visualLeft + horizontalEdge;
-        const maxLeft = visualLeft + viewportWidth - width - horizontalEdge;
-        const left = Math.max(minLeft, Math.min(rect.left, maxLeft));
-
-        list.style.setProperty("--np-sheet-top", `${Math.round(top)}px`);
-        list.style.setProperty("--np-sheet-left", `${Math.round(left)}px`);
-        list.style.setProperty("--np-sheet-width", `${Math.round(width)}px`);
-        list.style.setProperty("--np-sheet-max-height", `${Math.round(maxHeight)}px`);
-        list.dataset.npPlacement = placeBelow ? "below" : "above";
-        document.body.classList.toggle("np-keyboard-open", keyboardOpen);
       });
+      if (!mobile && !picker.hidden) closePicker();
     };
-    const portalList = (list) => {
-      if (list.parentNode !== document.body) document.body.appendChild(list);
+
+    const renderState = (container, text, actions = []) => {
+      container.innerHTML = `<div class="np-picker-state"><p>${escapeText(text)}</p>${actions.length ? `<div class="np-picker-state__actions">${actions.map((action, index) => `<button type="button" data-state-action="${index}">${escapeText(action.label)}</button>`).join("")}</div>` : ""}</div>`;
+      actions.forEach((action, index) => container.querySelector(`[data-state-action="${index}"]`)?.addEventListener("click", action.run));
     };
-    const restoreList = (list) => {
-      const anchor = listAnchors.get(list);
-      if (anchor?.parentNode && list.parentNode !== anchor.parentNode) {
-        anchor.parentNode.insertBefore(list, anchor.nextSibling);
-      }
+
+    const renderPopular = () => {
+      pickerResults.innerHTML = `<div class="np-picker-popular"><p>Популярні міста</p>${POPULAR_CITIES.map((name) => `<button type="button" data-popular-city="${escapeText(name)}">${escapeText(name)}</button>`).join("")}</div>`;
+      pickerResults.querySelectorAll("[data-popular-city]").forEach((button) => button.addEventListener("click", () => {
+        pickerSearch.value = button.dataset.popularCity || "";
+        searchCities(pickerSearch.value, true);
+      }));
     };
-    const syncBackdrop = () => {
-      const mobile = isMobileSheet();
-      if (!mobile) {
-        restoreList(cityList);
-        restoreList(warehouseList);
-      }
-      if (backdrop) backdrop.hidden = true;
-      document.body.classList.remove("np-sheet-open", "np-keyboard-open");
-      clearSheetGeometry(cityList);
-      clearSheetGeometry(warehouseList);
+
+    const renderMobileItems = (items, mode) => {
+      if (!items.length) return renderState(pickerResults, mode === "city" ? "Населених пунктів не знайдено." : "Відділень не знайдено.", [
+        { label: "Використати введене вручну", run: mode === "city" ? useManualCity : useManualWarehouse }
+      ]);
+      pickerResults.innerHTML = `<div class="np-picker-list">${items.map((item, index) => `<button type="button" class="np-picker-result" data-result-index="${index}"><span>${escapeText(item.label)}</span>${mode === "city" ? `<small>${escapeText(item.area || item.city || "")}</small>` : `<small>${escapeText(item.shortAddress || "")}</small>`}</button>`).join("")}</div>`;
+      pickerResults.querySelectorAll("[data-result-index]").forEach((button) => button.addEventListener("click", () => {
+        const item = items[Number(button.dataset.resultIndex)];
+        if (mode === "city") selectCity(item);
+        else selectWarehouse(item);
+      }));
     };
-    const openList = (input, list) => {
+
+    const renderDesktopItems = (input, list, items, title, onSelect) => {
+      list.innerHTML = `<div class="np-suggestions__head"><strong>${escapeText(title)}</strong><button type="button" class="np-suggestions__close" aria-label="Закрити">×</button></div><div class="np-suggestions__body">${items.map((item, index) => `<button type="button" class="np-suggestion" data-result-index="${index}"><span>${escapeText(item.label)}</span>${item.shortAddress || item.area ? `<small>${escapeText(item.shortAddress || item.area || "")}</small>` : ""}</button>`).join("")}</div>`;
       list.hidden = false;
       input.setAttribute("aria-expanded", "true");
-      activeList = list;
-      activeInput = input;
-      if (isMobileSheet()) openMobilePicker(input, list);
-      else restoreList(list);
-      syncBackdrop();
+      list.querySelector(".np-suggestions__close")?.addEventListener("click", () => closeDesktop(input, list));
+      list.querySelectorAll("[data-result-index]").forEach((button) => button.addEventListener("click", () => onSelect(items[Number(button.dataset.resultIndex)])));
     };
-    const closeList = (input, list) => {
+
+    const showDesktopState = (input, list, text, actions = []) => {
+      list.innerHTML = `<div class="np-suggestions__head"><strong>Пошук</strong><button type="button" class="np-suggestions__close" aria-label="Закрити">×</button></div><div class="np-suggestions__state"><p>${escapeText(text)}</p>${actions.length ? `<div class="np-suggestions__actions">${actions.map((action, index) => `<button type="button" data-state-action="${index}">${escapeText(action.label)}</button>`).join("")}</div>` : ""}</div>`;
+      list.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+      list.querySelector(".np-suggestions__close")?.addEventListener("click", () => closeDesktop(input, list));
+      actions.forEach((action, index) => list.querySelector(`[data-state-action="${index}"]`)?.addEventListener("click", action.run));
+    };
+
+    function closeDesktop(input, list) {
       list.hidden = true;
       input.setAttribute("aria-expanded", "false");
-      if (mobilePickerList === list) closeMobilePicker();
-      if (activeList === list) {
-        activeList = null;
-        activeInput = null;
+    }
+    const closeDesktopLists = () => { closeDesktop(city, cityList); closeDesktop(warehouse, warehouseList); };
+
+    function openPicker(mode) {
+      if (!isMobile()) return;
+      if (!picker.hidden && pickerMode === mode) return;
+      pickerMode = mode;
+      picker.hidden = false;
+      document.body.classList.add("np-mobile-picker-open");
+      pickerTitle.textContent = mode === "city" ? "Місто" : "Відділення або поштомат";
+      pickerSearch.placeholder = mode === "city" ? "Назва міста або поштовий індекс" : "Номер або частина адреси";
+      pickerSearch.value = "";
+      pickerContext.hidden = true;
+      pickerContext.textContent = "";
+      if (mode === "city") {
+        if (city.value && cityRef.value) {
+          pickerContext.textContent = `Обрано: ${city.value}`;
+          pickerContext.hidden = false;
+        }
+        renderPopular();
+      } else if (!city.value) {
+        renderState(pickerResults, "Спочатку оберіть місто.");
+      } else {
+        pickerContext.textContent = city.value;
+        pickerContext.hidden = false;
+        if (warehouseItems.length) renderMobileItems(warehouseItems.slice(0, 80), "warehouse");
+        else loadWarehouses("");
       }
-      restoreList(list);
-      syncBackdrop();
-    };
-    const closeAll = () => {
-      closeList(city, cityList);
-      closeList(warehouse, warehouseList);
-    };
-    const setLoading = (input, loading) => input.closest(".np-combobox")?.classList.toggle("is-loading", loading);
-    const showState = (input, list, text, actions = []) => {
-      list.innerHTML = `<div class="np-suggestions__head"><strong>${input === city ? "Оберіть населений пункт" : "Оберіть відділення"}</strong><button aria-label="Закрити" class="np-suggestions__close" type="button">×</button></div><div class="np-suggestions__state">${escapeText(text)}${actions.length ? `<div class="np-suggestions__actions">${actions.map((item, index) => `<button type="button" data-np-action="${index}">${escapeText(item.label)}</button>`).join("")}</div>` : ""}</div>`;
-      list.querySelector(".np-suggestions__close")?.addEventListener("click", () => closeList(input, list));
-      actions.forEach((item, index) => list.querySelector(`[data-np-action="${index}"]`)?.addEventListener("click", item.run));
-      openList(input, list);
-    };
-    const renderItems = (input, list, items, select, title) => {
-      if (!items.length) {
-        showState(input, list, "Нічого не знайдено. Уточніть назву або адресу.");
-        return;
-      }
-      list.innerHTML = `<div class="np-suggestions__head"><strong>${escapeText(title)}</strong><button aria-label="Закрити" class="np-suggestions__close" type="button">×</button></div><div class="np-suggestions__body">${items.map((item, index) => `<button class="np-suggestion" type="button" role="option" data-index="${index}"><span>${escapeText(item.label)}</span><small>${escapeText(item.shortAddress || item.area || "")}</small></button>`).join("")}</div>`;
-      list.querySelector(".np-suggestions__close")?.addEventListener("click", () => closeList(input, list));
-      list.querySelectorAll("[data-index]").forEach((button) => button.addEventListener("click", () => select(items[Number(button.dataset.index)])));
-      const body = list.querySelector(".np-suggestions__body");
-      if (body) body.scrollTop = 0;
-      list.scrollTop = 0;
-      openList(input, list);
-      window.requestAnimationFrame(() => {
-        if (body) body.scrollTop = 0;
-        list.scrollTop = 0;
-        syncSheetViewport();
-      });
-    };
-    const activateManualCity = () => {
+      requestAnimationFrame(() => pickerSearch.focus({ preventScroll: true }));
+    }
+
+    function closePicker() {
+      picker.hidden = true;
+      pickerMode = "";
+      document.body.classList.remove("np-mobile-picker-open");
+      pickerSearch.blur();
+    }
+
+    function useManualCity() {
+      const value = String(pickerSearch.value || city.value || "").trim();
+      if (value.length < 2) return renderState(pickerResults, "Введіть назву населеного пункту.");
+      city.value = value;
       cityRef.value = "";
       if (settlementRef) settlementRef.value = "";
-      warehouseRef.value = "";
       form.dataset.npCityManual = "true";
-      form.dataset.npWarehouseManual = "true";
+      warehouse.value = "";
+      warehouseRef.value = "";
       warehouse.disabled = false;
-      warehouse.placeholder = "Наприклад: відділення №12 або поштомат №1234";
-      if (cityHint) cityHint.textContent = "Місто буде передано менеджеру так, як ви його ввели.";
-      if (warehouseHint) warehouseHint.textContent = "Введіть номер або адресу відділення вручну.";
-      closeAll();
-    };
-    const activateManualWarehouse = () => {
+      form.dataset.npWarehouseManual = "true";
+      if (cityHint) cityHint.textContent = "Населений пункт введено вручну.";
+      if (warehouseHint) warehouseHint.textContent = "Введіть відділення або поштомат вручну.";
+      closePicker();
+      city.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+
+    function useManualWarehouse() {
+      const value = String(pickerSearch.value || warehouse.value || "").trim();
+      if (value.length < 3) return renderState(pickerResults, "Введіть номер або адресу відділення.");
+      warehouse.value = value;
       warehouseRef.value = "";
       form.dataset.npWarehouseManual = "true";
-      if (warehouseHint) warehouseHint.textContent = "Відділення буде передано менеджеру так, як ви його ввели.";
-      closeList(warehouse, warehouseList);
-      warehouse.focus({ preventScroll: true });
-    };
-    const cityError = (query) => showState(city, cityList, "Не вдалося завантажити населені пункти.", [
-      { label: "Повторити", run: () => searchCities(query, true) },
-      { label: "Ввести вручну", run: activateManualCity }
-    ]);
-    const warehouseError = (query) => showState(warehouse, warehouseList, "Не вдалося оновити список відділень.", [
-      { label: "Повторити", run: () => searchWarehousesRemote(query, true) },
-      { label: "Ввести вручну", run: activateManualWarehouse }
-    ]);
+      if (warehouseHint) warehouseHint.textContent = "Відділення введено вручну.";
+      closePicker();
+      warehouse.dispatchEvent(new Event("change", { bubbles: true }));
+    }
 
-    async function searchCities(query, force = false) {
-      const cacheId = normalize(query);
-      const cached = !force ? getCached(CITY_CACHE_KEY, cacheId, CITY_TTL) : null;
+    function selectCity(item) {
+      if (!item) return;
+      city.value = item.label || item.city || "";
+      cityRef.value = item.ref || "";
+      if (settlementRef) settlementRef.value = item.settlementRef || "";
+      form.dataset.npCityManual = "false";
+      warehouse.value = "";
+      warehouseRef.value = "";
+      warehouseItems = [];
+      warehouse.disabled = false;
+      form.dataset.npWarehouseManual = "false";
+      warehouse.placeholder = "Номер або частина адреси";
+      if (cityHint) cityHint.textContent = "Населений пункт обрано.";
+      if (warehouseHint) warehouseHint.textContent = "Завантажуємо актуальні відділення…";
+      closePicker();
+      closeDesktop(city, cityList);
+      city.dispatchEvent(new Event("change", { bubbles: true }));
+      loadWarehouses("");
+    }
+
+    function selectWarehouse(item, automatic = false) {
+      if (!item) return;
+      warehouse.value = item.label || item.shortAddress || "";
+      warehouseRef.value = item.ref || "";
+      form.dataset.npWarehouseManual = "false";
+      if (warehouseHint) warehouseHint.textContent = automatic
+        ? (normalize(item.label).includes("поштомат") ? "Єдиний доступний поштомат обрано автоматично." : "Єдине доступне відділення обрано автоматично.")
+        : "Відділення обрано.";
+      closePicker();
+      closeDesktop(warehouse, warehouseList);
+      warehouse.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+
+    async function searchCities(query, forceMobile = false) {
+      const value = String(query || "").trim();
+      if (value.length < 3) {
+        if (isMobile() || forceMobile) {
+          if (!value) renderPopular();
+          else renderState(pickerResults, `Ще ${3 - value.length} ${value.length === 2 ? "літера" : "літери"} для пошуку.`);
+        } else closeDesktop(city, cityList);
+        return;
+      }
+      if (!apiReady) {
+        const action = [{ label: "Використати введене вручну", run: useManualCity }];
+        if (isMobile()) renderState(pickerResults, "Пошук Нової пошти тимчасово недоступний.", action);
+        else showDesktopState(city, cityList, "Пошук Нової пошти тимчасово недоступний.", action);
+        return;
+      }
+      const cacheId = normalize(value);
+      const cached = getCached(CITY_CACHE_KEY, cacheId, CITY_TTL);
       if (cached) {
-        renderItems(city, cityList, cached, selectCity, "Знайдені населені пункти");
+        if (isMobile()) renderMobileItems(cached, "city");
+        else renderDesktopItems(city, cityList, cached, "Знайдені населені пункти", selectCity);
         return;
       }
       cityController?.abort();
       cityController = new AbortController();
-      setLoading(city, true);
-      if (cityList.hidden) showState(city, cityList, "Шукаємо населений пункт…");
+      const serial = ++requestSerial;
+      if (isMobile()) renderState(pickerResults, "Шукаємо населені пункти…");
+      else showDesktopState(city, cityList, "Шукаємо населені пункти…");
       try {
-        const items = await window.VAHomeSupabase.novaPoshtaLookup({ action: "cities", query }, { signal: cityController.signal });
-        putCached(CITY_CACHE_KEY, cacheId, items, 24);
-        if (normalize(city.value) !== cacheId) return;
-        renderItems(city, cityList, items, selectCity, "Знайдені населені пункти");
+        const items = await window.VAHomeSupabase.novaPoshtaLookup({ action: "cities", query: value }, { signal: cityController.signal });
+        if (serial !== requestSerial) return;
+        putCached(CITY_CACHE_KEY, cacheId, items, 30);
+        if (isMobile()) renderMobileItems(items, "city");
+        else renderDesktopItems(city, cityList, items, "Знайдені населені пункти", selectCity);
       } catch (error) {
-        if (error?.name !== "AbortError") cityError(query);
-      } finally {
-        setLoading(city, false);
+        if (error?.name === "AbortError") return;
+        const actions = [
+          { label: "Повторити", run: () => searchCities(value, true) },
+          { label: "Використати введене вручну", run: useManualCity }
+        ];
+        if (isMobile()) renderState(pickerResults, "Не вдалося завантажити міста.", actions);
+        else showDesktopState(city, cityList, "Не вдалося завантажити міста.", actions);
       }
     }
 
-    function applyPreloadedWarehouses(items, requestedCityRef) {
-      if (cityRef.value !== requestedCityRef || form.elements.deliveryMethod?.value === "nova_poshta_courier") return false;
-      warehouseItems = Array.isArray(items) ? items : [];
-
-      if (warehouseItems.length === 1) {
-        const onlyWarehouse = warehouseItems[0];
-        const isPostomat = normalize(`${onlyWarehouse.type || ""} ${onlyWarehouse.label || ""}`).includes("поштомат");
-        selectWarehouse(onlyWarehouse, { automatic: true, isPostomat });
-        return true;
+    const warehouseScore = (item, query) => {
+      const needle = normalize(query);
+      if (!needle) return 0;
+      const number = normalize(item.number || "").replace(/^№/, "");
+      const label = normalize(item.label || "");
+      const address = normalize(item.shortAddress || "");
+      const numeric = /^\d+$/.test(needle);
+      if (numeric) {
+        if (number === needle) return 0;
+        if (number.startsWith(needle)) return 1;
+        if (number.includes(needle)) return 2;
+        if (label.includes(needle)) return 3;
+        if (address.includes(needle)) return 4;
+        return 99;
       }
+      if (label.startsWith(needle) || address.startsWith(needle)) return 0;
+      if (label.includes(needle)) return 1;
+      if (address.includes(needle)) return 2;
+      return 99;
+    };
 
-      if (warehouseHint) {
-        warehouseHint.textContent = warehouseItems.length
-          ? "Список готовий — введіть номер або частину адреси."
-          : "Відділення не знайдено — спробуйте пошук або введіть дані вручну.";
-      }
-      return false;
+    function localWarehouseMatches(query) {
+      return warehouseItems.map((item, index) => ({ item, index, score: warehouseScore(item, query) }))
+        .filter((entry) => !query || entry.score < 99)
+        .sort((a, b) => a.score - b.score || a.index - b.index)
+        .slice(0, 80)
+        .map((entry) => entry.item);
     }
 
-    async function preloadWarehouses(force = false) {
-      if (!cityRef.value || form.elements.deliveryMethod?.value === "nova_poshta_courier") return;
-      const requestedCityRef = cityRef.value;
-      const cacheId = requestedCityRef;
-      const cached = !force ? getCached(WAREHOUSE_CACHE_KEY, cacheId, WAREHOUSE_TTL) : null;
-      if (cached) {
-        warehouseLoading = false;
-        setLoading(warehouse, false);
-        applyPreloadedWarehouses(cached, requestedCityRef);
+    async function loadWarehouses(query = "") {
+      if (form.elements.deliveryMethod?.value === "nova_poshta_courier") return;
+      if (!cityRef.value) {
+        if (form.dataset.npCityManual === "true") {
+          if (isMobile()) renderState(pickerResults, "Введіть відділення вручну.", [{ label: "Використати введене", run: useManualWarehouse }]);
+          return;
+        }
+        if (isMobile()) renderState(pickerResults, "Спочатку оберіть місто.");
+        else showDesktopState(warehouse, warehouseList, "Спочатку оберіть місто.");
         return;
       }
-      warehouseController?.abort();
-      const controller = new AbortController();
-      warehouseController = controller;
-      warehouseLoading = true;
-      setLoading(warehouse, true);
-      if (warehouseHint) warehouseHint.textContent = "Завантажуємо актуальний список відділень…";
-      try {
-        const items = await window.VAHomeSupabase.novaPoshtaLookup({ action: "warehouses", city_ref: requestedCityRef, query: "" }, { signal: controller.signal });
-        if (cityRef.value !== requestedCityRef || form.elements.deliveryMethod?.value === "nova_poshta_courier") return;
-        putCached(WAREHOUSE_CACHE_KEY, cacheId, items, 8);
-        applyPreloadedWarehouses(items, requestedCityRef);
-      } catch (error) {
-        if (error?.name !== "AbortError" && cityRef.value === requestedCityRef && warehouseHint) {
-          warehouseHint.textContent = "Введіть номер або адресу — пошук спробує завантажити дані ще раз.";
-        }
-      } finally {
-        if (warehouseController === controller) {
-          warehouseLoading = false;
-          setLoading(warehouse, false);
-        }
+      const cacheId = `${cityRef.value}:${normalize(query)}`;
+      const cached = getCached(WAREHOUSE_CACHE_KEY, cacheId, WAREHOUSE_TTL);
+      if (cached) {
+        if (!query) warehouseItems = cached;
+        showWarehouseResults(query, cached);
+        return;
       }
-    }
-
-    async function searchWarehousesRemote(query, force = false) {
-      if (!cityRef.value) return;
       warehouseController?.abort();
       warehouseController = new AbortController();
-      setLoading(warehouse, true);
+      if (isMobile()) renderState(pickerResults, "Завантажуємо відділення…");
+      else showDesktopState(warehouse, warehouseList, "Завантажуємо відділення…");
       try {
         const items = await window.VAHomeSupabase.novaPoshtaLookup({ action: "warehouses", city_ref: cityRef.value, query }, { signal: warehouseController.signal });
-        const merged = [...warehouseItems, ...items].filter((item, index, all) => item.ref && all.findIndex((entry) => entry.ref === item.ref) === index);
-        warehouseItems = merged.slice(0, 300);
-        putCached(WAREHOUSE_CACHE_KEY, cityRef.value, warehouseItems, 8);
-        if (normalize(warehouse.value) !== normalize(query)) return;
-        renderWarehouseMatches(query);
-      } catch (error) {
-        if (error?.name !== "AbortError") warehouseError(query);
-      } finally {
-        setLoading(warehouse, false);
-      }
-    }
-
-    function selectCity(item) {
-      city.value = item.label;
-      cityRef.value = item.ref;
-      if (settlementRef) settlementRef.value = item.settlementRef || "";
-      warehouse.value = "";
-      warehouseRef.value = "";
-      warehouse.disabled = false;
-      warehouse.placeholder = "Номер або частина адреси";
-      form.dataset.npCityManual = "false";
-      form.dataset.npWarehouseManual = "false";
-      if (cityHint) cityHint.textContent = "Населений пункт вибрано.";
-      closeList(city, cityList);
-      if (isMobileSheet()) { closeMobilePicker(); city.blur(); }
-      preloadWarehouses();
-      city.dispatchEvent(new Event("change", { bubbles: true }));
-    }
-
-    function selectWarehouse(item, { automatic = false, isPostomat = false } = {}) {
-      warehouse.value = item.label;
-      warehouseRef.value = item.ref;
-      form.dataset.npWarehouseManual = "false";
-      if (warehouseHint) {
-        warehouseHint.textContent = automatic
-          ? (isPostomat ? "Єдиний доступний поштомат обрано автоматично." : "Єдине доступне відділення обрано автоматично.")
-          : "Відділення вибрано.";
-      }
-      closeList(warehouse, warehouseList);
-      if (isMobileSheet()) { closeMobilePicker(); warehouse.blur(); }
-      warehouse.dispatchEvent(new Event("change", { bubbles: true }));
-    }
-
-    function renderWarehouseMatches(query) {
-      const needle = normalize(query);
-      const numericNeedle = /^\d+$/.test(needle);
-      const scoreMatch = (item) => {
-        if (!needle) return 0;
-        const number = normalize(item.number || "").replace(/^№/, "");
-        const label = normalize(item.label || "");
-        const address = normalize(item.shortAddress || "");
-        if (numericNeedle) {
-          if (number === needle) return 0;
-          if (number.startsWith(needle)) return 1;
-          if (label.startsWith(`відділення №${needle}`) || label.startsWith(`поштомат \"нова пошта\" №${needle}`)) return 2;
-          if (number.includes(needle)) return 3;
-          if (label.includes(needle)) return 4;
-          if (address.includes(needle)) return 5;
-          return 99;
+        putCached(WAREHOUSE_CACHE_KEY, cacheId, items, 20);
+        if (!query) warehouseItems = items;
+        else {
+          const merged = new Map(warehouseItems.map((item) => [item.ref, item]));
+          items.forEach((item) => merged.set(item.ref, item));
+          warehouseItems = [...merged.values()];
         }
-        if (label.startsWith(needle)) return 0;
-        if (address.startsWith(needle)) return 1;
-        if (label.includes(needle)) return 2;
-        if (address.includes(needle)) return 3;
-        return 99;
-      };
-      const matches = warehouseItems
-        .map((item, index) => ({ item, index, score: scoreMatch(item) }))
-        .filter((entry) => !needle || entry.score < 99)
-        .sort((a, b) => a.score - b.score || a.index - b.index)
-        .slice(0, 40)
-        .map((entry) => entry.item);
-      if (matches.length) {
-        renderItems(warehouse, warehouseList, matches, selectWarehouse, needle ? "Знайдені відділення" : "Оберіть відділення");
-      } else if (warehouseLoading) {
-        showState(warehouse, warehouseList, "Оновлюємо список відділень…");
-      } else if (needle.length >= 2) {
-        showState(warehouse, warehouseList, "Шукаємо точний збіг…", [{ label: "Ввести вручну", run: activateManualWarehouse }]);
+        if (!query && items.length === 1) {
+          selectWarehouse(items[0], true);
+          return;
+        }
+        showWarehouseResults(query, query ? localWarehouseMatches(query) : items);
+        if (warehouseHint && items.length !== 1) warehouseHint.textContent = "Оберіть відділення або поштомат зі списку.";
+      } catch (error) {
+        if (error?.name === "AbortError") return;
+        const actions = [
+          { label: "Повторити", run: () => loadWarehouses(query) },
+          { label: "Ввести вручну", run: useManualWarehouse }
+        ];
+        if (isMobile()) renderState(pickerResults, "Не вдалося завантажити відділення.", actions);
+        else showDesktopState(warehouse, warehouseList, "Не вдалося завантажити відділення.", actions);
       }
     }
+
+    function showWarehouseResults(query, items) {
+      const matches = query ? items.filter((item) => warehouseScore(item, query) < 99).sort((a, b) => warehouseScore(a, query) - warehouseScore(b, query)).slice(0, 80) : items.slice(0, 80);
+      if (isMobile()) renderMobileItems(matches, "warehouse");
+      else if (matches.length) renderDesktopItems(warehouse, warehouseList, matches, query ? "Знайдені відділення" : "Оберіть відділення", selectWarehouse);
+      else showDesktopState(warehouse, warehouseList, "Відділень не знайдено.", [{ label: "Ввести вручну", run: useManualWarehouse }]);
+    }
+
+    pickerSearch.addEventListener("input", () => {
+      const query = pickerSearch.value.trim();
+      if (pickerMode === "city") {
+        clearTimeout(cityTimer);
+        cityTimer = window.setTimeout(() => searchCities(query, true), 240);
+      } else if (pickerMode === "warehouse") {
+        clearTimeout(warehouseTimer);
+        if (form.dataset.npCityManual === "true") {
+          renderState(pickerResults, query.length >= 3 ? "Можна використати введене відділення." : "Введіть номер або адресу відділення.", query.length >= 3 ? [{ label: "Використати введене", run: useManualWarehouse }] : []);
+          return;
+        }
+        const local = localWarehouseMatches(query);
+        renderMobileItems(local, "warehouse");
+        if (query.length >= 2 && local.length < 4) warehouseTimer = window.setTimeout(() => loadWarehouses(query), 260);
+      }
+    });
+
+    picker.querySelector(".np-mobile-picker__back")?.addEventListener("click", closePicker);
+    picker.addEventListener("keydown", (event) => { if (event.key === "Escape") closePicker(); });
 
     city.addEventListener("input", () => {
+      if (isMobile()) return;
       clearTimeout(cityTimer);
-      cityController?.abort();
-      if (form.dataset.npCityManual === "true") {
-        cityRef.value = "";
-        if (settlementRef) settlementRef.value = "";
-        warehouse.disabled = false;
-        closeList(city, cityList);
-        return;
-      }
       cityRef.value = "";
       if (settlementRef) settlementRef.value = "";
-      warehouseRef.value = "";
       warehouse.value = "";
+      warehouseRef.value = "";
       warehouseItems = [];
       warehouse.disabled = true;
       form.dataset.npCityManual = "false";
       form.dataset.npWarehouseManual = "false";
       const query = city.value.trim();
-      if (query.length < 3) {
-        const message = query.length ? `Ще ${3 - query.length} ${query.length === 2 ? "літера" : "літери"} для пошуку.` : "Введіть щонайменше 3 літери для пошуку.";
-        if (cityHint) cityHint.textContent = query.length ? `Ще ${3 - query.length} ${query.length === 2 ? "літера" : "літери"} для пошуку.` : "Пошук почнеться після 3 літер.";
-        if (isMobileSheet() && !mobilePicker.hidden) showState(city, cityList, message);
-        else closeList(city, cityList);
-        return;
-      }
-      if (cityHint) cityHint.textContent = "Оберіть населений пункт зі списку.";
-      cityTimer = window.setTimeout(() => searchCities(query), 220);
+      if (cityHint) cityHint.textContent = query.length < 3 ? "Пошук почнеться після 3 літер." : "Оберіть населений пункт зі списку.";
+      cityTimer = window.setTimeout(() => searchCities(query), 240);
     });
-
-    const launchCityPicker = () => {
-      if (!isMobileSheet() || form.dataset.npCityManual === "true") return false;
-      if (!mobilePicker.hidden && mobilePickerInput === city) return true;
-      openMobilePicker(city, cityList);
-      const query = city.value.trim();
-      if (!query) showState(city, cityList, "Введіть щонайменше 3 літери для пошуку.");
-      else if (query.length < 3) showState(city, cityList, `Ще ${3 - query.length} ${query.length === 2 ? "літера" : "літери"} для пошуку.`);
-      else if (!cityRef.value) searchCities(query);
-      else searchCities(query);
-      return true;
-    };
-
-    city.addEventListener("focus", () => {
-      if (launchCityPicker()) return;
-      if (form.dataset.npCityManual === "true") return;
-      const query = city.value.trim();
-      if (!cityRef.value && query.length >= 3) searchCities(query);
-    });
-    city.addEventListener("pointerdown", (event) => {
-      if (!isMobileSheet() || form.dataset.npCityManual === "true") return;
-      event.preventDefault();
-      launchCityPicker();
-    }, { passive: false });
-    city.addEventListener("click", (event) => {
-      if (!isMobileSheet() || form.dataset.npCityManual === "true") return;
-      event.preventDefault();
-      launchCityPicker();
-    });
+    city.addEventListener("focus", () => { if (!isMobile() && city.value.trim().length >= 3 && !cityRef.value) searchCities(city.value.trim()); });
+    city.addEventListener("click", (event) => { if (isMobile()) { event.preventDefault(); openPicker("city"); } });
+    city.addEventListener("pointerup", (event) => { if (isMobile()) { event.preventDefault(); openPicker("city"); } }, { passive: false });
 
     warehouse.addEventListener("input", () => {
-      clearTimeout(warehouseTimer);
-      warehouseController?.abort();
+      if (isMobile()) return;
       warehouseRef.value = "";
-      if (form.dataset.npWarehouseManual === "true") {
-        closeList(warehouse, warehouseList);
-        return;
-      }
       form.dataset.npWarehouseManual = "false";
       const query = warehouse.value.trim();
-      if (form.elements.deliveryMethod?.value === "nova_poshta_courier") return closeList(warehouse, warehouseList);
-      if (!cityRef.value) {
-        if (form.dataset.npCityManual === "true") return;
-        showState(warehouse, warehouseList, "Спочатку оберіть місто зі списку.");
-        return;
-      }
-      renderWarehouseMatches(query);
-      const localCount = warehouseItems.filter((item) => normalize(`${item.number || ""} ${item.label || ""} ${item.shortAddress || ""}`).includes(normalize(query))).length;
-      if (query.length >= 2 && localCount < 4) warehouseTimer = window.setTimeout(() => searchWarehousesRemote(query), 260);
+      const local = localWarehouseMatches(query);
+      if (local.length) renderDesktopItems(warehouse, warehouseList, local, query ? "Знайдені відділення" : "Оберіть відділення", selectWarehouse);
+      else showDesktopState(warehouse, warehouseList, "Шукаємо точний збіг…");
+      clearTimeout(warehouseTimer);
+      if (query.length >= 2 && local.length < 4) warehouseTimer = window.setTimeout(() => loadWarehouses(query), 260);
     });
-
-    const launchWarehousePicker = () => {
-      if (!isMobileSheet() || warehouse.disabled || form.dataset.npWarehouseManual === "true") return false;
-      if (form.elements.deliveryMethod?.value === "nova_poshta_courier") return false;
-      if (!mobilePicker.hidden && mobilePickerInput === warehouse) return true;
-      openMobilePicker(warehouse, warehouseList);
-      if (!cityRef.value) {
-        if (form.dataset.npCityManual !== "true") showState(warehouse, warehouseList, "Спочатку оберіть місто зі списку.");
-        return true;
-      }
-      if (!warehouseItems.length && !warehouseLoading) preloadWarehouses();
-      renderWarehouseMatches(warehouse.value.trim());
-      return true;
-    };
-
     warehouse.addEventListener("focus", () => {
-      if (launchWarehousePicker()) return;
-      if (form.dataset.npWarehouseManual === "true") return;
-      if (form.elements.deliveryMethod?.value === "nova_poshta_courier") return;
-      if (!cityRef.value) {
-        if (form.dataset.npCityManual !== "true") showState(warehouse, warehouseList, "Спочатку оберіть місто зі списку.");
-        return;
-      }
-      if (!warehouseItems.length && !warehouseLoading) preloadWarehouses();
-      renderWarehouseMatches(warehouse.value.trim());
+      if (isMobile() || warehouse.disabled || form.elements.deliveryMethod?.value === "nova_poshta_courier") return;
+      if (warehouseItems.length) showWarehouseResults(warehouse.value.trim(), localWarehouseMatches(warehouse.value.trim()));
+      else loadWarehouses("");
     });
-    warehouse.addEventListener("pointerdown", (event) => {
-      if (!isMobileSheet() || warehouse.disabled || form.dataset.npWarehouseManual === "true") return;
-      event.preventDefault();
-      launchWarehousePicker();
-    }, { passive: false });
     warehouse.addEventListener("click", (event) => {
-      if (!isMobileSheet() || warehouse.disabled || form.dataset.npWarehouseManual === "true") return;
+      if (!isMobile() || warehouse.disabled || form.elements.deliveryMethod?.value === "nova_poshta_courier") return;
       event.preventDefault();
-      launchWarehousePicker();
+      openPicker("warehouse");
     });
+    warehouse.addEventListener("pointerup", (event) => {
+      if (!isMobile() || warehouse.disabled || form.elements.deliveryMethod?.value === "nova_poshta_courier") return;
+      event.preventDefault();
+      openPicker("warehouse");
+    }, { passive: false });
 
-    [city, warehouse].forEach((input) => input.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") closeAll();
-    }));
     document.addEventListener("click", (event) => {
-      if (event.target.closest(".np-mobile-picker")) return;
-      if (!event.target.closest(".np-combobox") && !event.target.closest(".np-suggestions")) closeAll();
+      if (event.target.closest(".np-combobox") || event.target.closest(".np-suggestions") || event.target.closest(".np-mobile-picker")) return;
+      closeDesktopLists();
     });
-    backdrop?.addEventListener("click", closeAll);
-    window.addEventListener("resize", () => { syncMobileReadonly(); syncBackdrop(); });
-    window.addEventListener("scroll", syncSheetViewport, { passive: true });
-    window.visualViewport?.addEventListener("resize", syncSheetViewport);
-    window.visualViewport?.addEventListener("scroll", syncSheetViewport);
+    window.addEventListener("resize", syncReadonly);
+    syncReadonly();
 
-    const apiReady = window.VAHomeSupabase?.configured?.() && typeof window.VAHomeSupabase.novaPoshtaLookup === "function";
     if (!apiReady) {
-      activateManualCity();
-      if (cityHint) cityHint.textContent = "Введіть місто вручну.";
+      if (cityHint) cityHint.textContent = "Введіть населений пункт вручну.";
+      if (warehouseHint) warehouseHint.textContent = "Введіть відділення або поштомат вручну.";
+      warehouse.disabled = false;
+      form.dataset.npCityManual = "true";
+      form.dataset.npWarehouseManual = "true";
     } else if (cityRef.value) {
       warehouse.disabled = false;
-      warehouse.placeholder = "Номер або частина адреси";
-      preloadWarehouses();
+      loadWarehouses("");
     } else if (city.value.trim()) {
-      // A remembered city name without Nova Poshta refs is not manual input.
-      // Keep search active so tapping the field can verify the city instead of
-      // silently disabling suggestions on Safari/PWA.
-      form.dataset.npCityManual = "false";
-      form.dataset.npWarehouseManual = "false";
-      warehouse.value = "";
-      warehouseRef.value = "";
       warehouse.disabled = true;
       if (cityHint) cityHint.textContent = "Натисніть поле, щоб підтвердити населений пункт.";
     } else {
@@ -940,10 +898,7 @@
         if (radio) radio.checked = selected;
         card.classList.toggle("is-selected", selected);
       });
-      const hint = document.getElementById("deliveryMethodHint");
-      if (hint) hint.textContent = courier
-        ? "Кур’єрська доставка оплачується отримувачем за тарифами Нової пошти."
-        : "Вартість доставки сплачує отримувач за тарифами Нової пошти.";
+      syncShippingCopy(pricingFor(getItems()));
       if (emit) select.dispatchEvent(new Event("change", { bubbles: true }));
     };
 
@@ -966,7 +921,10 @@
       if (!field) return;
       const wrap = field.closest(".form-field");
       let invalid = !field.value || !field.value.trim();
-      if (name === "customerName" && !invalid) invalid = field.value.trim().length < 3;
+      if (name === "customerName" && !invalid) {
+        const parts = field.value.trim().split(/\s+/).filter((part) => part.length >= 2);
+        invalid = parts.length < 2;
+      }
       if (name === "customerCity" && !invalid) invalid = field.value.trim().length < 2;
       if (name === "deliveryDetails" && !invalid) invalid = field.value.trim().length < 3;
       if (name === "courierStreet" && !invalid) invalid = field.value.trim().length < 2;
@@ -1045,6 +1003,8 @@
       courier_house: courier ? house : null,
       courier_apartment: courier ? apartment || null : null,
       payment_method: form.elements.paymentMethod.value,
+      do_not_call: Boolean(form.elements.doNotCall?.checked),
+      promo_code: readAppliedPromoCode() || null,
       customer_comment: form.elements.customerComment ? form.elements.customerComment.value.trim() || null : null,
       items: items.map((item) => ({ id: item.id, quantity: item.quantity, selections: item.selections }))
     };
@@ -1072,6 +1032,7 @@
       INVALID_DELIVERY: "Перевірте місто та дані доставки Нової пошти.",
       DELIVERY_VALIDATION_UNAVAILABLE: "Нова пошта тимчасово не підтвердила дані доставки. Кошик збережено — повторіть спробу трохи пізніше.",
       INVALID_PAYMENT: "Оберіть доступний спосіб оплати.",
+      INVALID_PROMO: "Промокод недійсний для цього замовлення. Перевірте код або приберіть його.",
       INVALID_ITEMS: "У кошику є некоректний товар. Оновіть кошик і повторіть спробу.",
       INVALID_ITEM: "Один із товарів більше недоступний. Оновіть кошик і повторіть спробу.",
       INVALID_DISCOVERY_SELECTION: "Для Discovery Set потрібно обрати рівно 6 різних ароматів.",
@@ -1129,6 +1090,8 @@
         paymentMethod: order.payment_method,
         items: order.items,
         total: order.total_amount,
+        discount: Number(result.discount_amount || order.discount_amount || 0),
+        promoCode: result.promo_code || order.promo_code || null,
         emailStatus: result.email_status,
         paymentDetails: result.payment_details || null,
         createdAt: new Date().toISOString()
@@ -1192,21 +1155,90 @@
       "customerName", "customerPhone", "customerEmail", "customerCity",
       "novaPoshtaCityRef", "novaPoshtaSettlementRef", "deliveryMethod",
       "deliveryDetails", "novaPoshtaWarehouseRef", "courierStreet",
-      "courierHouse", "courierApartment", "paymentMethod", "customerComment"
+      "courierHouse", "courierApartment", "paymentMethod", "doNotCall", "customerComment"
     ];
     let draft = {};
     try { draft = JSON.parse(sessionStorage.getItem(key) || "{}"); } catch (_) { draft = {}; }
     names.forEach((name) => {
       const field = form.elements[name];
-      if (field && draft[name] && (name === "paymentMethod" || name === "deliveryMethod" || !field.value)) field.value = draft[name];
+      if (!field || draft[name] === undefined) return;
+      if (field.type === "checkbox") field.checked = Boolean(draft[name]);
+      else if (name === "paymentMethod" || name === "deliveryMethod" || !field.value) field.value = draft[name];
     });
     const save = () => {
       const next = {};
-      names.forEach((name) => { const field = form.elements[name]; if (field) next[name] = field.value; });
+      names.forEach((name) => {
+        const field = form.elements[name];
+        if (field) next[name] = field.type === "checkbox" ? field.checked : field.value;
+      });
       try { sessionStorage.setItem(key, JSON.stringify(next)); } catch (_) {}
     };
     form.addEventListener("input", save);
     form.addEventListener("change", save);
+  }
+
+  function initPromoCode(form) {
+    const input = document.getElementById("promoCode");
+    const button = document.getElementById("applyPromoCode");
+    const status = document.getElementById("promoStatus");
+    const details = document.getElementById("promoDetails");
+    if (!input || !button || !status) return;
+
+    const showCurrent = () => {
+      const code = readAppliedPromoCode();
+      const pricing = pricingFor(getItems());
+      if (code) input.value = code.toUpperCase();
+      if (pricing.discount) {
+        status.textContent = `Промокод застосовано: −${formatUAH(pricing.discount)}`;
+        status.className = "promo-status is-success";
+        if (details) details.open = true;
+      } else if (code) {
+        writeAppliedPromoCode("");
+        resetCheckoutRequestId();
+        status.textContent = "Промокод діє на повноцінний аромадифузор.";
+        status.className = "promo-status is-error";
+      }
+    };
+
+    const apply = () => {
+      const code = normalizePromoCode(input.value);
+      if (!code) {
+        writeAppliedPromoCode("");
+        resetCheckoutRequestId();
+        status.textContent = "Промокод прибрано.";
+        status.className = "promo-status";
+        renderCartPage();
+        return;
+      }
+      if (code !== PROMO_CODE) {
+        writeAppliedPromoCode("");
+        resetCheckoutRequestId();
+        status.textContent = "Промокод не знайдено.";
+        status.className = "promo-status is-error";
+        renderCartPage();
+        return;
+      }
+      const eligible = getItems().some((item) => !String(item.id || "").startsWith("discovery-"));
+      if (!eligible) {
+        writeAppliedPromoCode("");
+        resetCheckoutRequestId();
+        status.textContent = "Промокод діє на повноцінний аромадифузор.";
+        status.className = "promo-status is-error";
+        renderCartPage();
+        return;
+      }
+      writeAppliedPromoCode(code);
+      resetCheckoutRequestId();
+      status.textContent = `Промокод застосовано: −${formatUAH(PROMO_DISCOUNT)}`;
+      status.className = "promo-status is-success";
+      renderCartPage();
+    };
+
+    button.addEventListener("click", apply);
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") { event.preventDefault(); apply(); }
+    });
+    showCurrent();
   }
 
   function initMobileCheckoutAction() {
@@ -1299,6 +1331,7 @@
     initDeliveryMethod(form);
     initNovaPoshtaCheckout(form);
     initPaymentCards(form);
+    initPromoCode(form);
     initMobileCheckoutAction();
 
     form.addEventListener("submit", (event) => {
@@ -1307,9 +1340,11 @@
     });
 
     form.addEventListener("input", (event) => {
+      resetCheckoutRequestId();
       const field = event.target.closest(".form-field input, .form-field select, .form-field textarea");
       if (field && field.closest(".form-field")) field.closest(".form-field").classList.remove("has-error");
     });
+    form.addEventListener("change", resetCheckoutRequestId);
   }
 
   document.addEventListener("DOMContentLoaded", () => {
