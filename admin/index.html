@@ -10,8 +10,8 @@
 <title>VA HOME Admin</title>
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <link href="../favicon/favicon.ico" rel="icon" sizes="any"/>
-<link href="../css/core-admin.css?v=13.8.8" rel="stylesheet"/><link href="../css/site-admin.css?v=13.8.8" rel="stylesheet"/>
-<meta content="Службова панель керування VA HOME." name="description"/><meta content="13.8.8 · Admin PWA 1.0" name="va-home-release"/>
+<link href="../css/core-admin.css?v=13.8.10" rel="stylesheet"/><link href="../css/site-admin.css?v=13.8.10" rel="stylesheet"/>
+<meta content="Службова панель керування VA HOME." name="description"/><meta content="13.8.10 · Admin PWA 1.0" name="va-home-release"/>
 <link href="/admin/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
 <meta content="#0b0a08" name="msapplication-TileColor"/>
@@ -55,13 +55,13 @@
 <button class="is-active" data-tab="orders" type="button">Замовлення <span id="ordersBadge"></span></button>
 <button data-tab="reviews" type="button">Відгуки <span id="reviewsBadge"></span></button>
 <button data-tab="promos" type="button">Промокоди <span id="promosBadge"></span></button>
+<button data-tab="analytics" type="button">Аналітика</button>
 </nav>
 <section class="admin-tab-panel" id="ordersTab">
-<div class="admin-period-stats" id="periodStats"></div>
-<section aria-labelledby="salesChartTitle" class="admin-chart-card">
-<div class="admin-chart-card__head"><div><p class="eyebrow">Аналітика</p><h2 id="salesChartTitle">Продажі за 30 днів</h2></div><strong id="chartTotal"></strong></div>
-<div aria-label="Графік продажів за останні 30 днів" class="admin-chart" id="salesChart" role="img"></div>
-</section>
+<div class="admin-orders-intro">
+<div><p class="eyebrow">Замовлення</p><h2>Усі замовлення</h2></div>
+<p>Спочатку — робота із замовленнями та статусами. Фінансова аналітика винесена в окремий розділ.</p>
+</div>
 <div class="admin-toolbar">
 <input aria-label="Пошук замовлень" id="orderSearch" placeholder="Номер, ім'я, телефон, email…" type="search"/>
 <select aria-label="Фільтр статусу замовлень" id="orderStatusFilter">
@@ -96,10 +96,21 @@
 <div class="admin-toolbar"><input aria-label="Пошук промокодів" id="promoSearch" placeholder="Код або назва…" type="search"/><select id="promoStatusFilter"><option value="">Усі</option><option value="active">Активні</option><option value="inactive">Вимкнені</option></select></div>
 <div class="admin-list" id="promosList"></div><p class="admin-empty" hidden="" id="promosEmpty">Промокодів ще немає.</p>
 </section>
+<section class="admin-tab-panel" hidden="" id="analyticsTab">
+<div class="admin-analytics-intro">
+<div><p class="eyebrow">Аналітика</p><h2>Продажі та динаміка</h2></div>
+<p>Окремий огляд виручки без змішування з операційною роботою над замовленнями.</p>
+</div>
+<div class="admin-period-stats" id="periodStats"></div>
+<section aria-labelledby="salesChartTitle" class="admin-chart-card">
+<div class="admin-chart-card__head"><div><p class="eyebrow">Останні 30 днів</p><h2 id="salesChartTitle">Динаміка продажів</h2></div><strong id="chartTotal"></strong></div>
+<div aria-label="Графік продажів за останні 30 днів" class="admin-chart" id="salesChart" role="img"></div>
+</section>
+</section>
 </section>
 </main>
 <dialog class="admin-dialog" id="orderDialog">
-<form method="dialog"><button aria-label="Закрити" class="admin-dialog__close" type="button">×</button></form>
+<button aria-label="Закрити замовлення" class="admin-dialog__close" id="orderDialogClose" type="button">×</button>
 <div id="orderDialogContent"></div>
 </dialog>
 
@@ -185,9 +196,9 @@
   </div>
 </dialog>
 <script defer="" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer="" src="../js/config.js?v=13.8.8"></script>
-<script defer="" src="../js/admin.js?v=13.8.8"></script>
-<script defer="" src="../js/motion.js?v=13.8.8"></script>
-<script defer="" src="/admin/pwa.js?v=13.8.8"></script>
+<script defer="" src="../js/config.js?v=13.8.10"></script>
+<script defer="" src="../js/admin.js?v=13.8.10"></script>
+<script defer="" src="../js/motion.js?v=13.8.10"></script>
+<script defer="" src="/admin/pwa.js?v=13.8.10"></script>
 </body>
 </html>
