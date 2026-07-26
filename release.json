@@ -1,13 +1,13 @@
 {
-  "version": "13.8.8",
-  "name": "ADMIN MOBILE DIALOGS FIX",
+  "version": "13.8.11",
+  "name": "IOS REVIEW PHOTO OPTIMISATION",
   "date": "2026-07-26",
-  "base": "13.8.7-EDITORIAL-SOCIAL-PROOF-REVIEWS",
+  "base": "13.8.10-ADMIN-ORDERS-FIRST-ANALYTICS-TAB",
   "changes": [
-    "Locked order and promo dialogs to the exact mobile viewport width",
-    "Added iPhone safe-area spacing so modal headers no longer sit under the status bar",
-    "Rebuilt the promo editor header with a more compact premium hierarchy",
-    "Prevented long order IDs, emails, addresses and item names from causing horizontal overflow",
-    "Added safe sticky footer spacing and synchronized the separate Admin PWA cache to 13.8.8"
+    "Automatically converts and compresses high-resolution iPhone review photos before upload",
+    "Accepts HEIC/HEIF selections where the browser can decode them and sends a normalized JPEG",
+    "Targets approximately 2.5 MB while preserving up to 2200 px on the longest edge",
+    "Shows the selected file size and optimisation state",
+    "Bumped the storefront service-worker cache and review script query to 13.8.11"
   ]
 }

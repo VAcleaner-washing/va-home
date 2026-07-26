@@ -5,7 +5,11 @@
   const MAX_TEXT = 1000;
   const COOLDOWN_MS = 60 * 1000;
   const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
+  const TARGET_PHOTO_BYTES = Math.floor(2.5 * 1024 * 1024);
+  const MAX_SOURCE_PHOTO_BYTES = 35 * 1024 * 1024;
+  const MAX_PHOTO_EDGE = 2200;
   const PHOTO_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+  const PHOTO_SOURCE_EXTENSIONS = /\.(?:jpe?g|png|webp|heic|heif)$/i;
 
   function escapeHTML(value) {
     return String(value || "").replace(/[&<>'"]/g, (char) => ({
@@ -17,6 +21,105 @@
     try {
       return new Intl.DateTimeFormat("uk-UA", { day: "numeric", month: "long", year: "numeric" }).format(new Date(value));
     } catch (_) { return ""; }
+  }
+
+  function formatFileSize(bytes) {
+    const megabytes = Number(bytes || 0) / (1024 * 1024);
+    return `${megabytes < 10 ? megabytes.toFixed(1) : Math.round(megabytes)} МБ`;
+  }
+
+  function looksLikeImage(file) {
+    if (!file) return false;
+    return String(file.type || "").startsWith("image/") || PHOTO_SOURCE_EXTENSIONS.test(String(file.name || ""));
+  }
+
+  function loadPhotoSource(file) {
+    return new Promise((resolve, reject) => {
+      const objectUrl = URL.createObjectURL(file);
+      const image = new Image();
+      image.decoding = "async";
+      image.onload = () => resolve({
+        source: image,
+        width: image.naturalWidth || image.width,
+        height: image.naturalHeight || image.height,
+        cleanup: () => URL.revokeObjectURL(objectUrl)
+      });
+      image.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        reject(new Error("PHOTO_DECODE_FAILED"));
+      };
+      image.src = objectUrl;
+    });
+  }
+
+  function canvasToBlob(canvas, type, quality) {
+    return new Promise((resolve, reject) => {
+      if (typeof canvas.toBlob === "function") {
+        canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("PHOTO_ENCODE_FAILED")), type, quality);
+        return;
+      }
+      try {
+        const dataUrl = canvas.toDataURL(type, quality);
+        const base64 = dataUrl.split(",")[1] || "";
+        const bytes = Uint8Array.from(atob(base64), (char) => char.charCodeAt(0));
+        resolve(new Blob([bytes], { type }));
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  async function optimiseReviewPhoto(file) {
+    if (!looksLikeImage(file)) throw new Error("PHOTO_TYPE_UNSUPPORTED");
+    if (file.size > MAX_SOURCE_PHOTO_BYTES) throw new Error("PHOTO_SOURCE_TOO_LARGE");
+
+    if (PHOTO_TYPES.has(file.type) && file.size <= TARGET_PHOTO_BYTES) {
+      return file;
+    }
+
+    const loaded = await loadPhotoSource(file);
+    try {
+      if (!loaded.width || !loaded.height) throw new Error("PHOTO_DECODE_FAILED");
+      let scale = Math.min(1, MAX_PHOTO_EDGE / Math.max(loaded.width, loaded.height));
+      let width = Math.max(1, Math.round(loaded.width * scale));
+      let height = Math.max(1, Math.round(loaded.height * scale));
+      let bestBlob = null;
+
+      for (let resizePass = 0; resizePass < 4; resizePass += 1) {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext("2d", { alpha: false });
+        if (!context) throw new Error("PHOTO_CANVAS_FAILED");
+        context.fillStyle = "#f5f2ec";
+        context.fillRect(0, 0, width, height);
+        context.drawImage(loaded.source, 0, 0, width, height);
+
+        for (const quality of [0.88, 0.82, 0.76, 0.70, 0.64]) {
+          const blob = await canvasToBlob(canvas, "image/jpeg", quality);
+          bestBlob = blob;
+          if (blob.size <= TARGET_PHOTO_BYTES) {
+            return new File([blob], `${String(file.name || "review-photo").replace(/\.[^.]+$/, "")}.jpg`, {
+              type: "image/jpeg",
+              lastModified: Date.now()
+            });
+          }
+        }
+
+        width = Math.max(960, Math.round(width * 0.82));
+        height = Math.max(960, Math.round(height * 0.82));
+      }
+
+      if (bestBlob && bestBlob.size <= MAX_PHOTO_BYTES) {
+        return new File([bestBlob], `${String(file.name || "review-photo").replace(/\.[^.]+$/, "")}.jpg`, {
+          type: "image/jpeg",
+          lastModified: Date.now()
+        });
+      }
+      throw new Error("PHOTO_STILL_TOO_LARGE");
+    } finally {
+      loaded.cleanup();
+    }
   }
 
   function stars(rating) {
@@ -125,7 +228,15 @@
     const photoNameEl = document.getElementById("reviewPhotoName");
     if (photoInput && photoNameEl) {
       photoInput.addEventListener("change", () => {
-        photoNameEl.textContent = photoInput.files && photoInput.files[0] ? photoInput.files[0].name : "Файл не обрано";
+        const selected = photoInput.files && photoInput.files[0];
+        if (!selected) {
+          photoNameEl.textContent = "Файл не обрано";
+          return;
+        }
+        const optimisationNote = selected.size > TARGET_PHOTO_BYTES || !PHOTO_TYPES.has(selected.type)
+          ? " · оптимізуємо перед надсиланням"
+          : "";
+        photoNameEl.textContent = `${selected.name} · ${formatFileSize(selected.size)}${optimisationNote}`;
       });
     }
     if (textarea && counter) {
@@ -148,26 +259,33 @@
       if (Date.now() - last < COOLDOWN_MS) return setMessage("Відгук уже надіслано. Зачекайте хвилину перед повторною спробою.", "error");
 
       const photo = photoInput?.files?.[0] || null;
-      if (photo && !PHOTO_TYPES.has(photo.type)) return setMessage("Додайте фото у форматі JPG, PNG або WebP.", "error");
-      if (photo && photo.size > MAX_PHOTO_BYTES) return setMessage("Фото має бути не більше 5 МБ.", "error");
+      if (photo && !looksLikeImage(photo)) return setMessage("Оберіть фотографію у форматі JPG, PNG, HEIC або WebP.", "error");
+      if (photo && photo.size > MAX_SOURCE_PHOTO_BYTES) return setMessage("Початкове фото завелике. Оберіть файл до 35 МБ.", "error");
       submit.disabled = true;
-      submit.textContent = "Надсилаємо…";
+      submit.textContent = photo ? "Оптимізуємо фото…" : "Надсилаємо…";
       try {
         let photoData = null;
+        let preparedPhoto = null;
         if (photo) {
+          preparedPhoto = await optimiseReviewPhoto(photo);
+          if (preparedPhoto.size > MAX_PHOTO_BYTES) throw new Error("PHOTO_STILL_TOO_LARGE");
+          submit.textContent = "Надсилаємо…";
           const dataUrl = await new Promise((resolve, reject) => {
-            const reader = new FileReader(); reader.onload = () => resolve(String(reader.result || "")); reader.onerror = reject; reader.readAsDataURL(photo);
+            const reader = new FileReader(); reader.onload = () => resolve(String(reader.result || "")); reader.onerror = reject; reader.readAsDataURL(preparedPhoto);
           });
           photoData = String(dataUrl).split(",")[1] || null;
         }
-        const result = await window.VAHomeSupabase.submitReview({ product_slug: PRODUCT_ID, customer_name: name, rating, review_text: text, photo_data: photoData, photo_type: photo?.type || null });
+        const result = await window.VAHomeSupabase.submitReview({ product_slug: PRODUCT_ID, customer_name: name, rating, review_text: text, photo_data: photoData, photo_type: preparedPhoto?.type || null });
         localStorage.setItem(cooldownKey, String(Date.now()));
         form.reset();
         if (counter) counter.textContent = `0/${MAX_TEXT}`;
         setMessage(result?.verified_purchase ? "Дякуємо! Покупку підтверджено автоматично. Відгук з’явиться після модерації." : "Дякуємо! Відгук отримано й з’явиться на сайті після перевірки.", "success");
       } catch (error) {
-        
-        if (error?.status === 409) setMessage("Ви вже залишили відгук про цей аромат. Після модерації він з’явиться на сайті.", "error");
+        if (["PHOTO_DECODE_FAILED", "PHOTO_ENCODE_FAILED", "PHOTO_CANVAS_FAILED", "PHOTO_STILL_TOO_LARGE"].includes(error?.message)) {
+          setMessage("Не вдалося оптимізувати це фото. Спробуйте інше зображення або зробіть його скриншот.", "error");
+        } else if (error?.message === "PHOTO_SOURCE_TOO_LARGE") {
+          setMessage("Початкове фото завелике. Оберіть файл до 35 МБ.", "error");
+        } else if (error?.status === 409) setMessage("Ви вже залишили відгук про цей аромат. Після модерації він з’явиться на сайті.", "error");
         else if (error?.status === 429) setMessage("Забагато спроб. Зачекайте кілька хвилин.", "error");
         else setMessage("Не вдалося надіслати відгук. Перевірте інтернет і спробуйте ще раз.", "error");
       } finally {
