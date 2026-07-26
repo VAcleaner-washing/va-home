@@ -1,3 +1,13 @@
+# VA HOME — Changelog
+
+## 13.8.2 — Premium Account Rebuild
+- Compact personal account header without the oversized hero banner.
+- Product-first order cards with clear hierarchy, status, amount and actions.
+- Correct expandable order details and Nova Poshta tracking action.
+- Refined current-scent card with the 8–12 week cycle.
+- Responsive desktop and mobile layouts plus skeleton loading.
+- No Supabase, SQL or Edge Function changes.
+
 # VA HOME changelog
 
 ## 13.8.1 — Premium Account Experience

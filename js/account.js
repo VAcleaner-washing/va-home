@@ -7,8 +7,8 @@
   })[char]);
   const money = (value) => `${Number(value || 0).toLocaleString("uk-UA")} грн`;
   const labels = {
-    new: "Нове", awaiting_payment: "Очікує оплату", pending: "Очікує підтвердження", paid: "Оплачено",
-    shipped: "Відправлено", completed: "Виконано", cancelled: "Скасовано"
+    new: "Опрацьовується", awaiting_payment: "Очікує оплату", pending: "Підтверджується", paid: "Оплачено",
+    shipped: "Передано перевізнику", completed: "Доставлено", cancelled: "Скасовано"
   };
   const REQUEST_TIMEOUT_MS = 12000;
   let sb = null;
@@ -59,7 +59,7 @@
     const greeting = $("#accountGreetingName");
     if (greeting) {
       const profileName = String(currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || "").trim().split(/\s+/)[0];
-      greeting.textContent = profileName || "ви";
+      greeting.textContent = profileName ? `, ${profileName}` : "";
     }
     if (currentUser.email_confirmed_at) {
       try { await sb.rpc("claim_customer_orders"); } catch (_) { /* Current orders still load. */ }
@@ -183,7 +183,7 @@
 
   async function loadOrders() {
     const list = $("#accountOrdersList");
-    list.innerHTML = '<p class="account-loading-inline">Завантажуємо замовлення…</p>';
+    list.innerHTML = '<div class="account-orders-skeleton" aria-label="Завантажуємо замовлення"><span></span><span></span></div>';
     let data, error;
     try {
       ({ data, error } = await withTimeout(sb.from("orders")
@@ -201,22 +201,47 @@
     $("#accountOrdersEmpty").hidden = rows.length > 0;
     renderAccountOverview(rows);
     renderCurrentScent(rows);
-    list.innerHTML = rows.map((order) => `<article class="account-order">
-      <div class="account-order__top"><div class="account-order__identity"><p class="account-order__label">Замовлення</p><h2>${esc(order.client_order_id)}</h2><small>${new Date(order.created_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" })}</small>${orderPreviewHtml(order.items)}</div>
-      <div class="account-order__summary"><span class="order-status order-status--${esc(order.status)}">${esc(labels[order.status] || order.status)}</span><strong>${money(order.total_amount)}</strong></div></div>
-      <div class="account-order__quick-actions"><button class="account-order__toggle" type="button" aria-expanded="false">Деталі</button><button class="account-order__repeat" type="button" data-repeat='${esc(JSON.stringify(order.items || []))}'>Повторити</button>${order.tracking_number ? `<a class="account-order__track-button" href="https://novaposhta.ua/tracking/?cargo_number=${encodeURIComponent(order.tracking_number)}" target="_blank" rel="noopener">Відстежити</a>` : ""}</div>
-      <div class="account-order__details" hidden>
-      ${orderProgressHtml(order.status)}
-      <p class="account-order__payment"><strong>Оплата:</strong> ${order.payment_method === "cash_on_delivery" ? "при отриманні" : "на рахунок"}</p>
-      <div class="account-order__items">${orderItems(order.items)}</div>
-      ${order.tracking_number ? `<p class="account-order__tracking">ТТН: <strong>${esc(order.tracking_number)}</strong> <a class="account-order__track-link" href="https://novaposhta.ua/tracking/?cargo_number=${encodeURIComponent(order.tracking_number)}" target="_blank" rel="noopener">Відстежити</a></p>` : ""}
-      </div>
-    </article>`).join("");
+    list.innerHTML = rows.map((order) => {
+      const orderDate = new Date(order.created_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" });
+      const safeId = esc(order.client_order_id);
+      const status = esc(order.status);
+      const repeatData = esc(JSON.stringify(order.items || []));
+      const tracking = order.tracking_number
+        ? `<a class="account-order__track-button" href="https://novaposhta.ua/tracking/?cargo_number=${encodeURIComponent(order.tracking_number)}" target="_blank" rel="noopener">Відстежити</a>`
+        : "";
+      return `<article class="account-order">
+        <div class="account-order__header">
+          <div>
+            <p class="account-order__label">${orderDate}</p>
+            <h3>Замовлення</h3>
+            <small>${safeId}</small>
+          </div>
+          <div class="account-order__summary">
+            <span class="order-status order-status--${status}">${esc(labels[order.status] || order.status)}</span>
+            <strong>${money(order.total_amount)}</strong>
+          </div>
+        </div>
+        <div class="account-order__products">${orderItems(order.items)}</div>
+        <div class="account-order__footer">
+          <button class="account-order__toggle" type="button" aria-expanded="false">Деталі</button>
+          <div class="account-order__actions">
+            <button class="account-order__repeat" type="button" data-repeat='${repeatData}'>Повторити замовлення</button>
+            ${tracking}
+          </div>
+        </div>
+        <div class="account-order__details" hidden>
+          ${orderProgressHtml(order.status)}
+          <p class="account-order__payment"><strong>Оплата:</strong> ${order.payment_method === "cash_on_delivery" ? "при отриманні" : "на рахунок"}</p>
+          ${order.tracking_number ? `<p class="account-order__tracking">ТТН: <strong>${esc(order.tracking_number)}</strong></p>` : ""}
+        </div>
+      </article>`;
+    }).join("");
     document.querySelectorAll(".account-order__toggle").forEach((button) => button.addEventListener("click", () => {
-      const details = button.nextElementSibling;
+      const card = button.closest(".account-order");
+      const details = card?.querySelector(".account-order__details");
       const open = button.getAttribute("aria-expanded") === "true";
       button.setAttribute("aria-expanded", String(!open));
-      button.textContent = open ? "Деталі замовлення" : "Згорнути деталі";
+      button.textContent = open ? "Деталі" : "Згорнути";
       if (details) details.hidden = open;
     }));
     document.querySelectorAll("[data-repeat]").forEach((button) => button.addEventListener("click", () => {

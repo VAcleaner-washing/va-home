@@ -1,12 +1,13 @@
 {
-  "version": "13.8.0",
-  "name": "SAFE TECHNICAL CLEANUP",
+  "version": "13.8.2",
+  "name": "PREMIUM ACCOUNT REBUILD",
   "date": "2026-07-26",
-  "base": "13.7.0-rc.36-DARK-DATETIME-PICKER",
+  "base": "13.8.1-PREMIUM-ACCOUNT-EXPERIENCE",
   "changes": [
-    "Moved historical RC documentation from the public root into docs/releases without deleting it",
-    "Normalized VA HOME CSS and JavaScript cache-busting tags to 13.8.0",
-    "Updated the service worker cache namespace to 13.8.0",
-    "Preserved checkout, Supabase, authentication, Nova Poshta, PWA, SEO and promo-code logic unchanged"
+    "Rebuilt the customer account dashboard with a compact premium header",
+    "Replaced oversized order rows with dense product-first order cards",
+    "Added refined order statuses, actions, tracking and stable expandable details",
+    "Kept Supabase schema, authentication, checkout and server functions unchanged",
+    "Added responsive account layouts and skeleton loading states"
   ]
 }
