@@ -26,9 +26,44 @@ function json(req: Request, body: unknown, status = 200) {
 function clean(value: unknown, max: number) {
   return String(value ?? "").trim().replace(/[\u0000-\u001f\u007f]/g, "").slice(0, max);
 }
+const REVIEW_PHOTO_BUCKET = "review-photos";
 const PHOTO_TYPES: Record<string,string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
 const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 const MAX_PHOTO_BASE64_CHARS = Math.ceil(MAX_PHOTO_BYTES / 3) * 4 + 4;
+let reviewPhotoBucketReady: Promise<void> | null = null;
+
+async function configureReviewPhotoBucket(service: any) {
+  const options = {
+    public: true,
+    fileSizeLimit: MAX_PHOTO_BYTES,
+    allowedMimeTypes: Object.keys(PHOTO_TYPES)
+  };
+  const current = await service.storage.getBucket(REVIEW_PHOTO_BUCKET);
+
+  if (!current.data) {
+    const created = await service.storage.createBucket(REVIEW_PHOTO_BUCKET, options);
+    if (!created.error) return;
+
+    // Another runtime may have created the bucket between getBucket and
+    // createBucket. Updating it makes this operation idempotent.
+    const updatedAfterCreate = await service.storage.updateBucket(REVIEW_PHOTO_BUCKET, options);
+    if (updatedAfterCreate.error) throw updatedAfterCreate.error;
+    return;
+  }
+
+  const updated = await service.storage.updateBucket(REVIEW_PHOTO_BUCKET, options);
+  if (updated.error) throw updated.error;
+}
+
+async function ensureReviewPhotoBucket(service: any) {
+  if (!reviewPhotoBucketReady) {
+    reviewPhotoBucketReady = configureReviewPhotoBucket(service).catch((error) => {
+      reviewPhotoBucketReady = null;
+      throw error;
+    });
+  }
+  return reviewPhotoBucketReady;
+}
 async function sha256(value: string) {
   const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
   return Array.from(new Uint8Array(bytes)).map(byte => byte.toString(16).padStart(2, "0")).join("");
@@ -54,7 +89,10 @@ Deno.serve(async req => {
     if (!Number.isInteger(rating) || rating < 1 || rating > 5) return json(req, { error: "INVALID_RATING" }, 400);
     if (photoData && (!PHOTO_TYPES[photoType] || photoData.length > MAX_PHOTO_BASE64_CHARS || !/^[A-Za-z0-9+/=]+$/.test(photoData))) return json(req, { error: "INVALID_PHOTO" }, 400);
 
-    const service = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    if (!serviceRoleKey || !supabaseUrl) return json(req, { error: "SERVICE_NOT_CONFIGURED" }, 503);
+    const service = createClient(supabaseUrl, serviceRoleKey);
     const bearer = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
     let user: { id: string; email?: string; emailConfirmed?: boolean } | null = null;
     if (bearer && bearer !== Deno.env.get("SUPABASE_ANON_KEY")) {
@@ -66,8 +104,9 @@ Deno.serve(async req => {
       };
     }
 
-    const rateLimitSecret = Deno.env.get("REVIEW_RATE_LIMIT_SECRET");
-    if (!rateLimitSecret) return json(req, { error: "SERVICE_NOT_CONFIGURED" }, 503);
+    // A dedicated secret is preferred, but the service-role key is a safe
+    // server-only fallback so review submission cannot break after a deploy.
+    const rateLimitSecret = Deno.env.get("REVIEW_RATE_LIMIT_SECRET") || serviceRoleKey;
     const forwarded = req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
     const fingerprint = await sha256(`${rateLimitSecret}:${forwarded}`);
     const since = new Date(Date.now() - 5 * 60 * 1000).toISOString();
@@ -111,9 +150,33 @@ Deno.serve(async req => {
         return json(req, { error: "INVALID_PHOTO" }, 400);
       }
       photoPath = `${productSlug}/${crypto.randomUUID()}.${PHOTO_TYPES[photoType]}`;
-      const uploaded = await service.storage.from("review-photos").upload(photoPath, bytes, { contentType: photoType, upsert: false });
-      if (uploaded.error) throw uploaded.error;
-      photoUrl = service.storage.from("review-photos").getPublicUrl(photoPath).data.publicUrl;
+
+      // Keep the runtime aligned with the SQL migration. The preflight is
+      // cached per warm instance and does not expose service credentials.
+      try {
+        await ensureReviewPhotoBucket(service);
+      } catch (bucketError) {
+        // Do not block a correctly configured bucket because the management
+        // preflight had a transient failure. The upload below is authoritative.
+        console.warn("REVIEW_BUCKET_PREFLIGHT_FAILED", bucketError);
+      }
+
+      let uploaded = await service.storage.from(REVIEW_PHOTO_BUCKET).upload(photoPath, bytes, { contentType: photoType, upsert: false });
+      if (uploaded.error) {
+        // Self-heal a missing or stale bucket configuration, then retry once.
+        reviewPhotoBucketReady = null;
+        try {
+          await ensureReviewPhotoBucket(service);
+          uploaded = await service.storage.from(REVIEW_PHOTO_BUCKET).upload(photoPath, bytes, { contentType: photoType, upsert: false });
+        } catch (repairError) {
+          console.error("REVIEW_BUCKET_REPAIR_FAILED", repairError);
+        }
+      }
+      if (uploaded.error) {
+        console.error("REVIEW_PHOTO_UPLOAD_FAILED", uploaded.error);
+        return json(req, { error: "PHOTO_UPLOAD_FAILED" }, 500);
+      }
+      photoUrl = service.storage.from(REVIEW_PHOTO_BUCKET).getPublicUrl(photoPath).data.publicUrl;
     }
 
     const { error } = await service.from("reviews").insert({
@@ -129,7 +192,7 @@ Deno.serve(async req => {
       photo_url: photoUrl
     });
     if (error) {
-      if (photoPath) await service.storage.from("review-photos").remove([photoPath]);
+      if (photoPath) await service.storage.from(REVIEW_PHOTO_BUCKET).remove([photoPath]);
       throw error;
     }
     return json(req, { ok: true, verified_purchase: verifiedPurchase }, 201);

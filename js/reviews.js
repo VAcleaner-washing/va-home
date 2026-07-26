@@ -112,9 +112,13 @@
       renderSummary(rows || []);
       renderList(rows || []);
     } catch (error) {
+      const list = document.getElementById("reviewsList");
       const empty = document.getElementById("reviewsEmpty");
-      if (empty) { empty.hidden = false; empty.textContent = "Не вдалося завантажити відгуки. Спробуйте трохи пізніше."; }
-      
+      const hasStaticFallback = Boolean(list && list.querySelector(".review-card"));
+      if (!hasStaticFallback && empty) {
+        empty.hidden = false;
+        empty.textContent = "Не вдалося оновити відгуки. Спробуйте трохи пізніше.";
+      }
     } finally {
       if (loading) loading.hidden = true;
     }
@@ -235,9 +239,12 @@
           setMessage("Фото має бути не більше 10 МБ. Видаліть його або оберіть інше.", "error");
         } else if (error?.message === "INVALID_PHOTO") {
           setMessage("Не вдалося прочитати фото. Оберіть JPG, PNG або WebP.", "error");
+        } else if (error?.message === "PHOTO_UPLOAD_FAILED") {
+          setMessage("Не вдалося завантажити фото. Спробуйте ще раз або видаліть фото й надішліть відгук без нього.", "error");
         } else if (error?.status === 409) setMessage("Ви вже залишили відгук про цей аромат. Після модерації він з’явиться на сайті.", "error");
         else if (error?.status === 429) setMessage("Забагато спроб. Зачекайте кілька хвилин.", "error");
-        else setMessage("Не вдалося надіслати відгук. Перевірте інтернет і спробуйте ще раз.", "error");
+        else if (error?.status === 502 || error?.status === 503) setMessage("Сервіс відгуків тимчасово недоступний. Спробуйте ще раз за хвилину.", "error");
+        else setMessage("Не вдалося надіслати відгук. Спробуйте ще раз.", "error");
       } finally {
         submit.disabled = false;
         submit.textContent = "Надіслати відгук";

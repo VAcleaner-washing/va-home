@@ -1,12 +1,28 @@
-# VA HOME CHANGELOG
+## 13.8.16 — Final technical polish
+- Синхронізовано cache-busters клієнтського сайту й окремого Admin PWA.
+- Виправлено PWA shortcuts для статичних `.html` маршрутів.
+- Додано CSP на сторінку порівняння.
+- Старі Release Candidate meta-позначки замінено на `13.8.16 Stable`.
+- Уніфіковано формулювання тривалості 8–12 тижнів і рекомендацію перевертати палички лише для короткочасного посилення.
+- Додано HTML-fallback рейтингів і схвалених відгуків, а також `aggregateRating`/`review` у Product JSON-LD.
+- На головній є статичний social-proof fallback, який працює до відповіді Supabase.
+- Оновлено sitemap і додано фінальний автоматизований звіт перевірки.
 
-## 13.8.13 — 10 MB original review photos
+## 13.8.15 — Review photo Storage hardening
+- Added an idempotent migration that creates or repairs the public `review-photos` bucket.
+- Fixed the bucket limit at 10 MB with JPG, PNG and WebP MIME restrictions.
+- `submit-review` now performs a cached bucket preflight and retries one failed upload after repairing Storage settings.
+- Added a specific `PHOTO_UPLOAD_FAILED` response and a useful client message instead of a misleading internet error.
+- Added deployment and verification instructions so Storage, Edge Function and storefront limits remain synchronized.
 
-- Ліміт фото у відгуку збільшено з 5 до 10 МБ.
-- JPG, PNG і WebP до 10 МБ надсилаються без зменшення роздільності та без повторного стиснення.
-- Кнопка видалення фото збережена, тому відгук завжди можна надіслати без зображення.
-- Серверний ліміт Edge Function `submit-review` також збільшено до 10 МБ.
-- Кеш магазину та версію `reviews.js` оновлено до 13.8.13.
+
+## 13.8.14 — Review service reliability
+- Fixed `submit-review` returning 503 after deployment when the optional rate-limit secret was absent.
+- Added a server-only fallback secret without weakening rate limiting.
+- Improved the client error message for temporary 502/503 responses.
+- Kept the 10 MB original-quality photo limit and removable photo selection.
+
+# VA HOME changelog
 
 ## 13.8.12 — Removable review photo
 - Після вибору фото біля назви файлу з’являється окрема дія «Видалити».

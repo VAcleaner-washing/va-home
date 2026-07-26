@@ -38,17 +38,17 @@
     {
       "name": "Каталог ароматів",
       "short_name": "Каталог",
-      "url": "/catalog"
+      "url": "/catalog.html"
     },
     {
       "name": "Підбір аромату",
       "short_name": "Гід ароматів",
-      "url": "/scent-guide"
+      "url": "/scent-guide.html"
     },
     {
       "name": "Discovery Set",
       "short_name": "Discovery Set",
-      "url": "/discovery-set"
+      "url": "/discovery-set.html"
     }
   ]
 }

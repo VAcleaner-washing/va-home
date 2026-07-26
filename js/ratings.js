@@ -1,6 +1,7 @@
 /* VA HOME — approved review ratings on product cards and product pages. */
 (function () {
   "use strict";
+  const STATIC_RATINGS = {"evening-ritual":{"sum":5.0,"count":1,"average":5.0},"forbidden-fruit":{"sum":5.0,"count":1,"average":5.0},"hotel-luxe":{"sum":5.0,"count":1,"average":5.0},"hotel-spring":{"sum":5.0,"count":1,"average":5.0},"mineral-salt":{"sum":5.0,"count":1,"average":5.0},"silent-temple":{"sum":5.0,"count":1,"average":5.0}};
 
   function summarize(rows) {
     const map = {};
@@ -58,7 +59,7 @@
     if (!window.VAHomeSupabase || !window.VAHomeSupabase.configured()) return;
     try {
       const rows = await window.VAHomeSupabase.getApprovedRatings();
-      const map = summarize(rows);
+      const map = { ...STATIC_RATINGS, ...summarize(rows) };
       window.VAHomeRatings = map;
       applyToCards(map);
       applyToProduct(map);
@@ -68,6 +69,11 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", load);
+  document.addEventListener("DOMContentLoaded", () => {
+    window.VAHomeRatings = { ...STATIC_RATINGS };
+    applyToCards(window.VAHomeRatings);
+    applyToProduct(window.VAHomeRatings);
+    load();
+  });
   document.addEventListener("vahome:products-rendered", () => applyToCards(window.VAHomeRatings || {}));
 })();

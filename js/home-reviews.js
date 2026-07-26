@@ -82,13 +82,13 @@
     const proof = document.getElementById("homeReviewsProof");
     const api = window.VAHomeSupabase;
 
-    if (!section || !grid || !prev || !next || !dots || !proof || !api) return;
+    if (!section || !grid || !prev || !next || !dots || !proof) return;
 
     try {
       let allRows = [];
-      if (typeof api.getApprovedReviews === "function") {
+      if (api && typeof api.getApprovedReviews === "function") {
         allRows = await api.getApprovedReviews();
-      } else if (typeof api.getRecentApprovedReviews === "function") {
+      } else if (api && typeof api.getRecentApprovedReviews === "function") {
         allRows = await api.getRecentApprovedReviews(12);
       }
 
@@ -194,7 +194,7 @@
       section.hidden = false;
       requestAnimationFrame(buildDots);
     } catch (error) {
-      section.hidden = true;
+      section.hidden = !grid.querySelector(".home-review-card");
     }
   });
 })();
