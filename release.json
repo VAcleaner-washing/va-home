@@ -11,6 +11,6 @@
     "Ranks an exact Nova Poshta warehouse number first when the customer enters digits",
     "Closes the mobile keyboard after selecting a city or warehouse",
     "Preserves cached search, request cancellation, courier delivery and single-warehouse autoselect",
-    "Bumped live assets and PWA cache to RC26"
+    "Bumped live assets and PWA cache to RC27"
   ]
 }

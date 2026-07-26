@@ -339,6 +339,81 @@
     let activeInput = null;
     let warehouseItems = [];
     let warehouseLoading = false;
+
+    // RC27: full-screen mobile picker. Search and results live in one dedicated view,
+    // instead of competing with Safari's keyboard inside the checkout layout.
+    const mobilePicker = document.createElement("section");
+    mobilePicker.className = "np-mobile-picker";
+    mobilePicker.hidden = true;
+    mobilePicker.innerHTML = `
+      <div class="np-mobile-picker__bar">
+        <button type="button" class="np-mobile-picker__back" aria-label="Повернутися">‹</button>
+        <strong class="np-mobile-picker__title">Місто</strong>
+        <button type="button" class="np-mobile-picker__done" aria-label="Закрити">×</button>
+      </div>
+      <div class="np-mobile-picker__search-wrap">
+        <span aria-hidden="true" class="np-mobile-picker__search-icon"></span>
+        <input class="np-mobile-picker__search" type="search" autocomplete="off" enterkeyhint="search" />
+      </div>
+      <div class="np-mobile-picker__results"></div>`;
+    document.body.appendChild(mobilePicker);
+    const mobilePickerTitle = mobilePicker.querySelector(".np-mobile-picker__title");
+    const mobilePickerSearch = mobilePicker.querySelector(".np-mobile-picker__search");
+    const mobilePickerResults = mobilePicker.querySelector(".np-mobile-picker__results");
+    let mobilePickerInput = null;
+    let mobilePickerList = null;
+
+    const syncMobileReadonly = () => {
+      const mobile = window.matchMedia("(max-width: 760px)").matches;
+      [city, warehouse].forEach((input) => {
+        if (!input) return;
+        if (mobile) input.setAttribute("readonly", "readonly");
+        else input.removeAttribute("readonly");
+      });
+    };
+    syncMobileReadonly();
+
+    const closeMobilePicker = () => {
+      if (mobilePicker.hidden) return;
+      mobilePicker.hidden = true;
+      document.body.classList.remove("np-mobile-picker-open");
+      if (mobilePickerList) {
+        mobilePickerList.hidden = true;
+        const anchor = listAnchors.get(mobilePickerList);
+        if (anchor?.parentNode) anchor.parentNode.insertBefore(mobilePickerList, anchor.nextSibling);
+      }
+      if (mobilePickerInput) mobilePickerInput.setAttribute("aria-expanded", "false");
+      mobilePickerInput = null;
+      mobilePickerList = null;
+      mobilePickerResults.innerHTML = "";
+    };
+
+    const openMobilePicker = (input, list) => {
+      mobilePickerInput = input;
+      mobilePickerList = list;
+      mobilePickerTitle.textContent = input === city ? "Місто" : "Відділення або поштомат";
+      mobilePickerSearch.placeholder = input === city ? "Назва міста або поштовий індекс" : "Номер або частина адреси";
+      mobilePickerSearch.value = input.value || "";
+      mobilePickerResults.innerHTML = "";
+      mobilePickerResults.appendChild(list);
+      list.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+      mobilePicker.hidden = false;
+      document.body.classList.add("np-mobile-picker-open");
+      requestAnimationFrame(() => {
+        mobilePickerSearch.focus({ preventScroll: true });
+        mobilePickerSearch.setSelectionRange(mobilePickerSearch.value.length, mobilePickerSearch.value.length);
+      });
+    };
+
+    mobilePickerSearch.addEventListener("input", () => {
+      if (!mobilePickerInput) return;
+      mobilePickerInput.value = mobilePickerSearch.value;
+      mobilePickerInput.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    mobilePicker.querySelector(".np-mobile-picker__back")?.addEventListener("click", closeMobilePicker);
+    mobilePicker.querySelector(".np-mobile-picker__done")?.addEventListener("click", closeMobilePicker);
+
     form.dataset.npCityManual = "false";
     form.dataset.npWarehouseManual = "false";
 
@@ -428,38 +503,28 @@
     };
     const syncBackdrop = () => {
       const mobile = isMobileSheet();
-      if (activeList && !activeList.hidden) {
-        if (mobile) portalList(activeList);
-        else restoreList(activeList);
-      } else if (!mobile) {
+      if (!mobile) {
         restoreList(cityList);
         restoreList(warehouseList);
       }
-      const open = Boolean(activeList && !activeList.hidden && mobile);
-      if (backdrop) backdrop.hidden = !open;
-      document.body.classList.toggle("np-sheet-open", open);
-      if (open) {
-        syncSheetViewport();
-        window.setTimeout(syncSheetViewport, 80);
-        window.setTimeout(syncSheetViewport, 260);
-      } else {
-        clearSheetGeometry(cityList);
-        clearSheetGeometry(warehouseList);
-        document.body.classList.remove("np-keyboard-open");
-      }
+      if (backdrop) backdrop.hidden = true;
+      document.body.classList.remove("np-sheet-open", "np-keyboard-open");
+      clearSheetGeometry(cityList);
+      clearSheetGeometry(warehouseList);
     };
     const openList = (input, list) => {
-      if (isMobileSheet()) portalList(list);
-      else restoreList(list);
       list.hidden = false;
       input.setAttribute("aria-expanded", "true");
       activeList = list;
       activeInput = input;
+      if (isMobileSheet()) openMobilePicker(input, list);
+      else restoreList(list);
       syncBackdrop();
     };
     const closeList = (input, list) => {
       list.hidden = true;
       input.setAttribute("aria-expanded", "false");
+      if (mobilePickerList === list) closeMobilePicker();
       if (activeList === list) {
         activeList = null;
         activeInput = null;
@@ -631,7 +696,7 @@
       form.dataset.npWarehouseManual = "false";
       if (cityHint) cityHint.textContent = "Населений пункт вибрано.";
       closeList(city, cityList);
-      if (isMobileSheet()) city.blur();
+      if (isMobileSheet()) { closeMobilePicker(); city.blur(); }
       preloadWarehouses();
       city.dispatchEvent(new Event("change", { bubbles: true }));
     }
@@ -646,7 +711,7 @@
           : "Відділення вибрано.";
       }
       closeList(warehouse, warehouseList);
-      if (isMobileSheet()) warehouse.blur();
+      if (isMobileSheet()) { closeMobilePicker(); warehouse.blur(); }
       warehouse.dispatchEvent(new Event("change", { bubbles: true }));
     }
 
@@ -708,8 +773,10 @@
       form.dataset.npWarehouseManual = "false";
       const query = city.value.trim();
       if (query.length < 3) {
+        const message = query.length ? `Ще ${3 - query.length} ${query.length === 2 ? "літера" : "літери"} для пошуку.` : "Введіть щонайменше 3 літери для пошуку.";
         if (cityHint) cityHint.textContent = query.length ? `Ще ${3 - query.length} ${query.length === 2 ? "літера" : "літери"} для пошуку.` : "Пошук почнеться після 3 літер.";
-        closeList(city, cityList);
+        if (isMobileSheet() && !mobilePicker.hidden) showState(city, cityList, message);
+        else closeList(city, cityList);
         return;
       }
       if (cityHint) cityHint.textContent = "Оберіть населений пункт зі списку.";
@@ -718,8 +785,18 @@
 
     city.addEventListener("focus", () => {
       if (form.dataset.npCityManual === "true") return;
+      if (isMobileSheet()) {
+        openMobilePicker(city, cityList);
+        const query = city.value.trim();
+        if (!query) showState(city, cityList, "Введіть щонайменше 3 літери для пошуку.");
+        else if (!cityRef.value && query.length >= 3) searchCities(query);
+        return;
+      }
       const query = city.value.trim();
       if (!cityRef.value && query.length >= 3) searchCities(query);
+    });
+    city.addEventListener("click", () => {
+      if (isMobileSheet() && form.dataset.npCityManual !== "true") city.focus({ preventScroll: true });
     });
 
     warehouse.addEventListener("input", () => {
@@ -746,12 +823,16 @@
     warehouse.addEventListener("focus", () => {
       if (form.dataset.npWarehouseManual === "true") return;
       if (form.elements.deliveryMethod?.value === "nova_poshta_courier") return;
+      if (isMobileSheet()) openMobilePicker(warehouse, warehouseList);
       if (!cityRef.value) {
         if (form.dataset.npCityManual !== "true") showState(warehouse, warehouseList, "Спочатку оберіть місто зі списку.");
         return;
       }
       if (!warehouseItems.length && !warehouseLoading) preloadWarehouses();
       renderWarehouseMatches(warehouse.value.trim());
+    });
+    warehouse.addEventListener("click", () => {
+      if (isMobileSheet() && !warehouse.disabled && form.dataset.npWarehouseManual !== "true") warehouse.focus({ preventScroll: true });
     });
 
     [city, warehouse].forEach((input) => input.addEventListener("keydown", (event) => {
@@ -761,7 +842,7 @@
       if (!event.target.closest(".np-combobox") && !event.target.closest(".np-suggestions")) closeAll();
     });
     backdrop?.addEventListener("click", closeAll);
-    window.addEventListener("resize", syncBackdrop);
+    window.addEventListener("resize", () => { syncMobileReadonly(); syncBackdrop(); });
     window.addEventListener("scroll", syncSheetViewport, { passive: true });
     window.visualViewport?.addEventListener("resize", syncSheetViewport);
     window.visualViewport?.addEventListener("scroll", syncSheetViewport);

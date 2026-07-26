@@ -2574,3 +2574,39 @@ body.np-sheet-open{overflow:hidden}
   .np-suggestions__state{padding:16px 14px 18px!important}
   @keyframes np-popup-in{from{opacity:.35;transform:translateY(6px) scale(.99)}to{opacity:1;transform:none}}
 }
+
+/* VA HOME v13.7.0 RC27 — full-screen Nova Poshta picker on mobile */
+.np-mobile-picker{display:none}
+@media(max-width:760px){
+  body.np-mobile-picker-open{overflow:hidden!important;overscroll-behavior:none}
+  body.np-mobile-picker-open .site-header,
+  body.np-mobile-picker-open .checkout-mobile-bar{visibility:hidden!important}
+  .np-sheet-backdrop{display:none!important}
+  .np-mobile-picker{
+    position:fixed;inset:0;z-index:30000;display:flex;flex-direction:column;
+    width:100%;height:100dvh;min-height:100%;background:#0b0a08;color:var(--text-primary);
+    padding-top:env(safe-area-inset-top);animation:np-fullscreen-in .18s ease-out;
+  }
+  .np-mobile-picker[hidden]{display:none!important}
+  .np-mobile-picker__bar{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;min-height:64px;padding:0 8px;border-bottom:1px solid var(--border-hairline);background:#0f0e0b}
+  .np-mobile-picker__title{text-align:center;font-family:var(--font-display);font-size:24px;font-weight:400;letter-spacing:.01em}
+  .np-mobile-picker__back,.np-mobile-picker__done{display:grid;place-items:center;width:44px;height:44px;border:0;background:transparent;color:var(--text-primary);font:inherit;font-size:34px;line-height:1;cursor:pointer}
+  .np-mobile-picker__done{font-size:26px}
+  .np-mobile-picker__search-wrap{position:relative;margin:16px 18px 10px}
+  .np-mobile-picker__search-icon{position:absolute;left:16px;top:50%;width:18px;height:18px;border:1.5px solid var(--text-secondary);border-radius:50%;transform:translateY(-55%);pointer-events:none}
+  .np-mobile-picker__search-icon::after{content:"";position:absolute;width:8px;height:1.5px;right:-6px;bottom:-3px;background:var(--text-secondary);transform:rotate(45deg);transform-origin:left center}
+  .np-mobile-picker__search{width:100%;height:54px;padding:0 16px 0 50px;border:1px solid var(--border-hairline-strong);border-radius:0;background:#15130f;color:var(--text-primary);font:inherit;font-size:16px;outline:none;-webkit-appearance:none}
+  .np-mobile-picker__search:focus{border-color:var(--color-gold);box-shadow:0 0 0 1px rgba(184,138,75,.2)}
+  .np-mobile-picker__search::placeholder{color:var(--text-secondary)}
+  .np-mobile-picker__results{flex:1;min-height:0;overflow:hidden;padding-bottom:env(safe-area-inset-bottom)}
+  .np-mobile-picker__results .np-suggestions{position:static!important;display:flex!important;flex-direction:column;width:100%!important;height:100%!important;max-height:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;animation:none!important;contain:none!important;overflow:hidden!important}
+  .np-mobile-picker__results .np-suggestions__head{display:none!important}
+  .np-mobile-picker__results .np-suggestions__body{flex:1;max-height:none!important;overflow-y:auto!important;padding-bottom:24px;-webkit-overflow-scrolling:touch}
+  .np-mobile-picker__results .np-suggestion{padding:18px 22px!important;border-bottom:1px solid var(--border-hairline)!important;background:transparent!important}
+  .np-mobile-picker__results .np-suggestion span{font-size:17px;line-height:1.35;white-space:normal;overflow:visible;text-overflow:clip}
+  .np-mobile-picker__results .np-suggestion small{margin-top:5px;font-size:13px;line-height:1.4}
+  .np-mobile-picker__results .np-suggestion:active{background:rgba(184,138,75,.09)!important}
+  .np-mobile-picker__results .np-suggestions__state{padding:24px 22px!important;font-size:14px;line-height:1.55}
+  .np-combobox input[readonly]:not([disabled]){cursor:pointer}
+  @keyframes np-fullscreen-in{from{opacity:.6;transform:translateY(10px)}to{opacity:1;transform:none}}
+}
