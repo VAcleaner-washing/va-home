@@ -10,7 +10,7 @@
 <title>VA HOME Admin</title>
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <link href="../favicon/favicon.ico" rel="icon" sizes="any"/>
-<link href="../css/core-admin.css?v=13.7.0-rc31" rel="stylesheet"/><link href="../css/site-admin.css?v=13.7.0-rc31" rel="stylesheet"/>
+<link href="../css/core-admin.css?v=13.7.0-rc32" rel="stylesheet"/><link href="../css/site-admin.css?v=13.7.0-rc32" rel="stylesheet"/>
 <meta content="Службова панель керування VA HOME." name="description"/><meta content="13.7.0 Release Candidate" name="va-home-release"/>
 <link href="/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
@@ -101,21 +101,91 @@
 <div id="orderDialogContent"></div>
 </dialog>
 
-<dialog class="admin-dialog" id="promoDialog"><form method="dialog"><button aria-label="Закрити" class="admin-dialog__close" type="button">×</button></form><div class="admin-dialog__body"><p class="eyebrow">Промокод</p><h2 id="promoDialogTitle">Новий промокод</h2><form class="admin-promo-form" id="promoForm">
-<input type="hidden" name="id">
-<label>Код<input name="code" maxlength="40" required placeholder="WELCOME100"></label>
-<label>Назва кампанії<input name="name" maxlength="120" placeholder="Вітальна знижка"></label>
-<div class="admin-promo-grid"><label>Тип знижки<select name="discount_type"><option value="fixed">Фіксована сума</option><option value="percent">Відсоток</option><option value="free_shipping">Безкоштовна доставка</option></select></label><label>Значення<input name="discount_value" type="number" min="0" step="1" value="100"></label></div>
-<div class="admin-promo-grid"><label>Мінімальна сума<input name="min_order_amount" type="number" min="0" step="1" value="0"></label><label>Ліміт використань<input name="usage_limit" type="number" min="1" step="1" placeholder="Без ліміту"></label></div>
-<div class="admin-promo-grid"><label>Початок<input name="starts_at" type="datetime-local"></label><label>Завершення<input name="ends_at" type="datetime-local"></label></div>
-<label>Діє на<select name="applies_to"><option value="all">Усі товари</option><option value="fragrances">Повноцінні аромадифузори</option><option value="products">Обрані товари</option></select></label>
-<label>ID товарів через кому<input name="product_ids" placeholder="silk-molecule, mineral-salt"></label>
-<label class="checkout-consent"><input name="active" type="checkbox" checked><span>Промокод активний</span></label>
-<p class="admin-message" id="promoFormMessage"></p><div class="admin-actions__buttons"><button class="btn btn-primary" type="submit">Зберегти</button><button class="btn btn-secondary" id="deletePromoBtn" type="button" hidden>Видалити</button></div></form></div></dialog>
+<dialog class="admin-dialog admin-promo-dialog" id="promoDialog">
+  <div class="admin-promo-shell">
+    <header class="admin-promo-shell__header">
+      <div>
+        <p class="eyebrow">Маркетинг</p>
+        <h2 id="promoDialogTitle">Новий промокод</h2>
+        <p class="admin-promo-shell__subtitle">Створіть знижку, налаштуйте обмеження та термін дії.</p>
+      </div>
+      <button aria-label="Закрити" class="admin-dialog__close admin-promo-close" type="button">×</button>
+    </header>
+
+    <form class="admin-promo-form" id="promoForm">
+      <input type="hidden" name="id">
+
+      <section class="admin-promo-section">
+        <div class="admin-promo-section__head"><span>01</span><div><h3>Основне</h3><p>Код, який вводитиме клієнт, і внутрішня назва кампанії.</p></div></div>
+        <div class="admin-promo-field admin-promo-field--code">
+          <label for="promoCodeInput">Код промокоду</label>
+          <div class="admin-promo-code-control">
+            <input id="promoCodeInput" name="code" maxlength="40" required placeholder="WELCOME100" autocomplete="off" spellcheck="false">
+            <button class="admin-promo-generate" id="generatePromoBtn" type="button">Згенерувати</button>
+          </div>
+          <small>Латиниця, цифри, дефіс або нижнє підкреслення.</small>
+        </div>
+        <label class="admin-promo-field">Назва кампанії<input name="name" maxlength="120" placeholder="Наприклад: Вітальна знижка"></label>
+      </section>
+
+      <section class="admin-promo-section">
+        <div class="admin-promo-section__head"><span>02</span><div><h3>Знижка</h3><p>Оберіть механіку та її значення.</p></div></div>
+        <div class="admin-promo-grid">
+          <label class="admin-promo-field">Тип знижки<select name="discount_type"><option value="fixed">Фіксована сума</option><option value="percent">Відсоток</option><option value="free_shipping">Безкоштовна доставка</option></select></label>
+          <label class="admin-promo-field" id="promoValueField">Значення<div class="admin-promo-value-wrap"><input name="discount_value" type="number" min="0" step="1" value="100"><span id="promoValueSuffix">грн</span></div></label>
+        </div>
+      </section>
+
+      <section class="admin-promo-section">
+        <div class="admin-promo-section__head"><span>03</span><div><h3>Обмеження</h3><p>Мінімальна сума замовлення та доступна кількість використань.</p></div></div>
+        <div class="admin-promo-grid">
+          <label class="admin-promo-field">Мінімальна сума<div class="admin-promo-value-wrap"><input name="min_order_amount" type="number" min="0" step="1" value="0"><span>грн</span></div></label>
+          <div class="admin-promo-field">
+            <label for="promoUsageLimit">Ліміт використань</label>
+            <input id="promoUsageLimit" name="usage_limit" type="number" min="1" step="1" placeholder="Наприклад: 100">
+            <label class="admin-promo-switch"><input id="promoUnlimited" type="checkbox" checked><span class="admin-promo-switch__track"></span><span>Без обмеження</span></label>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-promo-section">
+        <div class="admin-promo-section__head"><span>04</span><div><h3>Термін дії</h3><p>Можна запустити промокод одразу або запланувати кампанію.</p></div></div>
+        <div class="admin-promo-grid">
+          <label class="admin-promo-field">Початок<input name="starts_at" type="datetime-local"></label>
+          <div class="admin-promo-field">
+            <label for="promoEndsAt">Завершення</label>
+            <input id="promoEndsAt" name="ends_at" type="datetime-local">
+            <label class="admin-promo-switch"><input id="promoNoEnd" type="checkbox" checked><span class="admin-promo-switch__track"></span><span>Без дати завершення</span></label>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-promo-section">
+        <div class="admin-promo-section__head"><span>05</span><div><h3>Діє на</h3><p>Визначте товари, до яких застосовується знижка.</p></div></div>
+        <label class="admin-promo-field">Категорія<select name="applies_to"><option value="all">Усі товари</option><option value="fragrances">Повноцінні аромадифузори</option><option value="products">Обрані товари</option></select></label>
+        <label class="admin-promo-field" id="promoProductsField">ID товарів через кому<input name="product_ids" placeholder="silk-molecule, mineral-salt"><small>Поле використовується лише для варіанта «Обрані товари».</small></label>
+      </section>
+
+      <section class="admin-promo-section admin-promo-section--status">
+        <div><h3>Статус</h3><p>Вимкнений код зберігається в адмінці, але не працює на сайті.</p></div>
+        <label class="admin-promo-switch admin-promo-switch--large"><input name="active" type="checkbox" checked><span class="admin-promo-switch__track"></span><span>Промокод активний</span></label>
+      </section>
+
+      <p class="admin-message" id="promoFormMessage"></p>
+      <footer class="admin-promo-footer">
+        <button class="admin-promo-delete" id="deletePromoBtn" type="button" hidden>Видалити</button>
+        <div class="admin-promo-footer__actions">
+          <button class="btn btn-secondary" id="cancelPromoBtn" type="button">Скасувати</button>
+          <button class="btn btn-primary" type="submit"><span id="promoSubmitLabel">Створити промокод</span></button>
+        </div>
+      </footer>
+    </form>
+  </div>
+</dialog>
 <script defer="" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer="" src="../js/config.js?v=13.7.0-rc31"></script>
-<script defer="" src="../js/admin.js?v=13.7.0-rc31"></script>
-<script defer="" src="../js/motion.js?v=13.7.0-rc31"></script>
-<script defer="" src="/js/pwa.js?v=13.7.0-rc31"></script>
+<script defer="" src="../js/config.js?v=13.7.0-rc32"></script>
+<script defer="" src="../js/admin.js?v=13.7.0-rc32"></script>
+<script defer="" src="../js/motion.js?v=13.7.0-rc32"></script>
+<script defer="" src="/js/pwa.js?v=13.7.0-rc32"></script>
 </body>
 </html>
