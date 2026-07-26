@@ -56,6 +56,11 @@
     $("#accountAuth").hidden = true;
     $("#accountDashboard").hidden = false;
     $("#accountEmail").textContent = currentUser.email || "";
+    const greeting = $("#accountGreetingName");
+    if (greeting) {
+      const profileName = String(currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || "").trim().split(/\s+/)[0];
+      greeting.textContent = profileName || "ви";
+    }
     if (currentUser.email_confirmed_at) {
       try { await sb.rpc("claim_customer_orders"); } catch (_) { /* Current orders still load. */ }
     }
@@ -103,26 +108,55 @@
     return `<div class="account-order__preview" aria-label="Товари в замовленні">${thumbs}${extra ? `<span class="account-order__preview-more">+${extra}</span>` : ""}</div>`;
   }
 
-  function renderSignatureScent(orders) {
-    const block = $("#signatureScent");
-    if (!block) return;
-    const counts = new Map();
-    (orders || []).filter((order) => order.status !== "cancelled").forEach((order) => {
-      (Array.isArray(order.items) ? order.items : []).forEach((item) => {
-        if (!item.id || String(item.id).startsWith("discovery-")) return;
-        const quantity = Math.max(1, Number(item.quantity) || 1);
-        const current = counts.get(item.id) || { count: 0, name: item.name || item.id };
-        current.count += quantity;
-        counts.set(item.id, current);
-      });
+  function fullSizeItems(order) {
+    return (Array.isArray(order?.items) ? order.items : []).filter((item) => item?.id && !String(item.id).startsWith("discovery-"));
+  }
+
+  function addOrderItemsToCart(items) {
+    let added = 0;
+    (Array.isArray(items) ? items : []).forEach((item) => {
+      if (!item?.id) return;
+      const selections = Array.isArray(item.selection_ids)
+        ? item.selection_ids
+        : (Array.isArray(item.selections) ? item.selections : []);
+      window.Cart?.add(item.id, Math.max(1, Number(item.quantity) || 1), { selections });
+      added += 1;
     });
-    const winner = [...counts.entries()].sort((a, b) => b[1].count - a[1].count)[0];
-    if (!winner || winner[1].count < 2) { block.hidden = true; return; }
-    const [id, info] = winner;
-    $("#signatureScentName").textContent = info.name;
-    $("#signatureScentImage").src = `images/product-story/${id}/hero.webp`;
-    $("#signatureScentImage").alt = `${info.name} — ваш signature scent`;
-    $("#signatureScentLink").href = `products/${id}.html`;
+    if (!added) throw new Error("EMPTY_ORDER");
+  }
+
+  function renderAccountOverview(orders) {
+    const valid = (orders || []).filter((order) => order.status !== "cancelled");
+    const count = $("#accountOrdersCount");
+    const since = $("#accountMemberSince");
+    if (count) count.textContent = String(valid.length);
+    if (since) {
+      const oldest = [...valid].sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[0];
+      since.textContent = oldest ? new Date(oldest.created_at).toLocaleDateString("uk-UA", { month: "long", year: "numeric" }) : "сьогодні";
+    }
+  }
+
+  function renderCurrentScent(orders) {
+    const block = $("#currentScent");
+    if (!block) return;
+    const recentOrder = (orders || []).find((order) => order.status !== "cancelled" && fullSizeItems(order).length);
+    if (!recentOrder) { block.hidden = true; return; }
+    const item = fullSizeItems(recentOrder)[0];
+    const orderedAt = new Date(recentOrder.created_at);
+    const ageWeeks = Math.max(0, (Date.now() - orderedAt.getTime()) / 604800000);
+    const progress = Math.min(100, Math.round((ageWeeks / 12) * 100));
+    $("#currentScentName").textContent = item.name || item.id;
+    $("#currentScentImage").src = `images/product-story/${item.id}/hero.webp`;
+    $("#currentScentImage").alt = `${item.name || item.id} — ваш аромат зараз`;
+    $("#currentScentDate").textContent = `Замовлено ${orderedAt.toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" })}`;
+    $("#currentScentProgress").style.width = `${progress}%`;
+    $("#currentScentLink").href = `products/${item.id}.html`;
+    const note = $("#currentScentNote");
+    if (ageWeeks >= 12) note.textContent = "Ймовірно, цикл аромату вже завершився. Можливо, настав час оновити атмосферу.";
+    else if (ageWeeks >= 8) note.textContent = "Аромат наближається до завершення рекомендованого циклу. Ви можете повторити його або обрати нову композицію.";
+    else note.textContent = "Тривалість залежить від температури, вентиляції та кількості паличок.";
+    const repeat = $("#currentScentRepeat");
+    repeat.dataset.repeat = JSON.stringify([item]);
     block.hidden = false;
   }
 
@@ -165,17 +199,17 @@
     }
     const rows = data || [];
     $("#accountOrdersEmpty").hidden = rows.length > 0;
-    renderSignatureScent(rows);
+    renderAccountOverview(rows);
+    renderCurrentScent(rows);
     list.innerHTML = rows.map((order) => `<article class="account-order">
-      <div class="account-order__top"><div><h2>${esc(order.client_order_id)}</h2><small>${new Date(order.created_at).toLocaleDateString("uk-UA")}</small>${orderPreviewHtml(order.items)}</div>
+      <div class="account-order__top"><div class="account-order__identity"><p class="account-order__label">Замовлення</p><h2>${esc(order.client_order_id)}</h2><small>${new Date(order.created_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" })}</small>${orderPreviewHtml(order.items)}</div>
       <div class="account-order__summary"><span class="order-status order-status--${esc(order.status)}">${esc(labels[order.status] || order.status)}</span><strong>${money(order.total_amount)}</strong></div></div>
-      <button class="account-order__toggle" type="button" aria-expanded="false">Деталі замовлення</button>
+      <div class="account-order__quick-actions"><button class="account-order__toggle" type="button" aria-expanded="false">Деталі</button><button class="account-order__repeat" type="button" data-repeat='${esc(JSON.stringify(order.items || []))}'>Повторити</button>${order.tracking_number ? `<a class="account-order__track-button" href="https://novaposhta.ua/tracking/?cargo_number=${encodeURIComponent(order.tracking_number)}" target="_blank" rel="noopener">Відстежити</a>` : ""}</div>
       <div class="account-order__details" hidden>
       ${orderProgressHtml(order.status)}
       <p class="account-order__payment"><strong>Оплата:</strong> ${order.payment_method === "cash_on_delivery" ? "при отриманні" : "на рахунок"}</p>
       <div class="account-order__items">${orderItems(order.items)}</div>
       ${order.tracking_number ? `<p class="account-order__tracking">ТТН: <strong>${esc(order.tracking_number)}</strong> <a class="account-order__track-link" href="https://novaposhta.ua/tracking/?cargo_number=${encodeURIComponent(order.tracking_number)}" target="_blank" rel="noopener">Відстежити</a></p>` : ""}
-      <div class="account-order__actions"><button class="btn btn-secondary btn-small" data-repeat='${esc(JSON.stringify(order.items || []))}'>Повторити замовлення</button></div>
       </div>
     </article>`).join("");
     document.querySelectorAll(".account-order__toggle").forEach((button) => button.addEventListener("click", () => {
@@ -187,8 +221,12 @@
     }));
     document.querySelectorAll("[data-repeat]").forEach((button) => button.addEventListener("click", () => {
       try {
-        JSON.parse(button.dataset.repeat).forEach((item) => window.Cart?.add(item.id, Number(item.quantity) || 1, { selections: Array.isArray(item.selection_ids) ? item.selection_ids : [] }));
+        addOrderItemsToCart(JSON.parse(button.dataset.repeat || "[]"));
         window.VAHome?.showToast("Товари додано в кошик");
+        button.classList.add("is-added");
+        const old = button.textContent;
+        button.textContent = "Додано ✓";
+        setTimeout(() => { button.textContent = old; button.classList.remove("is-added"); }, 1800);
       } catch (_) { window.VAHome?.showToast("Не вдалося повторити замовлення"); }
     }));
     document.querySelectorAll(".account-order__review-link").forEach((link) => link.addEventListener("click", () => {

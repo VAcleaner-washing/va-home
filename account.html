@@ -11,9 +11,9 @@
 <title>Мій кабінет — VA HOME</title>
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <link href="favicon/favicon.ico" rel="icon"/>
-<link href="css/core.css?v=13.8.0" rel="stylesheet"/><link href="css/site-account.css?v=13.8.0" rel="stylesheet"/>
-<meta content="Особистий кабінет VA HOME: замовлення, адреси доставки, список бажань і налаштування профілю." name="description"/><meta content="13.7.0 Release Candidate" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
-<script defer="" src="js/hero-font-reveal.js?v=13.8.0"></script>
+<link href="css/core.css?v=13.8.1" rel="stylesheet"/><link href="css/site-account.css?v=13.8.1" rel="stylesheet"/>
+<meta content="Особистий кабінет VA HOME: замовлення, адреси доставки, список бажань і налаштування профілю." name="description"/><meta content="13.8.1 Premium Account" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
+<script defer="" src="js/hero-font-reveal.js?v=13.8.1"></script>
 <link href="/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
 
@@ -66,14 +66,19 @@
 </form>
 </section>
 <section hidden="" id="accountDashboard">
-<div class="account-head">
-<div>
-<p class="eyebrow">VA HOME</p>
-<h2 class="account-dashboard-title">Ваш простір</h2>
-<p id="accountEmail">
-</p>
+<div class="account-head account-head--premium">
+<div class="account-head__copy">
+<p class="eyebrow">ВАШ ПРОСТІР VA HOME</p>
+<h2 class="account-dashboard-title">Вітаємо, <span id="accountGreetingName">ви</span></h2>
+<p id="accountEmail"></p>
 </div>
-<button class="btn btn-secondary" id="accountLogout" type="button">Вийти</button>
+<div class="account-head__aside">
+<div class="account-overview" aria-label="Огляд кабінету">
+<div><strong id="accountOrdersCount">—</strong><span>замовлень</span></div>
+<div><strong id="accountMemberSince">—</strong><span>разом із VA HOME</span></div>
+</div>
+<button class="btn btn-secondary btn-small" id="accountLogout" type="button">Вийти</button>
+</div>
 </div>
 <nav aria-label="Розділи кабінету" class="account-tabs">
 <button class="is-active" data-account-tab="orders" type="button">Замовлення</button>
@@ -81,7 +86,24 @@
 <button data-account-tab="settings" type="button">Профіль</button>
 </nav>
 <section id="accountOrders">
-<div class="signature-scent" hidden="" id="signatureScent"><div class="signature-scent__media"><img alt="" decoding="async" id="signatureScentImage" loading="eager"/></div><div class="signature-scent__copy"><p class="eyebrow">YOUR SIGNATURE SCENT</p><h2 id="signatureScentName">—</h2><p>Аромат, до якого ви повертаєтесь найчастіше. Ваш особистий характер простору.</p><a class="btn btn-secondary btn-small" href="catalog.html" id="signatureScentLink">Замовити ще</a></div></div>
+<div class="account-current-scent" hidden id="currentScent">
+<div class="account-current-scent__media"><img alt="" decoding="async" id="currentScentImage" loading="eager"/></div>
+<div class="account-current-scent__content">
+<p class="eyebrow">ВАШ АРОМАТ ЗАРАЗ</p>
+<h2 id="currentScentName">—</h2>
+<p class="account-current-scent__date" id="currentScentDate"></p>
+<div class="account-cycle" aria-label="Рекомендований цикл використання">
+<div class="account-cycle__line"><span id="currentScentProgress"></span></div>
+<div class="account-cycle__meta"><span>Рекомендований цикл</span><strong>8–12 тижнів</strong></div>
+</div>
+<p class="account-current-scent__note" id="currentScentNote">Тривалість залежить від температури, вентиляції та кількості паличок.</p>
+<div class="account-current-scent__actions">
+<button class="btn btn-primary btn-small" id="currentScentRepeat" type="button">Замовити повторно</button>
+<a class="btn btn-secondary btn-small" href="catalog.html" id="currentScentLink">Переглянути аромат</a>
+</div>
+</div>
+</div>
+<div class="account-section-heading"><div><p class="eyebrow">ІСТОРІЯ</p><h2>Ваші замовлення</h2></div><p>Усі покупки, статуси та відстеження — в одному місці.</p></div>
 <div class="account-list" id="accountOrdersList">
 </div>
 <div class="account-empty" hidden="" id="accountOrdersEmpty"><h3>Ваш перший аромат ще попереду</h3><p>Перегляньте колекції або пройдіть короткий гід, щоб знайти композицію для свого простору.</p><div class="account-empty__actions"><a class="btn btn-primary" href="catalog.html">Перейти в каталог</a><a class="btn btn-secondary" href="scent-guide.html">Підібрати аромат</a></div></div>
@@ -129,17 +151,17 @@
 </div>
 <script defer="" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 </script>
-<script src="js/config.js?v=13.8.0">
+<script src="js/config.js?v=13.8.1">
 </script>
-<script src="js/products.js?v=13.8.0">
+<script src="js/products.js?v=13.8.1">
 </script>
-<script src="js/cart.js?v=13.8.0">
+<script src="js/cart.js?v=13.8.1">
 </script>
-<script defer="" src="js/main.js?v=13.8.0">
+<script defer="" src="js/main.js?v=13.8.1">
 </script>
-<script defer="" src="js/account.js?v=13.8.0">
+<script defer="" src="js/account.js?v=13.8.1">
 </script>
-<script defer="" src="js/motion.js?v=13.8.0"></script>
-<script defer="" src="/js/pwa.js?v=13.8.0"></script>
+<script defer="" src="js/motion.js?v=13.8.1"></script>
+<script defer="" src="/js/pwa.js?v=13.8.1"></script>
 </body>
 </html>
