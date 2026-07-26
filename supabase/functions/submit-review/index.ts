@@ -27,7 +27,7 @@ function clean(value: unknown, max: number) {
   return String(value ?? "").trim().replace(/[\u0000-\u001f\u007f]/g, "").slice(0, max);
 }
 const PHOTO_TYPES: Record<string,string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
-const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
+const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 const MAX_PHOTO_BASE64_CHARS = Math.ceil(MAX_PHOTO_BYTES / 3) * 4 + 4;
 async function sha256(value: string) {
   const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));

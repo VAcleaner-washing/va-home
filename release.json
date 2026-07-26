@@ -1,13 +1,13 @@
 {
-  "version": "13.8.11",
-  "name": "IOS REVIEW PHOTO OPTIMISATION",
+  "version": "13.8.13",
+  "name": "10 MB ORIGINAL REVIEW PHOTOS",
   "date": "2026-07-26",
-  "base": "13.8.10-ADMIN-ORDERS-FIRST-ANALYTICS-TAB",
+  "base": "13.8.12-REMOVABLE-REVIEW-PHOTO",
   "changes": [
-    "Automatically converts and compresses high-resolution iPhone review photos before upload",
-    "Accepts HEIC/HEIF selections where the browser can decode them and sends a normalized JPEG",
-    "Targets approximately 2.5 MB while preserving up to 2200 px on the longest edge",
-    "Shows the selected file size and optimisation state",
-    "Bumped the storefront service-worker cache and review script query to 13.8.11"
+    "Raises the review photo limit from 5 MB to 10 MB",
+    "Sends accepted JPG, PNG and WebP files without resizing or recompression",
+    "Keeps the remove-photo action available before submission",
+    "Updates the submit-review Edge Function limit to 10 MB",
+    "Updates review JS and storefront cache to 13.8.13"
   ]
 }
