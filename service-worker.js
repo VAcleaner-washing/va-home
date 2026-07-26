@@ -1,4 +1,4 @@
-const VERSION = '13.8.17';
+const VERSION = '13.8.18';
 const CACHE_PREFIX = 'vahome-';
 const STATIC_CACHE = `${CACHE_PREFIX}static-${VERSION}`;
 

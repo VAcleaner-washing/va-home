@@ -1,14 +1,15 @@
 {
-  "version": "13.8.17",
-  "name": "AUTHENTICATED CHECKOUT EMAIL PREFILL",
+  "version": "13.8.18",
+  "name": "STABLE PRODUCT GALLERY CROSSFADE",
   "date": "2026-07-26",
-  "base": "13.8.16-FINAL-TECHNICAL-POLISH",
+  "base": "13.8.17-AUTHENTICATED-CHECKOUT-EMAIL-PREFILL",
   "changes": [
-    "Automatically pre-fills checkout email from the active Supabase account session",
-    "Uses the cached account email immediately and verifies the user asynchronously without blocking checkout",
-    "Keeps the email editable and never overwrites it after the customer starts typing",
-    "Persists the prefilled email in the existing checkout draft",
-    "Adds a discreet account-prefill confirmation under the email field",
-    "Synchronizes customer and Admin PWA cache versions to 13.8.17"
+    "Replaces the product gallery source-swap transition with a persistent two-buffer crossfade",
+    "Decodes the next gallery image completely before it becomes visible",
+    "Removes transform/zoom animation during slide changes to prevent compositor blinking",
+    "Keeps both image buffers mounted and never clears the visible layer source during a transition",
+    "Warms the remaining product-story images during idle time for smoother first manual swipe",
+    "Uses a stable edge overlay instead of WebKit masks on touch Apple devices after pinch zoom",
+    "Synchronizes public and Admin PWA cache versions to 13.8.18"
   ]
 }
