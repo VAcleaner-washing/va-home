@@ -1,13 +1,13 @@
 {
-  "version": "13.8.2",
-  "name": "PREMIUM ACCOUNT REBUILD",
+  "version": "13.8.7",
+  "name": "EDITORIAL SOCIAL PROOF REVIEWS",
   "date": "2026-07-26",
-  "base": "13.8.1-PREMIUM-ACCOUNT-EXPERIENCE",
+  "base": "13.8.6-FIVE-EDITORIAL-REVIEWS",
   "changes": [
-    "Rebuilt the customer account dashboard with a compact premium header",
-    "Replaced oversized order rows with dense product-first order cards",
-    "Added refined order statuses, actions, tracking and stable expandable details",
-    "Kept Supabase schema, authentication, checkout and server functions unchanged",
-    "Added responsive account layouts and skeleton loading states"
+    "Rebuilt homepage reviews as a five-item editorial social-proof gallery",
+    "Added real live metrics for approved reviews, average rating and verified purchases",
+    "Prioritized verified photo reviews and varied fragrances without changing Supabase schema",
+    "Added an asymmetric desktop composition and a one-card mobile swipe experience",
+    "Kept review text within the lower third of every image and removed decorative star rows"
   ]
 }
