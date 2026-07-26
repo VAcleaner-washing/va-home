@@ -2577,7 +2577,7 @@ body.np-sheet-open{overflow:hidden}
 
 /* VA HOME v13.7.0 RC27 — full-screen Nova Poshta picker on mobile */
 .np-mobile-picker{display:none}
-@media(max-width:760px){
+@media(max-width:900px), (pointer:coarse){
   body.np-mobile-picker-open{overflow:hidden!important;overscroll-behavior:none}
   body.np-mobile-picker-open .site-header,
   body.np-mobile-picker-open .checkout-mobile-bar{visibility:hidden!important}
@@ -2609,4 +2609,11 @@ body.np-sheet-open{overflow:hidden}
   .np-mobile-picker__results .np-suggestions__state{padding:24px 22px!important;font-size:14px;line-height:1.55}
   .np-combobox input[readonly]:not([disabled]){cursor:pointer}
   @keyframes np-fullscreen-in{from{opacity:.6;transform:translateY(10px)}to{opacity:1;transform:none}}
+}
+
+/* VA HOME v13.7.0 RC28 — reliable full-screen picker launch in mobile Chrome */
+@media(max-width:900px), (pointer:coarse){
+  .np-mobile-picker{height:100vh;height:100svh;height:100dvh}
+  .np-combobox input[readonly]:not([disabled]){cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+  .np-mobile-picker__search{touch-action:manipulation;-webkit-user-select:text;user-select:text}
 }

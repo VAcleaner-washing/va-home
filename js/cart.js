@@ -345,6 +345,9 @@
     const mobilePicker = document.createElement("section");
     mobilePicker.className = "np-mobile-picker";
     mobilePicker.hidden = true;
+    mobilePicker.setAttribute("role", "dialog");
+    mobilePicker.setAttribute("aria-modal", "true");
+    mobilePicker.setAttribute("aria-label", "Вибір доставки Нової пошти");
     mobilePicker.innerHTML = `
       <div class="np-mobile-picker__bar">
         <button type="button" class="np-mobile-picker__back" aria-label="Повернутися">‹</button>
@@ -363,10 +366,12 @@
     let mobilePickerInput = null;
     let mobilePickerList = null;
 
+    const isMobilePickerMode = () => window.matchMedia("(max-width: 900px), (pointer: coarse)").matches;
     const syncMobileReadonly = () => {
-      const mobile = window.matchMedia("(max-width: 760px)").matches;
+      const mobile = isMobilePickerMode();
       [city, warehouse].forEach((input) => {
         if (!input) return;
+        input.setAttribute("aria-haspopup", "dialog");
         if (mobile) input.setAttribute("readonly", "readonly");
         else input.removeAttribute("readonly");
       });
@@ -413,6 +418,9 @@
     });
     mobilePicker.querySelector(".np-mobile-picker__back")?.addEventListener("click", closeMobilePicker);
     mobilePicker.querySelector(".np-mobile-picker__done")?.addEventListener("click", closeMobilePicker);
+    mobilePicker.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeMobilePicker();
+    });
 
     form.dataset.npCityManual = "false";
     form.dataset.npWarehouseManual = "false";
@@ -436,7 +444,7 @@
       Object.keys(cache).sort((a, b) => Number(cache[b]?.savedAt || 0) - Number(cache[a]?.savedAt || 0)).slice(maxEntries).forEach((oldKey) => delete cache[oldKey]);
       writeCache(key, cache);
     };
-    const isMobileSheet = () => window.matchMedia("(max-width: 760px)").matches;
+    const isMobileSheet = () => isMobilePickerMode();
     let sheetViewportRaf = 0;
     const clearSheetGeometry = (list) => {
       list.style.removeProperty("--np-sheet-top");
@@ -783,20 +791,33 @@
       cityTimer = window.setTimeout(() => searchCities(query), 220);
     });
 
+    const launchCityPicker = () => {
+      if (!isMobileSheet() || form.dataset.npCityManual === "true") return false;
+      if (!mobilePicker.hidden && mobilePickerInput === city) return true;
+      openMobilePicker(city, cityList);
+      const query = city.value.trim();
+      if (!query) showState(city, cityList, "Введіть щонайменше 3 літери для пошуку.");
+      else if (query.length < 3) showState(city, cityList, `Ще ${3 - query.length} ${query.length === 2 ? "літера" : "літери"} для пошуку.`);
+      else if (!cityRef.value) searchCities(query);
+      else searchCities(query);
+      return true;
+    };
+
     city.addEventListener("focus", () => {
+      if (launchCityPicker()) return;
       if (form.dataset.npCityManual === "true") return;
-      if (isMobileSheet()) {
-        openMobilePicker(city, cityList);
-        const query = city.value.trim();
-        if (!query) showState(city, cityList, "Введіть щонайменше 3 літери для пошуку.");
-        else if (!cityRef.value && query.length >= 3) searchCities(query);
-        return;
-      }
       const query = city.value.trim();
       if (!cityRef.value && query.length >= 3) searchCities(query);
     });
-    city.addEventListener("click", () => {
-      if (isMobileSheet() && form.dataset.npCityManual !== "true") city.focus({ preventScroll: true });
+    city.addEventListener("pointerdown", (event) => {
+      if (!isMobileSheet() || form.dataset.npCityManual === "true") return;
+      event.preventDefault();
+      launchCityPicker();
+    }, { passive: false });
+    city.addEventListener("click", (event) => {
+      if (!isMobileSheet() || form.dataset.npCityManual === "true") return;
+      event.preventDefault();
+      launchCityPicker();
     });
 
     warehouse.addEventListener("input", () => {
@@ -820,10 +841,24 @@
       if (query.length >= 2 && localCount < 4) warehouseTimer = window.setTimeout(() => searchWarehousesRemote(query), 260);
     });
 
+    const launchWarehousePicker = () => {
+      if (!isMobileSheet() || warehouse.disabled || form.dataset.npWarehouseManual === "true") return false;
+      if (form.elements.deliveryMethod?.value === "nova_poshta_courier") return false;
+      if (!mobilePicker.hidden && mobilePickerInput === warehouse) return true;
+      openMobilePicker(warehouse, warehouseList);
+      if (!cityRef.value) {
+        if (form.dataset.npCityManual !== "true") showState(warehouse, warehouseList, "Спочатку оберіть місто зі списку.");
+        return true;
+      }
+      if (!warehouseItems.length && !warehouseLoading) preloadWarehouses();
+      renderWarehouseMatches(warehouse.value.trim());
+      return true;
+    };
+
     warehouse.addEventListener("focus", () => {
+      if (launchWarehousePicker()) return;
       if (form.dataset.npWarehouseManual === "true") return;
       if (form.elements.deliveryMethod?.value === "nova_poshta_courier") return;
-      if (isMobileSheet()) openMobilePicker(warehouse, warehouseList);
       if (!cityRef.value) {
         if (form.dataset.npCityManual !== "true") showState(warehouse, warehouseList, "Спочатку оберіть місто зі списку.");
         return;
@@ -831,14 +866,22 @@
       if (!warehouseItems.length && !warehouseLoading) preloadWarehouses();
       renderWarehouseMatches(warehouse.value.trim());
     });
-    warehouse.addEventListener("click", () => {
-      if (isMobileSheet() && !warehouse.disabled && form.dataset.npWarehouseManual !== "true") warehouse.focus({ preventScroll: true });
+    warehouse.addEventListener("pointerdown", (event) => {
+      if (!isMobileSheet() || warehouse.disabled || form.dataset.npWarehouseManual === "true") return;
+      event.preventDefault();
+      launchWarehousePicker();
+    }, { passive: false });
+    warehouse.addEventListener("click", (event) => {
+      if (!isMobileSheet() || warehouse.disabled || form.dataset.npWarehouseManual === "true") return;
+      event.preventDefault();
+      launchWarehousePicker();
     });
 
     [city, warehouse].forEach((input) => input.addEventListener("keydown", (event) => {
       if (event.key === "Escape") closeAll();
     }));
     document.addEventListener("click", (event) => {
+      if (event.target.closest(".np-mobile-picker")) return;
       if (!event.target.closest(".np-combobox") && !event.target.closest(".np-suggestions")) closeAll();
     });
     backdrop?.addEventListener("click", closeAll);

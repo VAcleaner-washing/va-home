@@ -1,16 +1,14 @@
 {
-  "version": "13.7.0-rc.26",
-  "name": "NOVA POSHTA ANCHORED RESULTS UX FIX",
+  "version": "13.7.0-rc.28",
+  "name": "MOBILE CHROME FULLSCREEN NOVA POSHTA PICKER FIX",
   "date": "2026-07-26",
-  "base": "13.7.0-rc.25-SAFARI-PWA-CITY-SEARCH-KEYBOARD-FIX",
+  "base": "13.7.0-rc.27-FULLSCREEN-NOVA-POSHTA-PICKER",
   "changes": [
-    "Replaces the oversized mobile bottom sheet with a compact result panel anchored to the active city or warehouse field",
-    "Fits the panel into Safari visualViewport above the keyboard and browser controls, placing it above the field when needed",
-    "Keeps the form and active field visible instead of covering most of checkout",
-    "Resets result scroll position after every search so the first match is never clipped",
-    "Ranks an exact Nova Poshta warehouse number first when the customer enters digits",
-    "Closes the mobile keyboard after selecting a city or warehouse",
-    "Preserves cached search, request cancellation, courier delivery and single-warehouse autoselect",
-    "Bumped live assets and PWA cache to RC27"
+    "Opens the full-screen city and warehouse picker directly from tap/click instead of relying on focus of a readonly field",
+    "Supports mobile Chrome, installed Chrome PWA and narrow touch devices up to 900px",
+    "Prevents document click handling from immediately closing the full-screen picker",
+    "Keeps the search input interactive while the original checkout field remains readonly",
+    "Adds dialog semantics and Escape handling",
+    "Bumps checkout asset URLs and PWA cache to RC28"
   ]
 }
