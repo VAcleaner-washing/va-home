@@ -1,0 +1,80 @@
+{
+  "id": "/admin/",
+  "name": "VA HOME Admin",
+  "short_name": "VA Admin",
+  "description": "Захищена панель керування магазином VA HOME.",
+  "lang": "uk",
+  "dir": "ltr",
+  "start_url": "/admin/",
+  "scope": "/admin/",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+  "orientation": "any",
+  "background_color": "#0b0a08",
+  "theme_color": "#0b0a08",
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "/admin/pwa/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/admin/pwa/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/admin/pwa/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Замовлення",
+      "short_name": "Замовлення",
+      "description": "Відкрити список замовлень",
+      "url": "/admin/#orders",
+      "icons": [
+        {
+          "src": "/admin/pwa/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Відгуки",
+      "short_name": "Відгуки",
+      "description": "Відкрити модерацію відгуків",
+      "url": "/admin/#reviews",
+      "icons": [
+        {
+          "src": "/admin/pwa/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Промокоди",
+      "short_name": "Промокоди",
+      "description": "Керування промокодами",
+      "url": "/admin/#promos",
+      "icons": [
+        {
+          "src": "/admin/pwa/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
