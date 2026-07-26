@@ -1,14 +1,13 @@
 {
-  "version": "13.7.0-rc.29",
-  "name": "CONVERSION CHECKOUT AND UNIFIED NOVA POSHTA PICKER",
+  "version": "13.7.0-rc.30",
+  "name": "IOS FIRST-OPEN NOVA POSHTA VIEWPORT FIX",
   "date": "2026-07-26",
-  "base": "13.7.0-rc.28-MOBILE-CHROME-FULLSCREEN-PICKER-FIX",
+  "base": "13.7.0-rc.29-CHECKOUT-CONVERSION-UX-FINAL",
   "changes": [
-    "Replaces layered mobile Nova Poshta suggestions with one full-screen city/warehouse picker",
-    "Keeps email required while validating first and last name as two words",
-    "Adds do-not-call preference, promo code TEST, synchronized shipping copy and courier tariff messaging",
-    "Makes product names/images clickable, adds Discovery Set editing, quick add and undo removal",
-    "Applies promo discount server-side and displays it in confirmation emails and thank-you page",
-    "Bumps checkout assets and PWA cache to RC29"
+    "Locks checkout scroll before opening the mobile Nova Poshta picker",
+    "Pins the full-screen picker to the live iOS visual viewport above the keyboard",
+    "Prevents the first city or warehouse selection screen from sliding upward",
+    "Preserves RC29 checkout, promo and delivery logic",
+    "Bumps checkout assets and PWA cache to RC30"
   ]
 }

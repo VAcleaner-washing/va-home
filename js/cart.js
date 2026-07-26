@@ -557,12 +557,64 @@
     }
     const closeDesktopLists = () => { closeDesktop(city, cityList); closeDesktop(warehouse, warehouseList); };
 
+    let pickerBodyLock = null;
+    let pickerViewportRaf = 0;
+
+    const syncPickerViewport = () => {
+      if (picker.hidden) return;
+      cancelAnimationFrame(pickerViewportRaf);
+      pickerViewportRaf = requestAnimationFrame(() => {
+        const viewport = window.visualViewport;
+        const top = Math.max(0, Number(viewport?.offsetTop || 0));
+        const left = Math.max(0, Number(viewport?.offsetLeft || 0));
+        const width = Math.max(280, Number(viewport?.width || window.innerWidth));
+        const height = Math.max(320, Number(viewport?.height || window.innerHeight));
+        picker.style.setProperty("--np-picker-top", `${top}px`);
+        picker.style.setProperty("--np-picker-left", `${left}px`);
+        picker.style.setProperty("--np-picker-width", `${width}px`);
+        picker.style.setProperty("--np-picker-height", `${height}px`);
+      });
+    };
+
+    const lockPickerBody = () => {
+      if (pickerBodyLock) return;
+      const y = window.scrollY || document.documentElement.scrollTop || 0;
+      pickerBodyLock = {
+        y,
+        position: document.body.style.position,
+        top: document.body.style.top,
+        left: document.body.style.left,
+        right: document.body.style.right,
+        width: document.body.style.width
+      };
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${y}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.width = "100%";
+    };
+
+    const unlockPickerBody = () => {
+      if (!pickerBodyLock) return;
+      const state = pickerBodyLock;
+      pickerBodyLock = null;
+      document.body.style.position = state.position;
+      document.body.style.top = state.top;
+      document.body.style.left = state.left;
+      document.body.style.right = state.right;
+      document.body.style.width = state.width;
+      window.scrollTo(0, state.y);
+    };
+
     function openPicker(mode) {
       if (!isMobile()) return;
       if (!picker.hidden && pickerMode === mode) return;
       pickerMode = mode;
+      lockPickerBody();
       picker.hidden = false;
       document.body.classList.add("np-mobile-picker-open");
+      pickerResults.scrollTop = 0;
+      syncPickerViewport();
       pickerTitle.textContent = mode === "city" ? "Місто" : "Відділення або поштомат";
       pickerSearch.placeholder = mode === "city" ? "Назва міста або поштовий індекс" : "Номер або частина адреси";
       pickerSearch.value = "";
@@ -582,14 +634,23 @@
         if (warehouseItems.length) renderMobileItems(warehouseItems.slice(0, 80), "warehouse");
         else loadWarehouses("");
       }
-      requestAnimationFrame(() => pickerSearch.focus({ preventScroll: true }));
+      requestAnimationFrame(() => {
+        syncPickerViewport();
+        picker.scrollTop = 0;
+        pickerResults.scrollTop = 0;
+        pickerSearch.focus({ preventScroll: true });
+        setTimeout(syncPickerViewport, 60);
+        setTimeout(syncPickerViewport, 180);
+      });
     }
 
     function closePicker() {
+      pickerSearch.blur();
       picker.hidden = true;
       pickerMode = "";
       document.body.classList.remove("np-mobile-picker-open");
-      pickerSearch.blur();
+      unlockPickerBody();
+      picker.removeAttribute("style");
     }
 
     function useManualCity() {
@@ -800,6 +861,9 @@
 
     picker.querySelector(".np-mobile-picker__back")?.addEventListener("click", closePicker);
     picker.addEventListener("keydown", (event) => { if (event.key === "Escape") closePicker(); });
+    window.visualViewport?.addEventListener("resize", syncPickerViewport, { passive: true });
+    window.visualViewport?.addEventListener("scroll", syncPickerViewport, { passive: true });
+    window.addEventListener("orientationchange", () => setTimeout(syncPickerViewport, 120), { passive: true });
 
     city.addEventListener("input", () => {
       if (isMobile()) return;

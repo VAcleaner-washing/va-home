@@ -2659,7 +2659,7 @@ body.np-sheet-open{overflow:hidden}
   body.np-mobile-picker-open{overflow:hidden!important;overscroll-behavior:none;background:#0b0a08}
   body.np-mobile-picker-open .site-header,body.np-mobile-picker-open .checkout-mobile-bar{visibility:hidden!important}
   .np-combobox>.np-suggestions,.np-sheet-backdrop{display:none!important}
-  .np-mobile-picker--rc29{position:fixed;inset:0;z-index:50000;display:flex;flex-direction:column;width:100%;height:100vh;height:100svh;height:100dvh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);background:#0b0a08;color:var(--text-primary);animation:np-rc29-enter .18s ease-out}
+  .np-mobile-picker--rc29{position:fixed;top:var(--np-picker-top,0);left:var(--np-picker-left,0);right:auto;bottom:auto;z-index:50000;display:flex;flex-direction:column;width:var(--np-picker-width,100vw);height:var(--np-picker-height,100dvh);max-width:none;max-height:none;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);overflow:hidden;background:#0b0a08;color:var(--text-primary);animation:np-rc29-enter .18s ease-out}
   .np-mobile-picker--rc29[hidden]{display:none!important}
   .np-mobile-picker--rc29 .np-mobile-picker__bar{display:grid;grid-template-columns:54px minmax(0,1fr) 54px;align-items:center;min-height:62px;padding:0 8px;border-bottom:1px solid var(--border-hairline);background:#0b0a08}
   .np-mobile-picker--rc29 .np-mobile-picker__title{text-align:center;font-family:var(--font-display);font-size:27px;font-weight:400}
@@ -2686,3 +2686,15 @@ body.np-sheet-open{overflow:hidden}
   .discovery-variant-card__actions{justify-content:stretch}.discovery-variant-card__actions .btn{width:100%}
 }
 @media(max-width:520px){.promo-entry{grid-template-columns:1fr}.promo-entry .btn{width:100%}}
+
+
+/* VA HOME v13.7.0 RC30 — stable first-open viewport in iOS Safari/Chrome/PWA */
+@media(max-width:900px), (pointer:coarse){
+  html:has(body.np-mobile-picker-open){overflow:hidden!important}
+  body.np-mobile-picker-open{touch-action:none}
+  .np-mobile-picker--rc29{transform:translateZ(0);contain:layout paint;overscroll-behavior:none}
+  .np-mobile-picker--rc29 .np-mobile-picker__bar,
+  .np-mobile-picker--rc29 .np-mobile-picker__search-wrap,
+  .np-mobile-picker--rc29 .np-mobile-picker__context{flex:0 0 auto}
+  .np-mobile-picker--rc29 .np-mobile-picker__results{min-height:0;max-height:none;overscroll-behavior:contain}
+}
