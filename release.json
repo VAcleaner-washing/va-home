@@ -1,16 +1,14 @@
 {
-  "version": "13.8.16",
-  "name": "FINAL TECHNICAL POLISH",
+  "version": "13.8.17",
+  "name": "AUTHENTICATED CHECKOUT EMAIL PREFILL",
   "date": "2026-07-26",
-  "base": "13.8.15-REVIEW-PHOTO-STORAGE-HARDENING",
+  "base": "13.8.16-FINAL-TECHNICAL-POLISH",
   "changes": [
-    "Synchronizes storefront and Admin PWA cache versions to 13.8.16",
-    "Fixes main PWA shortcut URLs for the static GitHub Pages routes",
-    "Adds the shared Content Security Policy to compare.html",
-    "Replaces obsolete Release Candidate metadata with 13.8.16 Stable",
-    "Normalizes product duration and reed-use guidance",
-    "Adds server-rendered review/rating fallbacks and Product aggregateRating/review JSON-LD from approved Supabase reviews",
-    "Adds a static home social-proof fallback and a review SEO snapshot file",
-    "Updates sitemap lastmod values and includes a final validation report"
+    "Automatically pre-fills checkout email from the active Supabase account session",
+    "Uses the cached account email immediately and verifies the user asynchronously without blocking checkout",
+    "Keeps the email editable and never overwrites it after the customer starts typing",
+    "Persists the prefilled email in the existing checkout draft",
+    "Adds a discreet account-prefill confirmation under the email field",
+    "Synchronizes customer and Admin PWA cache versions to 13.8.17"
   ]
 }

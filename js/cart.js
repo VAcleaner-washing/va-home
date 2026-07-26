@@ -1183,6 +1183,40 @@
     }
   }
 
+
+  function prefillCheckoutFromAccount(form) {
+    const emailField = form.elements.customerEmail;
+    const hint = document.getElementById("checkoutAccountEmailHint");
+    const authApi = window.VAHomeSupabase;
+    if (!emailField || !authApi) return;
+
+    let userEdited = false;
+    emailField.addEventListener("input", (event) => {
+      if (event.isTrusted) {
+        userEdited = true;
+        emailField.dataset.accountEmailPrefilled = "false";
+        if (hint) hint.hidden = true;
+      }
+    });
+
+    const applyUser = (user) => {
+      const email = String(user?.email || "").trim().toLowerCase();
+      if (userEdited || !/^\S+@\S+\.\S+$/.test(email)) return;
+      if (emailField.value.trim().toLowerCase() === email && emailField.dataset.accountEmailPrefilled === "true") return;
+      emailField.value = email;
+      emailField.dataset.accountEmailPrefilled = "true";
+      emailField.closest(".form-field")?.classList.remove("has-error");
+      if (hint) {
+        hint.hidden = false;
+        hint.textContent = "Підтягнуто з вашого кабінету. Email можна змінити для цього замовлення.";
+      }
+      emailField.dispatchEvent(new Event("input", { bubbles: true }));
+    };
+
+    applyUser(authApi.getStoredAuthUser?.());
+    authApi.getAuthenticatedUser?.().then(applyUser).catch(() => {});
+  }
+
   function initPaymentCards(form) {
     const select = form.elements.paymentMethod;
     const cards = Array.from(form.querySelectorAll('.payment-option'));
@@ -1331,6 +1365,7 @@
     const button = document.getElementById("placeOrderBtn");
     prefillCheckoutFromSaved(form);
     initCheckoutDraft(form);
+    prefillCheckoutFromAccount(form);
     initDeliveryMethod(form);
     initNovaPoshtaCheckout(form);
     initPaymentCards(form);

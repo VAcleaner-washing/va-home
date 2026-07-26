@@ -1,4 +1,4 @@
-> Historical release notes. Current stable release: 13.8.16.
+> Historical release notes. Current stable release: 13.8.17.
 
 # VA HOME v13.7.0 RC28
 

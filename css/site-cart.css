@@ -2698,3 +2698,7 @@ body.np-sheet-open{overflow:hidden}
   .np-mobile-picker--rc29 .np-mobile-picker__context{flex:0 0 auto}
   .np-mobile-picker--rc29 .np-mobile-picker__results{min-height:0;max-height:none;overscroll-behavior:contain}
 }
+
+.checkout-account-email-hint{display:flex;align-items:center;gap:.45rem;color:var(--color-gold);font-size:var(--fs-caption);line-height:1.45}
+.checkout-account-email-hint::before{content:"✓";display:grid;place-items:center;width:1rem;height:1rem;border:1px solid currentColor;border-radius:50%;font-size:.62rem;line-height:1;flex:0 0 auto}
+.checkout-account-email-hint[hidden]{display:none}

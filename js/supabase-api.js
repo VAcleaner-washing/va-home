@@ -45,17 +45,62 @@
     return request("reviews?select=product_slug,rating&status=eq.approved", { method: "GET" });
   }
 
-  function storedAccessToken() {
+  function decodeJwtPayload(token) {
+    try {
+      const part = String(token || "").split(".")[1];
+      if (!part) return null;
+      const normalized = part.replace(/-/g, "+").replace(/_/g, "/");
+      const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+      return JSON.parse(decodeURIComponent(Array.from(atob(padded), char =>
+        `%${char.charCodeAt(0).toString(16).padStart(2, "0")}`
+      ).join("")));
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function storedAuthSession() {
     try {
       for (let i = 0; i < localStorage.length; i += 1) {
         const key = localStorage.key(i) || "";
         if (!/^sb-.*-auth-token$/.test(key)) continue;
         const parsed = JSON.parse(localStorage.getItem(key) || "null");
-        const token = parsed && (parsed.access_token || parsed.currentSession?.access_token);
-        if (token) return token;
+        const session = parsed?.currentSession || parsed;
+        const accessToken = session?.access_token || parsed?.access_token || null;
+        const storedUser = session?.user || parsed?.user || null;
+        const claims = accessToken ? decodeJwtPayload(accessToken) : null;
+        const user = storedUser || (claims?.sub ? { id: claims.sub, email: claims.email || "" } : null);
+        if (accessToken || user) return { accessToken, user };
       }
     } catch (_) {}
-    return null;
+    return { accessToken: null, user: null };
+  }
+
+  function storedAccessToken() {
+    return storedAuthSession().accessToken;
+  }
+
+  function getStoredAuthUser() {
+    return storedAuthSession().user;
+  }
+
+  async function getAuthenticatedUser() {
+    if (!configured()) return getStoredAuthUser();
+    const auth = storedAuthSession();
+    if (!auth.accessToken) return auth.user;
+    try {
+      const response = await fetch(`${cfg.url}/auth/v1/user`, {
+        headers: {
+          apikey: cfg.publishableKey,
+          Authorization: `Bearer ${auth.accessToken}`
+        }
+      });
+      if (!response.ok) return auth.user;
+      const user = await response.json();
+      return user && user.id ? user : auth.user;
+    } catch (_) {
+      return auth.user;
+    }
   }
 
   async function submitReview(payload) {
@@ -173,5 +218,5 @@
     }
   }
 
-  window.VAHomeSupabase = { configured, getApprovedReviews, getRecentApprovedReviews, getApprovedRatings, submitReview, getPublicOrderStatus, submitOrder, novaPoshtaLookup };
+  window.VAHomeSupabase = { configured, getApprovedReviews, getRecentApprovedReviews, getApprovedRatings, getStoredAuthUser, getAuthenticatedUser, submitReview, getPublicOrderStatus, submitOrder, novaPoshtaLookup };
 })();
