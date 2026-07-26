@@ -1,13 +1,13 @@
 {
-  "version": "13.8.7",
-  "name": "EDITORIAL SOCIAL PROOF REVIEWS",
+  "version": "13.8.8",
+  "name": "ADMIN MOBILE DIALOGS FIX",
   "date": "2026-07-26",
-  "base": "13.8.6-FIVE-EDITORIAL-REVIEWS",
+  "base": "13.8.7-EDITORIAL-SOCIAL-PROOF-REVIEWS",
   "changes": [
-    "Rebuilt homepage reviews as a five-item editorial social-proof gallery",
-    "Added real live metrics for approved reviews, average rating and verified purchases",
-    "Prioritized verified photo reviews and varied fragrances without changing Supabase schema",
-    "Added an asymmetric desktop composition and a one-card mobile swipe experience",
-    "Kept review text within the lower third of every image and removed decorative star rows"
+    "Locked order and promo dialogs to the exact mobile viewport width",
+    "Added iPhone safe-area spacing so modal headers no longer sit under the status bar",
+    "Rebuilt the promo editor header with a more compact premium hierarchy",
+    "Prevented long order IDs, emails, addresses and item names from causing horizontal overflow",
+    "Added safe sticky footer spacing and synchronized the separate Admin PWA cache to 13.8.8"
   ]
 }

@@ -670,3 +670,346 @@ img,video,canvas,svg{max-width:100%}
 
 /* VA HOME Admin PWA 1.0 */
 .admin-pwa-update{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));z-index:100000;display:flex;align-items:center;gap:18px;transform:translateX(-50%);width:min(620px,calc(100% - 32px));padding:14px 16px 14px 20px;border:1px solid rgba(198,151,77,.5);background:rgba(13,12,10,.96);box-shadow:0 18px 60px rgba(0,0,0,.48);backdrop-filter:blur(18px);color:#eee3d2;font-size:14px}.admin-pwa-update button{margin-left:auto;border:1px solid #c6974d;background:#c6974d;color:#0b0a08;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer}.admin-pwa-update button:hover{filter:brightness(1.08)}@media(max-width:560px){.admin-pwa-update{align-items:stretch;flex-direction:column;gap:12px}.admin-pwa-update button{margin-left:0;width:100%}}
+
+
+/* v13.8.8 — mobile admin dialogs: true viewport lock + safe premium headers */
+:root{
+  --admin-safe-top:max(12px, env(safe-area-inset-top));
+  --admin-safe-bottom:max(12px, env(safe-area-inset-bottom));
+}
+
+.admin-dialog,
+.admin-promo-dialog,
+.admin-promo-shell,
+.admin-dialog__body,
+.admin-dialog__head,
+.admin-detail-grid,
+.admin-detail,
+.admin-items,
+.admin-item,
+.admin-actions,
+.admin-promo-form,
+.admin-promo-section,
+.admin-promo-grid,
+.admin-promo-field,
+.admin-promo-code-control,
+.admin-promo-footer,
+.admin-promo-footer__actions{
+  min-width:0;
+  max-width:100%;
+}
+
+.admin-dialog__head h2,
+.admin-detail,
+.admin-item span,
+.admin-item small,
+.admin-detail a{
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
+
+@media(max-width:700px){
+  html,
+  body,
+  .admin-body{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden;
+  }
+
+  body:has(dialog[open]){
+    overflow:hidden;
+    overscroll-behavior:none;
+  }
+
+  .admin-shell{
+    width:100%;
+    max-width:100%;
+    padding-left:14px;
+    padding-right:14px;
+  }
+
+  /* Every admin modal becomes an exact phone-sized viewport. */
+  .admin-dialog,
+  .admin-promo-dialog{
+    position:fixed;
+    inset:0;
+    width:100%;
+    min-width:0;
+    max-width:100%;
+    height:100dvh;
+    min-height:100dvh;
+    max-height:100dvh;
+    margin:0;
+    padding:0;
+    border:0;
+    border-radius:0;
+    overflow-x:hidden;
+    overscroll-behavior:contain;
+    background:#0d0c0b;
+  }
+
+  .admin-dialog::backdrop,
+  .admin-promo-dialog::backdrop{
+    background:#0d0c0b;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+  }
+
+  /* Order details: safe-area aware, no right-side leak or overflow. */
+  #orderDialog{
+    overflow-y:auto;
+    padding-top:var(--admin-safe-top);
+    padding-bottom:var(--admin-safe-bottom);
+    scrollbar-gutter:auto;
+  }
+
+  #orderDialog>form[method="dialog"]{
+    position:sticky;
+    top:0;
+    z-index:20;
+    height:0;
+    overflow:visible;
+  }
+
+  #orderDialog .admin-dialog__close{
+    position:fixed;
+    top:calc(var(--admin-safe-top) + 10px);
+    right:14px;
+    float:none;
+    margin:0;
+    width:46px;
+    height:46px;
+    border:1px solid rgba(255,255,255,.11);
+    border-radius:50%;
+    background:rgba(25,23,20,.94);
+    color:#e7dfd3;
+    font-size:28px;
+    line-height:1;
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+  }
+
+  #orderDialog .admin-dialog__body{
+    width:100%;
+    padding:22px 20px calc(30px + var(--admin-safe-bottom));
+    gap:22px;
+  }
+
+  #orderDialog .admin-dialog__head{
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:10px;
+    padding:18px 66px 22px 0;
+    border-bottom:1px solid rgba(255,255,255,.08);
+  }
+
+  #orderDialog .admin-dialog__head h2{
+    margin-top:8px;
+    max-width:100%;
+    font-size:clamp(38px,11.2vw,52px);
+    line-height:.92;
+    letter-spacing:-.04em;
+  }
+
+  #orderDialog .admin-dialog__head>strong{
+    justify-self:start;
+    display:inline-flex;
+    align-items:center;
+    min-height:42px;
+    padding:8px 12px;
+    border:1px solid rgba(202,169,115,.22);
+    border-radius:999px;
+    background:rgba(202,169,115,.07);
+    color:#ead09d;
+    font-size:20px;
+    letter-spacing:.01em;
+  }
+
+  #orderDialog .admin-detail-grid{
+    gap:12px;
+  }
+
+  #orderDialog .admin-detail{
+    width:100%;
+    padding:16px;
+    border:1px solid rgba(255,255,255,.055);
+    border-radius:12px;
+    background:#171512;
+    font-size:16px;
+    line-height:1.55;
+  }
+
+  #orderDialog .admin-item{
+    align-items:flex-start;
+    width:100%;
+  }
+
+  #orderDialog .admin-item span{
+    flex:1 1 auto;
+  }
+
+  #orderDialog .admin-item strong{
+    flex:0 0 auto;
+    white-space:nowrap;
+  }
+
+  /* Promo editor: exact width, no horizontal travel, cleaner top. */
+  .admin-promo-dialog{
+    overflow:hidden;
+  }
+
+  .admin-promo-shell{
+    width:100%;
+    height:100dvh;
+    max-height:100dvh;
+    overflow-x:hidden;
+    overflow-y:auto;
+    overscroll-behavior-y:contain;
+    scrollbar-gutter:auto;
+    scroll-padding-top:152px;
+  }
+
+  .admin-promo-shell__header{
+    position:sticky;
+    top:0;
+    z-index:12;
+    width:100%;
+    min-height:0;
+    padding:calc(var(--admin-safe-top) + 14px) 76px 18px 20px;
+    gap:12px;
+    background:linear-gradient(180deg,rgba(16,15,14,.985) 0%,rgba(16,15,14,.97) 82%,rgba(16,15,14,.94) 100%);
+    border-bottom:1px solid rgba(202,169,115,.16);
+    box-shadow:0 16px 38px rgba(0,0,0,.22);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+  }
+
+  .admin-promo-shell__header>div{
+    min-width:0;
+  }
+
+  .admin-promo-shell__header .eyebrow{
+    margin:0 0 12px;
+    font-size:11px;
+    letter-spacing:.24em;
+    color:#b99258;
+  }
+
+  .admin-promo-shell__header h2{
+    margin:0 0 8px;
+    max-width:100%;
+    font-size:clamp(35px,10.4vw,46px);
+    line-height:.92;
+    letter-spacing:-.045em;
+    text-wrap:balance;
+  }
+
+  .admin-promo-shell__subtitle{
+    display:none;
+  }
+
+  .admin-promo-close{
+    position:absolute;
+    top:calc(var(--admin-safe-top) + 12px);
+    right:16px;
+    flex-basis:46px;
+    width:46px;
+    height:46px;
+    margin:0;
+    border:1px solid rgba(255,255,255,.11);
+    background:rgba(25,23,20,.92);
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+  }
+
+  .admin-promo-form{
+    width:100%;
+    padding:0 20px calc(18px + var(--admin-safe-bottom));
+    overflow-x:hidden;
+  }
+
+  .admin-promo-section{
+    width:100%;
+    padding:26px 0;
+    gap:18px;
+  }
+
+  .admin-promo-section__head{
+    grid-template-columns:32px minmax(0,1fr);
+    gap:13px;
+  }
+
+  .admin-promo-section__head>span{
+    width:30px;
+    height:30px;
+  }
+
+  .admin-promo-section h3{
+    font-size:20px;
+    font-family:Georgia,'Times New Roman',serif;
+    font-weight:400;
+  }
+
+  .admin-promo-section p{
+    font-size:13px;
+    line-height:1.55;
+  }
+
+  .admin-promo-field,
+  .admin-promo-field input,
+  .admin-promo-field select,
+  .admin-promo-value-wrap,
+  .admin-promo-code-control{
+    width:100%;
+    max-width:100%;
+  }
+
+  .admin-promo-field input,
+  .admin-promo-field select{
+    min-width:0;
+    height:54px;
+    border-radius:13px;
+  }
+
+  .admin-promo-footer{
+    width:100%;
+    margin:0;
+    padding:18px 0 calc(8px + var(--admin-safe-bottom));
+    background:linear-gradient(0deg,#0d0c0b 84%,rgba(13,12,11,.94));
+  }
+
+  .admin-promo-footer__actions{
+    display:grid;
+    grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);
+    gap:10px;
+  }
+
+  .admin-promo-footer .btn{
+    width:100%;
+    min-width:0;
+    height:52px;
+    padding:0 12px;
+    border-radius:13px;
+    white-space:normal;
+    line-height:1.15;
+  }
+}
+
+@media(max-width:380px){
+  .admin-promo-shell__header{
+    min-height:0;
+    padding-left:16px;
+    padding-right:68px;
+  }
+  .admin-promo-form{
+    padding-left:16px;
+    padding-right:16px;
+  }
+  .admin-promo-shell__header h2{
+    font-size:34px;
+  }
+  .admin-promo-footer__actions{
+    grid-template-columns:1fr;
+  }
+}
