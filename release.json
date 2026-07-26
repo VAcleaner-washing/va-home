@@ -1,12 +1,12 @@
 {
-  "version": "13.7.0-rc.33",
-  "name": "PROMO SWITCH SCROLL FIX",
+  "version": "13.8.0",
+  "name": "SAFE TECHNICAL CLEANUP",
   "date": "2026-07-26",
-  "base": "13.7.0-rc.32-PREMIUM-PROMO-ADMIN-UI",
+  "base": "13.7.0-rc.36-DARK-DATETIME-PICKER",
   "changes": [
-    "Fixes the promo modal jumping to an empty area when toggling usage or end-date switches",
-    "Anchors invisible checkbox controls to their visible switches",
-    "Preserves the internal modal scroll position while conditional fields are enabled or disabled",
-    "No Supabase redeploy or SQL migration required"
+    "Moved historical RC documentation from the public root into docs/releases without deleting it",
+    "Normalized VA HOME CSS and JavaScript cache-busting tags to 13.8.0",
+    "Updated the service worker cache namespace to 13.8.0",
+    "Preserved checkout, Supabase, authentication, Nova Poshta, PWA, SEO and promo-code logic unchanged"
   ]
 }
