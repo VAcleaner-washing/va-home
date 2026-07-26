@@ -139,24 +139,38 @@
     return data;
   }
 
-  async function novaPoshtaLookup(payload) {
+  async function novaPoshtaLookup(payload, options = {}) {
     if (!configured()) throw new Error("Supabase is not configured");
-    const response = await fetch(`${cfg.url}/functions/v1/nova-poshta-locations`, {
-      method: "POST",
-      headers: {
-        apikey: cfg.publishableKey,
-        Authorization: `Bearer ${cfg.publishableKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      const error = new Error(data.error || `Nova Poshta lookup failed (${response.status})`);
-      error.status = response.status;
-      throw error;
+    const controller = new AbortController();
+    const externalSignal = options && options.signal;
+    const abortFromOutside = () => controller.abort();
+    if (externalSignal) {
+      if (externalSignal.aborted) controller.abort();
+      else externalSignal.addEventListener("abort", abortFromOutside, { once: true });
     }
-    return Array.isArray(data.items) ? data.items : [];
+    const timeout = setTimeout(() => controller.abort(), 7000);
+    try {
+      const response = await fetch(`${cfg.url}/functions/v1/nova-poshta-locations`, {
+        method: "POST",
+        headers: {
+          apikey: cfg.publishableKey,
+          Authorization: `Bearer ${cfg.publishableKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const error = new Error(data.error || `Nova Poshta lookup failed (${response.status})`);
+        error.status = response.status;
+        throw error;
+      }
+      return Array.isArray(data.items) ? data.items : [];
+    } finally {
+      clearTimeout(timeout);
+      if (externalSignal) externalSignal.removeEventListener("abort", abortFromOutside);
+    }
   }
 
   window.VAHomeSupabase = { configured, getApprovedReviews, getRecentApprovedReviews, getApprovedRatings, submitReview, getPublicOrderStatus, submitOrder, novaPoshtaLookup };

@@ -1,0 +1,10 @@
+VA HOME 13.7.0 RC21 — WISHLIST AUTH REDIRECT FIX
+
+Fixed:
+- Guest wishlist clicks on /products/*.html no longer resolve to /products/account.html.
+- Redirect always targets /account.html with a safe local returnTo path.
+- The selected product is retained for 30 minutes in sessionStorage.
+- After successful sign-in, the user returns to the product and it is added automatically.
+- Canonical .html paths are used so static hosting does not receive a clean-URL 404.
+- Nested-page dynamic wishlist loading now uses window.VA_HOME_ROOT.
+- wishlist.js is network-only in the service worker and all asset versions are rc21.

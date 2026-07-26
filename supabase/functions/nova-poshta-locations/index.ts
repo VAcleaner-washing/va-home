@@ -1,5 +1,7 @@
 const ALLOWED_ORIGINS = new Set(["https://vahome.com.ua", "https://www.vahome.com.ua"]);
 const API_URL = "https://api.novaposhta.ua/v2.0/json/";
+const CACHE_TTL = 10 * 60 * 1000;
+const memoryCache = new Map<string, { expires: number; items: unknown[] }>();
 
 function originAllowed(origin: string) {
   return ALLOWED_ORIGINS.has(origin) || /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
@@ -26,9 +28,26 @@ function clean(value: unknown, max = 120) {
   return String(value ?? "").trim().slice(0, max);
 }
 
+function cacheGet(key: string) {
+  const entry = memoryCache.get(key);
+  if (!entry || entry.expires < Date.now()) {
+    memoryCache.delete(key);
+    return null;
+  }
+  return entry.items;
+}
+
+function cacheSet(key: string, items: unknown[]) {
+  if (memoryCache.size > 120) {
+    const first = memoryCache.keys().next().value;
+    if (first) memoryCache.delete(first);
+  }
+  memoryCache.set(key, { expires: Date.now() + CACHE_TTL, items });
+}
+
 async function novaPoshta(apiKey: string, modelName: string, calledMethod: string, methodProperties: Record<string, unknown>) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 8000);
+  const timer = setTimeout(() => controller.abort(), 6500);
   try {
     const response = await fetch(API_URL, {
       method: "POST",
@@ -58,10 +77,13 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const action = clean(body.action, 20);
     const query = clean(body.query, 100);
-    if (query.length < 2) return json(req, { items: [] });
 
     if (action === "cities") {
-      const data = await novaPoshta(apiKey, "Address", "searchSettlements", { CityName: query, Limit: 20, Page: 1 });
+      if (query.length < 3) return json(req, { items: [] });
+      const cacheKey = `cities:${query.toLocaleLowerCase("uk-UA")}`;
+      const cached = cacheGet(cacheKey);
+      if (cached) return json(req, { items: cached });
+      const data = await novaPoshta(apiKey, "Address", "searchSettlements", { CityName: query, Limit: 24, Page: 1 });
       const addresses = data.flatMap((entry: Record<string, unknown>) => Array.isArray(entry.Addresses) ? entry.Addresses : []);
       const items = addresses.map((item: Record<string, unknown>) => ({
         ref: clean(item.DeliveryCity || item.Ref, 80),
@@ -69,17 +91,23 @@ Deno.serve(async (req) => {
         label: clean(item.Present, 220),
         city: clean(item.MainDescription, 120),
         area: clean(item.Area, 120),
-      })).filter((item: { ref: string; label: string }) => item.ref && item.label);
+      })).filter((item: { ref: string; label: string }) => item.ref && item.label)
+        .filter((item: { ref: string }, index: number, all: { ref: string }[]) => all.findIndex((entry) => entry.ref === item.ref) === index);
+      cacheSet(cacheKey, items);
       return json(req, { items });
     }
 
     if (action === "warehouses") {
       const cityRef = clean(body.city_ref, 80);
       if (!cityRef) return json(req, { error: "CITY_REQUIRED" }, 400);
+      const cacheKey = `warehouses:${cityRef}:${query.toLocaleLowerCase("uk-UA")}`;
+      const cached = cacheGet(cacheKey);
+      if (cached) return json(req, { items: cached });
+      const preload = query.length === 0;
       const data = await novaPoshta(apiKey, "Address", "getWarehouses", {
         CityRef: cityRef,
         FindByString: query,
-        Limit: 30,
+        Limit: preload ? 150 : 50,
         Page: 1,
         Language: "UA",
       });
@@ -90,6 +118,7 @@ Deno.serve(async (req) => {
         shortAddress: clean(item.ShortAddress, 180),
         type: clean(item.TypeOfWarehouse, 80),
       })).filter((item: { ref: string; label: string }) => item.ref && item.label);
+      cacheSet(cacheKey, items);
       return json(req, { items });
     }
 

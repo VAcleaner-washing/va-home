@@ -13,10 +13,10 @@
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <link href="favicon/favicon.ico" rel="icon" sizes="any"/>
 <link href="favicon/favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="css/core.css?v=13.7.0-rc20" rel="stylesheet"/><link href="css/site-cart.css?v=13.7.0-rc20" rel="stylesheet"/>
+<link href="css/core.css?v=13.7.0-rc23" rel="stylesheet"/><link href="css/site-cart.css?v=13.7.0-rc23" rel="stylesheet"/>
 <link as="image" fetchpriority="high" href="images/home/hero-discovery.webp" rel="preload"/>
 <meta content="13.7.0 Release Candidate" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
-<script defer="" src="js/hero-font-reveal.js?v=13.7.0-rc20"></script>
+<script defer="" src="js/hero-font-reveal.js?v=13.7.0-rc23"></script>
 <link href="/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
 
@@ -105,9 +105,9 @@
 <fieldset class="checkout-fieldset">
 <legend><span>01</span> Контактні дані</legend>
 <div class="form-field">
-<label for="customerName">Ім'я *</label>
-<input aria-describedby="err-customerName" autocomplete="name" id="customerName" name="customerName" required="" type="text"/>
-<p class="form-error" id="err-customerName">Вкажіть, будь ласка, ваше ім'я.</p>
+<label for="customerName">Ім’я та прізвище *</label>
+<input aria-describedby="err-customerName" autocomplete="name" id="customerName" name="customerName" placeholder="Вікторія Петренко" required="" type="text"/>
+<p class="form-error" id="err-customerName">Вкажіть ім’я та прізвище.</p>
 </div>
 <div class="form-field">
 <label for="customerPhone">Номер телефону *</label>
@@ -120,32 +120,66 @@
 <p class="form-error" id="err-customerEmail">Вкажіть коректну електронну адресу.</p>
 </div>
 <div class="form-field np-combobox">
-<label for="customerCity">Місто *</label>
-<input aria-autocomplete="list" aria-controls="npCitySuggestions" aria-describedby="npCityHint err-customerCity" aria-expanded="false" autocomplete="off" id="customerCity" name="customerCity" placeholder="Почніть вводити назву міста" required="" role="combobox" type="text"/>
+<label for="customerCity">Місто / населений пункт *</label>
+<input aria-autocomplete="list" aria-controls="npCitySuggestions" aria-describedby="npCityHint err-customerCity" aria-expanded="false" autocomplete="off" id="customerCity" name="customerCity" placeholder="Введіть щонайменше 3 літери" required="" role="combobox" type="text"/>
 <input id="novaPoshtaCityRef" name="novaPoshtaCityRef" type="hidden"/>
 <input id="novaPoshtaSettlementRef" name="novaPoshtaSettlementRef" type="hidden"/>
 <div aria-label="Знайдені населені пункти" class="np-suggestions" hidden="" id="npCitySuggestions" role="listbox"></div>
-<p class="form-hint" id="npCityHint">Оберіть населений пункт зі списку Нової пошти.</p>
+<p aria-live="polite" class="form-hint" id="npCityHint">Пошук почнеться після 3 літер. Оберіть населений пункт зі списку.</p>
 <p class="form-error" id="err-customerCity">Вкажіть, будь ласка, місто.</p>
 </div>
 </fieldset>
 <fieldset class="checkout-fieldset">
 <legend><span>02</span> Доставка й оплата</legend>
-<div class="form-field">
+<div class="form-field delivery-method-field">
 <label for="deliveryMethod">Спосіб доставки *</label>
-<select aria-describedby="err-deliveryMethod" id="deliveryMethod" name="deliveryMethod" required="">
-<option selected="" value="nova_poshta">Нова пошта</option>
+<select aria-describedby="err-deliveryMethod" class="delivery-native-select" id="deliveryMethod" name="deliveryMethod" required="">
+<option selected="" value="nova_poshta_branch">У відділення або поштомат</option>
+<option value="nova_poshta_courier">Кур’єром на адресу</option>
 </select>
-<p class="form-error" id="err-deliveryMethod">Оберіть спосіб доставки.</p>
-<p class="form-hint">Вартість доставки сплачує отримувач за чинними тарифами Нової пошти.</p>
+<div aria-label="Спосіб доставки" class="delivery-options" role="radiogroup">
+<label class="delivery-option is-selected">
+<input checked="" name="deliveryChoice" type="radio" value="nova_poshta_branch"/>
+<span aria-hidden="true" class="delivery-option__mark"></span>
+<span><strong>Відділення або поштомат</strong><small>Оберіть з актуального списку Нової пошти.</small></span>
+</label>
+<label class="delivery-option">
+<input name="deliveryChoice" type="radio" value="nova_poshta_courier"/>
+<span aria-hidden="true" class="delivery-option__mark"></span>
+<span><strong>Кур’єрська доставка</strong><small>Нова пошта доставить замовлення за вашою адресою.</small></span>
+</label>
 </div>
+<p class="form-error" id="err-deliveryMethod">Оберіть спосіб доставки.</p>
+<p class="form-hint" id="deliveryMethodHint">Вартість доставки сплачує отримувач за тарифами Нової пошти.</p>
+</div>
+<div class="delivery-panel" id="npBranchFields">
 <div class="form-field np-combobox">
 <label for="deliveryDetails">Відділення або поштомат Нової пошти *</label>
 <input aria-autocomplete="list" aria-controls="npWarehouseSuggestions" aria-describedby="npWarehouseHint err-deliveryDetails" aria-expanded="false" autocomplete="off" id="deliveryDetails" name="deliveryDetails" placeholder="Спочатку оберіть місто" required="" role="combobox" type="text"/>
 <input id="novaPoshtaWarehouseRef" name="novaPoshtaWarehouseRef" type="hidden"/>
 <div aria-label="Знайдені відділення та поштомати" class="np-suggestions" hidden="" id="npWarehouseSuggestions" role="listbox"></div>
-<p class="form-hint" id="npWarehouseHint">Після вибору міста введіть номер або адресу відділення.</p>
+<p aria-live="polite" class="form-hint" id="npWarehouseHint">Після вибору міста список завантажиться один раз. Далі пошук працює миттєво.</p>
 <p class="form-error" id="err-deliveryDetails">Вкажіть відділення або поштомат Нової пошти.</p>
+</div>
+</div>
+<div class="delivery-panel courier-address" hidden="" id="npCourierFields">
+<div class="form-field">
+<label for="courierStreet">Вулиця *</label>
+<input aria-describedby="err-courierStreet" autocomplete="address-line1" id="courierStreet" name="courierStreet" placeholder="Назва вулиці" type="text"/>
+<p class="form-error" id="err-courierStreet">Вкажіть вулицю.</p>
+</div>
+<div class="courier-address__row">
+<div class="form-field">
+<label for="courierHouse">Будинок *</label>
+<input aria-describedby="err-courierHouse" autocomplete="address-line2" id="courierHouse" name="courierHouse" placeholder="12" type="text"/>
+<p class="form-error" id="err-courierHouse">Вкажіть номер будинку.</p>
+</div>
+<div class="form-field">
+<label for="courierApartment">Квартира</label>
+<input autocomplete="address-line3" id="courierApartment" name="courierApartment" placeholder="45" type="text"/>
+</div>
+</div>
+<p class="form-hint">Адресу передамо Новій пошті разом із вашим номером телефону.</p>
 </div>
 <div class="form-field">
 <label for="paymentMethod">Спосіб оплати *</label>
@@ -166,7 +200,7 @@
 </label>
 </div>
 <p class="form-error" id="err-paymentMethod">Оберіть спосіб оплати.</p>
-<p class="form-hint" id="paymentMethodHint">Для оплати при отриманні Нова пошта додатково стягує комісію за переказ коштів за своїми чинними тарифами.</p>
+<p class="form-hint" id="paymentMethodHint">Реквізити для оплати надійдуть після підтвердження замовлення менеджером.</p>
 </div>
 <details class="checkout-comment">
 <summary>+ Додати коментар до замовлення</summary>
@@ -197,6 +231,7 @@
 </div>
 <p aria-live="polite" class="checkout-status" id="checkoutStatus" role="status"></p>
 </form>
+<div class="np-sheet-backdrop" hidden="" id="npSheetBackdrop"></div>
 </div>
 <div class="checkout-mobile-bar" hidden="" id="checkoutMobileBar">
 <div><small>Разом</small><strong id="checkoutMobileTotal">0 грн</strong></div>
@@ -207,14 +242,14 @@
 </section>
 </main>
 <div data-root="" id="site-footer"></div>
-<script defer="" src="js/config.js?v=13.7.0-rc20"></script>
-<script defer="" src="js/supabase-api.js?v=13.7.0-rc20"></script>
-<script defer="" src="js/products.js?v=13.7.0-rc20"></script>
-<script defer="" src="js/compare.js?v=13.7.0-rc20"></script>
-<script defer="" src="js/cart.js?v=13.7.0-rc20"></script>
-<script defer="" src="js/ratings.js?v=13.7.0-rc20"></script>
-<script defer="" src="js/main.js?v=13.7.0-rc20"></script>
-<script defer="" src="js/motion.js?v=13.7.0-rc20"></script>
-<script defer="" src="/js/pwa.js?v=13.7.0-rc20"></script>
+<script defer="" src="js/config.js?v=13.7.0-rc23"></script>
+<script defer="" src="js/supabase-api.js?v=13.7.0-rc23"></script>
+<script defer="" src="js/products.js?v=13.7.0-rc23"></script>
+<script defer="" src="js/compare.js?v=13.7.0-rc23"></script>
+<script defer="" src="js/cart.js?v=13.7.0-rc23"></script>
+<script defer="" src="js/ratings.js?v=13.7.0-rc23"></script>
+<script defer="" src="js/main.js?v=13.7.0-rc23"></script>
+<script defer="" src="js/motion.js?v=13.7.0-rc23"></script>
+<script defer="" src="/js/pwa.js?v=13.7.0-rc23"></script>
 </body>
 </html>

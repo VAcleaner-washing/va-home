@@ -2476,3 +2476,52 @@ body.cart-page .checkout-submit-panel {
     display: none !important;
   }
 }
+
+
+/* VA HOME v13.7.0 RC23 — fast checkout with single-warehouse autoselect */
+.delivery-native-select{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important}
+.delivery-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.delivery-option{display:grid;grid-template-columns:18px minmax(0,1fr);gap:13px;align-items:start;min-width:0;padding:16px;border:1px solid var(--border-hairline);background:var(--bg-elevated);cursor:pointer;transition:border-color var(--duration-fast),background var(--duration-fast),transform var(--duration-fast)}
+.delivery-option:hover{border-color:var(--border-hairline-strong)}
+.delivery-option.is-selected{border-color:var(--color-gold);background:rgba(184,138,75,.075)}
+.delivery-option input{position:absolute;opacity:0;pointer-events:none}
+.delivery-option__mark{position:relative;width:16px;height:16px;margin-top:3px;border:1px solid var(--color-gold);border-radius:50%}
+.delivery-option.is-selected .delivery-option__mark::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--color-gold)}
+.delivery-option strong{display:block;margin-bottom:3px;font-size:var(--fs-small);font-weight:600;color:var(--text-primary)}
+.delivery-option small{display:block;color:var(--text-secondary);font-size:var(--fs-caption);line-height:1.5}
+.delivery-panel[hidden]{display:none!important}
+.courier-address{display:grid;gap:18px;padding-top:2px}
+.courier-address__row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.np-combobox{isolation:isolate}
+.np-combobox input[disabled]{cursor:not-allowed;opacity:.58}
+.np-suggestions{top:calc(100% - 1.1rem);overflow:hidden;max-height:320px;opacity:1;transform:translateY(0);transition:opacity .16s ease,transform .16s ease}
+.np-suggestions__head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 15px;border-bottom:1px solid var(--border-hairline);background:#11100d}
+.np-suggestions__head strong{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-gold)}
+.np-suggestions__close{display:none;width:34px;height:34px;border:0;background:transparent;color:var(--text-primary);font-size:24px;line-height:1;cursor:pointer}
+.np-suggestions__body{max-height:268px;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.np-suggestions__state{padding:18px 15px}
+.np-suggestions__actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.np-suggestions__actions button{min-height:38px;padding:8px 12px;border:1px solid var(--border-hairline-strong);background:transparent;color:var(--text-primary);font:inherit;font-size:12px;cursor:pointer}
+.np-suggestions__actions button:first-child{border-color:var(--color-gold);color:var(--color-gold)}
+.np-suggestion span{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.np-sheet-backdrop{display:none}
+body.np-sheet-open{overflow:hidden}
+
+@media(max-width:760px){
+  .delivery-options{grid-template-columns:1fr}
+  .delivery-option{padding:14px}
+  .courier-address__row{grid-template-columns:1fr 1fr}
+  .np-sheet-backdrop{position:fixed;inset:0;z-index:1198;display:block;background:rgba(0,0,0,.58);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+  .np-sheet-backdrop[hidden]{display:none!important}
+  .np-suggestions{position:fixed;z-index:1199;top:auto;left:0;right:0;bottom:0;width:100%;max-height:min(58dvh,520px);border:1px solid rgba(184,138,75,.38);border-bottom:0;border-radius:18px 18px 0 0;background:#0d0c0a;box-shadow:0 -24px 70px rgba(0,0,0,.62);padding-bottom:max(10px,env(safe-area-inset-bottom));animation:np-sheet-in .2s cubic-bezier(.2,.8,.2,1)}
+  .np-suggestions__head{padding:13px 18px;background:#11100d;border-radius:18px 18px 0 0}
+  .np-suggestions__close{display:grid;place-items:center}
+  .np-suggestions__body{max-height:calc(min(58dvh,520px) - 62px - env(safe-area-inset-bottom))}
+  .np-suggestion{padding:15px 18px}
+  .np-suggestions__state{padding:20px 18px 24px}
+  @keyframes np-sheet-in{from{transform:translateY(22px);opacity:.35}to{transform:translateY(0);opacity:1}}
+}
+
+@media(max-width:390px){
+  .courier-address__row{grid-template-columns:1fr}
+}

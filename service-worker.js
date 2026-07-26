@@ -1,4 +1,4 @@
-const VERSION = '13.7.0-rc20';
+const VERSION = '13.7.0-rc23';
 const CACHE_PREFIX = 'vahome-';
 const STATIC_CACHE = `${CACHE_PREFIX}static-${VERSION}`;
 
@@ -36,7 +36,8 @@ const LIVE_FILES = new Set([
   '/js/order-status.js',
   '/js/ratings.js',
   '/js/reviews.js',
-  '/js/home-reviews.js'
+  '/js/home-reviews.js',
+  '/js/wishlist.js'
 ]);
 
 const isPrivateRoute = (pathname) =>

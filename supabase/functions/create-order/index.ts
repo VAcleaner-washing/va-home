@@ -133,7 +133,16 @@ Deno.serve(async req => {
     const novaPoshtaSettlementRef = text(body.nova_poshta_settlement_ref, 80) || null;
     const novaPoshtaWarehouseRef = text(body.nova_poshta_warehouse_ref, 80) || null;
     const deliveryMethod = text(body.delivery_method, 40);
-    const deliveryDetails = text(body.delivery_details, 200);
+    const submittedDeliveryDetails = text(body.delivery_details, 200);
+    const courierStreet = text(body.courier_street, 120);
+    const courierHouse = text(body.courier_house, 30);
+    const courierApartment = text(body.courier_apartment, 30);
+    const isCourier = deliveryMethod === "nova_poshta_courier";
+    const isBranch = deliveryMethod === "nova_poshta" || deliveryMethod === "nova_poshta_branch";
+    const deliveryDetails = isCourier
+      ? `${courierStreet}, буд. ${courierHouse}${courierApartment ? `, кв. ${courierApartment}` : ""}`
+      : submittedDeliveryDetails;
+    const deliveryLabel = isCourier ? "Нова пошта — кур’єр" : "Нова пошта — відділення / поштомат";
     const paymentMethod = text(body.payment_method, 30);
     const comment = text(body.customer_comment, 1000) || null;
     const rawItems = Array.isArray(body.items) ? body.items : [];
@@ -141,8 +150,10 @@ Deno.serve(async req => {
     if (name.length < 2 || !/^\+?380\d{9}$/.test(phone) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return json(req, { error: "INVALID_CONTACTS" }, 400);
     }
-    if (!city || !deliveryDetails || deliveryMethod !== "nova_poshta") return json(req, { error: "INVALID_DELIVERY" }, 400);
-    if (Boolean(novaPoshtaCityRef) !== Boolean(novaPoshtaWarehouseRef)) return json(req, { error: "INVALID_DELIVERY" }, 400);
+    if (!city || (!isBranch && !isCourier)) return json(req, { error: "INVALID_DELIVERY" }, 400);
+    if (isBranch && !deliveryDetails) return json(req, { error: "INVALID_DELIVERY" }, 400);
+    if (isCourier && (!courierStreet || !courierHouse || novaPoshtaWarehouseRef)) return json(req, { error: "INVALID_DELIVERY" }, 400);
+    if (isBranch && novaPoshtaWarehouseRef && !novaPoshtaCityRef) return json(req, { error: "INVALID_DELIVERY" }, 400);
 
     const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
@@ -155,7 +166,7 @@ Deno.serve(async req => {
     if (rateLimitError) throw rateLimitError;
     if ((recentOrders || 0) >= 5) return json(req, { error: "RATE_LIMITED" }, 429);
 
-    if (novaPoshtaCityRef && novaPoshtaWarehouseRef) {
+    if (isBranch && novaPoshtaCityRef && novaPoshtaWarehouseRef) {
       const validDelivery = await validateNovaPoshtaSelection(novaPoshtaCityRef, novaPoshtaWarehouseRef);
       if (!validDelivery) return json(req, { error: "INVALID_DELIVERY" }, 400);
     }
@@ -183,13 +194,16 @@ Deno.serve(async req => {
     if (checkoutRequestId) {
       const { data: existing, error: existingError } = await supabase
         .from("orders")
-        .select("client_order_id,customer_name,customer_phone,customer_email,payment_method,items,total_amount,confirmation_email_status")
+        .select("client_order_id,customer_name,customer_phone,customer_email,delivery_method,delivery_details,payment_method,items,total_amount,confirmation_email_status")
         .eq("checkout_request_id", checkoutRequestId)
         .maybeSingle();
       if (existingError) throw existingError;
       if (existing) {
         const sameCustomer = existing.customer_phone === phone && String(existing.customer_email || "").toLowerCase() === email;
-        const sameOrder = Number(existing.total_amount) === total && JSON.stringify(existing.items || []) === JSON.stringify(items);
+        const sameOrder = Number(existing.total_amount) === total
+          && existing.delivery_method === deliveryLabel
+          && existing.delivery_details === deliveryDetails
+          && JSON.stringify(existing.items || []) === JSON.stringify(items);
         if (!sameCustomer || !sameOrder) return json(req, { error: "REQUEST_ID_CONFLICT" }, 409);
         return json(req, {
           order: {
@@ -213,7 +227,7 @@ Deno.serve(async req => {
         client_order_id: `VA-${stamp}-${suffix}`,
         checkout_request_id: checkoutRequestId || null,
         customer_name: name, customer_phone: phone, customer_email: email,
-        customer_city: city, delivery_method: "Нова пошта", delivery_details: deliveryDetails,
+        customer_city: city, delivery_method: deliveryLabel, delivery_details: deliveryDetails,
         nova_poshta_city_ref: novaPoshtaCityRef,
         nova_poshta_settlement_ref: novaPoshtaSettlementRef,
         nova_poshta_warehouse_ref: novaPoshtaWarehouseRef,
@@ -319,7 +333,7 @@ Deno.serve(async req => {
                     <p style="font-size: 14px; color: #E5E5E5; margin: 0 0 10px 0; line-height: 1.5;"><strong style="color: #A3A3A3;">Клієнт:</strong> ${escapeHtml(name)}</p>
                     <p style="font-size: 14px; color: #E5E5E5; margin: 0 0 10px 0; line-height: 1.5;"><strong style="color: #A3A3A3;">Телефон:</strong> <a href="tel:${phone}" style="color: #C8A27C; text-decoration: none;">${escapeHtml(phone)}</a></p>
                     <p style="font-size: 14px; color: #E5E5E5; margin: 0 0 10px 0; line-height: 1.5;"><strong style="color: #A3A3A3;">Email:</strong> ${escapeHtml(email)}</p>
-                    <p style="font-size: 14px; color: #E5E5E5; margin: 0 0 10px 0; line-height: 1.5;"><strong style="color: #A3A3A3;">Адреса:</strong> м. ${escapeHtml(city)}, ${escapeHtml(deliveryDetails)}</p>
+                    <p style="font-size: 14px; color: #E5E5E5; margin: 0 0 10px 0; line-height: 1.5;"><strong style="color: #A3A3A3;">Доставка:</strong> ${escapeHtml(deliveryLabel)} · ${escapeHtml(city)}, ${escapeHtml(deliveryDetails)}</p>
                     <p style="font-size: 14px; color: #E5E5E5; margin: 0 0 10px 0; line-height: 1.5;"><strong style="color: #A3A3A3;">Тип оплати:</strong> ${cod ? "При отриманні (накладений платіж)" : "Предоплата на рахунок ФОП"}</p>
                     <p style="font-size: 14px; color: #E5E5E5; margin: 0; line-height: 1.5;"><strong style="color: #A3A3A3;">Коментар:</strong> ${escapeHtml(comment || "Не вказано")}</p>
                   </div>
@@ -335,7 +349,7 @@ Deno.serve(async req => {
               <tr>
                 <td style="padding: 24px;">
                   <h2 style="font-family: 'Georgia', serif; font-size: 18px; color: #171717; margin: 0 0 12px 0; font-weight: normal; letter-spacing: 0.5px;">Оплата при отриманні</h2>
-                  <p style="font-size: 14px; margin: 0 0 8px 0; color: #525252; line-height: 1.6;">Ви зможете розрахуватися за посилку у відділенні або поштоматі Нової пошти при отриманні.</p>
+                  <p style="font-size: 14px; margin: 0 0 8px 0; color: #525252; line-height: 1.6;">${isCourier ? "Ви зможете розрахуватися за замовлення під час кур’єрської доставки Нової пошти." : "Ви зможете розрахуватися за посилку у відділенні або поштоматі Нової пошти при отриманні."}</p>
                   <p style="font-size: 13px; margin: 0; color: #737373; font-style: italic;">Термін відправки: протягом 1–2 робочих днів.</p>
                 </td>
               </tr>
