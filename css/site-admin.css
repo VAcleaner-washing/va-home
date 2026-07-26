@@ -619,3 +619,50 @@ img,video,canvas,svg{max-width:100%}
 /* RC34 — stable promo form viewport */
 .admin-promo-form,.admin-promo-section,.admin-promo-footer{overflow-anchor:none}
 .admin-promo-field input:disabled{background:#11100f;color:#746f68;border-color:rgba(255,255,255,.06);opacity:.62}
+
+/* RC35 — premium numeric fields: remove native white browser steppers */
+.admin-promo-field input[type="number"]{
+  -moz-appearance:textfield;
+  appearance:textfield;
+}
+.admin-promo-field input[type="number"]::-webkit-outer-spin-button,
+.admin-promo-field input[type="number"]::-webkit-inner-spin-button{
+  -webkit-appearance:none;
+  appearance:none;
+  margin:0;
+}
+
+/* RC36 — premium dark date/time controls */
+.admin-promo-field input[type="date"],
+.admin-promo-field input[type="datetime-local"],
+.admin-promo-field input[type="time"]{
+  color-scheme:dark;
+  padding-right:46px;
+  accent-color:#caa973;
+}
+.admin-promo-field input[type="date"]::-webkit-calendar-picker-indicator,
+.admin-promo-field input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+.admin-promo-field input[type="time"]::-webkit-calendar-picker-indicator{
+  width:18px;
+  height:18px;
+  margin:0;
+  padding:8px;
+  border-radius:9px;
+  opacity:.82;
+  cursor:pointer;
+  filter:sepia(.35) saturate(1.15) brightness(1.35);
+  transition:background-color .18s ease,opacity .18s ease,filter .18s ease;
+}
+.admin-promo-field input[type="date"]::-webkit-calendar-picker-indicator:hover,
+.admin-promo-field input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
+.admin-promo-field input[type="time"]::-webkit-calendar-picker-indicator:hover{
+  background:rgba(202,169,115,.12);
+  opacity:1;
+  filter:sepia(.5) saturate(1.35) brightness(1.55);
+}
+.admin-promo-field input[type="date"]:disabled::-webkit-calendar-picker-indicator,
+.admin-promo-field input[type="datetime-local"]:disabled::-webkit-calendar-picker-indicator,
+.admin-promo-field input[type="time"]:disabled::-webkit-calendar-picker-indicator{
+  opacity:.28;
+  cursor:not-allowed;
+}
