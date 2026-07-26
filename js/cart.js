@@ -316,6 +316,17 @@
     const backdrop = document.getElementById("npSheetBackdrop");
     if (!city || !warehouse || !cityRef || !warehouseRef || !cityList || !warehouseList) return;
 
+    // Keep mobile suggestion sheets outside form/fieldset stacking contexts.
+    // Installed iOS/Chrome PWAs can otherwise paint the backdrop above the
+    // fixed sheet, leaving the user on a darkened screen with no visible list.
+    const listAnchors = new Map();
+    [cityList, warehouseList].forEach((list) => {
+      const anchor = document.createComment(`np-sheet-anchor-${list.id}`);
+      list.parentNode?.insertBefore(anchor, list);
+      listAnchors.set(list, anchor);
+    });
+    if (backdrop && backdrop.parentNode !== document.body) document.body.appendChild(backdrop);
+
     const CITY_CACHE_KEY = "vahome_np_city_cache_v2";
     const WAREHOUSE_CACHE_KEY = "vahome_np_warehouse_cache_v2";
     const CITY_TTL = 24 * 60 * 60 * 1000;
@@ -350,13 +361,71 @@
       writeCache(key, cache);
     };
     const isMobileSheet = () => window.matchMedia("(max-width: 760px)").matches;
+    let sheetViewportRaf = 0;
+    const clearSheetGeometry = (list) => {
+      list.style.removeProperty("--np-sheet-top");
+      list.style.removeProperty("--np-sheet-max-height");
+    };
+    const syncSheetViewport = () => {
+      window.cancelAnimationFrame(sheetViewportRaf);
+      sheetViewportRaf = window.requestAnimationFrame(() => {
+        const list = activeList;
+        if (!isMobileSheet() || !list || list.hidden) {
+          clearSheetGeometry(cityList);
+          clearSheetGeometry(warehouseList);
+          document.body.classList.remove("np-keyboard-open");
+          return;
+        }
+
+        const vv = window.visualViewport;
+        const scrollTop = window.scrollY || window.pageYOffset || 0;
+        const viewportTop = scrollTop + Math.max(0, Number(vv?.offsetTop || 0));
+        const viewportHeight = Math.max(240, Number(vv?.height || window.innerHeight || 0));
+        const keyboardInset = Math.max(0, Number(window.innerHeight || viewportHeight) - viewportHeight);
+        const keyboardOpen = keyboardInset > 110;
+        const preferredHeight = keyboardOpen ? viewportHeight - 16 : Math.min(viewportHeight * 0.62, 540);
+        const maxHeight = Math.max(210, Math.min(preferredHeight, viewportHeight - 12));
+        const top = Math.max(viewportTop + 6, viewportTop + viewportHeight - maxHeight);
+
+        list.style.setProperty("--np-sheet-top", `${Math.round(top)}px`);
+        list.style.setProperty("--np-sheet-max-height", `${Math.round(maxHeight)}px`);
+        document.body.classList.toggle("np-keyboard-open", keyboardOpen);
+      });
+    };
+    const portalList = (list) => {
+      if (list.parentNode !== document.body) document.body.appendChild(list);
+    };
+    const restoreList = (list) => {
+      const anchor = listAnchors.get(list);
+      if (anchor?.parentNode && list.parentNode !== anchor.parentNode) {
+        anchor.parentNode.insertBefore(list, anchor.nextSibling);
+      }
+    };
     const syncBackdrop = () => {
-      if (!backdrop) return;
-      const open = Boolean(activeList && !activeList.hidden && isMobileSheet());
-      backdrop.hidden = !open;
+      const mobile = isMobileSheet();
+      if (activeList && !activeList.hidden) {
+        if (mobile) portalList(activeList);
+        else restoreList(activeList);
+      } else if (!mobile) {
+        restoreList(cityList);
+        restoreList(warehouseList);
+      }
+      const open = Boolean(activeList && !activeList.hidden && mobile);
+      if (backdrop) backdrop.hidden = !open;
       document.body.classList.toggle("np-sheet-open", open);
+      if (open) {
+        syncSheetViewport();
+        window.setTimeout(syncSheetViewport, 80);
+        window.setTimeout(syncSheetViewport, 260);
+      } else {
+        clearSheetGeometry(cityList);
+        clearSheetGeometry(warehouseList);
+        document.body.classList.remove("np-keyboard-open");
+      }
     };
     const openList = (input, list) => {
+      if (isMobileSheet()) portalList(list);
+      else restoreList(list);
       list.hidden = false;
       input.setAttribute("aria-expanded", "true");
       activeList = list;
@@ -366,6 +435,7 @@
       list.hidden = true;
       input.setAttribute("aria-expanded", "false");
       if (activeList === list) activeList = null;
+      restoreList(list);
       syncBackdrop();
     };
     const closeAll = () => {
@@ -627,6 +697,9 @@
     });
     backdrop?.addEventListener("click", closeAll);
     window.addEventListener("resize", syncBackdrop);
+    window.addEventListener("scroll", syncSheetViewport, { passive: true });
+    window.visualViewport?.addEventListener("resize", syncSheetViewport);
+    window.visualViewport?.addEventListener("scroll", syncSheetViewport);
 
     const apiReady = window.VAHomeSupabase?.configured?.() && typeof window.VAHomeSupabase.novaPoshtaLookup === "function";
     if (!apiReady) {
@@ -637,9 +710,15 @@
       warehouse.placeholder = "Номер або частина адреси";
       preloadWarehouses();
     } else if (city.value.trim()) {
-      form.dataset.npCityManual = "true";
-      form.dataset.npWarehouseManual = "true";
-      warehouse.disabled = false;
+      // A remembered city name without Nova Poshta refs is not manual input.
+      // Keep search active so tapping the field can verify the city instead of
+      // silently disabling suggestions on Safari/PWA.
+      form.dataset.npCityManual = "false";
+      form.dataset.npWarehouseManual = "false";
+      warehouse.value = "";
+      warehouseRef.value = "";
+      warehouse.disabled = true;
+      if (cityHint) cityHint.textContent = "Натисніть поле, щоб підтвердити населений пункт.";
     } else {
       warehouse.disabled = true;
     }

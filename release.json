@@ -1,16 +1,15 @@
 {
-  "version": "13.7.0-rc.23",
-  "name": "SINGLE WAREHOUSE AUTOSELECT",
+  "version": "13.7.0-rc.25",
+  "name": "SAFARI VISUAL VIEWPORT CITY SEARCH FIX",
   "date": "2026-07-26",
-  "base": "13.7.0-rc.22-CHECKOUT-SPEED-COURIER-UX",
+  "base": "13.7.0-rc.24-PWA-CITY-SHEET-VISIBILITY-FIX",
   "changes": [
-    "Automatically selects a warehouse when Nova Poshta returns exactly one option for the chosen settlement",
-    "Shows a clear automatic-selection hint for a sole branch or postomat",
-    "Keeps the search field unchanged when a settlement has multiple warehouse options",
-    "Applies the same one-option logic to fresh and locally cached warehouse lists",
-    "Guards warehouse preload responses against city or delivery-method changes",
-    "Preserved RC22 fast city and warehouse search, courier delivery and mobile bottom-sheet UX",
-    "Preserved RC21 wishlist redirect and all RC20 PWA black-strip fixes",
-    "Bumped all live assets and the PWA cache to RC23"
+    "Positions city and warehouse sheets inside Safari's live visual viewport above the keyboard",
+    "Recalculates sheet geometry during visualViewport resize, scroll, browser-bar movement and page scroll",
+    "Uses an absolute body portal so iOS cannot hide the sheet behind the software keyboard",
+    "Keeps remembered city text searchable instead of incorrectly switching Nova Poshta autocomplete to manual mode",
+    "Clears unverified remembered warehouse text until the city is selected from Nova Poshta",
+    "Preserves fast cached search, request cancellation, courier delivery and single-warehouse autoselect",
+    "Bumped live assets and PWA cache to RC25"
   ]
 }

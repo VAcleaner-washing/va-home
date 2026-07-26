@@ -15,7 +15,7 @@ Validated:
 - warehouse search: one-time preload, local filtering, 6-hour cache, remote fallback
 - manual-entry and retry recovery states
 - mobile results bottom sheet and safe-area rules
-- PWA cache version bumped to 13.7.0-rc23
+- PWA cache version bumped to 13.7.0-rc25
 - RC22 checkout speed and courier UX retained
 - RC21 wishlist redirect retained
 - RC20 PWA lower black-strip fixes retained

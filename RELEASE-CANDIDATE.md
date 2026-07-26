@@ -1,4 +1,4 @@
-# VA HOME v13.7.0-rc.23 — Single Warehouse Autoselect
+# VA HOME v13.7.0-rc.25 — Single Warehouse Autoselect
 
 ## Нове в RC23
 
@@ -67,3 +67,10 @@
 ## Статус
 
 Статичні перевірки Release Candidate пройдено. Перед production-публікацією потрібно додатково перевірити встановлення PWA на реальному iPhone та Android, а також виконати два живі тестові замовлення й перевірити відображення платіжних реквізитів.
+
+
+## RC24 — PWA city/warehouse sheet visibility
+
+- Mobile suggestion sheets are portalled to `document.body`, so the dimming layer can no longer cover them in an installed PWA.
+- The backdrop is now a lightweight translucent layer without blur.
+- No Supabase redeploy is required for this RC24-only frontend fix.
