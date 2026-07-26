@@ -586,7 +586,7 @@ img,video,canvas,svg{max-width:100%}
 /* RC32 — premium promo workspace */
 .admin-promo-dialog{width:min(820px,calc(100vw - 40px));max-width:820px;max-height:calc(100dvh - 40px);padding:0;border:1px solid rgba(202,169,115,.2);border-radius:24px;background:#0d0c0b;color:#f5f0e8;box-shadow:0 32px 90px rgba(0,0,0,.62);overflow:hidden}
 .admin-promo-dialog::backdrop{background:rgba(4,4,4,.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.admin-promo-shell{max-height:calc(100dvh - 40px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(202,169,115,.45) transparent}
+.admin-promo-shell{max-height:calc(100dvh - 40px);overflow:auto;overscroll-behavior:contain;overflow-anchor:none;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:rgba(202,169,115,.45) transparent}
 .admin-promo-shell__header{position:sticky;top:0;z-index:3;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;padding:34px 38px 28px;background:linear-gradient(180deg,#11100f 75%,rgba(17,16,15,.94));border-bottom:1px solid rgba(255,255,255,.07)}
 .admin-promo-shell__header h2{margin:8px 0 6px;font-family:Georgia,'Times New Roman',serif;font-size:clamp(34px,5vw,48px);font-weight:400;letter-spacing:-.035em;line-height:1}
 .admin-promo-shell__subtitle{margin:0;color:#8f8a82;font-size:14px}
@@ -605,9 +605,9 @@ img,video,canvas,svg{max-width:100%}
 .admin-promo-code-control{display:grid;grid-template-columns:1fr auto;gap:10px}.admin-promo-field--code input{text-transform:uppercase;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:18px;letter-spacing:.08em}
 .admin-promo-generate{min-width:126px;padding:0 16px;border:1px solid rgba(202,169,115,.25);border-radius:12px;background:rgba(202,169,115,.08);color:#d4b984;font-size:12px;letter-spacing:.04em;transition:.18s ease}.admin-promo-generate:hover{background:rgba(202,169,115,.16);border-color:rgba(202,169,115,.5)}
 .admin-promo-value-wrap{position:relative}.admin-promo-value-wrap input{padding-right:54px}.admin-promo-value-wrap span{position:absolute;right:15px;top:50%;transform:translateY(-50%);color:#77716a;font-size:12px;pointer-events:none}
-.admin-promo-switch{display:inline-flex;align-items:center;gap:10px;width:max-content;margin-top:2px;color:#99938a;font-size:12px;cursor:pointer}.admin-promo-switch input{position:absolute;opacity:0;pointer-events:none}
+.admin-promo-switch{position:relative;display:inline-flex;align-items:center;gap:10px;width:max-content;margin-top:2px;color:#99938a;font-size:12px;cursor:pointer;user-select:none;-webkit-user-select:none}.admin-promo-switch input{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;opacity:0}
 .admin-promo-switch__track{position:relative;width:38px;height:22px;border-radius:999px;background:#2a2723;border:1px solid rgba(255,255,255,.08);transition:.2s ease}.admin-promo-switch__track::after{content:'';position:absolute;left:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#858079;transition:.2s ease}
-.admin-promo-switch input:checked+.admin-promo-switch__track{background:#b58a4b;border-color:#d0ae73}.admin-promo-switch input:checked+.admin-promo-switch__track::after{left:19px;background:#fff7ea}
+.admin-promo-switch input:checked+.admin-promo-switch__track{background:#b58a4b;border-color:#d0ae73}.admin-promo-switch input:checked+.admin-promo-switch__track::after{left:19px;background:#fff7ea}.admin-promo-switch input:focus-visible+.admin-promo-switch__track{outline:2px solid rgba(202,169,115,.75);outline-offset:3px}
 .admin-promo-switch--large{font-size:13px;color:#e4ddd3}.admin-promo-section--status{grid-template-columns:1fr auto;align-items:center;gap:24px}
 .admin-promo-footer{position:sticky;bottom:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:18px;padding:22px 0 6px;background:linear-gradient(0deg,#0d0c0b 78%,rgba(13,12,11,.92))}
 .admin-promo-footer__actions{display:flex;gap:10px;margin-left:auto}.admin-promo-footer .btn{min-width:148px;height:48px;border-radius:12px}
@@ -615,3 +615,7 @@ img,video,canvas,svg{max-width:100%}
 #promoProductsField.is-hidden,#promoValueField.is-hidden{display:none}.admin-promo-field input:disabled{opacity:.42;cursor:not-allowed}
 .admin-promo-card{position:relative;overflow:hidden;border-radius:16px;transition:transform .2s ease,border-color .2s ease,background .2s ease}.admin-promo-card::before{content:'';position:absolute;inset:0 auto 0 0;width:2px;background:linear-gradient(#d4b473,#8f6834);opacity:0;transition:.2s ease}.admin-promo-card:hover{transform:translateY(-2px);border-color:rgba(202,169,115,.25);background:rgba(202,169,115,.035)}.admin-promo-card:hover::before{opacity:1}
 @media(max-width:700px){.admin-promo-dialog{width:100vw;max-width:none;max-height:100dvh;border-radius:0;border:0}.admin-promo-shell{max-height:100dvh}.admin-promo-shell__header{padding:26px 20px 22px}.admin-promo-shell__header h2{font-size:36px}.admin-promo-form{padding:0 20px 24px}.admin-promo-grid{grid-template-columns:1fr}.admin-promo-code-control{grid-template-columns:1fr}.admin-promo-generate{height:44px}.admin-promo-section--status{grid-template-columns:1fr}.admin-promo-footer{align-items:stretch;flex-direction:column-reverse}.admin-promo-footer__actions{width:100%;margin:0}.admin-promo-footer .btn{min-width:0;flex:1}.admin-promo-delete{align-self:flex-start}}
+
+/* RC34 — stable promo form viewport */
+.admin-promo-form,.admin-promo-section,.admin-promo-footer{overflow-anchor:none}
+.admin-promo-field input:disabled{background:#11100f;color:#746f68;border-color:rgba(255,255,255,.06);opacity:.62}

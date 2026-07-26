@@ -1,13 +1,12 @@
 {
-  "version": "13.7.0-rc.31",
-  "name": "ADMIN PROMO CODE MANAGEMENT",
+  "version": "13.7.0-rc.33",
+  "name": "PROMO SWITCH SCROLL FIX",
   "date": "2026-07-26",
-  "base": "13.7.0-rc.30-IOS-FIRST-OPEN-PICKER-FIX",
+  "base": "13.7.0-rc.32-PREMIUM-PROMO-ADMIN-UI",
   "changes": [
-    "Adds promo code CRUD management to the admin panel",
-    "Supports fixed, percentage and free-shipping promotions",
-    "Supports dates, minimum order, usage limits and product eligibility",
-    "Validates promo codes through a dedicated Supabase Edge Function",
-    "Performs final server-side validation and redemption tracking in create-order"
+    "Fixes the promo modal jumping to an empty area when toggling usage or end-date switches",
+    "Anchors invisible checkbox controls to their visible switches",
+    "Preserves the internal modal scroll position while conditional fields are enabled or disabled",
+    "No Supabase redeploy or SQL migration required"
   ]
 }
