@@ -1,4 +1,4 @@
-# VA HOME v14.0.0 RC6 — Atmosphere OS
+# VA HOME v14.0.0 RC6.1 — Atmosphere OS
 
 ## Production state
 

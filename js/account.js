@@ -198,8 +198,12 @@
       const isWelcome = activeCredit.credit_type === "welcome";
       next = {
         eyebrow: `ВАШ НАСТУПНИЙ КРОК · ${isWelcome ? "WELCOME CREDIT" : "DISCOVERY CREDIT"}`,
-        title: `На вашому акаунті зараховано ${money(activeCredit.amount)} на замовлення повнорозмірного аромату`,
-        text: `Персональний код діє до ${expires} і застосовується один раз. Ваш промокод доступний нижче в кабінеті.`,
+        title: isWelcome
+          ? `${money(activeCredit.amount)} на ваш перший повнорозмірний аромат`
+          : `На вашому акаунті — ${money(activeCredit.amount)} на повнорозмірний аромат`,
+        text: isWelcome
+          ? `Персональний код діє до ${expires}, лише на першу повнорозмірну покупку та не сумується з іншими пропозиціями.`
+          : `Персональний код діє до ${expires}, прив’язаний до вашого email і використовується один раз.`,
         label: "Обрати аромат із кредитом",
         href: "catalog.html",
         showCreditLink: true
@@ -505,6 +509,9 @@
       try { await navigator.clipboard.writeText(button.dataset.copyCredit); window.VAHome?.showToast("Персональний код скопійовано"); } catch (_) {}
     }));
     renderNextStep();
+    if (location.hash === "#accountCreditSection") {
+      requestAnimationFrame(() => requestAnimationFrame(() => section.scrollIntoView({ behavior: "smooth", block: "start" })));
+    }
   }
 
   async function loadDiscoveryCredits() {
@@ -774,6 +781,13 @@
     document.querySelectorAll("[data-account-tab]").forEach((button) => button.addEventListener("click", () => {
       activateAccountTab(button.dataset.accountTab);
     }));
+    $("#accountNextStepCreditLink")?.addEventListener("click", (event) => {
+      event.preventDefault();
+      const section = $("#accountCreditSection");
+      if (!section || section.hidden) return;
+      history.replaceState(null, "", "#accountCreditSection");
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }
 
   document.addEventListener("DOMContentLoaded", async () => {

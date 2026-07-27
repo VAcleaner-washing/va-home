@@ -1,10 +1,13 @@
 {
   "version": "14.0.0",
-  "channel": "RC6",
-  "name": "ATMOSPHERE OS — WELCOME CREDIT & RITUAL DETAIL",
+  "channel": "RC6.1",
+  "name": "ATMOSPHERE OS — ACCOUNT HIERARCHY POLISH",
   "date": "2026-07-27",
   "base": "13.8.36-AUTOMATION-HARDENING-LIVE-TEST",
   "changes": [
+    "Shortens the Discovery and Welcome Credit next-step headline for faster scanning",
+    "Turns the promo-code jump into a clear secondary action with equal visual affordance",
+    "Compacts the Atmosphere introduction and improves desktop/mobile hierarchy",
     "Adds Welcome Credit: personal 100 UAH code for seven days after a signed-in new customer completes Personal Scent Profile",
     "Restricts Welcome Credit to the first full-size fragrance purchase and prevents stacking through the single-code checkout flow",
     "Shows the Welcome Credit in the Atmosphere account hub and guides signed-out test users to activate it in their account",
