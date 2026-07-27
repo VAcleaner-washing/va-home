@@ -3062,3 +3062,50 @@ button, input, select, textarea, a{ min-width: 0; }
   .scent-reading-card--lead .scent-reading-card__media{ aspect-ratio: 16 / 10; }
   .scent-reading-card__body h3{ font-size: clamp(2rem,10vw,2.75rem); }
 }
+
+/* v13.8.32 — readable recommendation rationale */
+.guide-result-reason{
+  display:grid;
+  margin:clamp(16px,2vw,22px) 0 0;
+  padding:0;
+  overflow:hidden;
+  color:var(--guide-soft);
+  border-top:1px solid rgba(199,151,77,.18);
+  border-bottom:1px solid rgba(199,151,77,.12);
+  font-size:.82rem;
+  line-height:1.55
+}
+.guide-result-reason__row{
+  display:grid;
+  grid-template-columns:minmax(104px,.34fr) minmax(0,1fr);
+  align-items:start;
+  gap:clamp(12px,1.7vw,22px);
+  padding:11px 0
+}
+.guide-result-reason__row + .guide-result-reason__row{
+  border-top:1px solid rgba(244,240,233,.08)
+}
+.guide-result-reason__label{
+  color:rgba(199,151,77,.92);
+  font-size:.64rem;
+  font-weight:600;
+  letter-spacing:.1em;
+  line-height:1.45;
+  text-transform:uppercase
+}
+.guide-result-reason__row p{
+  min-width:0;
+  margin:0;
+  color:var(--guide-soft);
+  overflow-wrap:anywhere
+}
+.guide-result-reason__row--why p{
+  color:rgba(244,240,233,.78)
+}
+@media(max-width:620px){
+  .guide-result-reason__row{
+    grid-template-columns:1fr;
+    gap:4px;
+    padding:10px 0
+  }
+}

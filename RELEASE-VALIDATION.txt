@@ -1,14 +1,14 @@
-VA HOME v13.8.31 — UNIFIED PREMIUM COMPOSITION INTENT COPY
+VA HOME v13.8.32 — REVIEW LOAD, FLORAL FILTER & GUIDE READABILITY FIX
 
 BASE
-- v13.8.30 exact v13.8.27 DNA block geometry
+- v13.8.31 Unified Premium Composition Intent Copy
 - Original project lineage remains v13.8.17 AUTHENTICATED CHECKOUT EMAIL PREFILL
 
-CONTENT UPDATE
-- All 18 “Задум композиції” sentences rewritten in one premium editorial voice
-- Defensive negations and internal perfumer-language removed
-- Each sentence remains grounded in approved notes and spatial character
-- One-sentence format retained for the existing composition layout
+FIXES
+- Home review cards remain visible while Supabase review photos preload
+- No black/empty dynamic card during the review showcase refresh
+- Hotel Spring is included in the Floral catalog filter together with Evening Ritual
+- Scent-guide recommendation copy is separated into “Чому підходить”, “Палички” and “Догляд” rows
 
 PRESERVED
 - Exact v13.8.27 composition block geometry
@@ -18,7 +18,7 @@ PRESERVED
 - Authenticated checkout email prefill
 
 VALIDATION
-- Central JSON, generated products.js and all 18 static product pages synchronized
-- Product content, scent-guide and radar validators pass
+- Central JSON and generated products.js synchronized
 - JavaScript/MJS syntax passes
+- Product content, scent-guide and final release validators pass
 - Root and Admin PWA versions synchronized

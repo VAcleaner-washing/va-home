@@ -73,6 +73,39 @@
 
   const verifiedIcon = `<svg aria-hidden="true" viewBox="0 0 20 20"><path d="m6.6 10.2 2.1 2.1 4.8-5"/><path d="M10 2.4 12 3.7l2.4-.1.8 2.3 2 1.4-.8 2.2.8 2.2-2 1.4-.8 2.3-2.4-.1-2 1.3-2-1.3-2.4.1-.8-2.3-2-1.4.8-2.2-.8-2.2 2-1.4.8-2.3 2.4.1L10 2.4Z"/></svg>`;
 
+  const preloadPhoto = (src) => new Promise((resolve) => {
+    if (!src) return resolve(false);
+    const image = new Image();
+    let settled = false;
+    const finish = (ok) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve(ok);
+    };
+    const timer = window.setTimeout(() => finish(false), 12000);
+    image.onload = () => finish(true);
+    image.onerror = () => finish(false);
+    image.decoding = "async";
+    image.src = src;
+  });
+
+  const rowSignature = (row) => [
+    row?.product_slug || "",
+    row?.photo_url || "",
+    row?.customer_name || "",
+    String(row?.review_text || "").replace(/\s+/g, " ").trim(),
+    row?.verified_purchase ? "1" : "0"
+  ].join("|");
+
+  const gridSignature = (grid) => Array.from(grid.querySelectorAll(".home-review-card")).map((card) => [
+    card.getAttribute("href") || "",
+    card.querySelector("img")?.getAttribute("src") || "",
+    card.querySelector(".home-review-card__product")?.textContent?.trim() || "",
+    card.querySelector(".home-review-card__overlay p")?.textContent?.replace(/\s+/g, " ").trim() || "",
+    card.querySelector("footer strong")?.textContent?.trim() || ""
+  ].join("|")).join("||");
+
   document.addEventListener("DOMContentLoaded", async () => {
     const section = document.getElementById("homeReviewsSection");
     const grid = document.getElementById("homeReviewsGrid");
@@ -93,20 +126,26 @@
       }
 
       allRows = Array.isArray(allRows) ? allRows.filter(Boolean) : [];
-      const rows = selectShowcase(allRows);
+      const selectedRows = selectShowcase(allRows);
+      if (!selectedRows.length) return;
+
+      // Keep the server-rendered cards visible while remote photos are warming the browser cache.
+      // This prevents a loaded review card from turning into a black placeholder after API refresh.
+      const readiness = await Promise.all(selectedRows.map(async (row) => ({ row, ready: await preloadPhoto(row.photo_url) })));
+      const rows = readiness.filter((item) => item.ready).map((item) => item.row);
       if (!rows.length) return;
 
-      grid.className = `home-reviews__grid home-reviews__grid--${rows.length}`;
-      grid.innerHTML = rows.map((row, index) => {
+      const renderedRows = rows.map((row, index) => {
         const product = typeof window.getProduct === "function" ? window.getProduct(row.product_slug) : null;
         const productName = esc(product?.name || row.product_slug || "VA HOME");
         const href = product ? `products/${esc(product.id)}.html#reviews` : "catalog.html";
         const name = esc(row.customer_name || "Клієнт VA HOME");
         const review = esc(trimReview(row.review_text, reviewLimitForIndex(index)));
         const verified = Boolean(row.verified_purchase);
+        const eager = index < 2;
 
-        return `<a class="home-review-card home-review-card--${index + 1}" href="${href}" aria-label="Відгук ${name} про ${productName}">
-          <img class="home-review-card__photo" src="${esc(row.photo_url)}" alt="Фото клієнта до відгуку про ${productName}" loading="lazy" decoding="async">
+        return `<a class="home-review-card home-review-card--${index + 1}" href="${href}" aria-label="Відгук ${name} про ${productName}" data-review-signature="${esc(rowSignature(row))}">
+          <img class="home-review-card__photo" src="${esc(row.photo_url)}" alt="Фото клієнта до відгуку про ${productName}" loading="${eager ? "eager" : "lazy"}" decoding="async"${eager ? ' fetchpriority="high"' : ""}>
           <span class="home-review-card__product">${productName}</span>
           <div class="home-review-card__overlay">
             <p>${review}</p>
@@ -117,6 +156,14 @@
           </div>
         </a>`;
       }).join("");
+
+      const staging = document.createElement("div");
+      staging.innerHTML = renderedRows;
+      const desiredSignature = gridSignature(staging);
+      if (desiredSignature !== gridSignature(grid)) {
+        grid.className = `home-reviews__grid home-reviews__grid--${rows.length}`;
+        grid.innerHTML = renderedRows;
+      }
 
       let cards = Array.from(grid.querySelectorAll(".home-review-card"));
       cards.forEach((card) => {

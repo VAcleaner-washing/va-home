@@ -1,12 +1,12 @@
 {
-  "version": "13.8.31",
-  "name": "UNIFIED PREMIUM COMPOSITION INTENT COPY",
+  "version": "13.8.32",
+  "name": "REVIEW LOAD, FLORAL FILTER & GUIDE READABILITY FIX",
   "date": "2026-07-27",
-  "base": "13.8.31-EXACT-V13.8.27-DNA-BLOCK-GEOMETRY",
+  "base": "13.8.31-UNIFIED-PREMIUM-COMPOSITION-INTENT-COPY",
   "changes": [
-    "Rewrites the “Задум композиції” copy for all 18 fragrances into one consistent premium editorial voice",
-    "Removes defensive negations and internal technical phrasing from the public product narrative",
-    "Keeps every sentence grounded in the approved fragrance notes and intended spatial character",
-    "Preserves the exact v13.8.27 composition-block geometry and six-axis fragrance DNA from v13.8.31"
+    "Keeps the server-rendered review showcase visible while Supabase photos preload, preventing black/empty cards during refresh",
+    "Adds Hotel Spring to the Floral catalog filter based on its approved yuzu, exotic-flower and tulip profile",
+    "Separates “Чому підходить”, “Палички” and “Догляд” into three readable rows in scent-guide recommendations",
+    "Preserves product content, six-axis DNA, reed-care disclosure, checkout email prefill and stable v13.8.27 block geometry"
   ]
 }

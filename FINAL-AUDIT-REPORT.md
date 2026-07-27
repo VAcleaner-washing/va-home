@@ -1,21 +1,30 @@
-# VA HOME v13.8.31 — Final Audit
+# VA HOME v13.8.32 — Final Audit
 
-The public “Задум композиції” narrative was updated for all 18 fragrances. Every scent now uses the same concise premium editorial structure: one grounded sensory sentence built from approved notes and the intended spatial atmosphere.
+This release fixes three customer-visible issues without changing the product architecture or the stable composition block geometry.
 
-Removed from the public copy:
-- defensive negations and comparisons;
-- internal formulation language such as “підтримані”, “побудовані навколо” and “утримують характер”;
-- dry utility wording that read like an internal perfumer note rather than final brand copy.
+## Fixed
 
-Preserved without visual or behavioral changes:
-- exact v13.8.27 composition-block geometry restored in v13.8.30;
+- The homepage review showcase keeps its server-rendered cards visible while current Supabase photos preload. The grid updates only after usable images are ready, preventing a loaded review card from becoming a black placeholder.
+- The first two large review images use eager, high-priority loading.
+- Hotel Spring is now included in the `floral` character group. The “Квіткові” catalog filter returns Evening Ritual and Hotel Spring.
+- Scent-guide recommendations display “Чому підходить”, “Палички” and “Догляд” as three separate rows instead of one dense paragraph.
+
+## Preserved
+
+- all 18 approved “Задум композиції” texts from v13.8.31;
+- exact v13.8.27 composition-block geometry;
 - six-axis fragrance DNA and Warmth;
-- central product data, catalogue filters and validated scent guide;
+- central product data and scent-guide scoring;
 - individual reed setup and care disclosure;
-- authenticated checkout email prefill.
+- authenticated checkout email prefill;
+- v13.8.17 stable product gallery baseline.
 
-Validated:
-- all 18 central formulaIntent values are unique and non-empty;
-- generated `js/products.js` contains the approved copy;
-- every static product page contains the matching sentence;
-- JavaScript/MJS syntax, PWA versions and local paths pass release checks.
+## Validated
+
+- 53 HTML pages and 18 product pages;
+- all 1,728 scent-guide answer profiles;
+- central product JSON and generated `js/products.js` synchronization;
+- Floral filter contains at least two relevant products and includes Hotel Spring;
+- separated recommendation rows exist in JavaScript and CSS;
+- homepage review preloading and stable fallback are present;
+- JavaScript/MJS syntax, PWA versions, local assets and ZIP integrity.

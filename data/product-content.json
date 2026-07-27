@@ -1,6 +1,6 @@
 {
   "schemaVersion": 4,
-  "release": "13.8.31",
+  "release": "13.8.32",
   "source": {
     "workbook": "VA HOME  Ultra Molecular +(3).xlsx",
     "worksheet": "VA HOME  Ultra Molecular 2.1",
@@ -760,6 +760,7 @@
       "character": [
         "clean",
         "fresh",
+        "floral",
         "hotel"
       ],
       "room": [

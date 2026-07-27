@@ -35,7 +35,7 @@ try {
 
 for (const file of htmlFiles) {
   const html = fs.readFileSync(file, "utf8");
-  if (/\?v=13\.8\.(?!31\b)\d+/.test(html)) errors.push(`stale asset version: ${path.relative(root, file)}`);
+  if (/\?v=13\.8\.(?!32\b)\d+/.test(html)) errors.push(`stale asset version: ${path.relative(root, file)}`);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
   const duplicates = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
   if (duplicates.length) errors.push(`duplicate IDs ${duplicates.join(", ")}: ${path.relative(root, file)}`);
@@ -70,8 +70,19 @@ for (const file of files.filter((file) => file.endsWith(".js") || file.endsWith(
   }
 }
 
+
+const productContent = JSON.parse(fs.readFileSync(path.join(root, "data", "product-content.json"), "utf8"));
+const hotelSpring = (productContent.products || []).find((product) => product.id === "hotel-spring");
+const floralProducts = (productContent.products || []).filter((product) => (product.character || []).includes("floral"));
+if (!hotelSpring?.character?.includes("floral")) errors.push("Hotel Spring is missing from the Floral catalog filter");
+if (floralProducts.length < 2) errors.push("Floral catalog filter must contain at least two relevant products");
+const scentGuideJs = fs.readFileSync(path.join(root, "js", "scent-guide.js"), "utf8");
+if (!scentGuideJs.includes("guide-result-reason__row") || !scentGuideJs.includes("renderReason")) errors.push("scent-guide recommendation details are not separated into readable rows");
+const homeReviewsJs = fs.readFileSync(path.join(root, "js", "home-reviews.js"), "utf8");
+if (!homeReviewsJs.includes("preloadPhoto") || !homeReviewsJs.includes("Keep the server-rendered cards visible")) errors.push("home review photo preloading/stable fallback is missing");
+
 const release = JSON.parse(fs.readFileSync(path.join(root, "release.json"), "utf8"));
-if (release.version !== "13.8.31") errors.push(`release.json version is ${release.version}`);
+if (release.version !== "13.8.32") errors.push(`release.json version is ${release.version}`);
 if (!fs.existsSync(path.join(root, "data", "product-content.json"))) errors.push("central product content missing");
 if (!fs.existsSync(path.join(root, "PRODUCT-CONTENT-MASTER.md"))) errors.push("product content documentation missing");
 
@@ -82,7 +93,7 @@ if (errors.length) {
 }
 console.log(JSON.stringify({
   ok: true,
-  version: "13.8.31",
+  version: "13.8.32",
   htmlPages: htmlFiles.length,
   productPages: htmlFiles.filter((file) => file.includes(`${path.sep}products${path.sep}`)).length,
   centralProductSource: true,

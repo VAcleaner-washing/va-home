@@ -1,5 +1,5 @@
 /* ==========================================================================
-   VA HOME v13.8.31 — Personal Scent Experience
+   VA HOME v13.8.32 — Personal Scent Experience
    Questions, option copy and scoring rules come from data/product-content.json
    through the generated window.VA_SCENT_GUIDE object.
    ========================================================================== */
@@ -168,10 +168,31 @@
       pieces.push(matched.character.slice(0, 2).map((key) => labelFor("character", key).toLowerCase()).join(" + "));
     }
     const roomOption = getOption("room", state.answers.room);
-    if (matched.room && roomOption) pieces.push(`підходить для: ${roomOption.title.toLowerCase()}`);
+    if (matched.room && roomOption) pieces.push(`підходить для ${roomOption.title.toLowerCase()}`);
     if (matched.intensity) pieces.push("відповідає бажаній присутності");
-    const why = pieces.length ? pieces.join(" · ") : "збалансований збіг за вашим профілем";
-    return `Чому підходить: ${why}. Палички: ${reedSetupSummary(product)}. Догляд: ${product.reedCare?.publicText || "перевертайте за потреби"}`;
+    return {
+      why: pieces.length ? pieces.join(" · ") : "Збалансований збіг за вашим профілем",
+      reeds: reedSetupSummary(product),
+      care: product.reedCare?.publicText || "Перевертайте палички за потреби"
+    };
+  }
+
+  function renderReason(product, matched) {
+    const reason = buildReason(product, matched);
+    return `<div class="guide-result-reason" aria-label="Пояснення рекомендації">
+      <div class="guide-result-reason__row guide-result-reason__row--why">
+        <span class="guide-result-reason__label">Чому підходить</span>
+        <p>${escapeHtml(reason.why)}</p>
+      </div>
+      <div class="guide-result-reason__row">
+        <span class="guide-result-reason__label">Палички</span>
+        <p>${escapeHtml(reason.reeds)}</p>
+      </div>
+      <div class="guide-result-reason__row">
+        <span class="guide-result-reason__label">Догляд</span>
+        <p>${escapeHtml(reason.care)}</p>
+      </div>
+    </div>`;
   }
 
   function renderProfile() {
@@ -206,7 +227,7 @@
     if (!grid || !window.VAHomeProducts) return;
     grid.innerHTML = state.recommendations.map(({ product, matched, percent }, index) => {
       const card = window.VAHomeProducts.renderProductCard(product, "", { context: "guide" });
-      const reason = `<p class="guide-result-reason">${escapeHtml(buildReason(product, matched))}</p>`;
+      const reason = renderReason(product, matched);
       const enhanced = card.replace('<div class="product-card__meta">', reason + '<div class="product-card__meta">');
       const match = `${percent}% відповідності`;
       const withMatch = enhanced.replace('<div class="product-card__body">', `<div class="product-card__body"><span class="guide-result-match">${match}</span>`);
