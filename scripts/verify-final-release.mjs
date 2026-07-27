@@ -27,10 +27,15 @@ try {
 } catch {
   errors.push("scent-guide matrix validator failed");
 }
+try {
+  childProcess.execFileSync(process.execPath, [path.join(root, "scripts", "verify-product-radar.mjs"), root], { stdio: "inherit" });
+} catch {
+  errors.push("six-axis product radar validator failed");
+}
 
 for (const file of htmlFiles) {
   const html = fs.readFileSync(file, "utf8");
-  if (/\?v=13\.8\.(?!27\b)\d+/.test(html)) errors.push(`stale asset version: ${path.relative(root, file)}`);
+  if (/\?v=13\.8\.(?!31\b)\d+/.test(html)) errors.push(`stale asset version: ${path.relative(root, file)}`);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
   const duplicates = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
   if (duplicates.length) errors.push(`duplicate IDs ${duplicates.join(", ")}: ${path.relative(root, file)}`);
@@ -66,7 +71,7 @@ for (const file of files.filter((file) => file.endsWith(".js") || file.endsWith(
 }
 
 const release = JSON.parse(fs.readFileSync(path.join(root, "release.json"), "utf8"));
-if (release.version !== "13.8.27") errors.push(`release.json version is ${release.version}`);
+if (release.version !== "13.8.31") errors.push(`release.json version is ${release.version}`);
 if (!fs.existsSync(path.join(root, "data", "product-content.json"))) errors.push("central product content missing");
 if (!fs.existsSync(path.join(root, "PRODUCT-CONTENT-MASTER.md"))) errors.push("product content documentation missing");
 
@@ -77,11 +82,12 @@ if (errors.length) {
 }
 console.log(JSON.stringify({
   ok: true,
-  version: "13.8.27",
+  version: "13.8.31",
   htmlPages: htmlFiles.length,
   productPages: htmlFiles.filter((file) => file.includes(`${path.sep}products${path.sep}`)).length,
   centralProductSource: true,
   centralizedCatalogFilters: true,
   scentGuideProfilesTested: 1728,
+  fragranceDnaAxes: 6,
   base: "13.8.17"
 }, null, 2));

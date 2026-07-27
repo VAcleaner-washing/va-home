@@ -1,16 +1,21 @@
-# VA HOME v13.8.27 — Visible Reed-Care Disclosure
+# VA HOME v13.8.31 — Final Audit
 
-## Мета
+The public “Задум композиції” narrative was updated for all 18 fragrances. Every scent now uses the same concise premium editorial structure: one grounded sensory sentence built from approved notes and the intended spatial atmosphere.
 
-Зробити індивідуальну рекомендацію щодо перевертання паличок видимою ще до додавання товару в кошик, а не лише в нижньому блоці інструкції.
+Removed from the public copy:
+- defensive negations and comparisons;
+- internal formulation language such as “підтримані”, “побудовані навколо” and “утримують характер”;
+- dry utility wording that read like an internal perfumer note rather than final brand copy.
 
-## Реалізація
+Preserved without visual or behavioral changes:
+- exact v13.8.27 composition-block geometry restored in v13.8.30;
+- six-axis fragrance DNA and Warmth;
+- central product data, catalogue filters and validated scent guide;
+- individual reed setup and care disclosure;
+- authenticated checkout email prefill.
 
-- У hero-фактах кожної картки: тривалість, комплект, перевертання.
-- Інтервал береться з `data/product-content.json`.
-- Детальна інструкція дублюється в «Як користуватися» навмисно: коротко до покупки, повністю нижче.
-- Додано попередження, що частіше перевертання прискорює випаровування.
-
-## Перевірки
-
-Автоматична валідація всіх 18 карток, центрального контенту, JavaScript, PWA-версій та статичного HTML.
+Validated:
+- all 18 central formulaIntent values are unique and non-empty;
+- generated `js/products.js` contains the approved copy;
+- every static product page contains the matching sentence;
+- JavaScript/MJS syntax, PWA versions and local paths pass release checks.

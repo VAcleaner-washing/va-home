@@ -22,10 +22,18 @@ const reedIntervalLabel = (product) => {
   return `Кожні ${min}–${max} ${max <= 4 ? "дні" : "днів"}`;
 };
 
-if (content.release !== "13.8.27") fail(`central release is ${content.release}, expected 13.8.27`);
+if (content.release !== "13.8.31") fail(`central release is ${content.release}, expected 13.8.31`);
 if (products.length !== 18) fail(`expected 18 products, found ${products.length}`);
 if (new Set(products.map((product) => product.id)).size !== products.length) fail("duplicate product IDs");
 if (collections.length !== 4) fail(`expected 4 collections, found ${collections.length}`);
+
+const expectedScaleOrder = ["freshness", "warmth", "sweetness", "woodiness", "cleanliness", "intensity"];
+if (JSON.stringify(labels.scaleOrder || []) !== JSON.stringify(expectedScaleOrder)) fail("central fragrance scale order must contain exactly six axes");
+for (const key of expectedScaleOrder) {
+  if (!labels.scales?.[key]) fail(`missing centralized scale label ${key}`);
+  if (!labels.scaleCharacterWords?.[key]) fail(`missing centralized scale character word ${key}`);
+}
+if (labels.scales?.warmth !== "Теплість") fail("warmth must be published as Теплість");
 
 const collectionIds = new Set(collections.map((collection) => collection.id));
 for (const product of products) {
@@ -49,8 +57,9 @@ for (const product of products) {
   const expectedQuickFacts = `${product.reedSetupByArea?.standard?.label || (primary.countMin === primary.countMax ? primary.countMin : `${primary.countMin}–${primary.countMax}`)} палички`;
   if (product.quickFacts !== expectedQuickFacts) fail(`${product.id}: hero quickFacts must be exactly ${expectedQuickFacts}`);
   if (/м²|мм|для\s+\d/.test(product.quickFacts)) fail(`${product.id}: hero quickFacts repeat technical area or reed diameter`);
-  if (product.scales?.intensity == null || product.scales.intensity < 1 || product.scales.intensity > 10) {
-    fail(`${product.id}: invalid intensity`);
+  for (const key of expectedScaleOrder) {
+    const value = Number(product.scales?.[key]);
+    if (!Number.isFinite(value) || value < 0 || value > 10) fail(`${product.id}: invalid ${key} scale`);
   }
   if (!product.sourceRef?.workbookRow) fail(`${product.id}: missing workbook source row`);
   const care = product.reedCare;
@@ -192,7 +201,7 @@ for (const privateKey of ["formulaPercent", "perfumerComment", "spatialEvolution
 
 const productsJs = read("js/products.js");
 if (!productsJs.includes("AUTO-GENERATED from data/product-content.json")) fail("products.js is not marked generated");
-if (!productsJs.includes('const PRODUCT_CONTENT_VERSION = "13.8.27";')) fail("products.js content version mismatch");
+if (!productsJs.includes('const PRODUCT_CONTENT_VERSION = "13.8.31";')) fail("products.js content version mismatch");
 if (!productsJs.includes("const PRODUCT_CATALOG_FILTERS") || !productsJs.includes("const PRODUCT_SCENT_GUIDE") || !productsJs.includes("const PRODUCT_REED_CARE_POLICY") || !productsJs.includes("const PRODUCT_REED_SETUP_POLICY")) fail("generated products.js is missing centralized catalog/guide/reed-care/setup config");
 if (!productsJs.includes("window.VA_CATALOG_FILTERS") || !productsJs.includes("window.VA_SCENT_GUIDE") || !productsJs.includes("window.VA_REED_CARE_POLICY") || !productsJs.includes("window.VA_REED_SETUP_POLICY")) fail("centralized catalog/guide/reed-care/setup config is not exported to storefront modules");
 try {
@@ -218,10 +227,15 @@ for (const product of products) {
   for (const key of product.mood || []) if (!mood?.includes(htmlEscape(labels.mood[key]))) fail(`${product.id}: missing mood label ${labels.mood[key]}`);
   for (const key of product.room || []) if (!rooms?.includes(htmlEscape(labels.room[key]))) fail(`${product.id}: missing room label ${labels.room[key]}`);
   if (intensity?.trim() !== `${product.scales.intensity} / 10`) fail(`${product.id}: intensity HTML mismatch`);
+  const staticScales = extract(html, /<div class="product-detail-section" id="scalesSection">([\s\S]*?)<!-- ---- Для якої кімнати ---- -->/);
+  if (!staticScales?.includes("Теплість")) fail(`${product.id}: static warmth scale missing`);
+  for (const key of expectedScaleOrder.filter((key) => key !== "intensity")) {
+    if (!staticScales?.includes(htmlEscape(labels.scales[key]))) fail(`${product.id}: missing static scale ${labels.scales[key]}`);
+  }
   if (!html.includes(`${product.package.reedCount} чорні палички ${product.package.reedDiameterMm} мм`)) fail(`${product.id}: package reeds HTML mismatch`);
   if (!html.includes(htmlEscape(product.reedCare.publicText))) fail(`${product.id}: reed-care HTML mismatch`);
   if (!html.includes(htmlEscape(carePolicy.consumptionNote))) fail(`${product.id}: reed-care consumption note missing`);
-  if (!html.includes('id="reedSetupSection"') || !html.includes('id="productUsageSection"') || !html.includes("css/reed-guide.css?v=13.8.27")) fail(`${product.id}: customer-friendly reed guide, usage section or stylesheet missing`);
+  if (!html.includes('id="reedSetupSection"') || !html.includes('id="productUsageSection"') || !html.includes("css/reed-guide.css?v=13.8.31") || !html.includes("css/fragrance-dna.css?v=13.8.31")) fail(`${product.id}: customer-friendly reed guide, six-axis DNA stylesheet, usage section or stylesheet missing`);
   if (html.includes("<span>Старт</span>") || html.includes("<span>Площа</span>")) fail(`${product.id}: duplicated hero start/area facts are still visible`);
   if (!html.includes('id="productHeroDuration"') || !html.includes('id="productHeroPackage"') || !html.includes('id="productHeroReedCare"')) fail(`${product.id}: visible hero duration, package or reed-care fact is missing`);
   if (!html.includes(reedIntervalLabel(product))) fail(`${product.id}: hero/card reed-care interval is not visible`);
@@ -302,10 +316,10 @@ const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((entr
 });
 for (const file of walk(root).filter((file) => file.endsWith(".html"))) {
   const html = fs.readFileSync(file, "utf8");
-  if (/\?v=13\.8\.(?!27\b)\d+/.test(html)) fail(`stale asset version: ${path.relative(root, file)}`);
+  if (/\?v=13\.8\.(?!31\b)\d+/.test(html)) fail(`stale asset version: ${path.relative(root, file)}`);
 }
-if (!read("service-worker.js").includes("const VERSION = '13.8.27';")) fail("root service worker version mismatch");
-if (!read("admin/service-worker.js").includes("1.0.0-13.8.27")) fail("admin service worker version mismatch");
+if (!read("service-worker.js").includes("const VERSION = '13.8.31';")) fail("root service worker version mismatch");
+if (!read("admin/service-worker.js").includes("1.0.0-13.8.31")) fail("admin service worker version mismatch");
 
 if (errors.length) {
   console.error("Product content validation failed:");

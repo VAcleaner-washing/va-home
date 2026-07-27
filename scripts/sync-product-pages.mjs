@@ -26,7 +26,8 @@ const pills = (values, dictionary) => (values || [])
 const notesMarkup = (product) => `<div class="product-detail-section" id="notesSection"><h2 class="product-detail-section__title">Ноти</h2><p><strong>Верхні:</strong> ${escapeHtml(product.notes.top.join(", "))}</p><p><strong>Серце:</strong> ${escapeHtml(product.notes.heart.join(", "))}</p><p><strong>База:</strong> ${escapeHtml(product.notes.base.join(", "))}</p></div>`;
 
 const scalesMarkup = (product) => {
-  const fields = ["freshness", "sweetness", "woodiness", "cleanliness"];
+  const configuredOrder = Array.isArray(labels.scaleOrder) ? labels.scaleOrder : Object.keys(labels.scales || {});
+  const fields = configuredOrder.filter((key, index) => key !== "intensity" && labels.scales?.[key] && configuredOrder.indexOf(key) === index);
   return `<div class="product-detail-section" id="scalesSection"><h2 class="product-detail-section__title">Візуальні шкали</h2><div class="scent-scale">${fields.map((key) => {
     const value = Math.max(0, Math.min(10, Number(product.scales?.[key]) || 0));
     return `<div class="scent-scale__row"><span>${escapeHtml(labels.scales[key])}</span><div class="scent-scale__track"><div class="scent-scale__fill" style="width:${value * 10}%"></div></div></div>`;
@@ -116,6 +117,9 @@ function updateProductPage(file, product) {
   let html = fs.readFileSync(file, "utf8");
   if (!html.includes("css/reed-guide.css")) {
     html = html.replace(/(<link href="\.\.\/css\/site-product\.css\?v=[^"]+" rel="stylesheet"\/>)/, `$1<link href="../css/reed-guide.css?v=${content.release}" rel="stylesheet"/>`);
+  }
+  if (!html.includes("css/fragrance-dna.css")) {
+    html = html.replace(/(<link href="\.\.\/css\/site-product\.css\?v=[^"]+" rel="stylesheet"\/>)/, `$1<link href="../css/fragrance-dna.css?v=${content.release}" rel="stylesheet"/>`);
   }
   const pageDescription = `${product.shortDescription} 100 мл, ${collection.price} грн. Преміальний аромадифузор VA HOME.`;
 

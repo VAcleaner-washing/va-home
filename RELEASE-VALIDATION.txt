@@ -1,14 +1,24 @@
-VA HOME v13.8.27 — CLEAN NON-TECHNICAL REED UX
+VA HOME v13.8.31 — UNIFIED PREMIUM COMPOSITION INTENT COPY
 
-Base: v13.8.17 AUTHENTICATED CHECKOUT EMAIL PREFILL
+BASE
+- v13.8.30 exact v13.8.27 DNA block geometry
+- Original project lineage remains v13.8.17 AUTHENTICATED CHECKOUT EMAIL PREFILL
 
-Validated:
-- 53 HTML pages
-- 18 product pages
-- hero no longer duplicates Start and Area
-- hero shows only Duration and Included reeds
-- visible reed cards contain room labels and reed counts without m² ranges
-- scent-guide and compare cards show one concise standard-room recommendation
-- exact area ranges remain in central data and JSON-LD
-- centralized filters and 1,728 scent-guide profiles pass
-- JS syntax and ZIP integrity pass
+CONTENT UPDATE
+- All 18 “Задум композиції” sentences rewritten in one premium editorial voice
+- Defensive negations and internal perfumer-language removed
+- Each sentence remains grounded in approved notes and spatial character
+- One-sentence format retained for the existing composition layout
+
+PRESERVED
+- Exact v13.8.27 composition block geometry
+- Six-axis fragrance DNA with Warmth
+- Central filters and validated scent guide
+- Reed-care and room-size recommendations
+- Authenticated checkout email prefill
+
+VALIDATION
+- Central JSON, generated products.js and all 18 static product pages synchronized
+- Product content, scent-guide and radar validators pass
+- JavaScript/MJS syntax passes
+- Root and Admin PWA versions synchronized

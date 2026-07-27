@@ -67,11 +67,29 @@
     },
     "scales": {
       "freshness": "Свіжість",
+      "warmth": "Теплість",
       "sweetness": "Солодкість",
       "woodiness": "Деревність",
-      "cleanliness": "Чистота"
+      "cleanliness": "Чистота",
+      "intensity": "Інтенсивність"
+    },
+    "scaleOrder": ["freshness", "warmth", "sweetness", "woodiness", "cleanliness", "intensity"],
+    "scaleCharacterWords": {
+      "freshness": "свіжий",
+      "warmth": "теплий",
+      "sweetness": "солодкий",
+      "woodiness": "деревний",
+      "cleanliness": "чистий",
+      "intensity": "виразний"
     }
   };
+
+  function getProductScaleEntries() {
+    const labels = LABELS.scales || {};
+    const configuredOrder = Array.isArray(LABELS.scaleOrder) ? LABELS.scaleOrder : Object.keys(labels);
+    const order = configuredOrder.filter((key, index) => labels[key] && configuredOrder.indexOf(key) === index);
+    return order.map((key) => ({ key, label: labels[key] }));
+  }
 
   function escapeHtml(value) {
     return String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
@@ -218,7 +236,10 @@
     const notes = document.getElementById("notesSection");
     if (notes) notes.innerHTML = `<h2 class="product-detail-section__title">Ноти</h2><p><strong>Верхні:</strong> ${escapeHtml(product.notes.top.join(", "))}</p><p><strong>Серце:</strong> ${escapeHtml(product.notes.heart.join(", "))}</p><p><strong>База:</strong> ${escapeHtml(product.notes.base.join(", "))}</p>`;
     const scales = document.getElementById("scalesSection");
-    if (scales) scales.innerHTML = `<h2 class="product-detail-section__title">Візуальні шкали</h2><div class="scent-scale">${Object.entries(LABELS.scales).map(([key,label]) => `<div class="scent-scale__row"><span>${label}</span><div class="scent-scale__track"><div class="scent-scale__fill" style="width:${Math.max(0,Math.min(10,product.scales[key]))*10}%"></div></div></div>`).join("")}</div>`;
+    if (scales) {
+      const visibleScaleEntries = getProductScaleEntries().filter(({ key }) => key !== "intensity");
+      scales.innerHTML = `<h2 class="product-detail-section__title">Візуальні шкали</h2><div class="scent-scale">${visibleScaleEntries.map(({ key, label }) => `<div class="scent-scale__row"><span>${label}</span><div class="scent-scale__track"><div class="scent-scale__fill" style="width:${Math.max(0,Math.min(10,Number(product.scales[key]) || 0))*10}%"></div></div></div>`).join("")}</div>`;
+    }
     const intensity = document.getElementById("intensitySection");
     if (intensity) intensity.innerHTML = `<h2 class="product-detail-section__title">Інтенсивність</h2><p>${product.scales.intensity} / 10</p>`;
     const formula = document.querySelector(".product-formula-proof__intent");
@@ -383,16 +404,11 @@
     const baseStoryImage = storyAsset("base");
     const discoveryStoryImage = storyAsset("discovery") || "images/discovery/discovery-set.webp";
     const quote = insight.aura || product.shortDescription || "Аромат, що змінює відчуття простору.";
-    const labels = {
-      freshness: "Свіжість",
-      sweetness: "Солодкість",
-      woodiness: "Деревність",
-      cleanliness: "Чистота",
-      intensity: "Інтенсивність"
-    };
-    const radarKeys = ["freshness", "sweetness", "woodiness", "cleanliness", "intensity"];
-    const radarLabels = ["Свіжість", "Солодкість", "Деревність", "Чистота", "Інтенсивність"];
+    const radarEntries = getProductScaleEntries();
+    const radarKeys = radarEntries.map(({ key }) => key);
+    const radarLabels = radarEntries.map(({ label }) => label);
     const radarValues = radarKeys.map((key) => Math.max(0, Math.min(10, Number(product.scales[key]) || 0)));
+    if (radarEntries.length !== 6) return;
     const radarPoint = (value, index, radius = 82) => {
       const angle = (-90 + index * (360 / radarValues.length)) * Math.PI / 180;
       const r = radius * value / 10;
@@ -402,7 +418,7 @@
     const radarAxes = radarValues.map((_, i) => `<line x1="100" y1="100" x2="${radarPoint(10, i).split(',')[0]}" y2="${radarPoint(10, i).split(',')[1]}"/>`).join("");
     const radarShapePoints = radarValues.map((value, i) => radarPoint(value, i));
     const radarShape = radarShapePoints.join(" ");
-    const radarLabelPoint = (index, radius = 103) => {
+    const radarLabelPoint = (index, radius = 108) => {
       const angle = (-90 + index * (360 / radarValues.length)) * Math.PI / 180;
       return { x: 100 + Math.cos(angle) * radius, y: 100 + Math.sin(angle) * radius };
     };
@@ -417,19 +433,14 @@
     }).join("");
     const levelName = (value) => value <= 3 ? "Низька" : value <= 6 ? "Середня" : "Висока";
     const radarLegend = radarLabels.map((label, i) => `<li><span>${label}</span><i aria-hidden="true"><b style="--dna-level:${radarValues[i]}"></b></i><strong>${levelName(radarValues[i])}</strong></li>`).join("");
-    const characterWords = {
-      freshness: "свіжий",
-      sweetness: "м’який",
-      woodiness: "деревний",
-      cleanliness: "чистий",
-      intensity: "виразний"
-    };
+    const characterWords = LABELS.scaleCharacterWords || {};
     const character = radarKeys
-      .map((key, i) => ({ key, value: radarValues[i] }))
-      .sort((a, b) => b.value - a.value)
+      .map((key, i) => ({ key, value: radarValues[i], order: i }))
+      .sort((a, b) => b.value - a.value || a.order - b.order)
       .slice(0, 3)
-      .map((item) => characterWords[item.key])
+      .map((item) => characterWords[item.key] || String(LABELS.scales?.[item.key] || item.key).toLowerCase())
       .join(" · ");
+    const radarAria = radarEntries.map(({ label }, index) => `${label}: ${radarValues[index]} з 10`).join(", ");
 
     const existingFormula = document.querySelector(".product-formula-proof");
     const formulaIntent = existingFormula?.querySelector(".product-formula-proof__intent")?.innerHTML || `<strong>Задум композиції.</strong> ${escapeHtml(product.formulaIntent || product.shortDescription)}`;
@@ -468,8 +479,8 @@
         </figure>
         <div class="story-dna">
           <p class="eyebrow">DNA аромату</p>
-          <div class="story-dna__radar" role="img" aria-label="Радарний профіль аромату">
-            <svg viewBox="-18 -18 236 236" aria-hidden="true"><g class="story-dna__grid">${radarGrid}${radarAxes}</g><polygon class="story-dna__shape" points="${radarShape}"/>${radarDots}${radarLabelsSvg}</svg>
+          <div class="story-dna__radar" role="img" aria-label="Профіль аромату ${escapeHtml(product.name)}. ${escapeHtml(radarAria)}">
+            <svg viewBox="-42 -42 284 284" aria-hidden="true"><g class="story-dna__grid">${radarGrid}${radarAxes}</g><polygon class="story-dna__shape" points="${radarShape}"/>${radarDots}${radarLabelsSvg}</svg>
           </div>
           <div class="story-dna__character"><span>Характер</span><strong>${character}</strong></div>
           <ul class="story-dna__legend">${radarLegend}</ul>

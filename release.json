@@ -1,12 +1,12 @@
 {
-  "version": "13.8.27",
-  "name": "VISIBLE REED-CARE DISCLOSURE",
+  "version": "13.8.31",
+  "name": "UNIFIED PREMIUM COMPOSITION INTENT COPY",
   "date": "2026-07-27",
-  "base": "13.8.17-AUTHENTICATED-CHECKOUT-EMAIL-PREFILL",
+  "base": "13.8.31-EXACT-V13.8.27-DNA-BLOCK-GEOMETRY",
   "changes": [
-    "Adds the exact product-specific reed-turning interval to the visible product hero",
-    "Keeps the full instruction in the How to use section",
-    "Shows an evaporation disclaimer to prevent over-turning and mismatched expectations",
-    "Validates the visible reed-care disclosure across all 18 product cards"
+    "Rewrites the “Задум композиції” copy for all 18 fragrances into one consistent premium editorial voice",
+    "Removes defensive negations and internal technical phrasing from the public product narrative",
+    "Keeps every sentence grounded in the approved fragrance notes and intended spatial character",
+    "Preserves the exact v13.8.27 composition-block geometry and six-axis fragrance DNA from v13.8.31"
   ]
 }
