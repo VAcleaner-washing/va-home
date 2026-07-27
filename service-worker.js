@@ -1,4 +1,4 @@
-const VERSION = '13.8.36';
+const VERSION = '14.0.0';
 const CACHE_PREFIX = 'vahome-';
 const STATIC_CACHE = `${CACHE_PREFIX}static-${VERSION}`;
 
@@ -17,7 +17,8 @@ const PRIVATE_ROUTES = [
   /^\/cart(?:\.html)?\/?$/,
   /^\/checkout(?:\.html)?\/?$/,
   /^\/thank-you(?:\.html)?\/?$/,
-  /^\/order-status(?:\.html)?\/?$/
+  /^\/order-status(?:\.html)?\/?$/,
+  /^\/private-preview(?:\.html)?\/?$/
 ];
 
 const LIVE_FILES = new Set([
@@ -39,7 +40,10 @@ const LIVE_FILES = new Set([
   '/js/home-reviews.js',
   '/data/review-seo-snapshot.json',
   '/data/product-content.json',
-  '/js/wishlist.js'
+  '/js/wishlist.js',
+  '/js/scent-profile.js',
+  '/js/room-ritual.js',
+  '/js/private-preview.js'
 ]);
 
 const isPrivateRoute = (pathname) =>

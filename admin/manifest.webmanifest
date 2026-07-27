@@ -75,6 +75,18 @@
           "sizes": "192x192"
         }
       ]
+    },
+    {
+      "name": "Private Releases",
+      "short_name": "Релізи",
+      "description": "Керування раннім доступом Private Preview",
+      "url": "/admin/#releases",
+      "icons": [
+        {
+          "src": "/admin/pwa/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }

@@ -1,24 +1,67 @@
-# VA HOME v13.8.36 — Final Audit
+# VA HOME v14.0.0 RC1 — фінальний технічний аудит
 
-This release adds an automated repeat-purchase email lifecycle on top of v13.8.34.
+## Статус релізу
 
-## Customer flow
+`v14.0.0 RC1 · ATMOSPHERE OS` побудовано на перевіреній базі v13.8.36 із галереєю v13.8.17. Це функціонально завершений Release Candidate, а не позначений наперед STABLE-реліз.
 
-- Marketing consent is a separate optional checkbox and is never required to place an order.
-- A qualifying full-size fragrance order is scheduled 55 days after it reaches `completed`.
-- The customer receives a personal 100 UAH promo code valid for 7 days.
-- The code is single-use, bound to the recipient email, valid only for full-size fragrances and excluded from Discovery Set.
-- Every campaign email contains one-click unsubscribe. Service order emails remain enabled.
+## Перевірене ядро сайту
 
-## Backend
+- 61 HTML-сторінка без дублів `id` і битих локальних посилань.
+- 18 карток ароматів синхронізовані з `data/product-content.json`.
+- 47 центральних фільтрів каталогу.
+- 21 матеріал VA HOME Journal у правильному редакційному порядку.
+- 6 шкал Fragrance DNA для кожного аромату.
+- 1 728 комбінацій підбору пройшли матричний тест.
+- Автопідстановка email авторизованого клієнта збережена.
+- Галерея та базова геометрія product page не відхилилися від затвердженої v13.8.17.
+- Клієнт, Edge Function і Storage узгоджені на 10 МБ для фото відгуків.
+- JavaScript і MJS пройшли синтаксичну перевірку Node.
+- PWA root/admin cache versions синхронізовані з 14.0.0.
 
-- New `marketing_preferences` and `repeat_purchase_campaigns` tables.
-- New order timestamps and campaign status fields.
-- New personal-promo metadata in `promo_codes`.
-- New `process-repeat-purchase` and `marketing-unsubscribe` Edge Functions.
-- Daily protected pg_cron job.
-- Resend idempotency keys prevent duplicate delivery on retries.
+## Atmosphere OS
 
-## Preserved
+### Repeat Atmosphere
 
-- Product cards, Journal 01–21, product-to-Journal links, catalog filters, scent guide, six-axis DNA, gallery geometry, reed guidance, reviews, account flow and PWA behavior.
+- Кнопка поточного аромату додає композицію в кошик.
+- Кнопка в історії відновлює склад попереднього замовлення разом із кількістю та Discovery-вибором.
+
+### Personal Scent Profile
+
+- Профіль автоматично формується після п’яти відповідей.
+- Усі 18 ароматів отримують персональний match score.
+- Профіль працює локально без авторизації та синхронізується з `user_scent_profiles` після входу.
+- RLS дозволяє клієнтові читати й змінювати лише власний профіль.
+
+### Discovery Credit
+
+- Виконане замовлення з Discovery Set створює одноразовий код на 150 грн.
+- Код прив’язаний до email, діє 60 днів і лише на повнорозмірні аромати.
+- Один заказ створює не більше одного кредиту.
+- Використання коду переводить кредит у статус `used`.
+- Транзакційний rollback-тест створення кредиту пройдено.
+
+### Room Ritual
+
+- Розрахунок використовує центральні `reedSetupByArea`, комплект паличок і індивідуальний reed-care інтервал.
+- Враховуються кімната, площа, бажана присутність і розташування.
+- Результат не рекомендує більше паличок, ніж є в комплекті.
+- Для великого простору пріоритетом є другий дифузор, а не перевантаження одного флакону.
+
+### Private Preview
+
+- Дані керуються через `private_releases` і новий розділ `Private Releases` в адмінці.
+- Авторизований клієнт бачить реліз із моменту `preview_starts_at`.
+- Публічна RLS-політика відкриває його лише після `public_starts_at`.
+- Сторінка має `noindex`, заборону в robots і private-route режим service worker.
+- Тестовий вигаданий реліз у production не створювався.
+
+## Backend і листи
+
+- Повторна покупка через 55 днів залишається активною.
+- Живий repeat-purchase лист уже був прийнятий Resend і отримав provider message ID.
+- `send-status-email` production v10 додає Discovery Credit до листа після виконання Discovery-замовлення.
+- Атомарний guard блокує повторне використання одноразового промокоду: у rollback-тесті створено 1 замовлення, 1 redemption і usage_count 1; друга спроба заблокована.
+
+## Що потребує короткого smoke-test після заливки
+
+Статичні, матричні та транзакційні перевірки пройдені. Після публікації потрібно вручну відкрити на реальному iPhone/Chrome нові екрани «Атмосфера», Room Ritual і Private Preview, оскільки локальна browser automation у середовищі недоступна. Це не прихований відомий баг, а остання візуальна перевірка фактичного production-рендерингу.

@@ -1,14 +1,15 @@
 {
-  "version": "13.8.36",
-  "name": "AUTOMATED REPEAT PURCHASE EMAIL",
+  "version": "14.0.0",
+  "channel": "RC1",
+  "name": "ATMOSPHERE OS",
   "date": "2026-07-27",
-  "base": "13.8.34-RELEVANT-PRODUCT-JOURNAL-LINKS",
+  "base": "13.8.36-AUTOMATION-HARDENING-LIVE-TEST",
   "changes": [
-    "Adds an optional checkout consent for personalized email offers",
-    "Schedules a repeat-purchase campaign 55 days after an order is completed",
-    "Creates a personal one-time 100 UAH promo code valid for seven days",
-    "Restricts each repeat promo code to the recipient email and full-size fragrances",
-    "Adds one-click unsubscribe without affecting service order emails",
-    "Adds daily pg_cron processing, campaign audit records and admin visibility"
+    "Adds one-click Repeat Atmosphere actions in the customer account",
+    "Persists Personal Scent Profile locally and in Supabase with match percentages",
+    "Adds Discovery Credit: personal 150 UAH code after completed Discovery Set orders",
+    "Adds Room Ritual recommendations by room, area, presence and bottle placement",
+    "Adds authenticated Private Preview infrastructure for releases 48 hours early",
+    "Keeps promo use atomic through the production order redemption guard"
   ]
 }

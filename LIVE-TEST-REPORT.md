@@ -1,19 +1,39 @@
-# VA HOME v13.8.36 — Automation Hardening & Live Test
+# VA HOME v14.0.0 RC1 — live та transactional test report
 
-## Live repeat-purchase test
-- Order: VA-260727-541F0C
-- Product: Pure Zen
-- Marketing consent: true
-- Order status: completed
-- Campaign processed: sent
-- Resend provider message ID received
-- Personal promo generated and bound to the customer email
-- Discount: 100 UAH
-- Validity: 7 days
-- Usage count after send: 0
+## Repeat Purchase
 
-## Checkout city autofill hardening
-- Browser address autofill is discouraged for the custom Nova Poshta combobox.
-- Chrome/LastPass ignore hints added.
-- Autofill/change reconciliation clears stale Nova Poshta refs and reruns authoritative city lookup.
-- Warehouse remains disabled until the city is explicitly resolved.
+- Живе замовлення `VA-260727-541F0C` зі згодою на маркетинг дійшло до `completed`.
+- Кампанія була створена, примусово переведена у тестовий due-state і успішно оброблена.
+- Resend повернув provider message ID.
+- Створено email-bound одноразовий код на 100 грн із терміном 7 днів.
+
+## Discovery Credit
+
+Тест виконано всередині SQL-транзакції з `ROLLBACK`, тому тестові замовлення та коди не залишилися в production.
+
+Результат:
+
+- сума — 150 грн;
+- статус — `active`;
+- термін — 60 днів;
+- `usage_limit = 1`;
+- email-binding активний;
+- `campaign_type = discovery_credit`.
+
+Під час першого тесту виявлено несумісний виклик `gen_random_bytes`; функцію виправлено на `gen_random_uuid`, після чого повторний тест пройшов.
+
+## Atomic Promo Guard
+
+Тест виконано транзакційно з `ROLLBACK`:
+
+- перше замовлення з одноразовим кодом створено;
+- друга спроба використати той самий код заблокована;
+- `usage_count = 1`;
+- створено рівно одне замовлення;
+- створено рівно один запис redemption.
+
+## Production deployment
+
+- міграції Atmosphere OS застосовані до `yweluzclearwrazdkahu`;
+- `send-status-email` розгорнуто як version 10 і має статус ACTIVE;
+- вигаданий Private Preview release не додавався.

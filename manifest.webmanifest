@@ -49,6 +49,11 @@
       "name": "Discovery Set",
       "short_name": "Discovery Set",
       "url": "/discovery-set.html"
+    },
+    {
+      "name": "Room Ritual",
+      "short_name": "Room Ritual",
+      "url": "/room-ritual.html"
     }
   ]
 }

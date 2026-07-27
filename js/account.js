@@ -64,7 +64,7 @@
     if (currentUser.email_confirmed_at) {
       try { await sb.rpc("claim_customer_orders"); } catch (_) { /* Current orders still load. */ }
     }
-    await Promise.allSettled([loadOrders(), loadWishlist()]);
+    await Promise.allSettled([loadOrders(), loadWishlist(), loadAtmosphereHub()]);
   }
   function showDashboard(currentUser) {
     if (dashboardPromise && user?.id === currentUser.id) return dashboardPromise;
@@ -257,6 +257,83 @@
     document.querySelectorAll(".account-order__review-link").forEach((link) => link.addEventListener("click", () => {
       window.VAAnalytics?.event?.("select_content", { content_type: "leave_review_click", item_id: link.getAttribute("href")?.split("/")[1]?.replace(".html#reviews", "") || "" });
     }));
+  }
+
+
+  function profileProductCards(profile) {
+    const ids = Array.isArray(profile?.recommendation_ids) ? profile.recommendation_ids.slice(0, 3) : [];
+    return ids.map((id) => {
+      const item = product(id);
+      if (!item) return "";
+      const percent = Number(profile?.match_scores?.[id] || 0);
+      return `<a class="account-profile-match" href="products/${esc(id)}.html"><img src="${esc(item.images?.main || `images/product-story/${id}/hero.webp`)}" alt="${esc(item.name)}" loading="lazy"><span><strong>${esc(item.name)}</strong><small>${percent}% вашого профілю</small></span></a>`;
+    }).join("");
+  }
+
+  async function loadScentProfileCard() {
+    const host = $("#accountScentProfile");
+    if (!host) return;
+    let profile = null;
+    try {
+      const result = await withTimeout(sb.from("user_scent_profiles").select("answers,profile_title,profile_text,profile_tags,recommendation_ids,match_scores,updated_at").maybeSingle(), "PROFILE_TIMEOUT");
+      if (!result.error) profile = result.data;
+    } catch (_) {}
+    profile = profile || window.VAScentProfile?.read?.();
+    if (!profile) {
+      host.innerHTML = `<p class="eyebrow">SCENT PROFILE</p><h3>Ваш профіль ще не сформовано</h3><p>П’ять коротких відповідей збережуть характер вашого простору та покажуть точність збігу з кожним ароматом.</p><a class="btn btn-primary btn-small" href="scent-guide.html">Створити Scent Profile</a>`;
+      return;
+    }
+    const tags = (profile.profile_tags || []).map((tag) => `<span>${esc(tag)}</span>`).join("");
+    host.innerHTML = `<p class="eyebrow">SCENT PROFILE</p><h3>${esc(profile.profile_title || "Ваш ароматичний профіль")}</h3><p>${esc(profile.profile_text || "Персональний профіль збережено у вашому кабінеті.")}</p><div class="account-scent-profile__tags">${tags}</div><div class="account-profile-matches">${profileProductCards(profile)}</div><a class="account-text-link" href="scent-guide.html">Перерахувати профіль →</a>`;
+  }
+
+  function creditStatus(credit, promo) {
+    if (credit.status === "used" || Number(promo?.usage_count || 0) > 0) return { label: "Використано", cls: "used" };
+    if (new Date(credit.expires_at).getTime() < Date.now() || credit.status === "expired") return { label: "Термін завершено", cls: "expired" };
+    return { label: "Активний", cls: "active" };
+  }
+
+  async function loadDiscoveryCredits() {
+    const host = $("#accountDiscoveryCredits");
+    if (!host) return;
+    let data, error;
+    try {
+      ({ data, error } = await withTimeout(sb.from("discovery_credits").select("id,amount,status,expires_at,used_at,promo_codes(code,usage_count,ends_at,active)").order("issued_at", { ascending: false }), "CREDIT_TIMEOUT"));
+    } catch (_) {
+      host.innerHTML = '<p class="account-message">Не вдалося перевірити Discovery Credit.</p>';
+      return;
+    }
+    if (error || !data?.length) {
+      host.innerHTML = `<article class="account-credit account-credit--empty"><div><strong>Discovery Credit з’явиться тут</strong><p>Після завершеної покупки Discovery Set ви автоматично отримаєте 150 грн на повнорозмірний аромат.</p></div><a class="btn btn-secondary btn-small" href="discovery-set.html">Відкрити Discovery Set</a></article>`;
+      return;
+    }
+    host.innerHTML = data.map((credit) => {
+      const promo = Array.isArray(credit.promo_codes) ? credit.promo_codes[0] : credit.promo_codes;
+      const status = creditStatus(credit, promo);
+      const expires = new Date(credit.expires_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" });
+      return `<article class="account-credit account-credit--${status.cls}"><div><span class="account-credit__status">${status.label}</span><strong>${money(credit.amount)} Discovery Credit</strong><p>${status.cls === "active" ? `Код діє до ${esc(expires)} на будь-який повнорозмірний аромат.` : "Цей персональний кредит уже недоступний."}</p></div><div class="account-credit__code"><span>Персональний код</span><strong>${esc(promo?.code || "—")}</strong>${status.cls === "active" ? `<button type="button" data-copy-credit="${esc(promo?.code || "")}">Скопіювати</button>` : ""}</div></article>`;
+    }).join("");
+    host.querySelectorAll("[data-copy-credit]").forEach((button) => button.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(button.dataset.copyCredit); window.VAHome?.showToast("Промокод скопійовано"); } catch (_) {}
+    }));
+  }
+
+  async function loadPrivatePreviewStatus() {
+    const host = $("#accountPrivatePreview");
+    if (!host) return;
+    try {
+      const { data } = await withTimeout(sb.from("private_releases").select("title,public_starts_at").eq("active", true).lte("preview_starts_at", new Date().toISOString()).gt("public_starts_at", new Date().toISOString()).order("public_starts_at", { ascending: true }).limit(1), "PREVIEW_TIMEOUT");
+      if (data?.[0]) {
+        host.classList.add("is-live");
+        host.querySelector("h2").textContent = data[0].title;
+        host.querySelector("p:last-child").textContent = "Private release уже доступний у вашому персональному просторі.";
+        host.querySelector("a").textContent = "Відкрити реліз";
+      }
+    } catch (_) {}
+  }
+
+  async function loadAtmosphereHub() {
+    await Promise.allSettled([loadScentProfileCard(), loadDiscoveryCredits(), loadPrivatePreviewStatus()]);
   }
 
   async function loadWishlist() {
@@ -467,6 +544,7 @@
       document.querySelectorAll("[data-account-tab]").forEach((item) => item.classList.toggle("is-active", item === button));
       $("#accountOrders").hidden = button.dataset.accountTab !== "orders";
       $("#accountWishlist").hidden = button.dataset.accountTab !== "wishlist";
+      $("#accountAtmosphere").hidden = button.dataset.accountTab !== "atmosphere";
       $("#accountSettings").hidden = button.dataset.accountTab !== "settings";
     }));
   }

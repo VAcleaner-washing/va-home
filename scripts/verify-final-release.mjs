@@ -43,10 +43,15 @@ try {
 } catch {
   errors.push("repeat-purchase campaign validator failed");
 }
+try {
+  childProcess.execFileSync(process.execPath, [path.join(root, "scripts", "verify-atmosphere-os.mjs"), root], { stdio: "inherit" });
+} catch {
+  errors.push("Atmosphere OS validator failed");
+}
 
 for (const file of htmlFiles) {
   const html = fs.readFileSync(file, "utf8");
-  if (/\?v=13\.8\.(?!35\b)\d+/.test(html)) errors.push(`stale asset version: ${path.relative(root, file)}`);
+  if (/\?v=(?!14\.0\.0\b)\d+\.\d+\.\d+/.test(html)) errors.push(`stale asset version: ${path.relative(root, file)}`);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
   const duplicates = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
   if (duplicates.length) errors.push(`duplicate IDs ${duplicates.join(", ")}: ${path.relative(root, file)}`);
@@ -93,7 +98,7 @@ const homeReviewsJs = fs.readFileSync(path.join(root, "js", "home-reviews.js"), 
 if (!homeReviewsJs.includes("preloadPhoto") || !homeReviewsJs.includes("Keep the server-rendered cards visible")) errors.push("home review photo preloading/stable fallback is missing");
 
 const release = JSON.parse(fs.readFileSync(path.join(root, "release.json"), "utf8"));
-if (release.version !== "13.8.35") errors.push(`release.json version is ${release.version}`);
+if (release.version !== "14.0.0") errors.push(`release.json version is ${release.version}`);
 if (!fs.existsSync(path.join(root, "data", "product-content.json"))) errors.push("central product content missing");
 if (!fs.existsSync(path.join(root, "PRODUCT-CONTENT-MASTER.md"))) errors.push("product content documentation missing");
 
@@ -104,13 +109,15 @@ if (errors.length) {
 }
 console.log(JSON.stringify({
   ok: true,
-  version: "13.8.35",
+  version: "14.0.0",
   htmlPages: htmlFiles.length,
   productPages: htmlFiles.filter((file) => file.includes(`${path.sep}products${path.sep}`)).length,
   centralProductSource: true,
+  atmosphereOS: true,
   centralizedCatalogFilters: true,
   scentGuideProfilesTested: 1728,
   journalArticles: 21,
+  publicFeaturePages: 2,
   fragranceDnaAxes: 6,
-  base: "13.8.34"
+  base: "13.8.36"
 }, null, 2));

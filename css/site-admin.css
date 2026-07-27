@@ -1135,3 +1135,7 @@ img,video,canvas,svg{max-width:100%}
     pointer-events:auto;
   }
 }
+
+
+/* v14.0.0 — Private Release management */
+.admin-release-card{grid-template-columns:minmax(0,1.4fr) minmax(180px,.8fr) auto;cursor:pointer}.admin-release-card:hover{border-color:rgba(200,162,124,.5)}.admin-release-dialog{width:min(760px,calc(100vw - 28px));padding:0}.admin-release-shell{background:#0d0c0a;color:#f3efe9;border:1px solid rgba(200,162,124,.25);max-height:min(88vh,900px);overflow:auto}.admin-release-form{display:grid;gap:20px;padding:28px 32px 34px}.admin-release-form>label,.admin-release-grid>label{display:grid;gap:8px;color:#c9c1b8;font-size:13px}.admin-release-form input,.admin-release-form textarea,.admin-release-form select{width:100%;border:1px solid #332c24;background:#15120f;color:#f7f2ec;padding:13px 14px;font:inherit}.admin-release-form textarea{resize:vertical}.admin-release-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.admin-release-auto{justify-self:start}.admin-release-form .admin-promo-footer{margin:8px -32px -34px;padding:20px 32px}@media(max-width:760px){.admin-release-card{grid-template-columns:1fr}.admin-release-grid{grid-template-columns:1fr}.admin-release-form{padding:22px 18px 28px}.admin-release-form .admin-promo-footer{margin:6px -18px -28px;padding:18px}.admin-tabs{overflow-x:auto;justify-content:flex-start}.admin-tabs button{flex:0 0 auto}}

@@ -170,7 +170,7 @@
       return `<article class="product-reed-guide__item${recommended}"><span>${escapeHtml(band.label)}</span><strong>${escapeHtml(reedCountLabel(value.label))}</strong></article>`;
     }).join("");
     const hasExtra = Object.values(setup).some((value) => value && typeof value === "object" && value.extraReeds);
-    host.innerHTML = `<h2 class="product-detail-section__title">${escapeHtml(REED_SETUP_POLICY.title)}</h2><p class="product-reed-guide__lead">${escapeHtml(REED_SETUP_POLICY.publicRule)}</p><div class="product-reed-guide__grid">${cards}</div><div class="product-reed-guide__care"><span>Догляд за паличками</span><strong>${escapeHtml(reedIntervalLabel(product))}</strong></div><p class="product-reed-guide__note">${escapeHtml(REED_SETUP_POLICY.adjustmentNote)}</p>${hasExtra ? `<p class="product-reed-guide__extra">${escapeHtml(REED_SETUP_POLICY.extraReedsNote)}</p>` : ""}`;
+    host.innerHTML = `<h2 class="product-detail-section__title">${escapeHtml(REED_SETUP_POLICY.title)}</h2><p class="product-reed-guide__lead">${escapeHtml(REED_SETUP_POLICY.publicRule)}</p><div class="product-reed-guide__grid">${cards}</div><div class="product-reed-guide__care"><span>Догляд за паличками</span><strong>${escapeHtml(reedIntervalLabel(product))}</strong></div><p class="product-reed-guide__note">${escapeHtml(REED_SETUP_POLICY.adjustmentNote)}</p>${hasExtra ? `<p class="product-reed-guide__extra">${escapeHtml(REED_SETUP_POLICY.extraReedsNote)}</p>` : ""}<a class="product-reed-guide__ritual" href="../room-ritual.html?product=${encodeURIComponent(product.id)}"><span>ROOM RITUAL</span><strong>Налаштувати аромат під мою кімнату →</strong></a>`;
   }
 
   function renderUsageSection(product) {

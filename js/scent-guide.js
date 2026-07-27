@@ -1,5 +1,5 @@
 /* ==========================================================================
-   VA HOME v13.8.36 — Personal Scent Experience
+   VA HOME v14.0.0 — Personal Scent Experience
    Questions, option copy and scoring rules come from data/product-content.json
    through the generated window.VA_SCENT_GUIDE object.
    ========================================================================== */
@@ -222,6 +222,32 @@
       </div>`;
   }
 
+  function buildPersistentProfile() {
+    const atmosphere = getOption("atmosphere", state.answers.atmosphere);
+    const profile = atmosphere?.profile || {};
+    const scored = PRODUCTS.map((product) => ({ product, ...scoreProduct(product) }))
+      .sort((a, b) => b.score - a.score || b.percent - a.percent || b.product.popularity - a.product.popularity);
+    return {
+      answers: { ...state.answers },
+      profile_title: profile.title || "Ваш ароматичний профіль",
+      profile_text: profile.text || "Персональний профіль VA HOME.",
+      profile_tags: Array.isArray(profile.tags) ? profile.tags.slice(0, 6) : [],
+      recommendation_ids: scored.slice(0, Number(GUIDE.recommendationCount || 3)).map((item) => item.product.id),
+      match_scores: Object.fromEntries(scored.map((item) => [item.product.id, item.percent]))
+    };
+  }
+
+  async function persistProfile(notify) {
+    const payload = buildPersistentProfile();
+    if (!window.VAScentProfile?.save) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ answers: state.answers, savedAt: Date.now(), ...payload })); } catch (_) {}
+      if (notify) toast("Результат збережено на цьому пристрої");
+      return;
+    }
+    const result = await window.VAScentProfile.save(payload);
+    if (notify) toast(result?.cloud ? "Профіль збережено у вашому кабінеті" : "Профіль збережено на цьому пристрої");
+  }
+
   function renderRecommendations() {
     const grid = document.getElementById("guideResultsGrid");
     if (!grid || !window.VAHomeProducts) return;
@@ -266,6 +292,7 @@
     state.recommendations = getRecommendations();
     renderProfile();
     renderRecommendations();
+    persistProfile(false);
     if (results) results.classList.add("is-active");
     document.querySelector(".scent-guide-layout")?.classList.add("has-results");
     window.VAAnalytics?.event?.("select_content", {
@@ -342,10 +369,9 @@
     toast.timer = setTimeout(() => node.classList.remove("is-visible"), 2400);
   }
 
-  function saveResult() {
+  async function saveResult() {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ answers: state.answers, savedAt: Date.now() }));
-      toast("Результат збережено на цьому пристрої");
+      await persistProfile(true);
       window.VAAnalytics?.event?.("select_content", { content_type: "scent_guide_saved" });
     } catch (_) {
       toast("Не вдалося зберегти результат");

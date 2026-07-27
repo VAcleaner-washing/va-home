@@ -118,6 +118,7 @@
               <li><a href="${root}collections.html">Колекції</a></li>
               <li><a href="${root}discovery-set.html">Discovery Set</a></li>
               <li><a href="${root}scent-guide.html">Підбір аромату</a></li>
+              <li><a href="${root}room-ritual.html">Room Ritual</a></li>
             </ul>
           </div>
           <div class="footer-col">
@@ -526,7 +527,7 @@
     }
     if (window.SITE_CONFIG && typeof PRODUCTS !== "undefined" && !document.querySelector('script[data-vahome-wishlist]')) {
       const script = document.createElement("script");
-      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=13.8.36`;
+      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=14.0.0`;
       script.dataset.vahomeWishlist = "true";
       document.body.appendChild(script);
     }

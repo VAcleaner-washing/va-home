@@ -2628,3 +2628,35 @@ button, input, select, textarea, a{ min-width: 0; }
     padding-right: max(20px, calc(env(safe-area-inset-right) + 16px)) !important;
   }
 }
+
+/* v13.8.37 FINAL RC — keep the Molecular Architecture image genuinely full-width on mobile.
+   iOS could preserve a stale grid track width during the responsive transition, leaving a
+   visible black strip on the right. A block formatting context removes that ambiguity. */
+@media (max-width: 900px) {
+  .brand-world-page .about-molecules {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    overflow: hidden;
+  }
+
+  .brand-world-page .about-molecules__media {
+    display: block;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+  }
+
+  .brand-world-page .about-molecules__media img {
+    display: block;
+    width: 100% !important;
+    max-width: none !important;
+    height: 100% !important;
+    object-fit: cover;
+    object-position: center;
+  }
+}

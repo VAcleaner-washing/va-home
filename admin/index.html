@@ -10,8 +10,8 @@
 <title>VA HOME Admin</title>
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <link href="../favicon/favicon.ico" rel="icon" sizes="any"/>
-<link href="../css/core-admin.css?v=13.8.36" rel="stylesheet"/><link href="../css/site-admin.css?v=13.8.36" rel="stylesheet"/>
-<meta content="Службова панель керування VA HOME." name="description"/><meta content="13.8.36 Stable" name="va-home-release"/>
+<link href="../css/core-admin.css?v=14.0.0" rel="stylesheet"/><link href="../css/site-admin.css?v=14.0.0" rel="stylesheet"/>
+<meta content="Службова панель керування VA HOME." name="description"/><meta content="14.0.0 RC1" name="va-home-release"/>
 <link href="/admin/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
 <meta content="#0b0a08" name="msapplication-TileColor"/>
@@ -55,6 +55,7 @@
 <button class="is-active" data-tab="orders" type="button">Замовлення <span id="ordersBadge"></span></button>
 <button data-tab="reviews" type="button">Відгуки <span id="reviewsBadge"></span></button>
 <button data-tab="promos" type="button">Промокоди <span id="promosBadge"></span></button>
+<button data-tab="releases" type="button">Private Releases <span id="releasesBadge"></span></button>
 <button data-tab="analytics" type="button">Аналітика</button>
 </nav>
 <section class="admin-tab-panel" id="ordersTab">
@@ -95,6 +96,10 @@
 <div class="admin-promo-head"><div><p class="eyebrow">Маркетинг</p><h2>Промокоди</h2></div><button class="btn btn-primary btn-small" id="newPromoBtn" type="button">Створити промокод</button></div>
 <div class="admin-toolbar"><input aria-label="Пошук промокодів" id="promoSearch" placeholder="Код або назва…" type="search"/><select id="promoStatusFilter"><option value="">Усі</option><option value="active">Активні</option><option value="inactive">Вимкнені</option></select></div>
 <div class="admin-list" id="promosList"></div><p class="admin-empty" hidden="" id="promosEmpty">Промокодів ще немає.</p>
+</section>
+<section class="admin-tab-panel" hidden="" id="releasesTab">
+<div class="admin-promo-head"><div><p class="eyebrow">PRIVATE PREVIEW</p><h2>Закриті релізи</h2><p>Створюйте реальні релізи та відкривайте їх учасникам персонального простору за 48 годин до публічного запуску.</p></div><button class="btn btn-primary btn-small" id="newReleaseBtn" type="button">Створити реліз</button></div>
+<div class="admin-list" id="releasesList"></div><p class="admin-empty" hidden="" id="releasesEmpty">Активних або запланованих релізів немає.</p>
 </section>
 <section class="admin-tab-panel" hidden="" id="analyticsTab">
 <div class="admin-analytics-intro">
@@ -195,10 +200,41 @@
     </form>
   </div>
 </dialog>
+
+<dialog class="admin-dialog admin-release-dialog" id="releaseDialog">
+  <div class="admin-release-shell">
+    <header class="admin-promo-shell__header">
+      <div><p class="eyebrow">PRIVATE PREVIEW · 48H</p><h2 id="releaseDialogTitle">Новий приватний реліз</h2><p class="admin-promo-shell__subtitle">Публікуйте лише реальну композицію з затвердженим описом і фото.</p></div>
+      <button aria-label="Закрити" class="admin-dialog__close admin-release-close" type="button">×</button>
+    </header>
+    <form class="admin-release-form" id="releaseForm">
+      <input name="id" type="hidden">
+      <div class="admin-release-grid">
+        <label>Назва релізу<input name="title" maxlength="120" required placeholder="Назва композиції"></label>
+        <label>Службовий slug<input name="slug" maxlength="80" required placeholder="new-noir-release" autocomplete="off"></label>
+      </div>
+      <label>Eyebrow<input name="eyebrow" maxlength="80" value="PRIVATE RELEASE · NOIR"></label>
+      <label>Опис<textarea name="description" maxlength="600" rows="5" required placeholder="Короткий преміальний опис без вигаданих нот."></textarea></label>
+      <div class="admin-release-grid">
+        <label>Пов’язаний аромат<select name="product_id" id="releaseProductSelect"><option value="">Без товарної картки</option></select></label>
+        <label>Фото<input name="image_url" maxlength="300" placeholder="/images/product-story/.../hero.webp"></label>
+      </div>
+      <div class="admin-release-grid">
+        <label>Публічний старт<input name="public_starts_at" type="datetime-local" required></label>
+        <label>Private Preview старт<input name="preview_starts_at" type="datetime-local" required></label>
+      </div>
+      <label class="admin-promo-switch admin-release-auto"><input id="releaseAuto48" type="checkbox" checked><span class="admin-promo-switch__track"></span><span>Автоматично встановлювати Private Preview за 48 годин</span></label>
+      <label class="admin-promo-switch admin-promo-switch--large"><input name="active" type="checkbox" checked><span class="admin-promo-switch__track"></span><span>Реліз активний</span></label>
+      <p class="admin-message" id="releaseFormMessage"></p>
+      <footer class="admin-promo-footer"><button class="admin-promo-delete" id="deleteReleaseBtn" type="button" hidden>Видалити</button><div class="admin-promo-footer__actions"><button class="btn btn-secondary" id="cancelReleaseBtn" type="button">Скасувати</button><button class="btn btn-primary" type="submit">Зберегти реліз</button></div></footer>
+    </form>
+  </div>
+</dialog>
 <script defer="" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer="" src="../js/config.js?v=13.8.36"></script>
-<script defer="" src="../js/admin.js?v=13.8.36"></script>
-<script defer="" src="../js/motion.js?v=13.8.36"></script>
-<script defer="" src="/admin/pwa.js?v=13.8.36"></script>
+<script defer="" src="../js/config.js?v=14.0.0"></script>
+<script defer="" src="../js/products.js?v=14.0.0"></script>
+<script defer="" src="../js/admin.js?v=14.0.0"></script>
+<script defer="" src="../js/motion.js?v=14.0.0"></script>
+<script defer="" src="/admin/pwa.js?v=14.0.0"></script>
 </body>
 </html>
