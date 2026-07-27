@@ -11,8 +11,8 @@
 <title>Мій кабінет — VA HOME</title>
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <link href="favicon/favicon.ico" rel="icon"/>
-<link href="css/core.css?v=14.0.0" rel="stylesheet"/><link href="css/site-account.css?v=14.0.0-rc3" rel="stylesheet"/>
-<meta content="Особистий кабінет VA HOME: замовлення, адреси доставки, список бажань і налаштування профілю." name="description"/><meta content="14.0.0 RC3" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
+<link href="css/core.css?v=14.0.0" rel="stylesheet"/><link href="css/site-account.css?v=14.0.0-rc4" rel="stylesheet"/>
+<meta content="Особистий кабінет VA HOME: замовлення, адреси доставки, список бажань і налаштування профілю." name="description"/><meta content="14.0.0 RC4" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
 <script defer="" src="js/hero-font-reveal.js?v=14.0.0"></script>
 <link href="/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
@@ -81,12 +81,12 @@
 </div>
 </header>
 <nav aria-label="Розділи кабінету" class="account-tabs">
-<button class="is-active" data-account-tab="orders" type="button">Замовлення</button>
-<button data-account-tab="wishlist" type="button">Обране</button>
-<button data-account-tab="atmosphere" type="button">Атмосфера</button>
+<button data-account-tab="orders" type="button">Замовлення</button>
+<button data-account-tab="wishlist" type="button"><span>Обране</span><span class="account-tab-count" id="accountWishlistCount" aria-label="0 обраних ароматів">0</span></button>
+<button class="is-active" data-account-tab="atmosphere" type="button">Атмосфера</button>
 <button data-account-tab="settings" type="button">Профіль</button>
 </nav>
-<section id="accountOrders">
+<section hidden="" id="accountOrders">
 <div class="account-current-scent" hidden id="currentScent">
 <div class="account-current-scent__media"><img alt="" decoding="async" id="currentScentImage" loading="eager"/></div>
 <div class="account-current-scent__content">
@@ -116,7 +116,7 @@
 </div>
 <div class="account-empty" hidden="" id="accountWishlistEmpty"><h3>Тут з’являться ваші фаворити</h3><p>Зберігайте аромати, які хочеться порівняти або замовити пізніше.</p><a class="btn btn-primary" href="catalog.html">Переглянути аромати</a></div>
 </section>
-<section hidden="" id="accountAtmosphere">
+<section id="accountAtmosphere">
 <div class="account-atmosphere-intro">
 <div><p class="eyebrow">ATMOSPHERE OS</p><h2>Ваш персональний простір ароматів</h2><p>Профіль, точність збігу, Room Ritual, Discovery Credit і ранній доступ — в одному місці.</p></div>
 <a class="btn btn-secondary" href="scent-guide.html">Оновити профіль</a>
@@ -186,7 +186,7 @@
 <script defer="" src="js/main.js?v=14.0.0">
 </script>
 <script defer="" src="js/scent-profile.js?v=14.0.0"></script>
-<script defer="" src="js/account.js?v=14.0.0-rc3">
+<script defer="" src="js/account.js?v=14.0.0-rc4">
 </script>
 <script defer="" src="js/motion.js?v=14.0.0"></script>
 <script defer="" src="/js/pwa.js?v=14.0.0"></script>

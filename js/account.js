@@ -66,10 +66,11 @@
     }
     await Promise.allSettled([loadOrders(), loadWishlist(), loadAtmosphereHub()]);
     const requestedTab = new URLSearchParams(location.search).get("tab");
-    if (["orders", "wishlist", "atmosphere", "settings"].includes(requestedTab)) {
-      activateAccountTab(requestedTab);
-      if (location.hash) setTimeout(() => document.querySelector(location.hash)?.scrollIntoView({ block: "center" }), 80);
-    }
+    const initialTab = ["orders", "wishlist", "atmosphere", "settings"].includes(requestedTab)
+      ? requestedTab
+      : "atmosphere";
+    activateAccountTab(initialTab);
+    if (location.hash) setTimeout(() => document.querySelector(location.hash)?.scrollIntoView({ block: "center" }), 80);
   }
   function showDashboard(currentUser) {
     if (dashboardPromise && user?.id === currentUser.id) return dashboardPromise;
@@ -384,6 +385,15 @@
     await Promise.allSettled([loadScentProfileCard(), loadDiscoveryCredits(), loadPrivatePreviewStatus()]);
   }
 
+  function updateWishlistCount(count) {
+    const badge = $("#accountWishlistCount");
+    if (!badge) return;
+    const safeCount = Math.max(0, Number(count) || 0);
+    badge.textContent = String(safeCount);
+    badge.setAttribute("aria-label", `${safeCount} обраних ароматів`);
+    badge.closest("button")?.classList.toggle("has-items", safeCount > 0);
+  }
+
   async function loadWishlist() {
     const list = $("#accountWishlistList");
     list.innerHTML = '<p class="account-loading-inline">Завантажуємо список бажань…</p>';
@@ -399,6 +409,7 @@
       return;
     }
     const rows = (data || []).filter((row) => product(row.product_slug));
+    updateWishlistCount(rows.length);
     $("#accountWishlistEmpty").hidden = rows.length > 0;
     list.innerHTML = rows.map((row) => {
       const item = product(row.product_slug);

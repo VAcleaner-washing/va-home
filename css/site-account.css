@@ -1968,5 +1968,12 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 @media(max-width:620px){.account-atmosphere-intro,.account-scent-profile,.account-room-ritual,.account-private-preview{padding:26px 20px}.account-atmosphere-intro .btn,.account-private-preview .btn{width:100%}.account-credit{padding:22px 20px}.account-tabs{overflow-x:auto;justify-content:flex-start}.account-tabs button{flex:0 0 auto;min-width:112px}}
 
 
-/* v14.0.0 RC3 — saved Room Ritual in Atmosphere hub */
+/* v14.0.0 RC4 — saved Room Ritual in Atmosphere hub */
 .account-room-ritual.is-saved{background:radial-gradient(circle at 78% 14%,rgba(195,145,70,.12),transparent 34%),linear-gradient(145deg,rgba(18,15,12,.98),rgba(8,7,5,.99))}.account-room-ritual__meta{margin:0!important;color:rgba(255,255,255,.48)!important;font-size:12px;line-height:1.65!important}.account-room-ritual__result{display:grid;gap:7px;margin:26px 0 24px;padding:20px 0;border-top:1px solid rgba(195,145,70,.22);border-bottom:1px solid rgba(195,145,70,.22)}.account-room-ritual__result span,.account-room-ritual__result small{color:rgba(255,255,255,.38);font-size:9px;letter-spacing:.09em;text-transform:uppercase}.account-room-ritual__result strong{font-family:var(--font-display);font-size:30px;font-weight:500;color:#f0e5d7}.account-room-ritual__actions{display:flex;align-items:center;gap:16px;margin-top:auto}.account-room-ritual__remove{padding:8px 0;border:0;background:transparent;color:rgba(255,255,255,.42);font-size:10px;cursor:pointer}.account-room-ritual__remove:hover{color:#e4c08e}@media(max-width:620px){.account-room-ritual__actions{align-items:stretch;flex-direction:column}.account-room-ritual__actions .btn{width:100%}.account-room-ritual__remove{align-self:flex-start}}
+
+
+/* v14.0.0 RC4 — Atmosphere-first account and live wishlist badge */
+.account-tabs button[data-account-tab="wishlist"]{display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.account-tab-count{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border:1px solid rgba(195,145,70,.34);border-radius:999px;background:rgba(195,145,70,.08);color:rgba(255,255,255,.58);font-size:10px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;transition:background-color .25s ease,color .25s ease,border-color .25s ease}
+.account-tabs button.has-items .account-tab-count,.account-tabs button.is-active .account-tab-count{border-color:rgba(195,145,70,.58);background:rgba(195,145,70,.18);color:var(--color-gold)}
+@media(max-width:620px){.account-tabs button[data-account-tab="wishlist"]{gap:6px}.account-tab-count{min-width:18px;height:18px;padding:0 5px;font-size:9px}}
