@@ -1,4 +1,4 @@
-# VA HOME v14.0.0 RC5 — live та transactional test report
+# VA HOME v14.0.0 RC6 — live та transactional test report
 
 ## Repeat Purchase
 

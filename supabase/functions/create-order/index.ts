@@ -225,7 +225,19 @@ Deno.serve(async req => {
       const withinLimit = promoRow && (!promoRow.usage_limit || Number(promoRow.usage_count || 0) < Number(promoRow.usage_limit));
       const eligibleItems = promoRow && (promoRow.applies_to === "all" || (promoRow.applies_to === "fragrances" && items.some(item => FRAGRANCE_IDS.includes(item.id))) || (promoRow.applies_to === "products" && items.some(item => (promoRow.product_ids || []).includes(item.id))));
       const emailEligible = promoRow && (!promoRow.customer_email || String(promoRow.customer_email).trim().toLowerCase() === email);
-      if (!promoRow || !promoRow.active || !validTime || !withinLimit || subtotal < Number(promoRow.min_order_amount || 0) || !eligibleItems || !emailEligible) return json(req, { error: "INVALID_PROMO" }, 400);
+      let firstPurchaseEligible = true;
+      if (promoRow?.campaign_type === "welcome_scent_profile") {
+        const { data: priorOrders, error: priorOrdersError } = await supabase
+          .from("orders")
+          .select("id,items,status")
+          .eq("customer_email", email)
+          .neq("status", "cancelled");
+        if (priorOrdersError) throw priorOrdersError;
+        firstPurchaseEligible = !(priorOrders || []).some((order) =>
+          (Array.isArray(order.items) ? order.items : []).some((item: Record<string, unknown>) => FRAGRANCE_IDS.includes(String(item?.id || "")))
+        );
+      }
+      if (!promoRow || !promoRow.active || !validTime || !withinLimit || subtotal < Number(promoRow.min_order_amount || 0) || !eligibleItems || !emailEligible || !firstPurchaseEligible) return json(req, { error: "INVALID_PROMO" }, 400);
       promo = promoRow;
       if (promoRow.discount_type === "fixed") discountAmount = Math.min(subtotal, Number(promoRow.discount_value || 0));
       if (promoRow.discount_type === "percent") discountAmount = Math.min(subtotal, Math.round(subtotal * Number(promoRow.discount_value || 0)) / 100);

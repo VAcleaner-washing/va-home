@@ -15,7 +15,7 @@
   let mode = "login";
   let user = null;
   let dashboardPromise = null;
-  const accountState = { orders: [], profile: null, ritual: null, credits: [], privateRelease: null, ready: false };
+  const accountState = { orders: [], profile: null, ritual: null, credits: [], welcomeCredit: null, privateRelease: null, ready: false };
 
   function withTimeout(promise, code) {
     let timer;
@@ -164,13 +164,17 @@
     const text = $("#accountNextStepText");
     const eyebrow = $("#accountNextStepEyebrow");
     const action = $("#accountNextStepAction");
+    const creditLink = $("#accountNextStepCreditLink");
     if (!host || !title || !text || !eyebrow || !action) return;
 
     const activeOrder = (accountState.orders || []).find((order) => !["completed", "cancelled"].includes(order.status));
-    const activeCredit = (accountState.credits || []).find((credit) => {
+    const activeDiscovery = (accountState.credits || []).find((credit) => {
       const promo = Array.isArray(credit.promo_codes) ? credit.promo_codes[0] : credit.promo_codes;
       return creditStatus(credit, promo).cls === "active";
     });
+    const welcomePromo = Array.isArray(accountState.welcomeCredit?.promo_codes) ? accountState.welcomeCredit.promo_codes[0] : accountState.welcomeCredit?.promo_codes;
+    const activeWelcome = accountState.welcomeCredit && creditStatus(accountState.welcomeCredit, welcomePromo).cls === "active" ? accountState.welcomeCredit : null;
+    const activeCredit = activeDiscovery || activeWelcome;
     const currentOrder = (accountState.orders || []).find((order) => order.status === "completed" && fullSizeItems(order).length);
     const currentItem = currentOrder ? fullSizeItems(currentOrder)[0] : null;
 
@@ -191,12 +195,14 @@
       };
     } else if (activeCredit) {
       const expires = new Date(activeCredit.expires_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long" });
+      const isWelcome = activeCredit.credit_type === "welcome";
       next = {
-        eyebrow: "ВАШ НАСТУПНИЙ КРОК · DISCOVERY CREDIT",
-        title: `У вас є ${money(activeCredit.amount)} на повнорозмірний аромат`,
-        text: `Персональний код діє до ${expires} і застосовується один раз до будь-якої повнорозмірної композиції.`,
+        eyebrow: `ВАШ НАСТУПНИЙ КРОК · ${isWelcome ? "WELCOME CREDIT" : "DISCOVERY CREDIT"}`,
+        title: `На вашому акаунті зараховано ${money(activeCredit.amount)} на замовлення повнорозмірного аромату`,
+        text: `Персональний код діє до ${expires} і застосовується один раз. Ваш промокод доступний нижче в кабінеті.`,
         label: "Обрати аромат із кредитом",
-        href: "catalog.html"
+        href: "catalog.html",
+        showCreditLink: true
       };
     } else if (!accountState.profile) {
       next = {
@@ -237,6 +243,7 @@
     text.textContent = next.text;
     action.textContent = next.label;
     action.href = next.href;
+    if (creditLink) creditLink.hidden = !next.showCreditLink;
     host.hidden = false;
   }
 
@@ -394,7 +401,11 @@
     const presence = String(result.presence || "збалансована");
     accountState.ritual = saved;
     host.classList.add("is-saved");
-    host.innerHTML = `<p class="eyebrow">ROOM RITUAL · ЗБЕРЕЖЕНО</p><h3>${esc(item.name)}</h3><p class="account-room-ritual__meta">${esc(result.area)} м² · ${esc(room)} · ${esc(presence)} присутність</p><div class="account-room-ritual__result"><span>Рекомендований старт</span><strong>${esc(roomRitualTitle(result.reeds, result.diameter))}</strong><small>Збережено ${esc(savedAt)}</small></div><div class="account-room-ritual__actions"><a class="btn btn-primary btn-small" href="room-ritual.html?restore=1">Відкрити мій ритуал</a><button class="account-room-ritual__remove" type="button" data-remove-room-ritual>Видалити</button></div>`;
+    const placement = String(result.placement || "Поставте флакон на відкритій стійкій поверхні на висоті 70–120 см.");
+    const care = String(result.care || item?.reedCare?.publicText || "за потреби");
+    const productNote = String(item?.reedSetupByArea?.note || item?.diffusion?.tip || "Починайте зі стриманої інтенсивності та змінюйте налаштування поступово.");
+    const extraNote = result.extra ? " Для простору понад 25 м² краще додати другий дифузор, а не перевантажувати один флакон." : "";
+    host.innerHTML = `<p class="eyebrow">ROOM RITUAL · ЗБЕРЕЖЕНО</p><h3>${esc(item.name)}</h3><p class="account-room-ritual__meta">${esc(result.area)} м² · ${esc(room)} · ${esc(presence)} присутність</p><div class="account-room-ritual__result"><span>Рекомендований старт</span><strong>${esc(roomRitualTitle(result.reeds, result.diameter))}</strong><small>Збережено ${esc(savedAt)}</small></div><dl class="account-room-ritual__guide"><div><dt>Розміщення</dt><dd>${esc(placement)}</dd></div><div><dt>Догляд</dt><dd>Перевертайте палички ${esc(care)} або коли звучання стало тихішим.</dd></div><div><dt>Корекція</dt><dd>Додавайте або прибирайте лише одну паличку за раз.</dd></div><div><dt>Повторна оцінка</dt><dd>Оцініть результат через 24–48 годин після зміни.</dd></div></dl><p class="account-room-ritual__note">${esc(productNote + extraNote)}</p><div class="account-room-ritual__actions"><a class="btn btn-primary btn-small" href="room-ritual.html?restore=1">Відкрити мій ритуал</a><button class="account-room-ritual__remove" type="button" data-remove-room-ritual>Видалити</button></div>`;
     renderNextStep();
     host.querySelector("[data-remove-room-ritual]")?.addEventListener("click", () => {
       try { localStorage.removeItem("va_home_room_ritual_v14"); } catch (_) {}
@@ -464,42 +475,62 @@
     return { label: "Активний", cls: "active" };
   }
 
-  async function loadDiscoveryCredits() {
-    const host = $("#accountDiscoveryCredits");
-    const section = $("#accountDiscoveryCreditSection");
+  function renderCreditSection() {
+    const host = $("#accountCredits");
+    const section = $("#accountCreditSection");
     if (!host || !section) return;
-    let data, error;
-    try {
-      ({ data, error } = await withTimeout(sb.from("discovery_credits").select("id,amount,status,expires_at,used_at,promo_codes(code,usage_count,ends_at,active)").order("issued_at", { ascending: false }), "CREDIT_TIMEOUT"));
-    } catch (_) {
-      accountState.credits = [];
-      section.hidden = true;
-      renderNextStep();
-      return;
-    }
-    const available = (data || []).filter((credit) => {
+    const discovery = (accountState.credits || []).map((credit) => ({ ...credit, credit_type: "discovery" }));
+    const welcome = accountState.welcomeCredit ? [{ ...accountState.welcomeCredit, credit_type: "welcome" }] : [];
+    const available = [...discovery, ...welcome].filter((credit) => {
       const promo = Array.isArray(credit.promo_codes) ? credit.promo_codes[0] : credit.promo_codes;
       return creditStatus(credit, promo).cls === "active";
-    });
-    if (error || !available.length) {
-      accountState.credits = [];
-      section.hidden = true;
-      host.innerHTML = "";
-      renderNextStep();
-      return;
-    }
-    accountState.credits = available;
+    }).sort((a, b) => Number(b.amount || 0) - Number(a.amount || 0));
+    if (!available.length) { section.hidden = true; host.innerHTML = ""; renderNextStep(); return; }
     section.hidden = false;
     host.innerHTML = available.map((credit) => {
       const promo = Array.isArray(credit.promo_codes) ? credit.promo_codes[0] : credit.promo_codes;
       const status = creditStatus(credit, promo);
       const expires = new Date(credit.expires_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" });
-      return `<article class="account-credit account-credit--${status.cls}"><div><span class="account-credit__status">${status.label} · DISCOVERY CREDIT</span><strong>${money(credit.amount)} на повнорозмірний аромат</strong><p>${status.cls === "active" ? `Код діє до ${esc(expires)}, прив’язаний до вашого email і застосовується один раз.` : "Цей персональний кредит уже недоступний."}</p>${status.cls === "active" ? '<a class="account-credit__cta" href="catalog.html">Обрати аромат із кредитом →</a>' : ""}</div><div class="account-credit__code"><span>Персональний код</span><strong>${esc(promo?.code || "—")}</strong>${status.cls === "active" ? `<button type="button" data-copy-credit="${esc(promo?.code || "")}">Скопіювати код</button>` : ""}</div></article>`;
+      const welcomeCredit = credit.credit_type === "welcome";
+      const label = welcomeCredit ? "WELCOME CREDIT · ПЕРША ПОКУПКА" : "DISCOVERY CREDIT · ДЕПОЗИТ ПІСЛЯ НАБОРУ";
+      const title = welcomeCredit
+        ? `${money(credit.amount)} на першу повнорозмірну покупку`
+        : `На акаунті зараховано ${money(credit.amount)} на повнорозмірний аромат`;
+      const copy = welcomeCredit
+        ? `Код діє до ${esc(expires)}, лише на першу повнорозмірну покупку і не сумується з іншими кодами.`
+        : `Код діє до ${esc(expires)}, прив’язаний до вашого email і застосовується один раз.`;
+      return `<article class="account-credit account-credit--${status.cls}"><div><span class="account-credit__status">${status.label} · ${label}</span><strong>${title}</strong><p>${copy}</p><a class="account-credit__cta" href="catalog.html">Обрати аромат із кредитом →</a></div><div class="account-credit__code"><span>Персональний промокод</span><strong>${esc(promo?.code || "—")}</strong><button type="button" data-copy-credit="${esc(promo?.code || "")}">Скопіювати код</button></div></article>`;
     }).join("");
     host.querySelectorAll("[data-copy-credit]").forEach((button) => button.addEventListener("click", async () => {
       try { await navigator.clipboard.writeText(button.dataset.copyCredit); window.VAHome?.showToast("Персональний код скопійовано"); } catch (_) {}
     }));
     renderNextStep();
+  }
+
+  async function loadDiscoveryCredits() {
+    let data, error;
+    try {
+      ({ data, error } = await withTimeout(sb.from("discovery_credits").select("id,amount,status,expires_at,used_at,promo_codes(code,usage_count,ends_at,active)").order("issued_at", { ascending: false }), "CREDIT_TIMEOUT"));
+    } catch (_) { accountState.credits = []; renderCreditSection(); return; }
+    accountState.credits = error ? [] : (data || []);
+    renderCreditSection();
+  }
+
+  async function loadWelcomeCredit() {
+    accountState.welcomeCredit = null;
+    try {
+      await window.VAScentProfile?.sync?.();
+      const data = await window.VAHomeSupabase?.issueWelcomeCredit?.();
+      if (data?.eligible && data.credit?.promo?.code) {
+        accountState.welcomeCredit = {
+          ...data.credit,
+          credit_type: "welcome",
+          promo_codes: data.credit.promo
+        };
+        if (data.created) window.VAHome?.showToast?.("Welcome Credit 100 грн активовано на 7 днів");
+      }
+    } catch (_) {}
+    renderCreditSection();
   }
 
   async function loadPrivatePreviewStatus() {
@@ -521,7 +552,7 @@
 
   async function loadAtmosphereHub() {
     loadSavedRoomRitual();
-    await Promise.allSettled([loadScentProfileCard(), loadDiscoveryCredits(), loadPrivatePreviewStatus()]);
+    await Promise.allSettled([loadScentProfileCard(), loadDiscoveryCredits(), loadWelcomeCredit(), loadPrivatePreviewStatus()]);
     renderNextStep();
   }
 

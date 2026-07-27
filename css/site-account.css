@@ -1968,18 +1968,18 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 @media(max-width:620px){.account-atmosphere-intro,.account-scent-profile,.account-room-ritual,.account-private-preview{padding:26px 20px}.account-atmosphere-intro .btn,.account-private-preview .btn{width:100%}.account-credit{padding:22px 20px}.account-tabs{overflow-x:auto;justify-content:flex-start}.account-tabs button{flex:0 0 auto;min-width:112px}}
 
 
-/* v14.0.0 RC5 — saved Room Ritual in Atmosphere hub */
+/* v14.0.0 RC6 — saved Room Ritual in Atmosphere hub */
 .account-room-ritual.is-saved{background:radial-gradient(circle at 78% 14%,rgba(195,145,70,.12),transparent 34%),linear-gradient(145deg,rgba(18,15,12,.98),rgba(8,7,5,.99))}.account-room-ritual__meta{margin:0!important;color:rgba(255,255,255,.48)!important;font-size:12px;line-height:1.65!important}.account-room-ritual__result{display:grid;gap:7px;margin:26px 0 24px;padding:20px 0;border-top:1px solid rgba(195,145,70,.22);border-bottom:1px solid rgba(195,145,70,.22)}.account-room-ritual__result span,.account-room-ritual__result small{color:rgba(255,255,255,.38);font-size:9px;letter-spacing:.09em;text-transform:uppercase}.account-room-ritual__result strong{font-family:var(--font-display);font-size:30px;font-weight:500;color:#f0e5d7}.account-room-ritual__actions{display:flex;align-items:center;gap:16px;margin-top:auto}.account-room-ritual__remove{padding:8px 0;border:0;background:transparent;color:rgba(255,255,255,.42);font-size:10px;cursor:pointer}.account-room-ritual__remove:hover{color:#e4c08e}@media(max-width:620px){.account-room-ritual__actions{align-items:stretch;flex-direction:column}.account-room-ritual__actions .btn{width:100%}.account-room-ritual__remove{align-self:flex-start}}
 
 
-/* v14.0.0 RC5 — Atmosphere-first account and live wishlist badge */
+/* v14.0.0 RC6 — Atmosphere-first account and live wishlist badge */
 .account-tabs button[data-account-tab="wishlist"]{display:inline-flex;align-items:center;justify-content:center;gap:8px}
 .account-tab-count{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border:1px solid rgba(195,145,70,.34);border-radius:999px;background:rgba(195,145,70,.08);color:rgba(255,255,255,.58);font-size:10px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;transition:background-color .25s ease,color .25s ease,border-color .25s ease}
 .account-tabs button.has-items .account-tab-count,.account-tabs button.is-active .account-tab-count{border-color:rgba(195,145,70,.58);background:rgba(195,145,70,.18);color:var(--color-gold)}
 @media(max-width:620px){.account-tabs button[data-account-tab="wishlist"]{gap:6px}.account-tab-count{min-width:18px;height:18px;padding:0 5px;font-size:9px}}
 
 
-/* VA HOME v14.0.0 RC5 — guided Atmosphere hub */
+/* VA HOME v14.0.0 RC6 — guided Atmosphere hub */
 .account-next-step{display:flex;align-items:center;justify-content:space-between;gap:32px;margin:0 0 22px;padding:clamp(26px,4vw,42px);border:1px solid rgba(195,145,70,.42);background:radial-gradient(circle at 85% 12%,rgba(195,145,70,.16),transparent 34%),linear-gradient(135deg,rgba(26,21,15,.98),rgba(10,8,6,.99));box-shadow:0 22px 60px rgba(0,0,0,.18)}
 .account-next-step[hidden]{display:none!important}.account-next-step>div{max-width:790px}.account-next-step h2{margin:7px 0 10px;font-family:var(--font-display);font-size:clamp(34px,4.5vw,56px);font-weight:500;line-height:.96}.account-next-step p:last-child{max-width:68ch;margin:0;color:rgba(255,255,255,.54);font-size:13px;line-height:1.7}.account-next-step .btn{flex:0 0 auto}
 .account-current-scent--atmosphere{margin-bottom:24px}.account-atmosphere-grid{margin-top:0}.account-credit-section[hidden],.account-private-preview[hidden]{display:none!important}.account-credit__cta{display:inline-block;margin-top:8px;color:var(--color-gold);font-size:11px;text-decoration:none}.account-credit__cta:hover,.account-credit__cta:focus-visible{text-decoration:underline;text-underline-offset:3px}
@@ -1987,3 +1987,15 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 .account-tabs{scrollbar-width:none;-ms-overflow-style:none}.account-tabs::-webkit-scrollbar{display:none}.account-tabs button{scroll-snap-align:start}.account-tabs{scroll-snap-type:x proximity}
 @media(max-width:900px){.account-next-step{align-items:flex-start;flex-direction:column}.account-next-step .btn{width:100%}}
 @media(max-width:620px){.account-next-step{padding:25px 20px}.account-next-step h2{font-size:clamp(34px,11vw,46px)}.account-tabs{padding-right:24px;mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 20px),transparent 100%)}.account-current-scent--atmosphere{margin-bottom:18px}}
+
+/* VA HOME v14.0.0 RC6 — expanded saved ritual and credit handoff */
+.account-room-ritual__guide{display:grid;gap:0;margin:0 0 18px;border-top:1px solid rgba(255,255,255,.08)}
+.account-room-ritual__guide>div{display:grid;grid-template-columns:105px 1fr;gap:18px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.account-room-ritual__guide dt{color:var(--color-gold);font-size:9px;letter-spacing:.09em;text-transform:uppercase}
+.account-room-ritual__guide dd{margin:0;color:rgba(255,255,255,.58);font-size:12px;line-height:1.55}
+.account-room-ritual__note{margin:0 0 24px!important;padding:15px 16px;border-left:1px solid rgba(195,145,70,.72);background:rgba(195,145,70,.055);color:rgba(255,255,255,.54)!important;font-size:12px;line-height:1.65!important}
+.account-next-step__actions{display:flex;flex:0 0 auto;align-items:center;gap:16px}
+.account-next-step__credit-link{color:var(--color-gold);font-size:11px;text-decoration:none;white-space:nowrap}
+.account-next-step__credit-link:hover,.account-next-step__credit-link:focus-visible{text-decoration:underline;text-underline-offset:4px}
+@media(max-width:900px){.account-next-step__actions{width:100%;align-items:stretch;flex-direction:column}.account-next-step__actions .btn{width:100%}.account-next-step__credit-link{align-self:center}}
+@media(max-width:620px){.account-room-ritual__guide>div{grid-template-columns:1fr;gap:6px;padding:13px 0}.account-room-ritual__note{padding:14px}}

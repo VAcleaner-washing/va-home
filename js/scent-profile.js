@@ -105,7 +105,14 @@
       try {
         const rows = await rest(`user_scent_profiles?select=answers,profile_title,profile_text,profile_tags,recommendation_ids,match_scores,updated_at&user_id=eq.${encodeURIComponent(user.id)}&limit=1`);
         const row = Array.isArray(rows) ? rows[0] : null;
-        if (!row) return readLocal();
+        if (!row) {
+          const localOnly = readLocal();
+          if (localOnly) {
+            await save(localOnly);
+            return readLocal();
+          }
+          return null;
+        }
         const local = readLocal();
         const remoteTime = new Date(row.updated_at || 0).getTime();
         const localTime = new Date(local?.saved_at || 0).getTime();

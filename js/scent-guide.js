@@ -242,10 +242,41 @@
     if (!window.VAScentProfile?.save) {
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ answers: state.answers, savedAt: Date.now(), ...payload })); } catch (_) {}
       if (notify) toast("Результат збережено на цьому пристрої");
-      return;
+      return { local: true, cloud: false };
     }
     const result = await window.VAScentProfile.save(payload);
     if (notify) toast(result?.cloud ? "Профіль збережено у вашому кабінеті" : "Профіль збережено на цьому пристрої");
+    return result;
+  }
+
+  function renderWelcomeCreditState(data) {
+    const host = document.getElementById("guideWelcomeCredit");
+    const text = document.getElementById("guideWelcomeCreditText");
+    const action = document.getElementById("guideWelcomeCreditAction");
+    if (!host || !text || !action) return;
+    if (data?.eligible === false) { host.hidden = true; return; }
+    host.hidden = false;
+    if (data?.credit?.promo?.code) {
+      const expires = new Date(data.credit.expires_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long" });
+      text.textContent = `100 грн уже зараховано. Персональний код діє до ${expires} і доступний у вашому кабінеті.`;
+      action.textContent = "Переглянути код у кабінеті";
+      action.href = "account.html#accountCreditSection";
+      return;
+    }
+    text.textContent = "Увійдіть або створіть кабінет — після збереження профілю персональний код активується на 7 днів.";
+    action.textContent = "Увійти та активувати";
+    action.href = "account.html";
+  }
+
+  async function issueWelcomeCreditAfterProfile() {
+    try {
+      const data = await window.VAHomeSupabase?.issueWelcomeCredit?.();
+      renderWelcomeCreditState(data || null);
+      if (data?.created) toast("Welcome Credit 100 грн уже у вашому кабінеті");
+    } catch (error) {
+      if (error?.message === "AUTH_REQUIRED" || error?.status === 401) renderWelcomeCreditState(null);
+      else document.getElementById("guideWelcomeCredit")?.setAttribute("hidden", "");
+    }
   }
 
   function renderRecommendations() {
@@ -292,7 +323,8 @@
     state.recommendations = getRecommendations();
     renderProfile();
     renderRecommendations();
-    persistProfile(false);
+    persistProfile(false).then(() => issueWelcomeCreditAfterProfile());
+    renderWelcomeCreditState(null);
     if (results) results.classList.add("is-active");
     document.querySelector(".scent-guide-layout")?.classList.add("has-results");
     window.VAAnalytics?.event?.("select_content", {

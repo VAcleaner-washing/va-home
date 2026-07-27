@@ -1,10 +1,15 @@
 {
   "version": "14.0.0",
-  "channel": "RC5",
-  "name": "ATMOSPHERE OS",
+  "channel": "RC6",
+  "name": "ATMOSPHERE OS — WELCOME CREDIT & RITUAL DETAIL",
   "date": "2026-07-27",
   "base": "13.8.36-AUTOMATION-HARDENING-LIVE-TEST",
   "changes": [
+    "Adds Welcome Credit: personal 100 UAH code for seven days after a signed-in new customer completes Personal Scent Profile",
+    "Restricts Welcome Credit to the first full-size fragrance purchase and prevents stacking through the single-code checkout flow",
+    "Shows the Welcome Credit in the Atmosphere account hub and guides signed-out test users to activate it in their account",
+    "Rewords the Discovery Credit hero as an amount credited to the customer account and links directly to the promo code below",
+    "Expands the saved Room Ritual in the account with placement, care, correction and 24–48 hour reassessment guidance",
     "Guides the signed-in customer with one contextual Next Step in the Atmosphere hub",
     "Moves Current Scent from order history into the Atmosphere hub",
     "Hides Discovery Credit and Private Preview surfaces when they are not active",

@@ -11,8 +11,8 @@
 <title>Мій кабінет — VA HOME</title>
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <link href="favicon/favicon.ico" rel="icon"/>
-<link href="css/core.css?v=14.0.0" rel="stylesheet"/><link href="css/site-account.css?v=14.0.0-rc5" rel="stylesheet"/>
-<meta content="Особистий кабінет VA HOME: замовлення, адреси доставки, список бажань і налаштування профілю." name="description"/><meta content="14.0.0 RC5" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
+<link href="css/core.css?v=14.0.0" rel="stylesheet"/><link href="css/site-account.css?v=14.0.0-rc6" rel="stylesheet"/>
+<meta content="Особистий кабінет VA HOME: замовлення, адреси доставки, список бажань і налаштування профілю." name="description"/><meta content="14.0.0 RC6" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
 <script defer="" src="js/hero-font-reveal.js?v=14.0.0"></script>
 <link href="/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
@@ -106,7 +106,7 @@
 </div>
 <article class="account-next-step" id="accountNextStep" hidden>
 <div><p class="eyebrow" id="accountNextStepEyebrow">ВАШ НАСТУПНИЙ КРОК</p><h2 id="accountNextStepTitle">Формуємо персональну рекомендацію…</h2><p id="accountNextStepText"></p></div>
-<a class="btn btn-primary" href="scent-guide.html" id="accountNextStepAction">Продовжити</a>
+<div class="account-next-step__actions"><a class="btn btn-primary" href="scent-guide.html" id="accountNextStepAction">Продовжити</a><a class="account-next-step__credit-link" href="#accountCreditSection" id="accountNextStepCreditLink" hidden>Переглянути промокод ↓</a></div>
 </article>
 <div class="account-current-scent account-current-scent--atmosphere" hidden id="currentScent">
 <div class="account-current-scent__media"><img alt="" decoding="async" id="currentScentImage" loading="eager"/></div>
@@ -138,9 +138,9 @@
 <a class="btn btn-primary btn-small" href="room-ritual.html">Налаштувати палички</a>
 </article>
 </div>
-<section class="account-credit-section" hidden id="accountDiscoveryCreditSection">
-<div class="account-section-heading account-section-heading--compact"><div><p class="eyebrow">DISCOVERY CREDIT · ПОВЕРНЕННЯ ВАРТОСТІ НАБОРУ</p><h2>Ваші доступні кредити</h2></div><p>Персональний код на повнорозмірний аромат, прив’язаний до вашого email.</p></div>
-<div class="account-credit-list" id="accountDiscoveryCredits"></div>
+<section class="account-credit-section" hidden id="accountCreditSection">
+<div class="account-section-heading account-section-heading--compact"><div><p class="eyebrow">PERSONAL CREDITS · ВАШІ ПЕРСОНАЛЬНІ ПЕРЕВАГИ</p><h2>Ваші доступні кредити</h2></div><p>Одноразові персональні коди на повнорозмірний аромат, прив’язані до вашого email.</p></div>
+<div class="account-credit-list" id="accountCredits"></div>
 </section>
 <div class="account-private-preview" hidden id="accountPrivatePreview">
 <div><p class="eyebrow">PRIVATE PREVIEW · РАННІЙ ДОСТУП</p><h2>Новий реліз доступний раніше</h2><p>Активний приватний реліз відкривається у вашому кабінеті за 48 годин до публічного старту.</p></div>
@@ -192,7 +192,7 @@
 <script defer="" src="js/main.js?v=14.0.0">
 </script>
 <script defer="" src="js/scent-profile.js?v=14.0.0"></script>
-<script defer="" src="js/account.js?v=14.0.0-rc5">
+<script defer="" src="js/account.js?v=14.0.0-rc6">
 </script>
 <script defer="" src="js/motion.js?v=14.0.0"></script>
 <script defer="" src="/js/pwa.js?v=14.0.0"></script>

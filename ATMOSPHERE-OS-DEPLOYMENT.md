@@ -1,4 +1,4 @@
-# VA HOME v14.0.0 RC5 — Atmosphere OS
+# VA HOME v14.0.0 RC6 — Atmosphere OS
 
 ## Production state
 
@@ -53,3 +53,11 @@ insert into public.private_releases (
 ## Rollback
 
 Перед відкатом сайту не видаляйте нові таблиці: старий frontend їх не використовує, а дані профілів і кредитів залишаться безпечними. Для повного backend rollback окремо вимикаються тригер `issue_discovery_credit_on_completion` та RLS-доступ до `private_releases`.
+
+
+## RC6 production additions
+
+- `welcome_credits` table with RLS for personal Welcome Credit.
+- `issue-welcome-credit` Edge Function v1 (JWT required).
+- `validate-promo` Edge Function v3 with first-purchase enforcement.
+- Order insert trigger prevents Welcome Credit after any prior full-size purchase.

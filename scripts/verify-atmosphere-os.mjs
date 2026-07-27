@@ -18,7 +18,10 @@ const mustExist = [
   "supabase/migrations/20260727_atomic_promo_order_reservation.sql",
   "supabase/migrations/20260727_fix_discovery_credit_code.sql",
   "supabase/migrations/20260727_discovery_credit_tier_amounts.sql",
-  "supabase/functions/send-status-email/index.ts"
+  "supabase/functions/send-status-email/index.ts",
+  "supabase/functions/issue-welcome-credit/index.ts",
+  "supabase/migrations/20260727_welcome_credit_after_scent_profile.sql",
+  "supabase/migrations/20260727_enforce_welcome_credit_first_purchase.sql"
 ];
 for (const file of mustExist) if (!exists(file)) errors.push(`missing ${file}`);
 
@@ -46,9 +49,9 @@ for (const token of [
   'id="accountAtmosphere"',
   'id="accountScentProfile"',
   'id="accountRoomRitual"',
-  'id="accountDiscoveryCredits"',
+  'id="accountCredits"',
   'id="accountPrivatePreview"',
-  'Повторити атмосферу'
+  'Повторити цей аромат'
 ]) if (!accountHtml.includes(token)) errors.push(`account.html missing ${token}`);
 
 for (const token of [
@@ -56,6 +59,8 @@ for (const token of [
   "loadScentProfileCard",
   "loadSavedRoomRitual",
   "loadDiscoveryCredits",
+  "loadWelcomeCredit",
+  "renderCreditSection",
   "loadPrivatePreviewStatus",
   "loadAtmosphereHub"
 ]) if (!accountJs.includes(token)) errors.push(`account.js missing ${token}`);
@@ -132,6 +137,16 @@ for (const token of ["150 грн за набір із 6 композицій", "
   if (!discoveryHtml.includes(token)) errors.push(`Discovery Set copy missing ${token}`);
 }
 if (/30 дн|протягом 30|діє 30/.test(discoveryHtml)) errors.push("Discovery Set still contains stale 30-day credit copy");
+
+for (const token of ["WELCOME CREDIT", "100 грн на ваш перший аромат", "guideWelcomeCredit"]) {
+  if (!read("scent-guide.html").includes(token)) errors.push(`Welcome Credit UI missing ${token}`);
+}
+for (const token of ["issueWelcomeCredit", "issue-welcome-credit"]) {
+  if (!read("js/supabase-api.js").includes(token)) errors.push(`Welcome Credit client missing ${token}`);
+}
+for (const token of ["Розміщення", "Догляд", "Корекція", "Повторна оцінка", "24–48 годин"]) {
+  if (!accountJs.includes(token)) errors.push(`Expanded account Room Ritual missing ${token}`);
+}
 
 const productPages = fs.readdirSync(path.join(root, "products")).filter((name) => name.endsWith(".html"));
 for (const name of productPages) {

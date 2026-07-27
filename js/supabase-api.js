@@ -184,6 +184,32 @@
     return data;
   }
 
+  async function issueWelcomeCredit() {
+    if (!configured()) throw new Error("Supabase is not configured");
+    const token = storedAccessToken();
+    if (!token) {
+      const error = new Error("AUTH_REQUIRED");
+      error.status = 401;
+      throw error;
+    }
+    const response = await fetch(`${cfg.url}/functions/v1/issue-welcome-credit`, {
+      method: "POST",
+      headers: {
+        apikey: cfg.publishableKey,
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: "{}"
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error(data.error || `WELCOME_CREDIT_HTTP_${response.status}`);
+      error.status = response.status;
+      throw error;
+    }
+    return data;
+  }
+
   async function novaPoshtaLookup(payload, options = {}) {
     if (!configured()) throw new Error("Supabase is not configured");
     const controller = new AbortController();
@@ -218,5 +244,5 @@
     }
   }
 
-  window.VAHomeSupabase = { configured, getApprovedReviews, getRecentApprovedReviews, getApprovedRatings, getStoredAuthUser, getAuthenticatedUser, submitReview, getPublicOrderStatus, submitOrder, novaPoshtaLookup };
+  window.VAHomeSupabase = { configured, getApprovedReviews, getRecentApprovedReviews, getApprovedRatings, getStoredAuthUser, getAuthenticatedUser, submitReview, getPublicOrderStatus, submitOrder, issueWelcomeCredit, novaPoshtaLookup };
 })();

@@ -1,4 +1,4 @@
-VA HOME v14.0.0 RC5 — ATMOSPHERE OS
+VA HOME v14.0.0 RC6 — ATMOSPHERE OS
 
 Static release verification: PASS
 HTML pages: 61
@@ -10,7 +10,7 @@ JavaScript / MJS syntax: PASS
 Local references and duplicate IDs: PASS
 Sitemap / image sitemap XML: PASS
 Manifest / release / product JSON: PASS
-PWA root version: 14.0.0 / cache revision rc5
+PWA root version: 14.0.0 / cache revision rc6
 PWA admin version: 14.0.0
 Gallery baseline v13.8.17: PRESERVED
 
@@ -18,10 +18,13 @@ Guided Atmosphere next-step + hidden inactive surfaces: PASS
 Repeat Atmosphere: PASS
 Persistent Scent Profile: PASS
 Discovery Credit 150/450 UAH / 60 days: TRANSACTION TEST PASS
+Welcome Credit 100 UAH / 7 days / first full-size purchase: TRANSACTION TEST PASS
 Atomic one-time promo reuse guard: TRANSACTION TEST PASS
-Room Ritual custom controls + saved account card: PASS
+Room Ritual custom controls + expanded saved account guidance: PASS
 Private Preview + Admin Private Releases: PASS
 Repeat Purchase live Resend path: PASS
 Production send-status-email: ACTIVE v11
+Production issue-welcome-credit: ACTIVE v1
+Production validate-promo: ACTIVE v3
 
 Handoff ZIP integrity: PASS
