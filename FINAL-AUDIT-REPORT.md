@@ -1,4 +1,4 @@
-# VA HOME v13.8.35 — Final Audit
+# VA HOME v13.8.36 — Final Audit
 
 This release adds an automated repeat-purchase email lifecycle on top of v13.8.34.
 

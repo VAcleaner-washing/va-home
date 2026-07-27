@@ -3063,7 +3063,7 @@ button, input, select, textarea, a{ min-width: 0; }
   .scent-reading-card__body h3{ font-size: clamp(2rem,10vw,2.75rem); }
 }
 
-/* v13.8.35 — readable recommendation rationale */
+/* v13.8.36 — readable recommendation rationale */
 .guide-result-reason{
   display:grid;
   margin:clamp(16px,2vw,22px) 0 0;

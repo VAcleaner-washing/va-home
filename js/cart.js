@@ -875,6 +875,26 @@
       if (cityHint) cityHint.textContent = query.length < 3 ? "Пошук почнеться після 3 літер." : "Оберіть населений пункт зі списку.";
       cityTimer = window.setTimeout(() => searchCities(query), 240);
     });
+    // Chrome may ignore autocomplete=off and silently replace a custom Nova Poshta city field.
+    // Re-run the authoritative city lookup after autofill/change so hidden refs never stay stale.
+    let autofillSnapshot = city.value.trim();
+    const reconcileAutofilledCity = () => {
+      const value = city.value.trim();
+      if (!value || value === autofillSnapshot || cityRef.value) return;
+      autofillSnapshot = value;
+      cityRef.value = "";
+      if (settlementRef) settlementRef.value = "";
+      warehouse.value = "";
+      warehouseRef.value = "";
+      warehouse.disabled = true;
+      form.dataset.npCityManual = "false";
+      form.dataset.npWarehouseManual = "false";
+      if (!isMobile() && value.length >= 3) searchCities(value);
+    };
+    city.addEventListener("change", reconcileAutofilledCity);
+    city.addEventListener("animationstart", reconcileAutofilledCity);
+    window.setTimeout(reconcileAutofilledCity, 350);
+    window.setTimeout(reconcileAutofilledCity, 1200);
     city.addEventListener("focus", () => { if (!isMobile() && city.value.trim().length >= 3 && !cityRef.value) searchCities(city.value.trim()); });
     city.addEventListener("click", (event) => { if (isMobile()) { event.preventDefault(); openPicker("city"); } });
     city.addEventListener("pointerup", (event) => { if (isMobile()) { event.preventDefault(); openPicker("city"); } }, { passive: false });

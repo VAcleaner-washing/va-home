@@ -1,6 +1,6 @@
 # Repeat purchase email deployment
 
-Release: VA HOME v13.8.35
+Release: VA HOME v13.8.36
 
 ## Defaults
 
