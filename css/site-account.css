@@ -2020,3 +2020,8 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 
 .account-credit-section{scroll-margin-top:120px}
 @media(max-width:620px){.account-credit-section{scroll-margin-top:92px}}
+
+/* VA HOME v14.0.0 RC6.2 — truthful Welcome Credit eligibility */
+.account-next-step__credit-link[hidden]{display:none!important}
+.account-welcome-eligibility[hidden]{display:none!important}
+.account-welcome-eligibility{margin:18px 0 2px;padding:14px 16px;border-left:1px solid rgba(195,145,70,.55);background:rgba(195,145,70,.055);color:rgba(255,255,255,.52);font-size:12px;line-height:1.65}

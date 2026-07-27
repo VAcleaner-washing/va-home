@@ -1,10 +1,13 @@
 {
   "version": "14.0.0",
-  "channel": "RC6.1",
-  "name": "ATMOSPHERE OS — ACCOUNT HIERARCHY POLISH",
+  "channel": "RC6.2",
+  "name": "ATMOSPHERE OS — WELCOME CREDIT ELIGIBILITY FIX",
   "date": "2026-07-27",
   "base": "13.8.36-AUTOMATION-HARDENING-LIVE-TEST",
   "changes": [
+    "Hides the promo-code jump whenever no active credit exists",
+    "Explains that Welcome Credit is unavailable after a previous full-size purchase instead of opening an empty section",
+    "Keeps the 100 UAH Welcome Credit restricted to genuinely new full-size customers",
     "Shortens the Discovery and Welcome Credit next-step headline for faster scanning",
     "Turns the promo-code jump into a clear secondary action with equal visual affordance",
     "Compacts the Atmosphere introduction and improves desktop/mobile hierarchy",

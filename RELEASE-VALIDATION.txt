@@ -28,3 +28,8 @@ Production issue-welcome-credit: ACTIVE v1
 Production validate-promo: ACTIVE v3
 
 Handoff ZIP integrity: PASS
+
+RC6.2 UX regression check:
+- Hidden promo-code action without an active credit: PASS
+- Existing full-size customer receives FULL_SIZE_PURCHASE_EXISTS explanation: PASS
+- Welcome Credit remains restricted to first full-size purchase: PASS

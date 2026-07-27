@@ -253,9 +253,24 @@
     const host = document.getElementById("guideWelcomeCredit");
     const text = document.getElementById("guideWelcomeCreditText");
     const action = document.getElementById("guideWelcomeCreditAction");
-    if (!host || !text || !action) return;
-    if (data?.eligible === false) { host.hidden = true; return; }
+    const title = host?.querySelector("h2");
+    if (!host || !text || !action || !title) return;
+    host.classList.remove("is-ineligible");
+    if (data?.eligible === false) {
+      if (data.reason === "FULL_SIZE_PURCHASE_EXISTS") {
+        host.hidden = false;
+        host.classList.add("is-ineligible");
+        title.textContent = "Ваш профіль збережено";
+        text.textContent = "Welcome Credit 100 грн діє лише до першої повнорозмірної покупки. У цьому акаунті вже є повнорозмірний аромат, тому новий код не створюється.";
+        action.textContent = "Відкрити мої рекомендації";
+        action.href = "account.html";
+        return;
+      }
+      host.hidden = true;
+      return;
+    }
     host.hidden = false;
+    title.textContent = "100 грн на ваш перший аромат";
     if (data?.credit?.promo?.code) {
       const expires = new Date(data.credit.expires_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long" });
       text.textContent = `100 грн уже зараховано. Персональний код діє до ${expires} і доступний у вашому кабінеті.`;

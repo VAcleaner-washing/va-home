@@ -15,7 +15,7 @@
   let mode = "login";
   let user = null;
   let dashboardPromise = null;
-  const accountState = { orders: [], profile: null, ritual: null, credits: [], welcomeCredit: null, privateRelease: null, ready: false };
+  const accountState = { orders: [], profile: null, ritual: null, credits: [], welcomeCredit: null, welcomeEligibility: null, privateRelease: null, ready: false };
 
   function withTimeout(promise, code) {
     let timer;
@@ -469,8 +469,22 @@
     const profileAction = $("#accountProfileAction");
     if (profileAction) profileAction.textContent = "Оновити ароматичний профіль";
     const tags = (profile.profile_tags || []).map((tag) => `<span>${esc(tag)}</span>`).join("");
-    host.innerHTML = `<p class="eyebrow">SCENT PROFILE · ПЕРСОНАЛЬНІ ЗБІГИ</p><h3>${esc(profile.profile_title || "Ваш ароматичний профіль")}</h3><p>${esc(profile.profile_text || "Персональний профіль збережено у вашому кабінеті.")}</p><div class="account-scent-profile__tags">${tags}</div><div class="account-profile-matches">${profileProductCards(profile)}</div><a class="account-text-link" href="scent-guide.html">Оновити мої рекомендації →</a>`;
+    host.innerHTML = `<p class="eyebrow">SCENT PROFILE · ПЕРСОНАЛЬНІ ЗБІГИ</p><h3>${esc(profile.profile_title || "Ваш ароматичний профіль")}</h3><p>${esc(profile.profile_text || "Персональний профіль збережено у вашому кабінеті.")}</p><div class="account-scent-profile__tags">${tags}</div><div class="account-profile-matches">${profileProductCards(profile)}</div><div class="account-welcome-eligibility" id="accountWelcomeEligibility" hidden></div><a class="account-text-link" href="scent-guide.html">Оновити мої рекомендації →</a>`;
+    renderWelcomeEligibilityNote();
     renderNextStep();
+  }
+
+  function renderWelcomeEligibilityNote() {
+    const note = $("#accountWelcomeEligibility");
+    if (!note) return;
+    const reason = accountState.welcomeEligibility?.reason || "";
+    if (reason === "FULL_SIZE_PURCHASE_EXISTS") {
+      note.textContent = "Welcome Credit 100 грн доступний лише до першої повнорозмірної покупки. Ваш ароматичний профіль і персональні рекомендації збережені.";
+      note.hidden = false;
+      return;
+    }
+    note.hidden = true;
+    note.textContent = "";
   }
 
   function creditStatus(credit, promo) {
@@ -525,9 +539,14 @@
 
   async function loadWelcomeCredit() {
     accountState.welcomeCredit = null;
+    accountState.welcomeEligibility = null;
     try {
       await window.VAScentProfile?.sync?.();
       const data = await window.VAHomeSupabase?.issueWelcomeCredit?.();
+      accountState.welcomeEligibility = {
+        eligible: data?.eligible ?? null,
+        reason: data?.reason || ""
+      };
       if (data?.eligible && data.credit?.promo?.code) {
         accountState.welcomeCredit = {
           ...data.credit,
@@ -536,7 +555,10 @@
         };
         if (data.created) window.VAHome?.showToast?.("Welcome Credit 100 грн активовано на 7 днів");
       }
-    } catch (_) {}
+    } catch (error) {
+      accountState.welcomeEligibility = { eligible: null, reason: error?.message || "WELCOME_CREDIT_UNAVAILABLE" };
+    }
+    renderWelcomeEligibilityNote();
     renderCreditSection();
   }
 
