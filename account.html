@@ -11,8 +11,8 @@
 <title>Мій кабінет — VA HOME</title>
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <link href="favicon/favicon.ico" rel="icon"/>
-<link href="css/core.css?v=14.0.0" rel="stylesheet"/><link href="css/site-account.css?v=14.0.0-rc4" rel="stylesheet"/>
-<meta content="Особистий кабінет VA HOME: замовлення, адреси доставки, список бажань і налаштування профілю." name="description"/><meta content="14.0.0 RC4" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
+<link href="css/core.css?v=14.0.0" rel="stylesheet"/><link href="css/site-account.css?v=14.0.0-rc5" rel="stylesheet"/>
+<meta content="Особистий кабінет VA HOME: замовлення, адреси доставки, список бажань і налаштування профілю." name="description"/><meta content="14.0.0 RC5" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
 <script defer="" src="js/hero-font-reveal.js?v=14.0.0"></script>
 <link href="/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
@@ -80,14 +80,35 @@
 <button class="account-logout" id="accountLogout" type="button">Вийти</button>
 </div>
 </header>
-<nav aria-label="Розділи кабінету" class="account-tabs">
-<button data-account-tab="orders" type="button">Замовлення</button>
-<button data-account-tab="wishlist" type="button"><span>Обране</span><span class="account-tab-count" id="accountWishlistCount" aria-label="0 обраних ароматів">0</span></button>
-<button class="is-active" data-account-tab="atmosphere" type="button">Атмосфера</button>
-<button data-account-tab="settings" type="button">Профіль</button>
+<nav aria-label="Розділи кабінету" class="account-tabs" role="tablist">
+<button aria-controls="accountOrders" aria-selected="false" data-account-tab="orders" role="tab" type="button"><span>Замовлення</span><span class="account-tab-count" hidden id="accountOrdersActiveCount" aria-label="0 активних замовлень">0</span></button>
+<button aria-controls="accountWishlist" aria-selected="false" data-account-tab="wishlist" role="tab" type="button"><span>Обране</span><span class="account-tab-count" id="accountWishlistCount" aria-label="0 обраних ароматів">0</span></button>
+<button aria-controls="accountAtmosphere" aria-selected="true" class="is-active" data-account-tab="atmosphere" role="tab" type="button">Атмосфера</button>
+<button aria-controls="accountSettings" aria-selected="false" data-account-tab="settings" role="tab" type="button">Профіль</button>
 </nav>
-<section hidden="" id="accountOrders">
-<div class="account-current-scent" hidden id="currentScent">
+<section hidden="" id="accountOrders" role="tabpanel">
+<div class="account-section-heading"><div><p class="eyebrow">ІСТОРІЯ</p><h2>Ваші замовлення</h2></div><p>Усі покупки, статуси та відстеження — в одному місці.</p></div>
+<div class="account-list" id="accountOrdersList">
+</div>
+<div class="account-empty" hidden="" id="accountOrdersEmpty"><h3>Ваш перший аромат ще попереду</h3><p>Перегляньте колекції або пройдіть короткий гід, щоб знайти композицію для свого простору.</p><div class="account-empty__actions"><a class="btn btn-primary" href="catalog.html">Перейти в каталог</a><a class="btn btn-secondary" href="scent-guide.html">Підібрати аромат</a></div></div>
+</section>
+<section hidden="" id="accountWishlist" role="tabpanel">
+<div class="wishlist-intro"><div><p class="eyebrow">Ваш вибір</p><h2>Збережені аромати</h2><p>Додавайте композиції через сердечко в каталозі або на сторінці аромату.</p></div><a class="btn btn-secondary" href="catalog.html">Переглянути каталог</a></div>
+<p class="account-message" id="wishlistMessage" role="status"></p>
+<div class="wishlist-grid" id="accountWishlistList">
+</div>
+<div class="account-empty" hidden="" id="accountWishlistEmpty"><h3>Тут з’являться ваші фаворити</h3><p>Зберігайте аромати, які хочеться порівняти або замовити пізніше.</p><a class="btn btn-primary" href="catalog.html">Переглянути аромати</a></div>
+</section>
+<section id="accountAtmosphere" role="tabpanel">
+<div class="account-atmosphere-intro">
+<div><p class="eyebrow">ATMOSPHERE OS</p><h2>Ваш персональний простір ароматів</h2><p>Поточний аромат, персональні збіги, налаштування паличок і доступні переваги — в одному зрозумілому просторі.</p></div>
+<a class="btn btn-secondary" href="scent-guide.html" id="accountProfileAction">Створити ароматичний профіль</a>
+</div>
+<article class="account-next-step" id="accountNextStep" hidden>
+<div><p class="eyebrow" id="accountNextStepEyebrow">ВАШ НАСТУПНИЙ КРОК</p><h2 id="accountNextStepTitle">Формуємо персональну рекомендацію…</h2><p id="accountNextStepText"></p></div>
+<a class="btn btn-primary" href="scent-guide.html" id="accountNextStepAction">Продовжити</a>
+</article>
+<div class="account-current-scent account-current-scent--atmosphere" hidden id="currentScent">
 <div class="account-current-scent__media"><img alt="" decoding="async" id="currentScentImage" loading="eager"/></div>
 <div class="account-current-scent__content">
 <p class="eyebrow">ВАШ АРОМАТ ЗАРАЗ</p>
@@ -99,49 +120,34 @@
 </div>
 <p class="account-current-scent__note" id="currentScentNote">Тривалість залежить від температури, вентиляції та кількості паличок.</p>
 <div class="account-current-scent__actions">
-<button class="btn btn-primary btn-small" id="currentScentRepeat" type="button">Повторити атмосферу</button>
+<button class="btn btn-primary btn-small" id="currentScentRepeat" type="button">Повторити цей аромат</button>
 <a class="btn btn-secondary btn-small" href="catalog.html" id="currentScentLink">Переглянути аромат</a>
 </div>
 </div>
 </div>
-<div class="account-section-heading"><div><p class="eyebrow">ІСТОРІЯ</p><h2>Ваші замовлення</h2></div><p>Усі покупки, статуси та відстеження — в одному місці.</p></div>
-<div class="account-list" id="accountOrdersList">
-</div>
-<div class="account-empty" hidden="" id="accountOrdersEmpty"><h3>Ваш перший аромат ще попереду</h3><p>Перегляньте колекції або пройдіть короткий гід, щоб знайти композицію для свого простору.</p><div class="account-empty__actions"><a class="btn btn-primary" href="catalog.html">Перейти в каталог</a><a class="btn btn-secondary" href="scent-guide.html">Підібрати аромат</a></div></div>
-</section>
-<section hidden="" id="accountWishlist">
-<div class="wishlist-intro"><div><p class="eyebrow">Ваш вибір</p><h2>Збережені аромати</h2><p>Додавайте композиції через сердечко в каталозі або на сторінці аромату.</p></div><a class="btn btn-secondary" href="catalog.html">Переглянути каталог</a></div>
-<p class="account-message" id="wishlistMessage" role="status"></p>
-<div class="wishlist-grid" id="accountWishlistList">
-</div>
-<div class="account-empty" hidden="" id="accountWishlistEmpty"><h3>Тут з’являться ваші фаворити</h3><p>Зберігайте аромати, які хочеться порівняти або замовити пізніше.</p><a class="btn btn-primary" href="catalog.html">Переглянути аромати</a></div>
-</section>
-<section id="accountAtmosphere">
-<div class="account-atmosphere-intro">
-<div><p class="eyebrow">ATMOSPHERE OS</p><h2>Ваш персональний простір ароматів</h2><p>Профіль, точність збігу, Room Ritual, Discovery Credit і ранній доступ — в одному місці.</p></div>
-<a class="btn btn-secondary" href="scent-guide.html">Оновити профіль</a>
-</div>
 <div class="account-atmosphere-grid">
 <article class="account-scent-profile" id="accountScentProfile">
-<p class="eyebrow">SCENT PROFILE</p>
+<p class="eyebrow">SCENT PROFILE · ПЕРСОНАЛЬНІ ЗБІГИ</p>
 <h3>Формуємо ваш профіль…</h3>
-<p>Пройдіть короткий тест, щоб зберегти характер простору та бачити відсоток збігу з кожною композицією.</p>
+<p>П’ять коротких відповідей покажуть, наскільки кожна композиція відповідає характеру вашого простору.</p>
 </article>
 <article class="account-room-ritual" id="accountRoomRitual">
-<p class="eyebrow">ROOM RITUAL</p>
+<p class="eyebrow">ROOM RITUAL · НАЛАШТУВАННЯ ПАЛИЧОК</p>
 <h3>Налаштування дифузії під кімнату</h3>
-<p>Кімната, площа, бажана присутність і розташування флакону формують точну кількість паличок та інтервал догляду.</p>
-<a class="btn btn-primary btn-small" href="room-ritual.html">Створити Room Ritual</a>
+<p>Оберіть кімнату, площу та бажану присутність — система підкаже кількість паличок і догляд.</p>
+<a class="btn btn-primary btn-small" href="room-ritual.html">Налаштувати палички</a>
 </article>
 </div>
-<div class="account-section-heading account-section-heading--compact"><div><p class="eyebrow">DISCOVERY CREDIT</p><h2>Ваші персональні кредити</h2></div><p>150 або 450 грн — залежно від обраного Discovery Set.</p></div>
-<div class="account-credit-list" id="accountDiscoveryCredits"><p class="account-loading-inline">Перевіряємо доступні кредити…</p></div>
-<div class="account-private-preview" id="accountPrivatePreview">
-<div><p class="eyebrow">PRIVATE PREVIEW · 48H</p><h2>Нові Noir-композиції до публічного релізу</h2><p>Ранній доступ відкривається автоматично для учасників персонального простору VA HOME.</p></div>
-<a class="btn btn-secondary" href="private-preview.html">Відкрити Private Preview</a>
+<section class="account-credit-section" hidden id="accountDiscoveryCreditSection">
+<div class="account-section-heading account-section-heading--compact"><div><p class="eyebrow">DISCOVERY CREDIT · ПОВЕРНЕННЯ ВАРТОСТІ НАБОРУ</p><h2>Ваші доступні кредити</h2></div><p>Персональний код на повнорозмірний аромат, прив’язаний до вашого email.</p></div>
+<div class="account-credit-list" id="accountDiscoveryCredits"></div>
+</section>
+<div class="account-private-preview" hidden id="accountPrivatePreview">
+<div><p class="eyebrow">PRIVATE PREVIEW · РАННІЙ ДОСТУП</p><h2>Новий реліз доступний раніше</h2><p>Активний приватний реліз відкривається у вашому кабінеті за 48 годин до публічного старту.</p></div>
+<a class="btn btn-secondary" href="private-preview.html">Переглянути ранній доступ</a>
 </div>
 </section>
-<section hidden="" id="accountSettings">
+<section hidden="" id="accountSettings" role="tabpanel">
 <div class="account-settings-block">
 <h2>Дані для доставки</h2>
 <p class="account-settings-block__hint">Збережіть дані один раз — вони автоматично підставляться в форму замовлення наступного разу.</p>
@@ -186,7 +192,7 @@
 <script defer="" src="js/main.js?v=14.0.0">
 </script>
 <script defer="" src="js/scent-profile.js?v=14.0.0"></script>
-<script defer="" src="js/account.js?v=14.0.0-rc4">
+<script defer="" src="js/account.js?v=14.0.0-rc5">
 </script>
 <script defer="" src="js/motion.js?v=14.0.0"></script>
 <script defer="" src="/js/pwa.js?v=14.0.0"></script>

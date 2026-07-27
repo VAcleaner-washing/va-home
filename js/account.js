@@ -15,6 +15,7 @@
   let mode = "login";
   let user = null;
   let dashboardPromise = null;
+  const accountState = { orders: [], profile: null, ritual: null, credits: [], privateRelease: null, ready: false };
 
   function withTimeout(promise, code) {
     let timer;
@@ -52,6 +53,7 @@
   }
   async function renderDashboard(currentUser) {
     user = currentUser;
+    accountState.ready = false;
     finishLoading();
     $("#accountAuth").hidden = true;
     $("#accountDashboard").hidden = false;
@@ -65,6 +67,8 @@
       try { await sb.rpc("claim_customer_orders"); } catch (_) { /* Current orders still load. */ }
     }
     await Promise.allSettled([loadOrders(), loadWishlist(), loadAtmosphereHub()]);
+    accountState.ready = true;
+    renderNextStep();
     const requestedTab = new URLSearchParams(location.search).get("tab");
     const initialTab = ["orders", "wishlist", "atmosphere", "settings"].includes(requestedTab)
       ? requestedTab
@@ -131,30 +135,125 @@
     if (!added) throw new Error("EMPTY_ORDER");
   }
 
+  function updateActiveOrdersCount(orders) {
+    const badge = $("#accountOrdersActiveCount");
+    if (!badge) return;
+    const active = (orders || []).filter((order) => !["completed", "cancelled"].includes(order.status));
+    badge.textContent = String(active.length);
+    badge.hidden = active.length === 0;
+    badge.setAttribute("aria-label", `${active.length} активних замовлень`);
+    badge.closest("button")?.classList.toggle("has-items", active.length > 0);
+  }
+
   function renderAccountOverview(orders) {
     const valid = (orders || []).filter((order) => order.status !== "cancelled");
     const count = $("#accountOrdersCount");
     const since = $("#accountMemberSince");
     if (count) count.textContent = String(valid.length);
+    updateActiveOrdersCount(orders);
     if (since) {
       const oldest = [...valid].sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[0];
       since.textContent = oldest ? new Date(oldest.created_at).toLocaleDateString("uk-UA", { month: "long", year: "numeric" }) : "сьогодні";
     }
   }
 
+  function renderNextStep() {
+    const host = $("#accountNextStep");
+    if (!accountState.ready) return;
+    const title = $("#accountNextStepTitle");
+    const text = $("#accountNextStepText");
+    const eyebrow = $("#accountNextStepEyebrow");
+    const action = $("#accountNextStepAction");
+    if (!host || !title || !text || !eyebrow || !action) return;
+
+    const activeOrder = (accountState.orders || []).find((order) => !["completed", "cancelled"].includes(order.status));
+    const activeCredit = (accountState.credits || []).find((credit) => {
+      const promo = Array.isArray(credit.promo_codes) ? credit.promo_codes[0] : credit.promo_codes;
+      return creditStatus(credit, promo).cls === "active";
+    });
+    const currentOrder = (accountState.orders || []).find((order) => order.status === "completed" && fullSizeItems(order).length);
+    const currentItem = currentOrder ? fullSizeItems(currentOrder)[0] : null;
+
+    let next = null;
+    if (activeOrder) {
+      next = {
+        eyebrow: "ВАШ НАСТУПНИЙ КРОК · ЗАМОВЛЕННЯ",
+        title: ({
+          new: "Ваше замовлення вже опрацьовується",
+          awaiting_payment: "Замовлення очікує оплату",
+          pending: "Ми підтверджуємо ваше замовлення",
+          paid: "Оплату підтверджено — готуємо замовлення",
+          shipped: "Ваше замовлення вже в дорозі"
+        })[activeOrder.status] || "Перевірте статус замовлення",
+        text: `Замовлення ${activeOrder.client_order_id || "VA HOME"} має активний статус. Усі деталі й відстеження вже у вашому кабінеті.`,
+        label: "Переглянути замовлення",
+        href: "account.html?tab=orders"
+      };
+    } else if (activeCredit) {
+      const expires = new Date(activeCredit.expires_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long" });
+      next = {
+        eyebrow: "ВАШ НАСТУПНИЙ КРОК · DISCOVERY CREDIT",
+        title: `У вас є ${money(activeCredit.amount)} на повнорозмірний аромат`,
+        text: `Персональний код діє до ${expires} і застосовується один раз до будь-якої повнорозмірної композиції.`,
+        label: "Обрати аромат із кредитом",
+        href: "catalog.html"
+      };
+    } else if (!accountState.profile) {
+      next = {
+        eyebrow: "ВАШ НАСТУПНИЙ КРОК · SCENT PROFILE",
+        title: "Знайдіть свої найточніші композиції",
+        text: "П’ять коротких запитань сформують ваш ароматичний профіль і покажуть персональний відсоток збігу з усіма 18 ароматами.",
+        label: "Пройти підбір аромату",
+        href: "scent-guide.html"
+      };
+    } else if (currentItem && !accountState.ritual) {
+      next = {
+        eyebrow: "ВАШ НАСТУПНИЙ КРОК · ROOM RITUAL",
+        title: `Налаштуйте ${currentItem.name || currentItem.id} під вашу кімнату`,
+        text: "Вкажіть площу та бажану присутність — система підкаже кількість паличок, розташування і догляд.",
+        label: "Налаштувати палички",
+        href: `room-ritual.html?product=${encodeURIComponent(currentItem.id)}`
+      };
+    } else {
+      const recommendationId = accountState.profile?.recommendation_ids?.[0];
+      const recommendation = product(recommendationId);
+      next = recommendation ? {
+        eyebrow: "ВАШ НАСТУПНИЙ КРОК · ПЕРСОНАЛЬНА РЕКОМЕНДАЦІЯ",
+        title: `Познайомтеся з ${recommendation.name}`,
+        text: "Це одна з найточніших композицій вашого профілю. Відкрийте її характер, ноти та рекомендації для простору.",
+        label: "Переглянути рекомендацію",
+        href: `products/${encodeURIComponent(recommendation.id)}.html`
+      } : {
+        eyebrow: "ВАШ НАСТУПНИЙ КРОК",
+        title: "Продовжуйте створювати свою атмосферу",
+        text: "Перегляньте колекцію та збережіть композиції, до яких хочеться повернутися.",
+        label: "Переглянути аромати",
+        href: "catalog.html"
+      };
+    }
+
+    eyebrow.textContent = next.eyebrow;
+    title.textContent = next.title;
+    text.textContent = next.text;
+    action.textContent = next.label;
+    action.href = next.href;
+    host.hidden = false;
+  }
+
   function renderCurrentScent(orders) {
     const block = $("#currentScent");
     if (!block) return;
-    const recentOrder = (orders || []).find((order) => order.status !== "cancelled" && fullSizeItems(order).length);
+    const recentOrder = (orders || []).find((order) => order.status === "completed" && fullSizeItems(order).length);
     if (!recentOrder) { block.hidden = true; return; }
     const item = fullSizeItems(recentOrder)[0];
-    const orderedAt = new Date(recentOrder.created_at);
+    const orderedAt = new Date(recentOrder.completed_at || recentOrder.created_at);
+    const scentDateLabel = recentOrder.completed_at ? "Отримано" : "Замовлено";
     const ageWeeks = Math.max(0, (Date.now() - orderedAt.getTime()) / 604800000);
     const progress = Math.min(100, Math.round((ageWeeks / 12) * 100));
     $("#currentScentName").textContent = item.name || item.id;
     $("#currentScentImage").src = `images/product-story/${item.id}/hero.webp`;
     $("#currentScentImage").alt = `${item.name || item.id} — ваш аромат зараз`;
-    $("#currentScentDate").textContent = `Замовлено ${orderedAt.toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" })}`;
+    $("#currentScentDate").textContent = `${scentDateLabel} ${orderedAt.toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" })}`;
     $("#currentScentProgress").style.width = `${progress}%`;
     $("#currentScentLink").href = `products/${item.id}.html`;
     const note = $("#currentScentNote");
@@ -193,7 +292,7 @@
     let data, error;
     try {
       ({ data, error } = await withTimeout(sb.from("orders")
-        .select("client_order_id,created_at,status,total_amount,tracking_number,items,payment_method")
+        .select("client_order_id,created_at,completed_at,status,total_amount,tracking_number,items,payment_method")
         .order("created_at", { ascending: false }), "ORDERS_TIMEOUT"));
     } catch (_) {
       list.innerHTML = '<p class="account-message">Сервер довго не відповідає. Оновіть сторінку або спробуйте трохи пізніше.</p>';
@@ -204,9 +303,11 @@
       return;
     }
     const rows = data || [];
+    accountState.orders = rows;
     $("#accountOrdersEmpty").hidden = rows.length > 0;
     renderAccountOverview(rows);
     renderCurrentScent(rows);
+    renderNextStep();
     list.innerHTML = rows.map((order) => {
       const orderDate = new Date(order.created_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" });
       const safeId = esc(order.client_order_id);
@@ -282,15 +383,19 @@
     const productId = result?.product?.id || saved?.inputs?.product;
     const item = product(productId);
     if (!saved || !result || !item || !Number(result.reeds)) {
+      accountState.ritual = null;
       host.classList.remove("is-saved");
-      host.innerHTML = `<p class="eyebrow">ROOM RITUAL</p><h3>Налаштування дифузії під кімнату</h3><p>Кімната, площа, бажана присутність і розташування флакону формують точну кількість паличок та інтервал догляду.</p><a class="btn btn-primary btn-small" href="room-ritual.html">Створити Room Ritual</a>`;
+      host.innerHTML = `<p class="eyebrow">ROOM RITUAL · НАЛАШТУВАННЯ ПАЛИЧОК</p><h3>Налаштування дифузії під кімнату</h3><p>Оберіть кімнату, площу та бажану присутність — система підкаже кількість паличок і догляд.</p><a class="btn btn-primary btn-small" href="room-ritual.html">Налаштувати палички</a>`;
+      renderNextStep();
       return;
     }
     const savedAt = saved.savedAt ? new Date(saved.savedAt).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" }) : "на цьому пристрої";
     const room = String(result.room || "вашій кімнаті");
     const presence = String(result.presence || "збалансована");
+    accountState.ritual = saved;
     host.classList.add("is-saved");
-    host.innerHTML = `<p class="eyebrow">ROOM RITUAL · ЗБЕРЕЖЕНО</p><h3>${esc(item.name)}</h3><p class="account-room-ritual__meta">${esc(result.area)} м² · ${esc(room)} · ${esc(presence)} присутність</p><div class="account-room-ritual__result"><span>Рекомендований старт</span><strong>${esc(roomRitualTitle(result.reeds, result.diameter))}</strong><small>Збережено ${esc(savedAt)}</small></div><div class="account-room-ritual__actions"><a class="btn btn-primary btn-small" href="room-ritual.html?restore=1">Відкрити ритуал</a><button class="account-room-ritual__remove" type="button" data-remove-room-ritual>Видалити</button></div>`;
+    host.innerHTML = `<p class="eyebrow">ROOM RITUAL · ЗБЕРЕЖЕНО</p><h3>${esc(item.name)}</h3><p class="account-room-ritual__meta">${esc(result.area)} м² · ${esc(room)} · ${esc(presence)} присутність</p><div class="account-room-ritual__result"><span>Рекомендований старт</span><strong>${esc(roomRitualTitle(result.reeds, result.diameter))}</strong><small>Збережено ${esc(savedAt)}</small></div><div class="account-room-ritual__actions"><a class="btn btn-primary btn-small" href="room-ritual.html?restore=1">Відкрити мій ритуал</a><button class="account-room-ritual__remove" type="button" data-remove-room-ritual>Видалити</button></div>`;
+    renderNextStep();
     host.querySelector("[data-remove-room-ritual]")?.addEventListener("click", () => {
       try { localStorage.removeItem("va_home_room_ritual_v14"); } catch (_) {}
       loadSavedRoomRitual();
@@ -301,11 +406,21 @@
   function activateAccountTab(tab) {
     const button = document.querySelector(`[data-account-tab="${tab}"]`);
     if (!button) return;
-    document.querySelectorAll("[data-account-tab]").forEach((item) => item.classList.toggle("is-active", item === button));
+    document.querySelectorAll("[data-account-tab]").forEach((item) => {
+      const active = item === button;
+      item.classList.toggle("is-active", active);
+      item.setAttribute("aria-selected", active ? "true" : "false");
+    });
     $("#accountOrders").hidden = tab !== "orders";
     $("#accountWishlist").hidden = tab !== "wishlist";
     $("#accountAtmosphere").hidden = tab !== "atmosphere";
     $("#accountSettings").hidden = tab !== "settings";
+    try {
+      const url = new URL(location.href);
+      if (tab === "atmosphere") url.searchParams.delete("tab");
+      else url.searchParams.set("tab", tab);
+      history.replaceState({}, document.title, `${url.pathname}${url.search}${url.hash}`);
+    } catch (_) {}
   }
 
   function profileProductCards(profile) {
@@ -328,11 +443,19 @@
     } catch (_) {}
     profile = profile || window.VAScentProfile?.read?.();
     if (!profile) {
-      host.innerHTML = `<p class="eyebrow">SCENT PROFILE</p><h3>Ваш профіль ще не сформовано</h3><p>П’ять коротких відповідей збережуть характер вашого простору та покажуть точність збігу з кожним ароматом.</p><a class="btn btn-primary btn-small" href="scent-guide.html">Створити Scent Profile</a>`;
+      accountState.profile = null;
+      const profileAction = $("#accountProfileAction");
+      if (profileAction) profileAction.textContent = "Створити ароматичний профіль";
+      host.innerHTML = `<p class="eyebrow">SCENT PROFILE · ПЕРСОНАЛЬНІ ЗБІГИ</p><h3>Ваш профіль ще не сформовано</h3><p>П’ять коротких відповідей покажуть точність збігу з кожним із 18 ароматів.</p><a class="btn btn-primary btn-small" href="scent-guide.html">Пройти підбір аромату</a>`;
+      renderNextStep();
       return;
     }
+    accountState.profile = profile;
+    const profileAction = $("#accountProfileAction");
+    if (profileAction) profileAction.textContent = "Оновити ароматичний профіль";
     const tags = (profile.profile_tags || []).map((tag) => `<span>${esc(tag)}</span>`).join("");
-    host.innerHTML = `<p class="eyebrow">SCENT PROFILE</p><h3>${esc(profile.profile_title || "Ваш ароматичний профіль")}</h3><p>${esc(profile.profile_text || "Персональний профіль збережено у вашому кабінеті.")}</p><div class="account-scent-profile__tags">${tags}</div><div class="account-profile-matches">${profileProductCards(profile)}</div><a class="account-text-link" href="scent-guide.html">Перерахувати профіль →</a>`;
+    host.innerHTML = `<p class="eyebrow">SCENT PROFILE · ПЕРСОНАЛЬНІ ЗБІГИ</p><h3>${esc(profile.profile_title || "Ваш ароматичний профіль")}</h3><p>${esc(profile.profile_text || "Персональний профіль збережено у вашому кабінеті.")}</p><div class="account-scent-profile__tags">${tags}</div><div class="account-profile-matches">${profileProductCards(profile)}</div><a class="account-text-link" href="scent-guide.html">Оновити мої рекомендації →</a>`;
+    renderNextStep();
   }
 
   function creditStatus(credit, promo) {
@@ -343,46 +466,63 @@
 
   async function loadDiscoveryCredits() {
     const host = $("#accountDiscoveryCredits");
-    if (!host) return;
+    const section = $("#accountDiscoveryCreditSection");
+    if (!host || !section) return;
     let data, error;
     try {
       ({ data, error } = await withTimeout(sb.from("discovery_credits").select("id,amount,status,expires_at,used_at,promo_codes(code,usage_count,ends_at,active)").order("issued_at", { ascending: false }), "CREDIT_TIMEOUT"));
     } catch (_) {
-      host.innerHTML = '<p class="account-message">Не вдалося перевірити Discovery Credit.</p>';
+      accountState.credits = [];
+      section.hidden = true;
+      renderNextStep();
       return;
     }
-    if (error || !data?.length) {
-      host.innerHTML = `<article class="account-credit account-credit--empty"><div><strong>Discovery Credit з’явиться тут</strong><p>Після завершеної покупки ви автоматично отримаєте 150 або 450 грн — відповідно до обраного Discovery Set.</p></div><a class="btn btn-secondary btn-small" href="discovery-set.html">Відкрити Discovery Set</a></article>`;
+    const available = (data || []).filter((credit) => {
+      const promo = Array.isArray(credit.promo_codes) ? credit.promo_codes[0] : credit.promo_codes;
+      return creditStatus(credit, promo).cls === "active";
+    });
+    if (error || !available.length) {
+      accountState.credits = [];
+      section.hidden = true;
+      host.innerHTML = "";
+      renderNextStep();
       return;
     }
-    host.innerHTML = data.map((credit) => {
+    accountState.credits = available;
+    section.hidden = false;
+    host.innerHTML = available.map((credit) => {
       const promo = Array.isArray(credit.promo_codes) ? credit.promo_codes[0] : credit.promo_codes;
       const status = creditStatus(credit, promo);
       const expires = new Date(credit.expires_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" });
-      return `<article class="account-credit account-credit--${status.cls}"><div><span class="account-credit__status">${status.label}</span><strong>${money(credit.amount)} Discovery Credit</strong><p>${status.cls === "active" ? `Код діє до ${esc(expires)} на будь-який повнорозмірний аромат.` : "Цей персональний кредит уже недоступний."}</p></div><div class="account-credit__code"><span>Персональний код</span><strong>${esc(promo?.code || "—")}</strong>${status.cls === "active" ? `<button type="button" data-copy-credit="${esc(promo?.code || "")}">Скопіювати</button>` : ""}</div></article>`;
+      return `<article class="account-credit account-credit--${status.cls}"><div><span class="account-credit__status">${status.label} · DISCOVERY CREDIT</span><strong>${money(credit.amount)} на повнорозмірний аромат</strong><p>${status.cls === "active" ? `Код діє до ${esc(expires)}, прив’язаний до вашого email і застосовується один раз.` : "Цей персональний кредит уже недоступний."}</p>${status.cls === "active" ? '<a class="account-credit__cta" href="catalog.html">Обрати аромат із кредитом →</a>' : ""}</div><div class="account-credit__code"><span>Персональний код</span><strong>${esc(promo?.code || "—")}</strong>${status.cls === "active" ? `<button type="button" data-copy-credit="${esc(promo?.code || "")}">Скопіювати код</button>` : ""}</div></article>`;
     }).join("");
     host.querySelectorAll("[data-copy-credit]").forEach((button) => button.addEventListener("click", async () => {
-      try { await navigator.clipboard.writeText(button.dataset.copyCredit); window.VAHome?.showToast("Промокод скопійовано"); } catch (_) {}
+      try { await navigator.clipboard.writeText(button.dataset.copyCredit); window.VAHome?.showToast("Персональний код скопійовано"); } catch (_) {}
     }));
+    renderNextStep();
   }
 
   async function loadPrivatePreviewStatus() {
     const host = $("#accountPrivatePreview");
     if (!host) return;
+    host.hidden = true;
     try {
       const { data } = await withTimeout(sb.from("private_releases").select("title,public_starts_at").eq("active", true).lte("preview_starts_at", new Date().toISOString()).gt("public_starts_at", new Date().toISOString()).order("public_starts_at", { ascending: true }).limit(1), "PREVIEW_TIMEOUT");
-      if (data?.[0]) {
+      accountState.privateRelease = data?.[0] || null;
+      if (accountState.privateRelease) {
         host.classList.add("is-live");
-        host.querySelector("h2").textContent = data[0].title;
-        host.querySelector("p:last-child").textContent = "Private release уже доступний у вашому персональному просторі.";
-        host.querySelector("a").textContent = "Відкрити реліз";
+        host.querySelector("h2").textContent = accountState.privateRelease.title;
+        host.querySelector("p:last-child").textContent = "Реліз уже доступний у вашому персональному просторі до публічного старту.";
+        host.querySelector("a").textContent = "Переглянути ранній доступ";
+        host.hidden = false;
       }
-    } catch (_) {}
+    } catch (_) { accountState.privateRelease = null; }
   }
 
   async function loadAtmosphereHub() {
     loadSavedRoomRitual();
     await Promise.allSettled([loadScentProfileCard(), loadDiscoveryCredits(), loadPrivatePreviewStatus()]);
+    renderNextStep();
   }
 
   function updateWishlistCount(count) {
@@ -425,6 +565,7 @@
       if (removeError) $("#wishlistMessage").textContent = "Не вдалося видалити аромат.";
       else {
         document.dispatchEvent(new CustomEvent("vahome:wishlist-changed", { detail: { productSlug: button.dataset.wishRemove, saved: false } }));
+        window.VAHome?.showToast("Аромат видалено з обраного");
         await loadWishlist();
       }
     }));
