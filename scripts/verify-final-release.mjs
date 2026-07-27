@@ -38,10 +38,15 @@ try {
 } catch {
   errors.push("Journal SEO validator failed");
 }
+try {
+  childProcess.execFileSync(process.execPath, [path.join(root, "scripts", "verify-repeat-purchase.mjs"), root], { stdio: "inherit" });
+} catch {
+  errors.push("repeat-purchase campaign validator failed");
+}
 
 for (const file of htmlFiles) {
   const html = fs.readFileSync(file, "utf8");
-  if (/\?v=13\.8\.(?!34\b)\d+/.test(html)) errors.push(`stale asset version: ${path.relative(root, file)}`);
+  if (/\?v=13\.8\.(?!35\b)\d+/.test(html)) errors.push(`stale asset version: ${path.relative(root, file)}`);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
   const duplicates = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
   if (duplicates.length) errors.push(`duplicate IDs ${duplicates.join(", ")}: ${path.relative(root, file)}`);
@@ -88,7 +93,7 @@ const homeReviewsJs = fs.readFileSync(path.join(root, "js", "home-reviews.js"), 
 if (!homeReviewsJs.includes("preloadPhoto") || !homeReviewsJs.includes("Keep the server-rendered cards visible")) errors.push("home review photo preloading/stable fallback is missing");
 
 const release = JSON.parse(fs.readFileSync(path.join(root, "release.json"), "utf8"));
-if (release.version !== "13.8.34") errors.push(`release.json version is ${release.version}`);
+if (release.version !== "13.8.35") errors.push(`release.json version is ${release.version}`);
 if (!fs.existsSync(path.join(root, "data", "product-content.json"))) errors.push("central product content missing");
 if (!fs.existsSync(path.join(root, "PRODUCT-CONTENT-MASTER.md"))) errors.push("product content documentation missing");
 
@@ -99,7 +104,7 @@ if (errors.length) {
 }
 console.log(JSON.stringify({
   ok: true,
-  version: "13.8.34",
+  version: "13.8.35",
   htmlPages: htmlFiles.length,
   productPages: htmlFiles.filter((file) => file.includes(`${path.sep}products${path.sep}`)).length,
   centralProductSource: true,
@@ -107,5 +112,5 @@ console.log(JSON.stringify({
   scentGuideProfilesTested: 1728,
   journalArticles: 21,
   fragranceDnaAxes: 6,
-  base: "13.8.17"
+  base: "13.8.34"
 }, null, 2));

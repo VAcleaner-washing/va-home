@@ -1,23 +1,24 @@
-# VA HOME v13.8.34 — Final Audit
+# VA HOME v13.8.35 — Final Audit
 
-This release performs a focused internal-linking update on top of v13.8.33.
+This release adds an automated repeat-purchase email lifecycle on top of v13.8.34.
 
-## Updated
+## Customer flow
 
-- Hotel Luxe and Hotel Spring → `hotelni-aromaty-dlya-domu.html`.
-- Signature Relax and Wild Berry Way → `svizhi-aromadyfuzory.html`.
-- Velvet Spa and Pure Zen → `aromadyfuzor-dlya-vannoi.html`.
-- All 18 product-to-Journal mappings are now stored centrally in `data/product-content.json` and synchronized into static product pages.
+- Marketing consent is a separate optional checkbox and is never required to place an order.
+- A qualifying full-size fragrance order is scheduled 55 days after it reaches `completed`.
+- The customer receives a personal 100 UAH promo code valid for 7 days.
+- The code is single-use, bound to the recipient email, valid only for full-size fragrances and excluded from Discovery Set.
+- Every campaign email contains one-click unsubscribe. Service order emails remain enabled.
+
+## Backend
+
+- New `marketing_preferences` and `repeat_purchase_campaigns` tables.
+- New order timestamps and campaign status fields.
+- New personal-promo metadata in `promo_codes`.
+- New `process-repeat-purchase` and `marketing-unsubscribe` Edge Functions.
+- Daily protected pg_cron job.
+- Resend idempotency keys prevent duplicate delivery on retries.
 
 ## Preserved
 
-- Journal order and article numbers 01–21;
-- all other product Journal links;
-- product content, gallery geometry, six-axis DNA, reed guidance, filters, scent-guide scoring, reviews, checkout email prefill and PWA behavior.
-
-## Validation
-
-- all 18 product pages match the central Journal mapping;
-- all linked article files exist;
-- the six requested relevant mappings are locked by validation;
-- full release and Journal SEO validators pass.
+- Product cards, Journal 01–21, product-to-Journal links, catalog filters, scent guide, six-axis DNA, gallery geometry, reed guidance, reviews, account flow and PWA behavior.

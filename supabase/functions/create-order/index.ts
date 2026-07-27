@@ -145,6 +145,7 @@ Deno.serve(async req => {
     const deliveryLabel = isCourier ? "Нова пошта — кур’єр" : "Нова пошта — відділення / поштомат";
     const paymentMethod = text(body.payment_method, 30);
     const doNotCall = Boolean(body.do_not_call);
+    const marketingConsent = body.marketing_consent === true;
     const promoCode = text(body.promo_code, 40).toLocaleLowerCase("uk-UA");
     const rawComment = text(body.customer_comment, 900);
     const rawItems = Array.isArray(body.items) ? body.items : [];
@@ -159,6 +160,27 @@ Deno.serve(async req => {
     if (isBranch && novaPoshtaWarehouseRef && !novaPoshtaCityRef) return json(req, { error: "INVALID_DELIVERY" }, 400);
 
     const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+
+    const recordMarketingConsent = async (orderId: number | string) => {
+      if (!marketingConsent) return;
+      const nowIso = new Date().toISOString();
+      const { error: orderConsentError } = await supabase
+        .from("orders")
+        .update({ marketing_consent: true })
+        .eq("id", orderId);
+      if (orderConsentError) console.error("Marketing consent order update failed", orderConsentError);
+      const { error: preferenceError } = await supabase
+        .from("marketing_preferences")
+        .upsert({
+          email,
+          subscribed: true,
+          consented_at: nowIso,
+          unsubscribed_at: null,
+          source_order_id: orderId,
+          updated_at: nowIso,
+        }, { onConflict: "email" });
+      if (preferenceError) console.error("Marketing preference upsert failed", preferenceError);
+    };
 
     const rateLimitSince = new Date(Date.now() - 10 * 60 * 1000).toISOString();
     const { count: recentOrders, error: rateLimitError } = await supabase
@@ -202,7 +224,8 @@ Deno.serve(async req => {
       const validTime = promoRow && (!promoRow.starts_at || new Date(promoRow.starts_at).getTime() <= now) && (!promoRow.ends_at || new Date(promoRow.ends_at).getTime() >= now);
       const withinLimit = promoRow && (!promoRow.usage_limit || Number(promoRow.usage_count || 0) < Number(promoRow.usage_limit));
       const eligibleItems = promoRow && (promoRow.applies_to === "all" || (promoRow.applies_to === "fragrances" && items.some(item => FRAGRANCE_IDS.includes(item.id))) || (promoRow.applies_to === "products" && items.some(item => (promoRow.product_ids || []).includes(item.id))));
-      if (!promoRow || !promoRow.active || !validTime || !withinLimit || subtotal < Number(promoRow.min_order_amount || 0) || !eligibleItems) return json(req, { error: "INVALID_PROMO" }, 400);
+      const emailEligible = promoRow && (!promoRow.customer_email || String(promoRow.customer_email).trim().toLowerCase() === email);
+      if (!promoRow || !promoRow.active || !validTime || !withinLimit || subtotal < Number(promoRow.min_order_amount || 0) || !eligibleItems || !emailEligible) return json(req, { error: "INVALID_PROMO" }, 400);
       promo = promoRow;
       if (promoRow.discount_type === "fixed") discountAmount = Math.min(subtotal, Number(promoRow.discount_value || 0));
       if (promoRow.discount_type === "percent") discountAmount = Math.min(subtotal, Math.round(subtotal * Number(promoRow.discount_value || 0)) / 100);
@@ -220,7 +243,7 @@ Deno.serve(async req => {
     if (checkoutRequestId) {
       const { data: existing, error: existingError } = await supabase
         .from("orders")
-        .select("client_order_id,customer_name,customer_phone,customer_email,delivery_method,delivery_details,payment_method,items,total_amount,confirmation_email_status")
+        .select("id,client_order_id,customer_name,customer_phone,customer_email,delivery_method,delivery_details,payment_method,items,total_amount,confirmation_email_status,marketing_consent")
         .eq("checkout_request_id", checkoutRequestId)
         .maybeSingle();
       if (existingError) throw existingError;
@@ -231,6 +254,7 @@ Deno.serve(async req => {
           && existing.delivery_details === deliveryDetails
           && JSON.stringify(existing.items || []) === JSON.stringify(items);
         if (!sameCustomer || !sameOrder) return json(req, { error: "REQUEST_ID_CONFLICT" }, 409);
+        await recordMarketingConsent(existing.id);
         return json(req, {
           order: {
             client_order_id: existing.client_order_id,
@@ -260,7 +284,7 @@ Deno.serve(async req => {
         nova_poshta_settlement_ref: novaPoshtaSettlementRef,
         nova_poshta_warehouse_ref: novaPoshtaWarehouseRef,
         payment_method: paymentMethod, customer_comment: comment,
-        items, total_amount: total, discount_amount: discountAmount, promo_code: promo ? String(promo.code).toLowerCase() : null, status: "new", payment_status: "unpaid", source: "website",
+        items, total_amount: total, discount_amount: discountAmount, promo_code: promo ? String(promo.code).toLowerCase() : null, marketing_consent: marketingConsent, status: "new", payment_status: "unpaid", source: "website",
       };
       const { data, error } = await supabase.from("orders").insert(payload).select("*").single();
       if (!error) {
@@ -279,6 +303,7 @@ Deno.serve(async req => {
           const sameCustomer = racedOrder.customer_phone === phone && String(racedOrder.customer_email || "").toLowerCase() === email;
           const sameOrder = Number(racedOrder.total_amount) === total && JSON.stringify(racedOrder.items || []) === JSON.stringify(items);
           if (!sameCustomer || !sameOrder) return json(req, { error: "REQUEST_ID_CONFLICT" }, 409);
+          await recordMarketingConsent(racedOrder.id);
           return json(req, {
             order: {
               client_order_id: racedOrder.client_order_id,
@@ -299,6 +324,7 @@ Deno.serve(async req => {
       }
     }
     if (!order) throw new Error("ORDER_ID_COLLISION");
+    await recordMarketingConsent(order.id as number);
     if (promo) {
       const { error: redemptionError } = await supabase.from("promo_redemptions").insert({ promo_code_id: promo.id, order_id: order.id, customer_email: email, customer_phone: phone, discount_amount: discountAmount });
       if (redemptionError) console.error("Promo redemption insert failed", redemptionError);

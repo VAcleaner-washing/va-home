@@ -1,14 +1,14 @@
 {
-  "version": "13.8.34",
-  "name": "RELEVANT PRODUCT JOURNAL LINKS",
+  "version": "13.8.35",
+  "name": "AUTOMATED REPEAT PURCHASE EMAIL",
   "date": "2026-07-27",
-  "base": "13.8.33-SEO-JOURNAL-CHAPTER-IV",
+  "base": "13.8.34-RELEVANT-PRODUCT-JOURNAL-LINKS",
   "changes": [
-    "Connects six product cards to the most relevant Chapter IV Journal articles",
-    "Hotel Luxe and Hotel Spring now link to the hotel scent guide",
-    "Signature Relax and Wild Berry Way now link to the fresh diffuser guide",
-    "Velvet Spa and Pure Zen now link to the bathroom and home SPA guide",
-    "Centralizes the Journal link and title for all 18 products in data/product-content.json",
-    "Preserves every other product link, Journal order, scent guide, catalog filters, checkout and PWA behavior"
+    "Adds an optional checkout consent for personalized email offers",
+    "Schedules a repeat-purchase campaign 55 days after an order is completed",
+    "Creates a personal one-time 100 UAH promo code valid for seven days",
+    "Restricts each repeat promo code to the recipient email and full-size fragrances",
+    "Adds one-click unsubscribe without affecting service order emails",
+    "Adds daily pg_cron processing, campaign audit records and admin visibility"
   ]
 }
