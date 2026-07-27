@@ -5,7 +5,7 @@
    Run: node scripts/build-product-content.mjs
    ========================================================================== */
 
-const PRODUCT_CONTENT_VERSION = "13.8.32";
+const PRODUCT_CONTENT_VERSION = "13.8.34";
 const PRODUCT_LABELS = {
   "character": {
     "clean": "Чисті",
@@ -1133,6 +1133,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "Універсальний аромат легко налаштовується кількістю паличок."
+    },
+    "journalArticle": {
+      "path": "guides/svizhi-aromadyfuzory.html",
+      "title": "Свіжі аромадифузори для дому"
     }
   },
   {
@@ -1287,6 +1291,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "У невеликій кімнаті починайте з 2 паличок."
+    },
+    "journalArticle": {
+      "path": "guides/noty-aromatu.html",
+      "title": "Як читати ноти аромату"
     }
   },
   {
@@ -1440,6 +1448,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "У теплому приміщенні карамельний профіль посилюється."
+    },
+    "journalArticle": {
+      "path": "guides/noty-aromatu.html",
+      "title": "Як читати ноти аромату"
     }
   },
   {
@@ -1588,6 +1600,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "Свіжий сезонний профіль найкраще розкривається на 4 паличках."
+    },
+    "journalArticle": {
+      "path": "guides/svizhi-aromadyfuzory.html",
+      "title": "Свіжі аромадифузори для дому"
     }
   },
   {
@@ -1737,6 +1753,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "Для ефекту весняного boutique hotel у стандартній кімнаті використовуйте всі 4 палички."
+    },
+    "journalArticle": {
+      "path": "guides/hotelni-aromaty-dlya-domu.html",
+      "title": "Готельні аромати для дому"
     }
   },
   {
@@ -1886,6 +1906,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "У спальні починайте з 3 паличок."
+    },
+    "journalArticle": {
+      "path": "guides/vechirnii-rytual.html",
+      "title": "Аромат як вечірній ритуал"
     }
   },
   {
@@ -2036,6 +2060,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "У невеликій ванній 2–3 паличок зазвичай достатньо."
+    },
+    "journalArticle": {
+      "path": "guides/aromadyfuzor-dlya-vannoi.html",
+      "title": "Домашня SPA-атмосфера у ванній"
     }
   },
   {
@@ -2189,6 +2217,10 @@ const PRODUCTS = [
         "extraReeds": true
       },
       "note": "У стандартній кімнаті використовуйте всі 4 палички: тихе звучання є задумом композиції."
+    },
+    "journalArticle": {
+      "path": "guides/aromadyfuzor-dlya-vannoi.html",
+      "title": "Домашня SPA-атмосфера у ванній"
     }
   },
   {
@@ -2342,6 +2374,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "Для холу або стандартної кімнати оптимальні всі 4 палички."
+    },
+    "journalArticle": {
+      "path": "guides/hotelni-aromaty-dlya-domu.html",
+      "title": "Готельні аромати для дому"
     }
   },
   {
@@ -2490,6 +2526,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "Темний шкіряний аромат краще залишати стриманим."
+    },
+    "journalArticle": {
+      "path": "guides/chomu-dorohyi-aromat-ne-krychyt.html",
+      "title": "Чому дорогий аромат не кричить"
     }
   },
   {
@@ -2640,6 +2680,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "Активний чоловічий профіль: у невеликій кімнаті починайте з 2 паличок."
+    },
+    "journalArticle": {
+      "path": "guides/iso-e-super.html",
+      "title": "Як Iso E Super створює об’єм"
     }
   },
   {
@@ -2790,6 +2834,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "Для повної SPA-аури у стандартній кімнаті використовуйте всі 4 палички."
+    },
+    "journalArticle": {
+      "path": "guides/ambroxan.html",
+      "title": "Як Ambroxan створює простір"
     }
   },
   {
@@ -2939,6 +2987,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "Активна дифузія: у невеликій кімнаті не перевантажуйте простір."
+    },
+    "journalArticle": {
+      "path": "guides/iso-e-super.html",
+      "title": "Як працює Iso E Super"
     }
   },
   {
@@ -3094,6 +3146,10 @@ const PRODUCTS = [
         "extraReeds": true
       },
       "note": "У стандартній кімнаті використовуйте всі 4 палички 5 мм і оцініть остаточну інтенсивність через 24–48 годин."
+    },
+    "journalArticle": {
+      "path": "guides/molekulyarna-kompozytsiya.html",
+      "title": "Чому це молекулярна композиція"
     }
   },
   {
@@ -3241,6 +3297,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "Камерна композиція: у великому просторі аромат залишатиметься стриманим."
+    },
+    "journalArticle": {
+      "path": "guides/chomu-testuyemo-tyzhnyamy.html",
+      "title": "Чому формулу тестують тижнями"
     }
   },
   {
@@ -3394,6 +3454,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "Медитативна композиція не розрахована на агресивну дифузію."
+    },
+    "journalArticle": {
+      "path": "guides/chomu-noir-ne-pro-temryavu.html",
+      "title": "Чому Noir — не про темряву"
     }
   },
   {
@@ -3544,6 +3608,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "Темний NOIR-профіль краще налаштовувати поступово."
+    },
+    "journalArticle": {
+      "path": "guides/chomu-noir-ne-pro-temryavu.html",
+      "title": "Чому Noir — не про темряву"
     }
   },
   {
@@ -3694,6 +3762,10 @@ const PRODUCTS = [
         "label": "4"
       },
       "note": "Ванільно-смоляна база: у невеликій кімнаті починайте з нижчого значення."
+    },
+    "journalArticle": {
+      "path": "guides/chomu-noir-ne-pro-temryavu.html",
+      "title": "Чому Noir — не про темряву"
     }
   }
 ];

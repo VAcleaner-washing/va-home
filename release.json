@@ -1,12 +1,14 @@
 {
-  "version": "13.8.32",
-  "name": "REVIEW LOAD, FLORAL FILTER & GUIDE READABILITY FIX",
+  "version": "13.8.34",
+  "name": "RELEVANT PRODUCT JOURNAL LINKS",
   "date": "2026-07-27",
-  "base": "13.8.31-UNIFIED-PREMIUM-COMPOSITION-INTENT-COPY",
+  "base": "13.8.33-SEO-JOURNAL-CHAPTER-IV",
   "changes": [
-    "Keeps the server-rendered review showcase visible while Supabase photos preload, preventing black/empty cards during refresh",
-    "Adds Hotel Spring to the Floral catalog filter based on its approved yuzu, exotic-flower and tulip profile",
-    "Separates “Чому підходить”, “Палички” and “Догляд” into three readable rows in scent-guide recommendations",
-    "Preserves product content, six-axis DNA, reed-care disclosure, checkout email prefill and stable v13.8.27 block geometry"
+    "Connects six product cards to the most relevant Chapter IV Journal articles",
+    "Hotel Luxe and Hotel Spring now link to the hotel scent guide",
+    "Signature Relax and Wild Berry Way now link to the fresh diffuser guide",
+    "Velvet Spa and Pure Zen now link to the bathroom and home SPA guide",
+    "Centralizes the Journal link and title for all 18 products in data/product-content.json",
+    "Preserves every other product link, Journal order, scent guide, catalog filters, checkout and PWA behavior"
   ]
 }

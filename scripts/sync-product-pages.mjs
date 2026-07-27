@@ -25,6 +25,11 @@ const pills = (values, dictionary) => (values || [])
 
 const notesMarkup = (product) => `<div class="product-detail-section" id="notesSection"><h2 class="product-detail-section__title">Ноти</h2><p><strong>Верхні:</strong> ${escapeHtml(product.notes.top.join(", "))}</p><p><strong>Серце:</strong> ${escapeHtml(product.notes.heart.join(", "))}</p><p><strong>База:</strong> ${escapeHtml(product.notes.base.join(", "))}</p></div>`;
 
+const journalMarkup = (product) => `<div class="product-journal-proof">
+<span class="product-journal-proof__label">VA HOME Journal</span>
+<a href="../${escapeHtml(product.journalArticle.path)}"><span class="product-journal-proof__title">${escapeHtml(product.journalArticle.title)}</span><span aria-hidden="true" class="product-journal-proof__arrow">→</span></a>
+</div>`;
+
 const scalesMarkup = (product) => {
   const configuredOrder = Array.isArray(labels.scaleOrder) ? labels.scaleOrder : Object.keys(labels.scales || {});
   const fields = configuredOrder.filter((key, index) => key !== "intensity" && labels.scales?.[key] && configuredOrder.indexOf(key) === index);
@@ -131,6 +136,7 @@ function updateProductPage(file, product) {
   html = replaceRequired(html, /(<p class="product-hero__desc" id="productDesc">)[\s\S]*?(<\/p>)/, `$1${escapeHtml(product.shortDescription)}$2`, `${product.id} description`);
   html = replaceRequired(html, /<div class="product-essential-facts">[\s\S]*?<div class="product-hero__suit-for">/, `${heroFactsMarkup(product)}<div class="product-hero__suit-for">`, `${product.id} hero facts`);
   html = replaceRequired(html, /(<div class="product-hero__suit-for">)[\s\S]*?(<\/div>)/, `$1${escapeHtml(product.suitFor)}$2`, `${product.id} suitFor`);
+  html = replaceRequired(html, /<div class="product-journal-proof">[\s\S]*?<\/div>\s*<!-- ---- Ароматичний профіль ---- -->/, `${journalMarkup(product)}\n<!-- ---- Ароматичний профіль ---- -->`, `${product.id} journal article`);
   html = replaceRequired(html, /(<div class="tag-pills" id="profileTags">)[\s\S]*?(<\/div>)/, `$1${pills(product.character, labels.character)}$2`, `${product.id} profile tags`);
   html = replaceRequired(html, /<div class="product-detail-section" id="notesSection">[\s\S]*?<\/div>/, notesMarkup(product), `${product.id} notes`);
   html = replaceRequired(html, /(<p class="product-formula-proof__intent">)[\s\S]*?(<\/p>)/, `$1<strong>Задум композиції.</strong> ${escapeHtml(product.formulaIntent)}$2`, `${product.id} formula intent`);

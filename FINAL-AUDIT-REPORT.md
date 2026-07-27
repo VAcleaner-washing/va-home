@@ -1,30 +1,23 @@
-# VA HOME v13.8.32 — Final Audit
+# VA HOME v13.8.34 — Final Audit
 
-This release fixes three customer-visible issues without changing the product architecture or the stable composition block geometry.
+This release performs a focused internal-linking update on top of v13.8.33.
 
-## Fixed
+## Updated
 
-- The homepage review showcase keeps its server-rendered cards visible while current Supabase photos preload. The grid updates only after usable images are ready, preventing a loaded review card from becoming a black placeholder.
-- The first two large review images use eager, high-priority loading.
-- Hotel Spring is now included in the `floral` character group. The “Квіткові” catalog filter returns Evening Ritual and Hotel Spring.
-- Scent-guide recommendations display “Чому підходить”, “Палички” and “Догляд” as three separate rows instead of one dense paragraph.
+- Hotel Luxe and Hotel Spring → `hotelni-aromaty-dlya-domu.html`.
+- Signature Relax and Wild Berry Way → `svizhi-aromadyfuzory.html`.
+- Velvet Spa and Pure Zen → `aromadyfuzor-dlya-vannoi.html`.
+- All 18 product-to-Journal mappings are now stored centrally in `data/product-content.json` and synchronized into static product pages.
 
 ## Preserved
 
-- all 18 approved “Задум композиції” texts from v13.8.31;
-- exact v13.8.27 composition-block geometry;
-- six-axis fragrance DNA and Warmth;
-- central product data and scent-guide scoring;
-- individual reed setup and care disclosure;
-- authenticated checkout email prefill;
-- v13.8.17 stable product gallery baseline.
+- Journal order and article numbers 01–21;
+- all other product Journal links;
+- product content, gallery geometry, six-axis DNA, reed guidance, filters, scent-guide scoring, reviews, checkout email prefill and PWA behavior.
 
-## Validated
+## Validation
 
-- 53 HTML pages and 18 product pages;
-- all 1,728 scent-guide answer profiles;
-- central product JSON and generated `js/products.js` synchronization;
-- Floral filter contains at least two relevant products and includes Hotel Spring;
-- separated recommendation rows exist in JavaScript and CSS;
-- homepage review preloading and stable fallback are present;
-- JavaScript/MJS syntax, PWA versions, local assets and ZIP integrity.
+- all 18 product pages match the central Journal mapping;
+- all linked article files exist;
+- the six requested relevant mappings are locked by validation;
+- full release and Journal SEO validators pass.

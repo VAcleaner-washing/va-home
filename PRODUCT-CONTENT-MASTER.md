@@ -112,3 +112,8 @@ node scripts/verify-final-release.mjs
 6. Інтенсивність
 
 Радар, легенда та слова блоку «Характер» будуються з центральних `labels.scales` і `labels.scaleCharacterWords`. Додавати або приховувати вісь безпосередньо у `js/product.js` заборонено. `scripts/verify-product-radar.mjs` перевіряє всі 18 ароматів і зупиняє реліз, якщо зникає будь-яка шкала.
+
+## Product → Journal mapping
+
+Each product stores one editorial link in `journalArticle.path` and `journalArticle.title`.
+`node scripts/sync-product-pages.mjs` writes that centralized mapping into all 18 static product pages, while `validate-product-content.mjs` verifies the target file, visible title and six relevance-locked Chapter IV mappings.

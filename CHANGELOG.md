@@ -1,3 +1,12 @@
+# v13.8.34 — Relevant Product Journal Links
+
+- Усі 18 посилань із карток ароматів на VA HOME Journal централізовано в `data/product-content.json`.
+- Hotel Luxe і Hotel Spring ведуть на «Готельні аромати для дому».
+- Signature Relax і Wild Berry Way ведуть на «Свіжі аромадифузори для дому».
+- Velvet Spa і Pure Zen ведуть на «Домашня SPA-атмосфера у ванній».
+- Інші 12 карток зберегли свої точні редакційні матеріали.
+- Порядок Journal 01–21, підбір, каталог, палички, DNA, checkout і стабільна галерея не змінювалися.
+
 # v13.8.32 — Review Load, Floral Filter & Guide Readability Fix
 
 - Статичні відгуки на головній більше не зникають під час фонового запиту до Supabase.
