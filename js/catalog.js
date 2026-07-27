@@ -10,11 +10,53 @@
   const PAGE_SIZE = 12;
   const RETURN_STATE_KEY = "vahome:catalog-return-state";
 
-  const ALLOWED = {
-    character: new Set(["all", "fresh", "woody", "clean", "fruity", "spa", "hotel", "warm", "evening", "molecular"]),
-    collection: new Set(["all", "entry", "signature", "premium", "noir"]),
-    sort: new Set(["recommended", "price-asc", "price-desc", "new"])
+  const FILTERS = window.VA_CATALOG_FILTERS || {
+    collections: [], characters: [], rooms: [], moods: [],
+    sort: [
+      { id: "recommended", label: "Рекомендовані" },
+      { id: "price-asc", label: "Від дешевших" },
+      { id: "price-desc", label: "Від дорожчих" },
+      { id: "new", label: "Новинки" }
+    ]
   };
+
+  const ids = (items) => new Set(["all", ...(items || []).map((item) => item.id)]);
+  const ALLOWED = {
+    character: ids(FILTERS.characters),
+    collection: ids(FILTERS.collections),
+    room: ids(FILTERS.rooms),
+    mood: ids(FILTERS.moods),
+    sort: new Set((FILTERS.sort || []).map((item) => item.id))
+  };
+
+  const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[char]));
+
+  function renderCatalogControls() {
+    const collectionChips = document.getElementById("collectionChips");
+    const characterChips = document.getElementById("characterChips");
+    const roomSelect = document.getElementById("roomSelect");
+    const moodSelect = document.getElementById("moodSelect");
+    const sortSelect = document.getElementById("catalogSort");
+
+    const chips = (items) => [
+      '<button class="filter-chip is-active" data-value="all" type="button">Усі</button>',
+      ...(items || []).map((item) => `<button class="filter-chip" data-value="${escapeHtml(item.id)}" type="button">${escapeHtml(item.label)}</button>`)
+    ].join("");
+    const options = (items, allLabel) => [
+      `<option value="all">${escapeHtml(allLabel)}</option>`,
+      ...(items || []).map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.label)}</option>`)
+    ].join("");
+
+    if (collectionChips && FILTERS.collections?.length) collectionChips.innerHTML = chips(FILTERS.collections);
+    if (characterChips && FILTERS.characters?.length) characterChips.innerHTML = chips(FILTERS.characters);
+    if (roomSelect && FILTERS.rooms?.length) roomSelect.innerHTML = options(FILTERS.rooms, "Усі кімнати");
+    if (moodSelect && FILTERS.moods?.length) moodSelect.innerHTML = options(FILTERS.moods, "Усі настрої");
+    if (sortSelect && FILTERS.sort?.length) {
+      sortSelect.innerHTML = FILTERS.sort.map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.label)}</option>`).join("");
+    }
+  }
 
   const state = {
     character: "all", // all | fresh | woody | clean | fruity | spa | hotel | warm | evening | molecular
@@ -104,7 +146,7 @@
   function matchesCharacter(product, value) {
     if (value === "all") return true;
     if (value === "evening") {
-      return (product.mood || []).includes("warm-evening");
+      return (product.character || []).includes("evening") || (product.filterMood || product.mood || []).includes("warm-evening");
     }
     return (product.character || []).includes(value);
   }
@@ -118,7 +160,7 @@
   }
 
   function matchesMood(product, value) {
-    return value === "all" || (product.mood || []).includes(value);
+    return value === "all" || (product.filterMood || product.mood || []).includes(value);
   }
 
   function getFiltered() {
@@ -327,8 +369,8 @@
 
     state.character = readSafeParam(params, "character", "all", ALLOWED.character);
     state.collection = readSafeParam(params, "collection", "all", ALLOWED.collection);
-    state.room = readSafeParam(params, "room", "all");
-    state.mood = readSafeParam(params, "mood", "all");
+    state.room = readSafeParam(params, "room", "all", ALLOWED.room);
+    state.mood = readSafeParam(params, "mood", "all", ALLOWED.mood);
     state.sort = readSafeParam(params, "sort", "recommended", ALLOWED.sort);
 
     const shown = Number.parseInt(params.get("shown") || "", 10);
@@ -361,6 +403,7 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     if (typeof PRODUCTS === "undefined") return;
+    renderCatalogControls();
     initFromQueryString();
     initChipGroup("#characterChips", "character");
     initChipGroup("#collectionChips", "collection");

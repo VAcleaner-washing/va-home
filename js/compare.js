@@ -5,19 +5,10 @@
   const MAX = 3;
   const root = location.pathname.includes('/products/') ? '../' : '';
 
-  const chars = {
-    clean: 'Чистий', fresh: 'Свіжий', warm: 'Теплий', fruity: 'Фруктовий',
-    woody: 'Деревний', floral: 'Квітковий', mineral: 'Мінеральний',
-    molecular: 'Молекулярний', spicy: 'Пряний', sweet: 'Солодкий', smoky: 'Димний'
-  };
-  const rooms = {
-    'living-room': 'Вітальня', bedroom: 'Спальня', office: 'Кабінет',
-    hallway: 'Передпокій', bathroom: 'Ванна'
-  };
-  const moods = {
-    calm: 'Спокій', 'warm-evening': 'Теплий вечір', 'warm-sweet': 'Затишок',
-    spa: 'SPA', hotel: 'Luxury hotel', modern: 'Сучасний простір', focus: 'Фокус'
-  };
+  const sharedLabels = window.VA_PRODUCT_LABELS || {};
+  const chars = sharedLabels.character || {};
+  const rooms = sharedLabels.room || {};
+  const moods = sharedLabels.mood || {};
 
   const esc = (value) => String(value ?? '').replace(/[&<>'"]/g, (char) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
@@ -27,6 +18,12 @@
   const collection = (product) => typeof window.getCollection === 'function'
     ? window.getCollection(product.collection)
     : null;
+
+  const reedSetupSummary = (product) => {
+    const setup = product?.reedSetupByArea;
+    if (!setup) return product?.quickFacts || '—';
+    return `${setup.standard.label} палички для стандартної кімнати`;
+  };
 
   let selected = read();
   let currentTab = 'character';
@@ -271,8 +268,12 @@
           <section class="va-compare-meter"><div><span>Деревність</span>${scale(product, 'woodiness')}</div></section>
           <section class="va-compare-meter"><div><span>Інтенсивність</span>${scale(product, 'intensity')}</div></section>
           <section class="va-compare-block va-compare-block--compact">
-            <p class="va-compare-label">Рекомендований старт</p>
-            <p class="va-compare-value">${esc(product.quickFacts || '3–4 палички')}</p>
+            <p class="va-compare-label">Палички за площею</p>
+            <p class="va-compare-value">${esc(reedSetupSummary(product))}</p>
+          </section>
+          <section class="va-compare-block va-compare-block--compact">
+            <p class="va-compare-label">Перевертання паличок</p>
+            <p class="va-compare-value">${esc(product.reedCare?.publicText || 'За потреби')}</p>
           </section>
         </div>
 

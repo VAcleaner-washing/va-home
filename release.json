@@ -1,14 +1,12 @@
 {
-  "version": "13.8.17",
-  "name": "AUTHENTICATED CHECKOUT EMAIL PREFILL",
-  "date": "2026-07-26",
-  "base": "13.8.16-FINAL-TECHNICAL-POLISH",
+  "version": "13.8.27",
+  "name": "VISIBLE REED-CARE DISCLOSURE",
+  "date": "2026-07-27",
+  "base": "13.8.17-AUTHENTICATED-CHECKOUT-EMAIL-PREFILL",
   "changes": [
-    "Automatically pre-fills checkout email from the active Supabase account session",
-    "Uses the cached account email immediately and verifies the user asynchronously without blocking checkout",
-    "Keeps the email editable and never overwrites it after the customer starts typing",
-    "Persists the prefilled email in the existing checkout draft",
-    "Adds a discreet account-prefill confirmation under the email field",
-    "Synchronizes customer and Admin PWA cache versions to 13.8.17"
+    "Adds the exact product-specific reed-turning interval to the visible product hero",
+    "Keeps the full instruction in the How to use section",
+    "Shows an evaporation disclaimer to prevent over-turning and mismatched expectations",
+    "Validates the visible reed-care disclosure across all 18 product cards"
   ]
 }

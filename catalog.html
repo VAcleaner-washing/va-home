@@ -19,7 +19,7 @@
 <meta content="summary_large_image" name="twitter:card"/>
 <link href="favicon/favicon.ico" rel="icon" sizes="any"/>
 <link href="favicon/favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="css/core.css?v=13.8.17" rel="stylesheet"/><link href="css/site-catalog.css?v=13.8.17" rel="stylesheet"/>
+<link href="css/core.css?v=13.8.27" rel="stylesheet"/><link href="css/site-catalog.css?v=13.8.27" rel="stylesheet"/>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -30,9 +30,9 @@
   ]
 }
 </script>
-<meta content="13.8.17 Stable" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
+<meta content="13.8.27 Stable" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
 <meta content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" name="robots"/><meta content="uk_UA" property="og:locale"/><meta content="VA HOME" property="og:site_name"/><meta content="Signature Relax — аромадифузор VA HOME" property="og:image:alt"/><meta content="Каталог ароматів — VA HOME" name="twitter:title"/><meta content="Каталог аромадифузорів VA HOME: Entry, Signature, Premium, Noir. Фільтруйте за характером, колекцією та настроєм." name="twitter:description"/><meta content="https://vahome.com.ua/images/pages/catalog-hero.webp" name="twitter:image"/><meta content="Signature Relax — аромадифузор VA HOME" name="twitter:image:alt"/>
-<script defer="" src="js/hero-font-reveal.js?v=13.8.17"></script>
+<script defer="" src="js/hero-font-reveal.js?v=13.8.27"></script>
 <link href="/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
 
@@ -98,11 +98,13 @@
 <button class="filter-chip" data-value="woody" type="button">Деревні</button>
 <button class="filter-chip" data-value="clean" type="button">Чисті</button>
 <button class="filter-chip" data-value="fruity" type="button">Фруктові</button>
-<button class="filter-chip" data-value="spa" type="button">Спа</button>
+<button class="filter-chip" data-value="spa" type="button">SPA</button>
 <button class="filter-chip" data-value="hotel" type="button">Готельні</button>
 <button class="filter-chip" data-value="warm" type="button">Теплі</button>
 <button class="filter-chip" data-value="evening" type="button">Вечірні</button>
+<button class="filter-chip" data-value="floral" type="button">Квіткові</button>
 <button class="filter-chip" data-value="molecular" type="button">Молекулярні</button>
+<button class="filter-chip" data-value="spicy" type="button">Пряні</button>
 </div>
 </div>
 <div class="filter-group">
@@ -112,18 +114,37 @@
 <option value="living-room">Вітальня</option>
 <option value="bedroom">Спальня</option>
 <option value="bathroom">Ванна</option>
-<option value="hallway">Передпокій</option>
 <option value="office">Кабінет</option>
+<option value="hallway">Передпокій</option>
+<option value="wardrobe">Гардероб</option>
+<option value="library">Бібліотека</option>
+<option value="lounge">Лаунж</option>
+<option value="balcony">Балкон</option>
+<option value="terrace">Тераса</option>
+<option value="showroom">Шоурум</option>
+<option value="dining-room">Їдальня</option>
+<option value="spa-zone">SPA-зона</option>
 </select>
 </div>
 <div class="filter-group">
 <label class="filter-group__title" for="moodSelect">Настрій</label>
 <select class="filter-select" id="moodSelect">
 <option value="all">Усі настрої</option>
-<option value="calm">Чистота й спокій</option>
+<option value="calm">Спокій</option>
 <option value="warm-evening">Теплий вечір</option>
-<option value="hotel">Готельна атмосфера</option>
-<option value="warm-sweet">М'яка фруктова композиція</option>
+<option value="warm-sweet">Тепла солодкість</option>
+<option value="hotel-clean">Готельна чистота</option>
+<option value="spring-fresh">Весняна свіжість</option>
+<option value="berry-air">Свіже ягідне повітря</option>
+<option value="dark-luxury">Темна розкіш</option>
+<option value="confident-space">Впевнений простір</option>
+<option value="airy-luxury">Повітряна розкіш</option>
+<option value="private-library">Приватна бібліотека</option>
+<option value="silk-aura">Шовкова аура</option>
+<option value="meditative-wood">Медитативна деревна свіжість</option>
+<option value="mossy-dark">Мохово-деревна атмосфера</option>
+<option value="sensual-evening">Чуттєвий вечір</option>
+<option value="spa">SPA</option>
 </select>
 </div>
 <!--
@@ -145,7 +166,6 @@
 <option value="price-asc">Від дешевших</option>
 <option value="price-desc">Від дорожчих</option>
 <option value="new">Новинки</option>
-<!-- "Популярні" додамо, коли зʼявляться реальні дані popularity -->
 </select>
 </div>
 </div>
@@ -230,7 +250,7 @@
 <div class="product-card__body">
 <span class="product-card__collection">Entry Collection</span>
 <a href="products/hotel-spring.html"><h3 class="product-card__name">Hotel Spring</h3></a>
-<p class="product-card__desc">Юзу й тюльпан з атмосферою світлого весняного boutique hotel.</p>
+<p class="product-card__desc">Юзу й тюльпан з атмосферою світлого весняного бутик-готелю.</p>
 <div class="product-card__rating has-rating" data-product-rating aria-label="Рейтинг товару">★ 5.0 · 1 відгук</div><div class="product-card__meta">
 <span>100 мл</span>
 <span class="product-card__price">799 грн</span>
@@ -358,7 +378,7 @@
 <div class="product-card__body">
 <span class="product-card__collection">Premium Collection</span>
 <a href="products/mineral-salt.html"><h3 class="product-card__name">Mineral Salt</h3></a>
-<p class="product-card__desc">Морська сіль і шавлія з чистою атмосферою luxury SPA.</p>
+<p class="product-card__desc">Морська сіль і шавлія з чистою атмосферою преміального SPA.</p>
 <div class="product-card__rating has-rating" data-product-rating aria-label="Рейтинг товару">★ 5.0 · 1 відгук</div><div class="product-card__meta">
 <span>100 мл</span>
 <span class="product-card__price">999 грн</span>
@@ -382,16 +402,16 @@
 </section>
 </main>
 <div data-root="" id="site-footer"></div>
-<script defer="" src="js/config.js?v=13.8.17"></script>
-<script defer="" src="js/supabase-api.js?v=13.8.17"></script>
-<script defer="" src="js/products.js?v=13.8.17"></script>
-<script defer="" src="js/compare.js?v=13.8.17"></script>
-<script defer="" src="js/catalog.js?v=13.8.17"></script>
-<script defer="" src="js/cart.js?v=13.8.17"></script>
-<script data-vahome-wishlist="true" defer="" src="js/wishlist.js?v=13.8.17"></script>
-<script defer="" src="js/ratings.js?v=13.8.17"></script>
-<script defer="" src="js/main.js?v=13.8.17"></script>
-<script defer="" src="js/motion.js?v=13.8.17"></script>
-<script defer="" src="/js/pwa.js?v=13.8.17"></script>
+<script defer="" src="js/config.js?v=13.8.27"></script>
+<script defer="" src="js/supabase-api.js?v=13.8.27"></script>
+<script defer="" src="js/products.js?v=13.8.27"></script>
+<script defer="" src="js/compare.js?v=13.8.27"></script>
+<script defer="" src="js/catalog.js?v=13.8.27"></script>
+<script defer="" src="js/cart.js?v=13.8.27"></script>
+<script data-vahome-wishlist="true" defer="" src="js/wishlist.js?v=13.8.27"></script>
+<script defer="" src="js/ratings.js?v=13.8.27"></script>
+<script defer="" src="js/main.js?v=13.8.27"></script>
+<script defer="" src="js/motion.js?v=13.8.27"></script>
+<script defer="" src="/js/pwa.js?v=13.8.27"></script>
 </body>
 </html>

@@ -1,20 +1,16 @@
-# VA HOME v13.8.17 — Authenticated checkout prefill
+# VA HOME v13.8.27 — Visible Reed-Care Disclosure
 
-## Scope
-- All HTML pages in the archive
-- 18 product pages
-- Main and Admin PWA manifests/service workers
-- Public sitemap and internal links
-- Local CSS/JS/image references
-- Product JSON-LD and approved-review fallbacks
+## Мета
 
-## Release decisions
-- Product lifetime: 8–12 weeks, dependent on reeds, temperature and airflow.
-- Reeds: flip only for a temporary intensity boost; frequent flipping accelerates evaporation.
-- Reviews: Supabase remains the live source. Static HTML contains an approved-review snapshot for crawlability and graceful degradation.
-- PWA: customer and admin apps use independent caches, both versioned 13.8.17.
+Зробити індивідуальну рекомендацію щодо перевертання паличок видимою ще до додавання товару в кошик, а не лише в нижньому блоці інструкції.
 
-## Deployment
-Upload the complete archive contents to the site root. No new SQL migration or Edge Function deployment is required for this release. The review Storage hardening from v13.8.15 remains included.
+## Реалізація
 
-- Checkout: when a customer is signed in, the account email is automatically inserted into the checkout form while remaining editable.
+- У hero-фактах кожної картки: тривалість, комплект, перевертання.
+- Інтервал береться з `data/product-content.json`.
+- Детальна інструкція дублюється в «Як користуватися» навмисно: коротко до покупки, повністю нижче.
+- Додано попередження, що частіше перевертання прискорює випаровування.
+
+## Перевірки
+
+Автоматична валідація всіх 18 карток, центрального контенту, JavaScript, PWA-версій та статичного HTML.

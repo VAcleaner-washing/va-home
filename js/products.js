@@ -1,22 +1,917 @@
 /* ==========================================================================
-   VA HOME — Product & Collection data
-   Single source of truth. Do not duplicate names/prices/notes in HTML.
-
-   Unknown fields are explicitly `null` — templates hide those sections
-   instead of guessing or showing placeholder text.
+   VA HOME — products.js
+   AUTO-GENERATED from data/product-content.json.
+   Do not edit product copy, filters, guide rules, rooms, scales or reed guidance here.
+   Run: node scripts/build-product-content.mjs
    ========================================================================== */
 
+const PRODUCT_CONTENT_VERSION = "13.8.27";
+const PRODUCT_LABELS = {
+  "character": {
+    "clean": "Чисті",
+    "fresh": "Свіжі",
+    "fruity": "Фруктові",
+    "warm": "Теплі",
+    "woody": "Деревні",
+    "spa": "SPA",
+    "molecular": "Молекулярні",
+    "hotel": "Готельні",
+    "floral": "Квіткові",
+    "evening": "Вечірні",
+    "spicy": "Пряні"
+  },
+  "room": {
+    "living-room": "Вітальня",
+    "bedroom": "Спальня",
+    "bathroom": "Ванна",
+    "office": "Кабінет",
+    "hallway": "Передпокій",
+    "wardrobe": "Гардероб",
+    "library": "Бібліотека",
+    "lounge": "Лаунж",
+    "balcony": "Балкон",
+    "terrace": "Тераса",
+    "showroom": "Шоурум",
+    "dining-room": "Їдальня",
+    "spa-zone": "SPA-зона"
+  },
+  "mood": {
+    "calm": "Спокій",
+    "warm-evening": "Теплий вечір",
+    "warm-sweet": "Тепла солодкість",
+    "hotel-clean": "Готельна чистота",
+    "spring-fresh": "Весняна свіжість",
+    "berry-air": "Свіже ягідне повітря",
+    "dark-luxury": "Темна розкіш",
+    "confident-space": "Впевнений простір",
+    "airy-luxury": "Повітряна розкіш",
+    "private-library": "Приватна бібліотека",
+    "silk-aura": "Шовкова аура",
+    "meditative-wood": "Медитативна деревна свіжість",
+    "mossy-dark": "Мохово-деревна атмосфера",
+    "sensual-evening": "Чуттєвий вечір",
+    "spa": "SPA"
+  },
+  "scales": {
+    "freshness": "Свіжість",
+    "sweetness": "Солодкість",
+    "woodiness": "Деревність",
+    "cleanliness": "Чистота"
+  }
+};
+const PRODUCT_CATALOG_FILTERS = {
+  "collections": [
+    {
+      "id": "entry",
+      "label": "Entry"
+    },
+    {
+      "id": "signature",
+      "label": "Signature"
+    },
+    {
+      "id": "premium",
+      "label": "Premium"
+    },
+    {
+      "id": "noir",
+      "label": "Noir"
+    }
+  ],
+  "characters": [
+    {
+      "id": "fresh",
+      "label": "Свіжі"
+    },
+    {
+      "id": "woody",
+      "label": "Деревні"
+    },
+    {
+      "id": "clean",
+      "label": "Чисті"
+    },
+    {
+      "id": "fruity",
+      "label": "Фруктові"
+    },
+    {
+      "id": "spa",
+      "label": "SPA"
+    },
+    {
+      "id": "hotel",
+      "label": "Готельні"
+    },
+    {
+      "id": "warm",
+      "label": "Теплі"
+    },
+    {
+      "id": "evening",
+      "label": "Вечірні"
+    },
+    {
+      "id": "floral",
+      "label": "Квіткові"
+    },
+    {
+      "id": "molecular",
+      "label": "Молекулярні"
+    },
+    {
+      "id": "spicy",
+      "label": "Пряні"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "living-room",
+      "label": "Вітальня"
+    },
+    {
+      "id": "bedroom",
+      "label": "Спальня"
+    },
+    {
+      "id": "bathroom",
+      "label": "Ванна"
+    },
+    {
+      "id": "office",
+      "label": "Кабінет"
+    },
+    {
+      "id": "hallway",
+      "label": "Передпокій"
+    },
+    {
+      "id": "wardrobe",
+      "label": "Гардероб"
+    },
+    {
+      "id": "library",
+      "label": "Бібліотека"
+    },
+    {
+      "id": "lounge",
+      "label": "Лаунж"
+    },
+    {
+      "id": "balcony",
+      "label": "Балкон"
+    },
+    {
+      "id": "terrace",
+      "label": "Тераса"
+    },
+    {
+      "id": "showroom",
+      "label": "Шоурум"
+    },
+    {
+      "id": "dining-room",
+      "label": "Їдальня"
+    },
+    {
+      "id": "spa-zone",
+      "label": "SPA-зона"
+    }
+  ],
+  "moods": [
+    {
+      "id": "calm",
+      "label": "Спокій"
+    },
+    {
+      "id": "warm-evening",
+      "label": "Теплий вечір"
+    },
+    {
+      "id": "warm-sweet",
+      "label": "Тепла солодкість"
+    },
+    {
+      "id": "hotel-clean",
+      "label": "Готельна чистота"
+    },
+    {
+      "id": "spring-fresh",
+      "label": "Весняна свіжість"
+    },
+    {
+      "id": "berry-air",
+      "label": "Свіже ягідне повітря"
+    },
+    {
+      "id": "dark-luxury",
+      "label": "Темна розкіш"
+    },
+    {
+      "id": "confident-space",
+      "label": "Впевнений простір"
+    },
+    {
+      "id": "airy-luxury",
+      "label": "Повітряна розкіш"
+    },
+    {
+      "id": "private-library",
+      "label": "Приватна бібліотека"
+    },
+    {
+      "id": "silk-aura",
+      "label": "Шовкова аура"
+    },
+    {
+      "id": "meditative-wood",
+      "label": "Медитативна деревна свіжість"
+    },
+    {
+      "id": "mossy-dark",
+      "label": "Мохово-деревна атмосфера"
+    },
+    {
+      "id": "sensual-evening",
+      "label": "Чуттєвий вечір"
+    },
+    {
+      "id": "spa",
+      "label": "SPA"
+    }
+  ],
+  "sort": [
+    {
+      "id": "recommended",
+      "label": "Рекомендовані"
+    },
+    {
+      "id": "price-asc",
+      "label": "Від дешевших"
+    },
+    {
+      "id": "price-desc",
+      "label": "Від дорожчих"
+    },
+    {
+      "id": "new",
+      "label": "Новинки"
+    }
+  ]
+};
+const PRODUCT_SCENT_GUIDE = {
+  "version": 2,
+  "storageKey": "vaHomeScentProfileV13822",
+  "recommendationCount": 3,
+  "aggregation": "best-match-per-dimension",
+  "questions": [
+    {
+      "id": "atmosphere",
+      "stepLabel": "Атмосфера",
+      "title": "Яке перше відчуття має створювати аромат?",
+      "options": [
+        {
+          "id": "calm",
+          "title": "Чистота й спокій",
+          "note": "Білий текстиль, світло, тиша",
+          "profile": {
+            "title": "Тиха чистота",
+            "text": "Вам близькі композиції, які не заповнюють кімнату шумом, а роблять її світлішою, спокійнішою та зібранішою.",
+            "tags": [
+              "чистота",
+              "повітря",
+              "м’який ритм"
+            ]
+          },
+          "score": {
+            "character": {
+              "clean": 3,
+              "fresh": 1,
+              "spa": 1
+            },
+            "mood": {
+              "calm": 5,
+              "spa": 3,
+              "meditative-wood": 2,
+              "silk-aura": 1
+            },
+            "cap": 8
+          }
+        },
+        {
+          "id": "hotel",
+          "title": "Дорогий готель",
+          "note": "Доглянутий простір і стриманий комфорт",
+          "profile": {
+            "title": "Стриманий комфорт",
+            "text": "Ви шукаєте відчуття доглянутого простору: чисті лінії, впевнена дифузія та атмосфера хорошого boutique hotel.",
+            "tags": [
+              "готельна чистота",
+              "доглянутість",
+              "елегантність"
+            ]
+          },
+          "score": {
+            "character": {
+              "hotel": 4,
+              "clean": 2,
+              "fresh": 1
+            },
+            "mood": {
+              "hotel-clean": 6,
+              "spring-fresh": 3
+            },
+            "cap": 8
+          }
+        },
+        {
+          "id": "warm-evening",
+          "title": "Теплий вечір",
+          "note": "М’яке світло, дерево, повільний ритм",
+          "profile": {
+            "title": "Вечірній ритуал",
+            "text": "Ваш аромат має зігрівати простір, сповільнювати його та створювати відчуття приватного вечора вдома.",
+            "tags": [
+              "тепло",
+              "дерево",
+              "ритуал"
+            ]
+          },
+          "score": {
+            "character": {
+              "warm": 3,
+              "floral": 2,
+              "woody": 1
+            },
+            "mood": {
+              "warm-evening": 6,
+              "sensual-evening": 5,
+              "dark-luxury": 3,
+              "silk-aura": 2
+            },
+            "cap": 8
+          }
+        },
+        {
+          "id": "fresh",
+          "title": "Прохолодна свіжість",
+          "note": "Повітря, вода, відкрите вікно",
+          "profile": {
+            "title": "Прохолодне повітря",
+            "text": "Вам потрібна композиція, що освіжає без різкості: повітря, вода, мінеральність і відчуття відкритого простору.",
+            "tags": [
+              "свіжість",
+              "мінерали",
+              "легкість"
+            ]
+          },
+          "score": {
+            "character": {
+              "fresh": 4,
+              "clean": 2,
+              "spa": 1
+            },
+            "mood": {
+              "airy-luxury": 4,
+              "spring-fresh": 4,
+              "berry-air": 4,
+              "spa": 4,
+              "meditative-wood": 2,
+              "hotel-clean": 2
+            },
+            "cap": 8
+          }
+        },
+        {
+          "id": "woody",
+          "title": "Дерево й камінь",
+          "note": "Архітектурність і природна сухість",
+          "profile": {
+            "title": "Архітектура тиші",
+            "text": "Ви тяжієте до сухих, фактурних ароматів із деревом, каменем і тінню — стриманих, але характерних.",
+            "tags": [
+              "дерево",
+              "камінь",
+              "характер"
+            ]
+          },
+          "score": {
+            "character": {
+              "woody": 4,
+              "molecular": 1,
+              "spicy": 1
+            },
+            "mood": {
+              "private-library": 6,
+              "dark-luxury": 5,
+              "mossy-dark": 5,
+              "confident-space": 4,
+              "meditative-wood": 3
+            },
+            "cap": 8
+          }
+        },
+        {
+          "id": "warm-sweet",
+          "title": "М’яка солодкість",
+          "note": "Фрукти, вершковість, затишок",
+          "profile": {
+            "title": "М’який затишок",
+            "text": "Вам близькі теплі композиції з фруктовими, кремовими або пряними відтінками, які роблять дім гостиннішим.",
+            "tags": [
+              "затишок",
+              "м’яка солодкість",
+              "тепло"
+            ]
+          },
+          "score": {
+            "character": {
+              "warm": 4,
+              "fruity": 3,
+              "floral": 1
+            },
+            "mood": {
+              "warm-sweet": 6,
+              "sensual-evening": 4,
+              "silk-aura": 3,
+              "warm-evening": 3
+            },
+            "cap": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "room",
+      "stepLabel": "Простір",
+      "title": "Де аромат має звучати найкраще?",
+      "options": [
+        {
+          "id": "living-room",
+          "title": "Вітальня",
+          "note": "Головна атмосфера дому",
+          "score": {
+            "room": {
+              "living-room": 6
+            },
+            "cap": 6,
+            "roomMismatchPenalty": -1
+          }
+        },
+        {
+          "id": "bedroom",
+          "title": "Спальня",
+          "note": "Спокійніше й ближче до тіла",
+          "score": {
+            "room": {
+              "bedroom": 6
+            },
+            "cap": 6,
+            "roomMismatchPenalty": -1
+          }
+        },
+        {
+          "id": "bathroom",
+          "title": "Ванна",
+          "note": "Чистота, вода, SPA-відчуття",
+          "score": {
+            "room": {
+              "bathroom": 6
+            },
+            "character": {
+              "clean": 1,
+              "spa": 1
+            },
+            "cap": 7,
+            "roomMismatchPenalty": -2
+          }
+        },
+        {
+          "id": "hallway",
+          "title": "Передпокій",
+          "note": "Аромат, який зустрічає при вході",
+          "score": {
+            "room": {
+              "hallway": 6
+            },
+            "character": {
+              "clean": 1,
+              "fresh": 1
+            },
+            "cap": 7,
+            "roomMismatchPenalty": -2
+          }
+        },
+        {
+          "id": "office",
+          "title": "Кабінет",
+          "note": "Зібраність і характер",
+          "score": {
+            "room": {
+              "office": 6
+            },
+            "character": {
+              "woody": 1,
+              "clean": 1
+            },
+            "cap": 7,
+            "roomMismatchPenalty": -1
+          }
+        },
+        {
+          "id": "kitchen",
+          "title": "Кухня",
+          "note": "Свіжий фон без зайвої солодкості",
+          "score": {
+            "character": {
+              "fresh": 3,
+              "clean": 3
+            },
+            "scales": [
+              {
+                "key": "sweetness",
+                "max": 5,
+                "points": 2,
+                "otherwise": -4
+              }
+            ],
+            "cap": 7,
+            "avoidRoomPenalty": -12
+          }
+        }
+      ]
+    },
+    {
+      "id": "composition",
+      "stepLabel": "Напрям",
+      "title": "До якого характеру ви повертаєтесь найчастіше?",
+      "options": [
+        {
+          "id": "fresh",
+          "title": "Свіжий",
+          "note": "Цитрус, зелень, повітря, мінерали",
+          "score": {
+            "character": {
+              "fresh": 6,
+              "clean": 1,
+              "spa": 1
+            },
+            "cap": 6
+          }
+        },
+        {
+          "id": "woody",
+          "title": "Деревний",
+          "note": "Кедр, шкіра, суха земля, дим",
+          "score": {
+            "character": {
+              "woody": 6,
+              "molecular": 1,
+              "spicy": 1
+            },
+            "cap": 6
+          }
+        },
+        {
+          "id": "warm-sweet",
+          "title": "Теплий",
+          "note": "Фрукти, спеції, кремові акорди",
+          "score": {
+            "character": {
+              "warm": 5,
+              "fruity": 3,
+              "floral": 1
+            },
+            "cap": 6
+          }
+        },
+        {
+          "id": "clean",
+          "title": "Чистий",
+          "note": "Текстиль, білий чай, м’який мускус",
+          "score": {
+            "character": {
+              "clean": 6,
+              "fresh": 1,
+              "spa": 1,
+              "molecular": 1
+            },
+            "cap": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "intensity",
+      "stepLabel": "Присутність",
+      "title": "Наскільки помітним має бути аромат?",
+      "options": [
+        {
+          "id": "light",
+          "title": "Ледь відчутний",
+          "note": "Помітний лише коли проходите поруч",
+          "profileLabel": "легка присутність",
+          "score": {
+            "targetScale": {
+              "key": "intensity",
+              "target": 5,
+              "pointsByDistance": [
+                5,
+                4,
+                2,
+                0
+              ],
+              "farPenalty": -2
+            },
+            "cap": 5
+          }
+        },
+        {
+          "id": "moderate",
+          "title": "Збалансований",
+          "note": "Відчутний у кімнаті, але не домінує",
+          "profileLabel": "збалансована присутність",
+          "score": {
+            "targetScale": {
+              "key": "intensity",
+              "target": 7,
+              "pointsByDistance": [
+                5,
+                4,
+                2,
+                0
+              ],
+              "farPenalty": -2
+            },
+            "cap": 5
+          }
+        },
+        {
+          "id": "rich",
+          "title": "Виразний",
+          "note": "Зустрічає при вході й формує простір",
+          "profileLabel": "виразна присутність",
+          "score": {
+            "targetScale": {
+              "key": "intensity",
+              "target": 9,
+              "pointsByDistance": [
+                5,
+                4,
+                2,
+                0
+              ],
+              "farPenalty": -2
+            },
+            "cap": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "space",
+      "stepLabel": "Естетика",
+      "title": "Який інтер’єр найближчий вам за характером?",
+      "options": [
+        {
+          "id": "entry",
+          "title": "Світлий мінімалізм",
+          "note": "Природне світло й прості форми",
+          "score": {
+            "collection": {
+              "entry": 2
+            },
+            "character": {
+              "clean": 1,
+              "fresh": 1,
+              "fruity": 1
+            },
+            "mood": {
+              "calm": 2,
+              "spring-fresh": 2,
+              "berry-air": 2,
+              "warm-sweet": 1
+            },
+            "cap": 4
+          }
+        },
+        {
+          "id": "signature",
+          "title": "Теплий затишок",
+          "note": "Текстиль, дерево, вечірній ритуал",
+          "score": {
+            "collection": {
+              "signature": 2
+            },
+            "character": {
+              "warm": 1,
+              "spa": 1,
+              "floral": 1
+            },
+            "mood": {
+              "warm-evening": 2,
+              "warm-sweet": 2,
+              "spa": 2,
+              "calm": 1
+            },
+            "cap": 4
+          }
+        },
+        {
+          "id": "premium",
+          "title": "Архітектурний простір",
+          "note": "Камінь, масштаб, впевнені лінії",
+          "score": {
+            "collection": {
+              "premium": 2
+            },
+            "character": {
+              "woody": 1,
+              "clean": 1,
+              "fresh": 1,
+              "spa": 1
+            },
+            "mood": {
+              "confident-space": 2,
+              "dark-luxury": 2,
+              "airy-luxury": 2,
+              "hotel-clean": 1
+            },
+            "cap": 4
+          }
+        },
+        {
+          "id": "noir",
+          "title": "Темний модернізм",
+          "note": "Тіні, арт-об’єкти, складний характер",
+          "score": {
+            "collection": {
+              "noir": 2
+            },
+            "character": {
+              "molecular": 1,
+              "woody": 1,
+              "warm": 1
+            },
+            "mood": {
+              "private-library": 2,
+              "mossy-dark": 2,
+              "sensual-evening": 2,
+              "dark-luxury": 2,
+              "silk-aura": 1,
+              "meditative-wood": 1
+            },
+            "cap": 4
+          }
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "matrixProfiles": 1728,
+    "goldenProfiles": [
+      {
+        "answers": {
+          "atmosphere": "hotel",
+          "room": "living-room",
+          "composition": "clean",
+          "intensity": "moderate",
+          "space": "signature"
+        },
+        "expectedTop": [
+          "hotel-luxe"
+        ]
+      },
+      {
+        "answers": {
+          "atmosphere": "fresh",
+          "room": "bathroom",
+          "composition": "fresh",
+          "intensity": "moderate",
+          "space": "premium"
+        },
+        "expectedTop": [
+          "mineral-salt"
+        ]
+      },
+      {
+        "answers": {
+          "atmosphere": "woody",
+          "room": "office",
+          "composition": "woody",
+          "intensity": "moderate",
+          "space": "noir"
+        },
+        "expectedTop": [
+          "the-archive",
+          "moss-and-shadow"
+        ]
+      },
+      {
+        "answers": {
+          "atmosphere": "warm-evening",
+          "room": "bedroom",
+          "composition": "warm-sweet",
+          "intensity": "moderate",
+          "space": "noir"
+        },
+        "expectedTop": [
+          "dark-bloom"
+        ]
+      },
+      {
+        "answers": {
+          "atmosphere": "calm",
+          "room": "bedroom",
+          "composition": "clean",
+          "intensity": "light",
+          "space": "signature"
+        },
+        "expectedTop": [
+          "pure-zen"
+        ]
+      },
+      {
+        "answers": {
+          "atmosphere": "fresh",
+          "room": "hallway",
+          "composition": "fresh",
+          "intensity": "moderate",
+          "space": "entry"
+        },
+        "expectedTop": [
+          "hotel-spring"
+        ]
+      },
+      {
+        "answers": {
+          "atmosphere": "woody",
+          "room": "office",
+          "composition": "woody",
+          "intensity": "moderate",
+          "space": "premium"
+        },
+        "expectedTop": [
+          "old-money"
+        ]
+      }
+    ]
+  }
+};
+const PRODUCT_REED_CARE_POLICY = {
+  "title": "Догляд за паличками",
+  "publicRule": "Частота залежить від композиції: щільні мускусні та смоляні бази потребують перевертання частіше, а легкі свіжі й чайні профілі — рідше.",
+  "consumptionNote": "Якщо інтенсивність достатня, перевертайте рідше: кожне перевертання тимчасово посилює аромат і пришвидшує випаровування.",
+  "faqText": "Частота залежить від композиції: щільні мускусні та смоляні бази — орієнтовно кожні 3–4 дні, середні — кожні 4–7 днів, легкі свіжі й чайні — раз на тиждень або за потреби. Точна рекомендація є на картці кожного аромату.",
+  "tiers": {
+    "dense": {
+      "label": "Щільна база",
+      "range": "3–4 дні"
+    },
+    "balanced": {
+      "label": "Збалансована база",
+      "range": "4–7 днів"
+    },
+    "light": {
+      "label": "Легка база",
+      "range": "7 днів або за потреби"
+    }
+  }
+};
+const PRODUCT_REED_SETUP_POLICY = {
+  "title": "Скільки паличок використати",
+  "publicRule": "Почніть зі стандартного варіанта. За добу аромат набере повну силу.",
+  "adjustmentNote": "Хочете тихіше звучання — приберіть одну паличку. Виразніше — додайте одну.",
+  "extraReedsNote": "Для великого простору може знадобитися додатковий комплект паличок.",
+  "bands": [
+    {
+      "id": "small",
+      "label": "Невелика кімната",
+      "area": "до 15 м²"
+    },
+    {
+      "id": "standard",
+      "label": "Стандартна кімната",
+      "area": "15–25 м²",
+      "recommended": true
+    },
+    {
+      "id": "large",
+      "label": "Великий простір",
+      "area": "від 25 м²"
+    }
+  ]
+};
 const COLLECTIONS = [
   {
-    id: "entry",
-    name: "Entry Collection",
-    price: 799,
-    volume: "100 мл",
-    tagline: "Світлий камінь, груша, м'яке ранкове світло.",
-    description:
-      "Перше знайомство з VA HOME: чисті, доступні композиції для щоденного простору.",
-    heroImage: "images/collections/entry.webp",
-    productIds: [
+    "id": "entry",
+    "name": "Entry Collection",
+    "price": 799,
+    "volume": "100 мл",
+    "tagline": "Світлий камінь, груша, м'яке ранкове світло.",
+    "description": "Перше знайомство з VA HOME: чисті, доступні композиції для щоденного простору.",
+    "heroImage": "images/collections/entry.webp",
+    "productIds": [
       "signature-relax",
       "forbidden-fruit",
       "doux-moment",
@@ -25,37 +920,43 @@ const COLLECTIONS = [
     ]
   },
   {
-    id: "signature",
-    name: "Signature Collection",
-    price: 899,
-    volume: "100 мл",
-    tagline: "Тепле дерево, ivory, домашній вечірній ритуал.",
-    description:
-      "Композиції для дому, де важливий вечірній ритуал і відчуття теплого затишку.",
-    heroImage: "images/collections/signature.webp",
-    productIds: ["evening-ritual", "velvet-spa", "pure-zen", "hotel-luxe"]
+    "id": "signature",
+    "name": "Signature Collection",
+    "price": 899,
+    "volume": "100 мл",
+    "tagline": "Тепле дерево, ivory, домашній вечірній ритуал.",
+    "description": "Композиції для дому, де важливий вечірній ритуал і відчуття теплого затишку.",
+    "heroImage": "images/collections/signature.webp",
+    "productIds": [
+      "evening-ritual",
+      "velvet-spa",
+      "pure-zen",
+      "hotel-luxe"
+    ]
   },
   {
-    id: "premium",
-    name: "Premium Collection",
-    price: 999,
-    volume: "100 мл",
-    tagline: "Темний камінь, травертин, спрямоване світло.",
-    description:
-      "Архітектурні, впевненіші композиції для простору з характером.",
-    heroImage: "images/collections/premium.webp",
-    productIds: ["old-money", "linstinct", "mineral-salt"]
+    "id": "premium",
+    "name": "Premium Collection",
+    "price": 999,
+    "volume": "100 мл",
+    "tagline": "Темний камінь, травертин, спрямоване світло.",
+    "description": "Архітектурні, впевненіші композиції для простору з характером.",
+    "heroImage": "images/collections/premium.webp",
+    "productIds": [
+      "old-money",
+      "linstinct",
+      "mineral-salt"
+    ]
   },
   {
-    id: "noir",
-    name: "Noir Collection",
-    price: 1199,
-    volume: "100 мл",
-    tagline: "Майже чорний фон, димчасті тіні, арт-об'єктний характер.",
-    description:
-      "Найбільш молекулярні та стримані композиції лінійки VA HOME.",
-    heroImage: "images/collections/noir.webp",
-    productIds: [
+    "id": "noir",
+    "name": "Noir Collection",
+    "price": 1199,
+    "volume": "100 мл",
+    "tagline": "Майже чорний фон, димчасті тіні, арт-об'єктний характер.",
+    "description": "Найбільш молекулярні та стримані композиції лінійки VA HOME.",
+    "heroImage": "images/collections/noir.webp",
+    "productIds": [
       "pure-imagination",
       "silk-molecule",
       "the-archive",
@@ -65,12 +966,6 @@ const COLLECTIONS = [
     ]
   }
 ];
-
-// Helper: look up a collection's shared fields (price/volume) by id
-function getCollection(collectionId) {
-  return COLLECTIONS.find((c) => c.id === collectionId) || null;
-}
-
 const PRODUCTS = [
   {
     "id": "signature-relax",
@@ -88,7 +983,7 @@ const PRODUCTS = [
       "hallway"
     ],
     "mood": [
-          "calm"
+      "calm"
     ],
     "scales": {
       "freshness": 8,
@@ -120,10 +1015,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/signature-relax/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/signature-relax/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/signature-relax/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/signature-relax/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/signature-relax/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/signature-relax/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/signature-relax/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/signature-relax/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/signature-relax/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/signature-relax/atmosphere.webp",
@@ -136,20 +1047,75 @@ const PRODUCTS = [
         "top": "images/product-story/signature-relax/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
+    "quickFacts": "3–4 палички",
     "suitFor": "Підійде, якщо любите чисті свіжі аромати для спокою — універсальний вибір для вітальні, спальні чи кабінету.",
     "formulaIntent": "Цитрусова ясність тут не домінує: вона відкриває простір для білого чаю, імбиру та м’якого жасминового сліду.",
     "insights": {
-          "aura": "М’яка чайна атмосфера",
-          "season": "Універсальний",
-          "zones": "Спальня · зона відпочинку · кабінет",
-          "comfort": "Дуже комфортний для щоденного використання",
-          "evolution": "Спочатку — мандарин і лимон. За кілька днів аромат стає теплішим, а білий чай формує спокійну шовкову ауру."
+      "aura": "М’яка чайна атмосфера",
+      "season": "Універсальний",
+      "zones": "Спальня · зона відпочинку · кабінет",
+      "comfort": "Дуже комфортний для щоденного використання",
+      "evolution": "Спочатку — мандарин і лимон. За кілька днів аромат стає теплішим, а білий чай формує спокійну шовкову ауру."
     },
     "similar": [
       "hotel-spring",
       "pure-zen"
-    ]
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 3,
+        "countMax": 4,
+        "label": "3–4 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 2,
+        "countMax": 2,
+        "label": "2 палички 5 мм для великих кімнат"
+      },
+      "area": "20–30 м²",
+      "tip": "Для м’якшого звучання використовуйте 3 палички."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "filterMood": [
+      "calm"
+    ],
+    "sourceRef": {
+      "workbookRow": "SIGNATURE RELAX v2"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "light",
+      "intervalDays": {
+        "min": 7,
+        "max": 7
+      },
+      "publicText": "Перевертайте палички орієнтовно раз на 7 днів або коли звучання стало тихішим."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 2,
+        "max": 3,
+        "label": "2–3"
+      },
+      "standard": {
+        "min": 3,
+        "max": 4,
+        "label": "3–4"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "Універсальний аромат легко налаштовується кількістю паличок."
+    }
   },
   {
     "id": "forbidden-fruit",
@@ -165,8 +1131,8 @@ const PRODUCTS = [
       "bedroom"
     ],
     "mood": [
-          "warm-evening",
-          "warm-sweet"
+      "warm-evening",
+      "warm-sweet"
     ],
     "scales": {
       "freshness": 3,
@@ -200,10 +1166,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/forbidden-fruit/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/forbidden-fruit/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/forbidden-fruit/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/forbidden-fruit/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/forbidden-fruit/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/forbidden-fruit/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/forbidden-fruit/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/forbidden-fruit/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/forbidden-fruit/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/forbidden-fruit/atmosphere.webp",
@@ -216,20 +1198,78 @@ const PRODUCTS = [
         "top": "images/product-story/forbidden-fruit/top.webp"
       }
     },
-    "quickFacts": "2–3 палички для старту",
+    "quickFacts": "3 палички",
     "suitFor": "Підійде, якщо тягне до фруктово-теплих композицій для затишного вечора у вітальні чи спальні.",
     "formulaIntent": "Вишневий акцент урівноважений пряністю й теплою базою, щоб композиція залишалась глибокою, а не кондитерською.",
     "insights": {
-          "aura": "Темна соковита вишня",
-          "season": "Осінь · зима",
-          "zones": "Спальня · lounge · beauty-zone",
-          "comfort": "Виразний вечірній характер",
-          "evolution": "Стартує соковитою вишнею з лікерним акцентом, а з часом стає глибшим, теплішим і менш солодким."
+      "aura": "Темна соковита вишня",
+      "season": "Осінь · зима",
+      "zones": "Спальня · lounge · beauty-zone",
+      "comfort": "Виразний вечірній характер",
+      "evolution": "Стартує соковитою вишнею з лікерним акцентом, а з часом стає глибшим, теплішим і менш солодким."
     },
     "similar": [
       "doux-moment",
       "dark-bloom"
-    ]
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 3,
+        "countMax": 3,
+        "label": "3 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 2,
+        "countMax": 2,
+        "label": "2 палички 5 мм для великих вечірніх просторів"
+      },
+      "area": "15–25 м²",
+      "tip": "Не рекомендується для кухні: тепла база може конфліктувати із запахами їжі."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "filterMood": [
+      "warm-evening",
+      "warm-sweet"
+    ],
+    "sourceRef": {
+      "workbookRow": "FORBIDDEN FRUIT"
+    },
+    "guide": {
+      "avoidRooms": [
+        "kitchen"
+      ]
+    },
+    "reedCare": {
+      "tier": "balanced",
+      "intervalDays": {
+        "min": 4,
+        "max": 5
+      },
+      "publicText": "Перевертайте палички орієнтовно кожні 4–5 днів для рівномірної віддачі."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 2,
+        "max": 2,
+        "label": "2"
+      },
+      "standard": {
+        "min": 3,
+        "max": 3,
+        "label": "3"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "У невеликій кімнаті починайте з 2 паличок."
+    }
   },
   {
     "id": "doux-moment",
@@ -242,11 +1282,12 @@ const PRODUCTS = [
     ],
     "room": [
       "living-room",
-      "bedroom"
+      "bedroom",
+      "dining-room"
     ],
     "mood": [
-          "warm-evening",
-          "warm-sweet"
+      "warm-evening",
+      "warm-sweet"
     ],
     "scales": {
       "freshness": 3,
@@ -278,10 +1319,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/doux-moment/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/doux-moment/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/doux-moment/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/doux-moment/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/doux-moment/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/doux-moment/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/doux-moment/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/doux-moment/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/doux-moment/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/doux-moment/atmosphere.webp",
@@ -294,20 +1351,78 @@ const PRODUCTS = [
         "top": "images/product-story/doux-moment/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
+    "quickFacts": "3 палички",
     "suitFor": "Підійде, якщо любите фруктово-теплі аромати для вечірньої атмосфери у вітальні чи спальні.",
     "formulaIntent": "Фруктовий початок переходить у вершково-праліневе серце — тепле, округле й придатне для щоденного простору.",
     "insights": {
-          "aura": "Тепла вершкова атмосфера",
-          "season": "Осінь · зима",
-          "zones": "Вітальня · їдальня · затишна зона",
-          "comfort": "М’який домашній gourmand",
-          "evolution": "Груша й яблуко відкривають аромат, після чого вершки, карамель і праліне створюють відчуття дорогого домашнього спокою."
+      "aura": "Тепла вершкова атмосфера",
+      "season": "Осінь · зима",
+      "zones": "Вітальня · їдальня · затишна зона",
+      "comfort": "М’який домашній gourmand",
+      "evolution": "Груша й яблуко відкривають аромат, після чого вершки, карамель і праліне створюють відчуття дорогого домашнього спокою."
     },
     "similar": [
       "forbidden-fruit",
       "signature-relax"
-    ]
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 3,
+        "countMax": 3,
+        "label": "3 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 1,
+        "countMax": 2,
+        "label": "1–2 палички 5 мм для великих кімнат"
+      },
+      "area": "15–20 м²",
+      "tip": "У маленькому теплому приміщенні починайте з 2 паличок. Не ставте на кухні."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "filterMood": [
+      "warm-evening",
+      "warm-sweet"
+    ],
+    "sourceRef": {
+      "workbookRow": "DOUX MOMENT"
+    },
+    "guide": {
+      "avoidRooms": [
+        "kitchen"
+      ]
+    },
+    "reedCare": {
+      "tier": "balanced",
+      "intervalDays": {
+        "min": 5,
+        "max": 7
+      },
+      "publicText": "Перевертайте палички орієнтовно кожні 5–7 днів або коли звучання стало тихішим."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 2,
+        "max": 2,
+        "label": "2"
+      },
+      "standard": {
+        "min": 3,
+        "max": 3,
+        "label": "3"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "У теплому приміщенні карамельний профіль посилюється."
+    }
   },
   {
     "id": "wild-berry-way",
@@ -320,12 +1435,12 @@ const PRODUCTS = [
       "woody"
     ],
     "room": [
-      "living-room",
       "bathroom",
-      "hallway"
+      "balcony",
+      "terrace"
     ],
     "mood": [
-          "warm-sweet"
+      "berry-air"
     ],
     "scales": {
       "freshness": 8,
@@ -355,10 +1470,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/wild-berry-way/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/wild-berry-way/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/wild-berry-way/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/wild-berry-way/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/wild-berry-way/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/wild-berry-way/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/wild-berry-way/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/wild-berry-way/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/wild-berry-way/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/wild-berry-way/atmosphere.webp",
@@ -371,26 +1502,81 @@ const PRODUCTS = [
         "top": "images/product-story/wild-berry-way/top.webp"
       }
     },
-    "quickFacts": "2–3 палички для старту",
-    "suitFor": "Підійде, якщо шукаєте фруктово-свіжий аромат з деревним акцентом для вітальні, ванної кімнати чи передпокою.",
+    "quickFacts": "4 палички",
+    "suitFor": "Підійде, якщо любите свіже ягідне повітря без варення — для ванної, балкона або тераси.",
     "formulaIntent": "Ягоди підтримані лавром, грейпфрутом і сухою деревиною, тому аромат зберігає повітряність і свіжий контур.",
     "insights": {
-          "aura": "Свіже ягідне повітря",
-          "season": "Весна · літо",
-          "zones": "Тераса · балкон · ванна кімната",
-          "comfort": "Легкий і ненав’язливий",
-          "evolution": "Ожина й лавр звучать свіжо на старті; за кілька днів проявляються грейпфрут, кедр і чиста деревна повітряність."
+      "aura": "Свіже ягідне повітря",
+      "season": "Весна · літо",
+      "zones": "Балкон · тераса · ванна кімната",
+      "comfort": "Легкий і ненав’язливий",
+      "evolution": "Ожина й лавр звучать свіжо на старті; за кілька днів проявляються грейпфрут, кедр і чиста деревна повітряність."
     },
     "similar": [
       "hotel-spring",
       "forbidden-fruit"
-    ]
+    ],
+    "filterMood": [
+      "calm"
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 4,
+        "countMax": 4,
+        "label": "4 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 2,
+        "countMax": 2,
+        "label": "2 палички 5 мм для тераси та open-space"
+      },
+      "area": "20–30 м²",
+      "tip": "Особливо красиво звучить навесні та влітку."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "sourceRef": {
+      "workbookRow": "WILD BERRY WAY"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "light",
+      "intervalDays": {
+        "min": 7,
+        "max": 7
+      },
+      "publicText": "Перевертайте палички орієнтовно раз на 7 днів або коли звучання стало тихішим."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 3,
+        "max": 3,
+        "label": "3"
+      },
+      "standard": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "Свіжий сезонний профіль найкраще розкривається на 4 паличках."
+    }
   },
   {
     "id": "hotel-spring",
     "name": "Hotel Spring",
     "collection": "entry",
-    "shortDescription": "Юзу й тюльпан з атмосферою світлого весняного boutique hotel.",
+    "shortDescription": "Юзу й тюльпан з атмосферою світлого весняного бутик-готелю.",
     "character": [
       "clean",
       "fresh",
@@ -398,10 +1584,11 @@ const PRODUCTS = [
     ],
     "room": [
       "living-room",
-      "hallway"
+      "hallway",
+      "dining-room"
     ],
     "mood": [
-          "calm"
+      "spring-fresh"
     ],
     "scales": {
       "freshness": 9,
@@ -430,10 +1617,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/hotel-spring/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/hotel-spring/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/hotel-spring/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/hotel-spring/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/hotel-spring/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/hotel-spring/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/hotel-spring/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/hotel-spring/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/hotel-spring/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/hotel-spring/atmosphere.webp",
@@ -446,20 +1649,76 @@ const PRODUCTS = [
         "top": "images/product-story/hotel-spring/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
-    "suitFor": "Підійде, якщо цінуєте чисту, готельну свіжість для вітальні чи передпокою.",
+    "quickFacts": "4 палички",
+    "suitFor": "Підійде, якщо любите світлі квітково-цитрусові композиції для вітальні, холу або весняного простору.",
     "formulaIntent": "Юзу й світлі квіти побудовані навколо чистого повітряного ефекту — без важкої солодкості.",
     "insights": {
-          "aura": "Світла весняна clean-атмосфера",
-          "season": "Березень · червень",
-          "zones": "Світлі кімнати · хол · вітальня",
-          "comfort": "Легкий сезонний характер",
-          "evolution": "Дзвінкий юзу та світлі квіти поступово стають м’якшими й формують атмосферу весняного boutique hotel."
+      "aura": "Весняна clean-атмосфера",
+      "season": "Весна · березень–червень",
+      "zones": "Світлі кімнати · хол · вітальня",
+      "comfort": "Легкий сезонний характер",
+      "evolution": "Дзвінкий юзу та світлі квіти поступово стають м’якшими й формують атмосферу весняного boutique hotel."
     },
     "similar": [
       "signature-relax",
       "hotel-luxe"
-    ]
+    ],
+    "filterMood": [
+      "hotel-clean",
+      "calm"
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 4,
+        "countMax": 4,
+        "label": "4 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 2,
+        "countMax": 2,
+        "label": "2 палички 5 мм для open-space"
+      },
+      "area": "20–30 м²",
+      "tip": "Особливо красиво звучить навесні, приблизно з березня до червня."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "sourceRef": {
+      "workbookRow": "HOTEL SPRING v2"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "light",
+      "intervalDays": {
+        "min": 7,
+        "max": 7
+      },
+      "publicText": "Перевертайте палички орієнтовно раз на 7 днів або коли звучання стало тихішим."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 3,
+        "max": 3,
+        "label": "3"
+      },
+      "standard": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "Для ефекту весняного boutique hotel у стандартній кімнаті використовуйте всі 4 палички."
+    }
   },
   {
     "id": "evening-ritual",
@@ -467,14 +1726,16 @@ const PRODUCTS = [
     "collection": "signature",
     "shortDescription": "Темні квіти й кашемірова глибина для вечірньої атмосфери.",
     "character": [
-      "warm"
+      "warm",
+      "floral",
+      "evening"
     ],
     "room": [
       "living-room",
       "bedroom"
     ],
     "mood": [
-          "warm-evening"
+      "warm-evening"
     ],
     "scales": {
       "freshness": 5,
@@ -506,10 +1767,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/evening-ritual/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/evening-ritual/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/evening-ritual/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/evening-ritual/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/evening-ritual/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/evening-ritual/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/evening-ritual/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/evening-ritual/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/evening-ritual/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/evening-ritual/atmosphere.webp",
@@ -522,20 +1799,75 @@ const PRODUCTS = [
         "top": "images/product-story/evening-ritual/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
+    "quickFacts": "3–4 палички",
     "suitFor": "Підійде, якщо шукаєте теплий аромат для вечірнього ритуалу у вітальні чи спальні.",
     "formulaIntent": "Повітряний квітковий старт поступово переходить у кашемірово-амброву глибину для вечірнього простору.",
     "insights": {
-          "aura": "Темна квіткова атмосфера",
-          "season": "Осінь · вечір цілий рік",
-          "zones": "Спальня · lounge · зона відпочинку",
-          "comfort": "Найкраще розкривається ввечері",
-          "evolution": "Повітряні квіти й озон на старті переходять у темнішу кашемірову композицію з пачулі, мускусом та амброю."
+      "aura": "Темна квіткова атмосфера",
+      "season": "Осінь · вечір цілий рік",
+      "zones": "Спальня · lounge · зона відпочинку",
+      "comfort": "Найкраще розкривається ввечері",
+      "evolution": "Повітряні квіти й озон на старті переходять у темнішу кашемірову композицію з пачулі, мускусом та амброю."
     },
     "similar": [
       "dark-bloom",
       "velvet-spa"
-    ]
+    ],
+    "filterMood": [
+      "warm-evening"
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 3,
+        "countMax": 4,
+        "label": "3–4 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 2,
+        "countMax": 2,
+        "label": "2 палички 5 мм для великих просторів"
+      },
+      "area": "20–30 м²",
+      "tip": "У спальні починайте з 3 паличок. Найкраще працює ввечері."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "sourceRef": {
+      "workbookRow": "EVENING RITUAL v2"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "balanced",
+      "intervalDays": {
+        "min": 4,
+        "max": 5
+      },
+      "publicText": "Перевертайте палички орієнтовно кожні 4–5 днів для рівномірної віддачі."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 2,
+        "max": 3,
+        "label": "2–3"
+      },
+      "standard": {
+        "min": 3,
+        "max": 4,
+        "label": "3–4"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "У спальні починайте з 3 паличок."
+    }
   },
   {
     "id": "velvet-spa",
@@ -549,10 +1881,12 @@ const PRODUCTS = [
     ],
     "room": [
       "bathroom",
-      "bedroom"
+      "bedroom",
+      "spa-zone"
     ],
     "mood": [
-          "calm"
+      "spa",
+      "calm"
     ],
     "scales": {
       "freshness": 3,
@@ -583,10 +1917,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/velvet-spa/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/velvet-spa/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/velvet-spa/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/velvet-spa/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/velvet-spa/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/velvet-spa/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/velvet-spa/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/velvet-spa/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/velvet-spa/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/velvet-spa/atmosphere.webp",
@@ -599,20 +1949,75 @@ const PRODUCTS = [
         "top": "images/product-story/velvet-spa/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
+    "quickFacts": "3–4 палички",
     "suitFor": "Підійде, якщо любите спа-атмосферу з теплим деревним акцентом для ванної кімнати чи спальні.",
     "formulaIntent": "Кокосове молоко, сандал і бензоїн зібрані у м’яку текстуру, а не у виразно солодкий тропічний акорд.",
     "insights": {
-          "aura": "Оксамитова SPA-хмара",
-          "season": "Осінь · зима",
-          "zones": "Ванна кімната · SPA · спальня",
-          "comfort": "Теплий огортальний профіль",
-          "evolution": "Кокосове молоко й бензоїн поступово зливаються із сандалом та кедром у м’яку атмосферу домашнього SPA."
+      "aura": "Оксамитова SPA-хмара",
+      "season": "Осінь · зима",
+      "zones": "Ванна кімната · SPA · спальня",
+      "comfort": "Теплий огортальний профіль",
+      "evolution": "Кокосове молоко й бензоїн поступово зливаються із сандалом та кедром у м’яку атмосферу домашнього SPA."
     },
     "similar": [
       "pure-zen",
       "evening-ritual"
-    ]
+    ],
+    "filterMood": [
+      "calm"
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 3,
+        "countMax": 4,
+        "label": "3–4 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 2,
+        "countMax": 2,
+        "label": "2 палички 5 мм для великих SPA-просторів"
+      },
+      "area": "15–25 м²",
+      "tip": "У невеликій ванній починайте з 3 паличок. Найповніше розкривається у теплому приміщенні."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "sourceRef": {
+      "workbookRow": "VELVET SPA v2"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "balanced",
+      "intervalDays": {
+        "min": 4,
+        "max": 5
+      },
+      "publicText": "Перевертайте палички орієнтовно кожні 4–5 днів для рівномірної віддачі."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 2,
+        "max": 3,
+        "label": "2–3"
+      },
+      "standard": {
+        "min": 3,
+        "max": 4,
+        "label": "3–4"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "У невеликій ванній 2–3 паличок зазвичай достатньо."
+    }
   },
   {
     "id": "pure-zen",
@@ -627,10 +2032,11 @@ const PRODUCTS = [
     "room": [
       "bedroom",
       "bathroom",
-      "office"
+      "office",
+      "spa-zone"
     ],
     "mood": [
-          "calm"
+      "calm"
     ],
     "scales": {
       "freshness": 8,
@@ -663,10 +2069,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/pure-zen/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/pure-zen/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/pure-zen/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/pure-zen/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/pure-zen/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/pure-zen/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/pure-zen/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/pure-zen/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/pure-zen/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/pure-zen/atmosphere.webp",
@@ -679,20 +2101,76 @@ const PRODUCTS = [
         "top": "images/product-story/pure-zen/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
-    "suitFor": "Підійде, якщо шукаєте чисту спа-свіжість для спокою в спальні, ванній кімнаті чи кабінеті.",
+    "quickFacts": "4 палички",
+    "suitFor": "Підійде, якщо любите тихі wellness-композиції. Інтенсивність 5/10 є задумом: аромат створює ауру, а не домінує у кімнаті.",
     "formulaIntent": "Білий чай, лотос і сухий сандал формують тишу композиції; цитрус і кардамон залишають її живою.",
     "insights": {
-          "aura": "Тиха медитативна атмосфера",
-          "season": "Весна · універсальний",
-          "zones": "Спальня · SPA · зона медитації",
-          "comfort": "Один із найтихіших ароматів лінійки",
-          "evolution": "Білий чай, цитрус і кардамон стають спокійнішими, відкриваючи лотос, сандал і м’яку мигдальну глибину."
+      "aura": "Тиха медитативна атмосфера",
+      "season": "Весна · універсальний",
+      "zones": "Спальня · SPA · зона медитації",
+      "comfort": "Один із найтихіших ароматів лінійки",
+      "evolution": "Білий чай, цитрус і кардамон стають спокійнішими, відкриваючи лотос, сандал і м’яку мигдальну глибину."
     },
     "similar": [
       "mineral-salt",
       "velvet-spa"
-    ]
+    ],
+    "filterMood": [
+      "calm"
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 4,
+        "countMax": 4,
+        "label": "4 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 3,
+        "countMax": 3,
+        "label": "3 палички 5 мм для великих SPA-просторів"
+      },
+      "area": "20–30 м²",
+      "tip": "Використовуйте всі 4 палички з комплекту для повного розкриття тихої медитативної аури."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "sourceRef": {
+      "workbookRow": "PURE ZEN v2"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "balanced",
+      "intervalDays": {
+        "min": 5,
+        "max": 7
+      },
+      "publicText": "Перевертайте палички орієнтовно кожні 5–7 днів або коли звучання стало тихішим."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 3,
+        "max": 3,
+        "label": "3"
+      },
+      "standard": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4+",
+        "extraReeds": true
+      },
+      "note": "У стандартній кімнаті використовуйте всі 4 палички: тихе звучання є задумом композиції."
+    }
   },
   {
     "id": "hotel-luxe",
@@ -709,7 +2187,7 @@ const PRODUCTS = [
       "hallway"
     ],
     "mood": [
-          "hotel"
+      "hotel-clean"
     ],
     "scales": {
       "freshness": 9,
@@ -734,7 +2212,7 @@ const PRODUCTS = [
       "base": [
         "Сандал",
         "Мох",
-        "Пудрові ноти"
+        "М’які пудрові ноти"
       ]
     },
     "howToUse": null,
@@ -745,10 +2223,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/hotel-luxe/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/hotel-luxe/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/hotel-luxe/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/hotel-luxe/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/hotel-luxe/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/hotel-luxe/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/hotel-luxe/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/hotel-luxe/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/hotel-luxe/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/hotel-luxe/atmosphere.webp",
@@ -761,20 +2255,75 @@ const PRODUCTS = [
         "top": "images/product-story/hotel-luxe/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
+    "quickFacts": "4 палички",
     "suitFor": "Підійде, якщо любите готельну чистоту й свіжість для вітальні чи передпокою.",
     "formulaIntent": "Льон, озонічне повітря та мінеральна чистота поєднані з теплою базою, щоб уникнути стерильного звучання.",
     "insights": {
-          "aura": "Об’ємна готельна чистота",
-          "season": "Універсальний",
-          "zones": "Хол · великі простори · гардероб",
-          "comfort": "Чистий профіль без відчуття стерильності",
-          "evolution": "Озон, льон і свіже повітря поступово набувають теплої текстури — так формується ефект дорогого готелю."
+      "aura": "Об’ємна готельна чистота",
+      "season": "Універсальний",
+      "zones": "Хол · великі простори · гардероб",
+      "comfort": "Чистий профіль без відчуття стерильності",
+      "evolution": "Озон, льон і свіже повітря поступово набувають теплої текстури — так формується ефект дорогого готелю."
     },
     "similar": [
       "mineral-salt",
       "hotel-spring"
-    ]
+    ],
+    "filterMood": [
+      "hotel-clean"
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 4,
+        "countMax": 4,
+        "label": "4 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 2,
+        "countMax": 3,
+        "label": "2–3 палички 5 мм для open-space"
+      },
+      "area": "20–30 м²",
+      "tip": "Для великого холу або відкритого простору використовуйте товстіші палички."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "sourceRef": {
+      "workbookRow": "HOTEL LUXE Б+"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "light",
+      "intervalDays": {
+        "min": 7,
+        "max": 7
+      },
+      "publicText": "Перевертайте палички орієнтовно раз на 7 днів або коли звучання стало тихішим."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 3,
+        "max": 3,
+        "label": "3"
+      },
+      "standard": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "Для холу або стандартної кімнати оптимальні всі 4 палички."
+    }
   },
   {
     "id": "old-money",
@@ -786,12 +2335,11 @@ const PRODUCTS = [
       "warm"
     ],
     "room": [
-      "living-room",
       "office",
-      "hallway"
+      "living-room"
     ],
     "mood": [
-          "hotel"
+      "dark-luxury"
     ],
     "scales": {
       "freshness": 3,
@@ -823,10 +2371,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/old-money/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/old-money/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/old-money/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/old-money/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/old-money/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/old-money/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/old-money/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/old-money/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/old-money/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/old-money/atmosphere.webp",
@@ -839,20 +2403,75 @@ const PRODUCTS = [
         "top": "images/product-story/old-money/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
-    "suitFor": "Підійде, якщо шукаєте теплий деревний аромат з готельним характером для вітальні, кабінету чи передпокою.",
+    "quickFacts": "3 палички",
+    "suitFor": "Підійде, якщо шукаєте темний шкіряно-деревний аромат для кабінету, темного інтер’єру або просторої вітальні.",
     "formulaIntent": "Шкіра, тютюн і лабданум пом’якшені бергамотом, лавандою та амбровим теплом — для камерної, зібраної атмосфери.",
     "insights": {
-          "aura": "Глибока dark luxury-атмосфера",
-          "season": "Осінь · зима",
-          "zones": "Кабінет · темний інтер’єр · представницький простір",
-          "comfort": "Камерний, стриманий характер",
-          "evolution": "Суха шкіра й бергамот відкривають композицію; пізніше тютюн, лабданум та амбра створюють теплу кашемірову глибину."
+      "aura": "Глибока dark luxury-атмосфера",
+      "season": "Осінь · зима",
+      "zones": "Кабінет · dark interior · представницький простір",
+      "comfort": "Камерний, стриманий характер",
+      "evolution": "Суха шкіра й бергамот відкривають композицію; пізніше тютюн, лабданум та амбра створюють теплу кашемірову глибину."
     },
     "similar": [
       "the-archive",
       "linstinct"
-    ]
+    ],
+    "filterMood": [
+      "dark-luxury"
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 3,
+        "countMax": 3,
+        "label": "3 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 1,
+        "countMax": 2,
+        "label": "1–2 палички 5 мм для dark interior"
+      },
+      "area": "10–18 м²",
+      "tip": "У маленькій кімнаті починайте з 2 паличок. Не створюйте агресивну дифузію."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "sourceRef": {
+      "workbookRow": "OLD MONEY v2"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "balanced",
+      "intervalDays": {
+        "min": 4,
+        "max": 5
+      },
+      "publicText": "Перевертайте палички орієнтовно кожні 4–5 днів для рівномірної віддачі."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 2,
+        "max": 2,
+        "label": "2"
+      },
+      "standard": {
+        "min": 3,
+        "max": 3,
+        "label": "3"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "Темний шкіряний аромат краще залишати стриманим."
+    }
   },
   {
     "id": "linstinct",
@@ -861,15 +2480,16 @@ const PRODUCTS = [
     "shortDescription": "Бергамот, перець і суха деревина для впевненого простору.",
     "character": [
       "woody",
-      "fresh"
+      "fresh",
+      "spicy"
     ],
     "room": [
       "office",
-      "hallway",
-      "living-room"
+      "showroom",
+      "hallway"
     ],
     "mood": [
-          "hotel"
+      "confident-space"
     ],
     "scales": {
       "freshness": 7,
@@ -901,10 +2521,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/linstinct/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/linstinct/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/linstinct/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/linstinct/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/linstinct/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/linstinct/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/linstinct/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/linstinct/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/linstinct/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/linstinct/atmosphere.webp",
@@ -917,26 +2553,81 @@ const PRODUCTS = [
         "top": "images/product-story/linstinct/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
-    "suitFor": "Підійде, якщо любите свіжо-деревні композиції з готельним характером для кабінету, передпокою чи вітальні.",
+    "quickFacts": "3–4 палички",
+    "suitFor": "Підійде, якщо любите пряно-деревні композиції для впевненого чоловічого простору — кабінету, шоуруму чи виразного передпокою.",
     "formulaIntent": "Перець і бергамот задають напрям, а кедр, ветивер і лабданум утримують сухий деревний характер.",
     "insights": {
-          "aura": "Впевнена деревно-пряна атмосфера",
-          "season": "Універсальний · холодний сезон",
-          "zones": "Кабінет · showroom · передпокій",
-          "comfort": "Виразний характер для просторих зон",
-          "evolution": "Бергамот і перець звучать енергійно, а з часом кедр, ветивер і лабданум формують суху деревну основу."
+      "aura": "Впевнений чоловічий простір",
+      "season": "Універсальний · осінь–зима пріоритет",
+      "zones": "Кабінет · showroom · передпокій",
+      "comfort": "Виразний характер для просторих зон",
+      "evolution": "Бергамот і перець звучать енергійно, а з часом кедр, ветивер і лабданум формують суху деревну основу."
     },
     "similar": [
       "old-money",
       "moss-and-shadow"
-    ]
+    ],
+    "filterMood": [
+      "confident-space"
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 3,
+        "countMax": 4,
+        "label": "3–4 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 2,
+        "countMax": 2,
+        "label": "2 палички 5 мм для showroom та open-space"
+      },
+      "area": "15–25 м²",
+      "tip": "Найкраще працює у кабінеті, шоурумі або виразному передпокої."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "sourceRef": {
+      "workbookRow": "L'INSTINCT v2"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "balanced",
+      "intervalDays": {
+        "min": 5,
+        "max": 7
+      },
+      "publicText": "Перевертайте палички орієнтовно кожні 5–7 днів або коли звучання стало тихішим."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 2,
+        "max": 3,
+        "label": "2–3"
+      },
+      "standard": {
+        "min": 3,
+        "max": 4,
+        "label": "3–4"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "Активний чоловічий профіль: у невеликій кімнаті починайте з 2 паличок."
+    }
   },
   {
     "id": "mineral-salt",
     "name": "Mineral Salt",
     "collection": "premium",
-    "shortDescription": "Морська сіль і шавлія з чистою атмосферою luxury SPA.",
+    "shortDescription": "Морська сіль і шавлія з чистою атмосферою преміального SPA.",
     "character": [
       "clean",
       "fresh",
@@ -944,10 +2635,12 @@ const PRODUCTS = [
     ],
     "room": [
       "bathroom",
-      "bedroom"
+      "bedroom",
+      "spa-zone"
     ],
     "mood": [
-          "calm"
+      "spa",
+      "calm"
     ],
     "scales": {
       "freshness": 10,
@@ -978,10 +2671,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/mineral-salt/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/mineral-salt/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/mineral-salt/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/mineral-salt/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/mineral-salt/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/mineral-salt/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/mineral-salt/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/mineral-salt/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/mineral-salt/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/mineral-salt/atmosphere.webp",
@@ -994,20 +2703,75 @@ const PRODUCTS = [
         "top": "images/product-story/mineral-salt/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
+    "quickFacts": "4 палички",
     "suitFor": "Підійде, якщо шукаєте чисту спа-свіжість для спокою у ванній кімнаті чи спальні.",
     "formulaIntent": "Морська сіль і шавлія підтримані грейпфрутом та м’якою мінеральною базою — свіжість без різкості.",
     "insights": {
-          "aura": "Повітряна мінеральна SPA-атмосфера",
-          "season": "Весна · літо · універсальний",
-          "zones": "Ванна · спальня · SPA · гардероб",
-          "comfort": "Свіжий профіль для тривалого використання",
-          "evolution": "Морська сіль, шавлія та грейпфрут створюють свіжий старт; пізніше аромат стає глибшим і шовковистішим."
+      "aura": "Повітряна мінеральна SPA-атмосфера",
+      "season": "Весна · літо · універсальний",
+      "zones": "Ванна · спальня · SPA · гардероб",
+      "comfort": "Свіжий профіль для тривалого використання",
+      "evolution": "Морська сіль, шавлія та грейпфрут створюють свіжий старт; пізніше аромат стає глибшим і шовковистішим."
     },
     "similar": [
       "pure-zen",
       "hotel-luxe"
-    ]
+    ],
+    "filterMood": [
+      "calm"
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 4,
+        "countMax": 4,
+        "label": "4 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 2,
+        "countMax": 2,
+        "label": "2 палички 5 мм для великих SPA-просторів"
+      },
+      "area": "15–25 м²",
+      "tip": "Для більш камерного звучання використовуйте 3 палички."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "sourceRef": {
+      "workbookRow": "MINERAL SALT v2"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "light",
+      "intervalDays": {
+        "min": 7,
+        "max": 7
+      },
+      "publicText": "Перевертайте палички орієнтовно раз на 7 днів або коли звучання стало тихішим."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 3,
+        "max": 3,
+        "label": "3"
+      },
+      "standard": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "Для повної SPA-аури у стандартній кімнаті використовуйте всі 4 палички."
+    }
   },
   {
     "id": "pure-imagination",
@@ -1024,7 +2788,7 @@ const PRODUCTS = [
       "office"
     ],
     "mood": [
-          "hotel"
+      "airy-luxury"
     ],
     "scales": {
       "freshness": 9,
@@ -1056,10 +2820,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/pure-imagination/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/pure-imagination/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/pure-imagination/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/pure-imagination/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/pure-imagination/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/pure-imagination/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/pure-imagination/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/pure-imagination/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/pure-imagination/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/pure-imagination/atmosphere.webp",
@@ -1072,20 +2852,75 @@ const PRODUCTS = [
         "top": "images/product-story/pure-imagination/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
-    "suitFor": "Підійде, якщо цікавлять молекулярні, чисто-свіжі композиції з готельним характером для вітальні чи кабінету.",
+    "quickFacts": "3 палички",
+    "suitFor": "Підійде, якщо шукаєте повітряну молекулярну композицію для вітальні, кабінету або великого відкритого простору.",
     "formulaIntent": "Цитрусова прозорість швидко наповнює простір, а квітково-деревна база додає композиції об’єму.",
     "insights": {
-          "aura": "Об’ємний кришталевий luxury-шлейф",
-          "season": "Універсальний",
-          "zones": "Вітальня · open-space · lobby · кабінет",
-          "comfort": "Найкраще для великого простору",
-          "evolution": "Повітряний цитрус дає швидкий room bloom, а троянда, жасмин, сандал і пачулі поступово додають теплу глибину."
+      "aura": "Повітряна молекулярна розкіш",
+      "season": "Універсальний",
+      "zones": "Вітальня · open-space · premium lobby · кабінет",
+      "comfort": "Найкраще для великого простору",
+      "evolution": "Повітряний цитрус дає швидкий room bloom, а троянда, жасмин, сандал і пачулі поступово додають теплу глибину."
     },
     "similar": [
       "silk-molecule",
       "mineral-salt"
-    ]
+    ],
+    "filterMood": [
+      "airy-luxury"
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 3,
+        "countMax": 3,
+        "label": "3 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 1,
+        "countMax": 2,
+        "label": "1–2 палички 5 мм для open-space"
+      },
+      "area": "10–18 м²",
+      "tip": "Не перевантажуйте маленькі кімнати. Це аромат для великого простору."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "sourceRef": {
+      "workbookRow": "PURE IMAGINATION"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "balanced",
+      "intervalDays": {
+        "min": 5,
+        "max": 7
+      },
+      "publicText": "Перевертайте палички орієнтовно кожні 5–7 днів або коли звучання стало тихішим."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 2,
+        "max": 2,
+        "label": "2"
+      },
+      "standard": {
+        "min": 3,
+        "max": 3,
+        "label": "3"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "Активна дифузія: у невеликій кімнаті не перевантажуйте простір."
+    }
   },
   {
     "id": "silk-molecule",
@@ -1099,10 +2934,10 @@ const PRODUCTS = [
     ],
     "room": [
       "bedroom",
-      "living-room"
+      "wardrobe"
     ],
     "mood": [
-          "warm-evening"
+      "silk-aura"
     ],
     "scales": {
       "freshness": 4,
@@ -1139,10 +2974,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/silk-molecule/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/silk-molecule/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/silk-molecule/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/silk-molecule/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/silk-molecule/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/silk-molecule/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/silk-molecule/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/silk-molecule/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/silk-molecule/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/silk-molecule/atmosphere.webp",
@@ -1155,20 +3006,76 @@ const PRODUCTS = [
         "top": "images/product-story/silk-molecule/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
-    "suitFor": "Підійде, якщо любите молекулярні, теплі аромати для вечірньої атмосфери у спальні чи вітальні.",
+    "quickFacts": "4 палички",
+    "suitFor": "Підійде, якщо любите шовковисті мускусні композиції для спальні, гардероба або особистого простору.",
     "formulaIntent": "Шафран, фіалка й темний мускус працюють як єдина текстура — тиха, шовкова та близька до простору.",
     "insights": {
-          "aura": "М’яка шовкова аура",
-          "season": "Осінь · зима",
-          "zones": "Спальня · гардероб · особистий простір",
-          "comfort": "Камерна texture-атмосфера",
-          "evolution": "Шафран і легкі спеції переходять у кашемірово-мускусну хмару з фіалкою, сандалом та м’якою ваніллю."
+      "aura": "М’яка шовкова аура",
+      "season": "Осінь · зима",
+      "zones": "Спальня · гардероб · особистий простір",
+      "comfort": "Камерна texture-атмосфера",
+      "evolution": "Шафран і легкі спеції переходять у кашемірово-мускусну хмару з фіалкою, сандалом та м’якою ваніллю."
     },
     "similar": [
       "pure-imagination",
       "evening-ritual"
-    ]
+    ],
+    "filterMood": [
+      "warm-evening"
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 5,
+        "countMin": 4,
+        "countMax": 4,
+        "label": "4 палички 5 мм"
+      },
+      "alternative": {
+        "diameterMm": 4,
+        "countMin": 4,
+        "countMax": 4,
+        "label": "4 палички 4 мм для м’якшого звучання"
+      },
+      "area": "15–25 м²",
+      "tip": "Оцінюйте остаточну інтенсивність через 24–48 годин."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 5
+    },
+    "sourceRef": {
+      "workbookRow": "SILK MOLECULE v2"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "dense",
+      "intervalDays": {
+        "min": 3,
+        "max": 4
+      },
+      "publicText": "Перевертайте палички орієнтовно кожні 3–4 дні для рівномірного розкриття."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 3,
+        "max": 3,
+        "label": "3"
+      },
+      "standard": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4+",
+        "extraReeds": true
+      },
+      "note": "У стандартній кімнаті використовуйте всі 4 палички 5 мм і оцініть остаточну інтенсивність через 24–48 годин."
+    }
   },
   {
     "id": "the-archive",
@@ -1180,11 +3087,12 @@ const PRODUCTS = [
       "molecular"
     ],
     "room": [
+      "library",
       "office",
-      "living-room"
+      "lounge"
     ],
     "mood": [
-          "hotel"
+      "private-library"
     ],
     "scales": {
       "freshness": 4,
@@ -1219,10 +3127,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/the-archive/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/the-archive/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/the-archive/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/the-archive/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/the-archive/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/the-archive/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/the-archive/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/the-archive/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/the-archive/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/the-archive/atmosphere.webp",
@@ -1235,20 +3159,70 @@ const PRODUCTS = [
         "top": "images/product-story/the-archive/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
-    "suitFor": "Підійде, якщо шукаєте молекулярно-деревну композицію з готельним характером для кабінету чи вітальні.",
+    "quickFacts": "3 палички",
+    "suitFor": "Підійде, якщо любите сухі деревні композиції з атмосферою приватної бібліотеки — для кабінету, бібліотеки чи камерного лаунжу.",
     "formulaIntent": "Копал і кедр з’єднані з прохолодною камфорою та теплою смолистою базою — сухо й інтелектуально.",
     "insights": {
-          "aura": "Суха інтелектуальна атмосфера",
-          "season": "Осінь · зима",
-          "zones": "Бібліотека · кабінет · приватний lounge",
-          "comfort": "Нішевий камерний профіль",
-          "evolution": "Копал, кедр і прохолодна камфора поступово теплішають, створюючи атмосферу тихої приватної бібліотеки."
+      "aura": "Суха інтелектуальна атмосфера",
+      "season": "Осінь · зима",
+      "zones": "Бібліотека · кабінет · приватний лаунж",
+      "comfort": "Нішевий камерний профіль",
+      "evolution": "Копал, кедр і прохолодна камфора поступово теплішають, створюючи атмосферу тихої приватної бібліотеки."
     },
     "similar": [
       "old-money",
       "moss-and-shadow"
-    ]
+    ],
+    "filterMood": [
+      "private-library"
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 3,
+        "countMax": 3,
+        "label": "3 палички 4 мм"
+      },
+      "alternative": null,
+      "area": "10–18 м²",
+      "tip": "Камерний аромат для бібліотеки чи кабінету. Паличка 5 мм не рекомендується."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "sourceRef": {
+      "workbookRow": "THE ARCHIVE v2"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "dense",
+      "intervalDays": {
+        "min": 3,
+        "max": 4
+      },
+      "publicText": "Перевертайте палички орієнтовно кожні 3–4 дні для рівномірного розкриття."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 2,
+        "max": 2,
+        "label": "2"
+      },
+      "standard": {
+        "min": 3,
+        "max": 3,
+        "label": "3"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "Камерна композиція: у великому просторі аромат залишатиметься стриманим."
+    }
   },
   {
     "id": "silent-temple",
@@ -1267,7 +3241,7 @@ const PRODUCTS = [
       "bathroom"
     ],
     "mood": [
-          "calm"
+      "meditative-wood"
     ],
     "scales": {
       "freshness": 8,
@@ -1301,10 +3275,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/silent-temple/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/silent-temple/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/silent-temple/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/silent-temple/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/silent-temple/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/silent-temple/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/silent-temple/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/silent-temple/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/silent-temple/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/silent-temple/atmosphere.webp",
@@ -1317,26 +3307,81 @@ const PRODUCTS = [
         "top": "images/product-story/silent-temple/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
-    "suitFor": "Підійде, якщо любите молекулярно-деревну свіжість для спокою в кабінеті, спальні чи ванній кімнаті.",
+    "quickFacts": "4 палички",
+    "suitFor": "Підійде, якщо шукаєте медитативну хвойно-деревну свіжість для спальні, кабінету або SPA-простору.",
     "formulaIntent": "Білий чай та евкаліпт відкривають композицію, а кипарис, сосна й кедр залишають чисту деревну тишу.",
     "insights": {
-          "aura": "Тиха японська temple-атмосфера",
-          "season": "Весна · осінь · універсальний",
-          "zones": "Кабінет · SPA · спальня · медитація",
-          "comfort": "Найспокійніший характер NOIR",
-          "evolution": "Евкаліпт, озон і білий чай відкривають композицію; кипарис, сосна й кедр залишають чисту деревну тишу."
+      "aura": "Тиха японська temple-атмосфера",
+      "season": "Весна · осінь · універсальний",
+      "zones": "Кабінет · SPA · спальня",
+      "comfort": "Найспокійніший характер NOIR",
+      "evolution": "Евкаліпт, озон і білий чай відкривають композицію; кипарис, сосна й кедр залишають чисту деревну тишу."
     },
     "similar": [
       "moss-and-shadow",
       "pure-zen"
-    ]
+    ],
+    "filterMood": [
+      "calm"
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 4,
+        "countMax": 4,
+        "label": "4 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 2,
+        "countMax": 2,
+        "label": "2 палички 5 мм для великих медитативних просторів"
+      },
+      "area": "15–25 м²",
+      "tip": "3 палички дають делікатну атмосферу, 4 — повніше розкриття."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "sourceRef": {
+      "workbookRow": "SILENT TEMPLE"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "balanced",
+      "intervalDays": {
+        "min": 5,
+        "max": 7
+      },
+      "publicText": "Перевертайте палички орієнтовно кожні 5–7 днів або коли звучання стало тихішим."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 3,
+        "max": 3,
+        "label": "3"
+      },
+      "standard": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "Медитативна композиція не розрахована на агресивну дифузію."
+    }
   },
   {
     "id": "moss-and-shadow",
     "name": "Moss & Shadow",
     "collection": "noir",
-    "shortDescription": "Дубовий мох, шавлія й амбра після дощу в лісі.",
+    "shortDescription": "Темний дубовий мох, шавлія й амбра для стриманої атмосфери старого лісу після дощу.",
     "character": [
       "woody",
       "molecular",
@@ -1347,7 +3392,7 @@ const PRODUCTS = [
       "office"
     ],
     "mood": [
-          "warm-evening"
+      "mossy-dark"
     ],
     "scales": {
       "freshness": 5,
@@ -1380,10 +3425,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/moss-and-shadow/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/moss-and-shadow/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/moss-and-shadow/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/moss-and-shadow/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/moss-and-shadow/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/moss-and-shadow/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/moss-and-shadow/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/moss-and-shadow/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/moss-and-shadow/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/moss-and-shadow/atmosphere.webp",
@@ -1396,20 +3457,75 @@ const PRODUCTS = [
         "top": "images/product-story/moss-and-shadow/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
-    "suitFor": "Підійде, якщо шукаєте молекулярно-деревну свіжість для вечірньої атмосфери у вітальні чи кабінеті.",
+    "quickFacts": "3–4 палички",
+    "suitFor": "Підійде, якщо любите темні мохово-деревні композиції для кабінету, бібліотеки або атмосферного вечірнього простору.",
     "formulaIntent": "Дубовий мох, шавлія й амбра формують вологу лісову глибину, яку освітлює стриманий цитрусовий початок.",
     "insights": {
-          "aura": "Темна мохова luxury-атмосфера",
-          "season": "Осінь · зима",
-          "zones": "Кабінет · бібліотека · темний lounge",
-          "comfort": "Нішевий природний профіль",
-          "evolution": "Шавлія та цитруси поступаються лаванді, дубовому моху й амбрі — ніби повітря після дощу в старому лісі."
+      "aura": "Темна мохово-деревна атмосфера",
+      "season": "Осінь · зима",
+      "zones": "Кабінет · темний інтер’єр · лаунж · бібліотека",
+      "comfort": "Нішевий природний профіль",
+      "evolution": "Шавлія та цитруси поступаються лаванді, дубовому моху й амбрі — ніби повітря після дощу в старому лісі."
     },
     "similar": [
       "silent-temple",
       "the-archive"
-    ]
+    ],
+    "filterMood": [
+      "dark-luxury"
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 3,
+        "countMax": 4,
+        "label": "3–4 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 2,
+        "countMax": 2,
+        "label": "2 палички 5 мм для великого dark space"
+      },
+      "area": "15–25 м²",
+      "tip": "Не використовуйте як аромат для всього дому: найкраще працює у кабінеті або бібліотеці."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "sourceRef": {
+      "workbookRow": "MOSS & SHADOW"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "balanced",
+      "intervalDays": {
+        "min": 4,
+        "max": 5
+      },
+      "publicText": "Перевертайте палички орієнтовно кожні 4–5 днів для рівномірної віддачі."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 2,
+        "max": 3,
+        "label": "2–3"
+      },
+      "standard": {
+        "min": 3,
+        "max": 4,
+        "label": "3–4"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "Темний NOIR-профіль краще налаштовувати поступово."
+    }
   },
   {
     "id": "dark-bloom",
@@ -1422,11 +3538,10 @@ const PRODUCTS = [
     ],
     "room": [
       "bedroom",
-      "living-room"
+      "lounge"
     ],
     "mood": [
-          "warm-evening",
-          "warm-sweet"
+      "sensual-evening"
     ],
     "scales": {
       "freshness": 3,
@@ -1460,10 +3575,26 @@ const PRODUCTS = [
     "images": {
       "main": "images/product-story/dark-bloom/hero.webp",
       "gallery": [
-        { "type": "hero", "label": "Hero", "src": "images/product-story/dark-bloom/hero.webp" },
-        { "type": "macro", "label": "Macro", "src": "images/product-story/dark-bloom/macro.webp" },
-        { "type": "interior", "label": "Interior", "src": "images/product-story/dark-bloom/interior.webp" },
-        { "type": "detail", "label": "Detail", "src": "images/product-story/dark-bloom/detail.webp" }
+        {
+          "type": "hero",
+          "label": "Hero",
+          "src": "images/product-story/dark-bloom/hero.webp"
+        },
+        {
+          "type": "macro",
+          "label": "Macro",
+          "src": "images/product-story/dark-bloom/macro.webp"
+        },
+        {
+          "type": "interior",
+          "label": "Interior",
+          "src": "images/product-story/dark-bloom/interior.webp"
+        },
+        {
+          "type": "detail",
+          "label": "Detail",
+          "src": "images/product-story/dark-bloom/detail.webp"
+        }
       ],
       "story": {
         "atmosphere": "images/product-story/dark-bloom/atmosphere.webp",
@@ -1476,24 +3607,89 @@ const PRODUCTS = [
         "top": "images/product-story/dark-bloom/top.webp"
       }
     },
-    "quickFacts": "3–4 палички для старту",
-    "suitFor": "Підійде, якщо любите теплі молекулярні композиції для вечора у спальні чи вітальні.",
+    "quickFacts": "3–4 палички",
+    "suitFor": "Підійде, якщо любите чуттєві темні квіткові композиції для спальні або камерного вечірнього лаунжу.",
     "formulaIntent": "Слива й чорна троянда побудовані на пачулі та лабданумі — темно, оксамитово й без прямої солодкості.",
     "insights": {
-          "aura": "Темна квітково-смоляна атмосфера",
-          "season": "Осінь · зима · вечір",
-          "zones": "Спальня · lounge · темний інтер’єр",
-          "comfort": "Виразний вечірній профіль",
-          "evolution": "Рожевий перець і слива відкривають композицію; чорна троянда, пачулі та лабданум поступово створюють темну оксамитову ауру."
+      "aura": "Темна sensual квіткова атмосфера",
+      "season": "Осінь · зима · вечір",
+      "zones": "Спальня · лаунж · темний інтер’єр",
+      "comfort": "Виразний вечірній профіль",
+      "evolution": "Рожевий перець і слива відкривають композицію; чорна троянда, пачулі та лабданум поступово створюють темну оксамитову ауру."
     },
     "similar": [
       "evening-ritual",
       "forbidden-fruit"
-    ]
+    ],
+    "filterMood": [
+      "warm-evening"
+    ],
+    "diffusion": {
+      "primary": {
+        "diameterMm": 4,
+        "countMin": 3,
+        "countMax": 4,
+        "label": "3–4 палички 4 мм"
+      },
+      "alternative": {
+        "diameterMm": 5,
+        "countMin": 2,
+        "countMax": 2,
+        "label": "2 палички 5 мм для великих вечірніх просторів"
+      },
+      "area": "15–25 м²",
+      "tip": "Не ставте на кухні. У теплому приміщенні починайте з 3 паличок."
+    },
+    "package": {
+      "reedCount": 4,
+      "reedDiameterMm": 4
+    },
+    "sourceRef": {
+      "workbookRow": "DARK BLOOM"
+    },
+    "guide": {
+      "avoidRooms": []
+    },
+    "reedCare": {
+      "tier": "dense",
+      "intervalDays": {
+        "min": 3,
+        "max": 4
+      },
+      "publicText": "Перевертайте палички орієнтовно кожні 3–4 дні для рівномірного розкриття."
+    },
+    "reedSetupByArea": {
+      "small": {
+        "min": 2,
+        "max": 3,
+        "label": "2–3"
+      },
+      "standard": {
+        "min": 3,
+        "max": 4,
+        "label": "3–4"
+      },
+      "large": {
+        "min": 4,
+        "max": 4,
+        "label": "4"
+      },
+      "note": "Ванільно-смоляна база: у невеликій кімнаті починайте з нижчого значення."
+    }
   }
 ];
 
-// ---- Lookup helpers ----
+window.VA_PRODUCT_LABELS = PRODUCT_LABELS;
+window.VA_CATALOG_FILTERS = PRODUCT_CATALOG_FILTERS;
+window.VA_SCENT_GUIDE = PRODUCT_SCENT_GUIDE;
+window.VA_REED_CARE_POLICY = PRODUCT_REED_CARE_POLICY;
+window.VA_REED_SETUP_POLICY = PRODUCT_REED_SETUP_POLICY;
+window.VA_PRODUCT_CONTENT_VERSION = PRODUCT_CONTENT_VERSION;
+
+function getCollection(collectionId) {
+  return COLLECTIONS.find((collection) => collection.id === collectionId) || null;
+}
+
 function getProduct(id) {
   return PRODUCTS.find((p) => p.id === id) || null;
 }
@@ -1639,3 +3835,4 @@ function getSimilarProducts(product) {
 window.PRODUCTS = PRODUCTS;
 window.COLLECTIONS = COLLECTIONS;
 window.getCollection = getCollection;
+

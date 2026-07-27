@@ -1,8 +1,9 @@
 (() => {
 'use strict';
 const KEY='vahome_compare_v1';
-const chars={clean:'Чистий',fresh:'Свіжий',warm:'Теплий',fruity:'Фруктовий',woody:'Деревний',floral:'Квітковий',mineral:'Мінеральний',molecular:'Молекулярний',spicy:'Пряний',sweet:'Солодкий',smoky:'Димний',spa:'SPA',hotel:'Hotel'};
-const rooms={'living-room':'Вітальня',bedroom:'Спальня',office:'Кабінет',hallway:'Передпокій',bathroom:'Ванна'};
+const sharedLabels=window.VA_PRODUCT_LABELS||{};
+const chars=sharedLabels.character||{};
+const rooms=sharedLabels.room||{};
 const scaleLabels={freshness:'Свіжість',warmth:'Теплота',woodiness:'Деревність',intensity:'Інтенсивність',cleanliness:'Чистота',sweetness:'Солодкість'};
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]').filter(Boolean).slice(0,3)}catch{return[]}};

@@ -10,11 +10,67 @@
   "use strict";
 
 
-  const LABELS = {
-    character: { clean: "Чисті", fresh: "Свіжі", fruity: "Фруктові", warm: "Теплі", woody: "Деревні", spa: "Спа", molecular: "Молекулярні" },
-    room: { "living-room": "Вітальня", bedroom: "Спальня", bathroom: "Ванна", office: "Кабінет", hallway: "Передпокій", wardrobe: "Гардероб" },
-    mood: { calm: "Спокій", "warm-evening": "Теплий вечір", "warm-sweet": "Тепла солодкість", clean: "Чистота", focus: "Фокус" },
-    scales: { freshness: "Свіжість", sweetness: "Солодкість", woodiness: "Деревність", cleanliness: "Чистота" }
+  const REED_CARE_POLICY = window.VA_REED_CARE_POLICY || { consumptionNote: "Кожне перевертання тимчасово посилює аромат і пришвидшує випаровування." };
+  const REED_SETUP_POLICY = window.VA_REED_SETUP_POLICY || {
+    title: "Налаштуйте аромат під кімнату",
+    publicRule: "Почніть із рекомендованої кількості. Остаточне звучання оцініть наступного дня.",
+    adjustmentNote: "Якщо аромат звучить занадто тихо — додайте одну паличку. Якщо надто виразно — приберіть одну.",
+    extraReedsNote: "Для великого простору може знадобитися додатковий комплект паличок.",
+    bands: [{ id: "small", label: "Невелика кімната" }, { id: "standard", label: "Стандартна кімната", recommended: true }, { id: "large", label: "Великий простір" }]
+  };
+
+  const LABELS = window.VA_PRODUCT_LABELS || {
+    "character": {
+      "clean": "Чисті",
+      "fresh": "Свіжі",
+      "fruity": "Фруктові",
+      "warm": "Теплі",
+      "woody": "Деревні",
+      "spa": "SPA",
+      "molecular": "Молекулярні",
+      "hotel": "Готельні",
+      "floral": "Квіткові",
+      "evening": "Вечірні",
+      "spicy": "Пряні"
+    },
+    "room": {
+      "living-room": "Вітальня",
+      "bedroom": "Спальня",
+      "bathroom": "Ванна",
+      "office": "Кабінет",
+      "hallway": "Передпокій",
+      "wardrobe": "Гардероб",
+      "library": "Бібліотека",
+      "lounge": "Lounge",
+      "balcony": "Балкон",
+      "terrace": "Тераса",
+      "showroom": "Showroom",
+      "dining-room": "Їдальня",
+      "spa-zone": "SPA-зона"
+    },
+    "mood": {
+      "calm": "Спокій",
+      "warm-evening": "Теплий вечір",
+      "warm-sweet": "Тепла солодкість",
+      "hotel-clean": "Готельна чистота",
+      "spring-fresh": "Весняна свіжість",
+      "berry-air": "Свіже ягідне повітря",
+      "dark-luxury": "Темна розкіш",
+      "confident-space": "Впевнений простір",
+      "airy-luxury": "Повітряна розкіш",
+      "private-library": "Приватна бібліотека",
+      "silk-aura": "Шовкова аура",
+      "meditative-wood": "Медитативна деревна свіжість",
+      "mossy-dark": "Мохово-деревна атмосфера",
+      "sensual-evening": "Чуттєвий вечір",
+      "spa": "SPA"
+    },
+    "scales": {
+      "freshness": "Свіжість",
+      "sweetness": "Солодкість",
+      "woodiness": "Деревність",
+      "cleanliness": "Чистота"
+    }
   };
 
   function escapeHtml(value) {
@@ -64,12 +120,51 @@
       image: [`https://vahome.com.ua/${getPrimaryProductImage(product)}`], description: product.shortDescription,
       brand: { "@type": "Brand", name: "VA HOME" }, sku: product.id,
       offers: { "@type": "Offer", url: location.href, priceCurrency: "UAH", price, availability: "https://schema.org/InStock" },
-      additionalProperty: [{ "@type": "PropertyValue", name: "Об’єм", value: volume }, { "@type": "PropertyValue", name: "Інтенсивність", value: `${product.scales.intensity} з 10` }]
+      additionalProperty: [{ "@type": "PropertyValue", name: "Об’єм", value: volume }, { "@type": "PropertyValue", name: "Рекомендований старт", value: product.quickFacts }, { "@type": "PropertyValue", name: "Палички у комплекті", value: `${product.package?.reedCount || 4} × ${product.package?.reedDiameterMm || 4} мм` }, { "@type": "PropertyValue", name: "Рекомендована площа", value: product.diffusion?.area || "до 25 м²" }, { "@type": "PropertyValue", name: "Інтенсивність", value: `${product.scales.intensity} з 10` }, { "@type": "PropertyValue", name: "Перевертання паличок", value: product.reedCare?.publicText || "За потреби" }, { "@type": "PropertyValue", name: "Палички до 15 м²", value: product.reedSetupByArea?.small?.label || "—" }, { "@type": "PropertyValue", name: "Палички для 15–25 м²", value: product.reedSetupByArea?.standard?.label || "—" }, { "@type": "PropertyValue", name: "Палички для 25 м²+", value: product.reedSetupByArea?.large?.label || "—" }]
     };
     const script = document.createElement("script");
     script.type = "application/ld+json";
     script.textContent = JSON.stringify(schema);
     document.head.appendChild(script);
+  }
+
+  function reedCountLabel(value) {
+    return `${value} палички`;
+  }
+
+  function reedIntervalLabel(product) {
+    const min = product.reedCare?.intervalDays?.min;
+    const max = product.reedCare?.intervalDays?.max;
+    if (!Number.isInteger(min) || !Number.isInteger(max)) return "За потреби";
+    if (min === 7 && max === 7) return "Раз на тиждень";
+    if (min === max) return `Кожні ${min} дні`;
+    return `Кожні ${min}–${max} ${max <= 4 ? "дні" : "днів"}`;
+  }
+
+  function renderReedSetup(product) {
+    const host = document.getElementById("reedSetupSection");
+    const setup = product.reedSetupByArea;
+    if (!host || !setup) return;
+    const cards = (REED_SETUP_POLICY.bands || []).map((band) => {
+      const value = setup[band.id];
+      if (!value) return "";
+      const recommended = band.recommended ? " is-recommended" : "";
+      return `<article class="product-reed-guide__item${recommended}"><span>${escapeHtml(band.label)}</span><strong>${escapeHtml(reedCountLabel(value.label))}</strong></article>`;
+    }).join("");
+    const hasExtra = Object.values(setup).some((value) => value && typeof value === "object" && value.extraReeds);
+    host.innerHTML = `<h2 class="product-detail-section__title">${escapeHtml(REED_SETUP_POLICY.title)}</h2><p class="product-reed-guide__lead">${escapeHtml(REED_SETUP_POLICY.publicRule)}</p><div class="product-reed-guide__grid">${cards}</div><div class="product-reed-guide__care"><span>Догляд за паличками</span><strong>${escapeHtml(reedIntervalLabel(product))}</strong></div><p class="product-reed-guide__note">${escapeHtml(REED_SETUP_POLICY.adjustmentNote)}</p>${hasExtra ? `<p class="product-reed-guide__extra">${escapeHtml(REED_SETUP_POLICY.extraReedsNote)}</p>` : ""}`;
+  }
+
+  function renderUsageSection(product) {
+    const host = document.getElementById("productUsageSection");
+    if (!host || !product.package || !product.diffusion?.primary) return;
+    const pack = product.package;
+    const primary = product.diffusion.primary;
+    const countText = primary.countMin === primary.countMax
+      ? `${primary.countMin} палички`
+      : `${primary.countMin}–${primary.countMax} палички`;
+    const packageText = `${pack.reedCount} чорні палички ${pack.reedDiameterMm} мм`;
+    host.innerHTML = `<h2 class="product-detail-section__title">Як користуватися</h2><div class="product-usage-guide__steps"><article><span>01</span><div><strong>Вставте ${escapeHtml(countText)}</strong><p>Використовуйте палички з комплекту та поставте флакон на стійку поверхню.</p></div></article><article><span>02</span><div><strong>Зачекайте 24–48 годин</strong><p>Аромат розкривається поступово — не оцінюйте інтенсивність одразу.</p></div></article><article><span>03</span><div><strong>Перевертайте палички</strong><p>${escapeHtml(product.reedCare?.publicText || "Перевертайте за потреби.")}</p></div></article></div><div class="product-usage-guide__meta"><p><strong>У комплекті:</strong> флакон 100 мл і ${escapeHtml(packageText)}.</p><p><strong>Тривалість:</strong> орієнтовно 8–12 тижнів.</p></div><p class="product-usage-guide__note">${escapeHtml(REED_CARE_POLICY.consumptionNote)}</p>`;
   }
 
   function hydrateProductPage() {
@@ -96,8 +191,18 @@
     setText("productDesc", product.shortDescription);
     setText("productVolume", volume);
     setText("productPrice", `${Number(price).toLocaleString("uk-UA")} грн`);
-    document.querySelector(".product-hero__quickfacts")?.replaceChildren(document.createTextNode(product.quickFacts || "3–4 палички для старту"));
+    setText("productHeroDuration", "8–12 тижнів");
+    setText("productHeroPackage", `${product.package?.reedCount || 4} чорні палички`);
+    setText("productHeroReedCare", reedIntervalLabel(product));
     document.querySelector(".product-hero__suit-for")?.replaceChildren(document.createTextNode(product.suitFor || ""));
+
+
+    const formulaStart = Array.from(document.querySelectorAll(".product-formula-proof dt"))
+      .find((node) => node.textContent.trim() === "Рекомендований старт")?.parentElement?.querySelector("dd");
+    if (formulaStart) formulaStart.textContent = product.diffusion?.primary?.label || product.quickFacts || "3–4 палички";
+
+    renderUsageSection(product);
+    renderReedSetup(product);
 
     const gallery = getProductGallery(product);
     if (window.VAHomeGallery) {
