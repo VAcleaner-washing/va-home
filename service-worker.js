@@ -1,6 +1,7 @@
 const VERSION = '14.0.0';
+const CACHE_REVISION = 'rc3';
 const CACHE_PREFIX = 'vahome-';
-const STATIC_CACHE = `${CACHE_PREFIX}static-${VERSION}`;
+const STATIC_CACHE = `${CACHE_PREFIX}static-${VERSION}-${CACHE_REVISION}`;
 
 const CORE_ASSETS = [
   '/offline.html',

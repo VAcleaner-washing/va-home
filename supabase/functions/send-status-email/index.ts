@@ -30,7 +30,7 @@ function reviewTargets(items:unknown){
     const row=item as Record<string,unknown>;
     const id=String(row.id||"");
     if(PRODUCT_NAMES[id]) ids.add(id);
-    if(id==="discovery-17") Object.keys(PRODUCT_NAMES).forEach(productId=>ids.add(productId));
+    if(id==="discovery-17"||id==="discovery-18") Object.keys(PRODUCT_NAMES).forEach(productId=>ids.add(productId));
     const selected=Array.isArray(row.selection_ids)?row.selection_ids:[];
     selected.forEach(value=>{const productId=String(value||"");if(PRODUCT_NAMES[productId])ids.add(productId);});
   }
@@ -50,7 +50,7 @@ function discoveryCreditBlock(credit:any){
   const promo=Array.isArray(credit.promo_codes)?credit.promo_codes[0]:credit.promo_codes;
   if(!promo?.code)return "";
   const expires=new Intl.DateTimeFormat("uk-UA",{day:"numeric",month:"long",year:"numeric",timeZone:"Europe/Kyiv"}).format(new Date(credit.expires_at));
-  return `<div style="margin:28px 0;padding:26px;border:1px solid #C8A27C;background:#FBF9F6;border-radius:3px;"><div style="font-size:10px;letter-spacing:1.6px;color:#9A744D;text-transform:uppercase;margin-bottom:10px;">Discovery Credit</div><h2 style="margin:0 0 10px;color:#171717;font:normal 21px/1.25 'Georgia',serif;">150 грн на повнорозмірний аромат</h2><p style="margin:0 0 18px;color:#525252;font-size:14px;line-height:1.6;">Ваш персональний кредит створено автоматично після Discovery Set.</p><div style="padding:15px 16px;background:#EDE7DF;text-align:center;font-family:monospace;font-size:18px;letter-spacing:1.5px;color:#171717;">${esc(promo.code)}</div><p style="margin:12px 0 0;color:#8B8178;font-size:11px;line-height:1.5;">Код діє до ${esc(expires)}, прив’язаний до цього email і застосовується один раз.</p><p style="margin:18px 0 0;"><a href="https://vahome.com.ua/catalog.html" style="display:inline-block;padding:12px 20px;background:#171717;color:#fff;text-decoration:none;font-size:13px;">Обрати повнорозмірний аромат</a></p></div>`;
+  return `<div style="margin:28px 0;padding:26px;border:1px solid #C8A27C;background:#FBF9F6;border-radius:3px;"><div style="font-size:10px;letter-spacing:1.6px;color:#9A744D;text-transform:uppercase;margin-bottom:10px;">Discovery Credit</div><h2 style="margin:0 0 10px;color:#171717;font:normal 21px/1.25 'Georgia',serif;">${money(credit.amount)} на повнорозмірний аромат</h2><p style="margin:0 0 18px;color:#525252;font-size:14px;line-height:1.6;">Ваш персональний кредит створено автоматично після Discovery Set.</p><div style="padding:15px 16px;background:#EDE7DF;text-align:center;font-family:monospace;font-size:18px;letter-spacing:1.5px;color:#171717;">${esc(promo.code)}</div><p style="margin:12px 0 0;color:#8B8178;font-size:11px;line-height:1.5;">Код діє до ${esc(expires)}, прив’язаний до цього email і застосовується один раз.</p><p style="margin:18px 0 0;"><a href="https://vahome.com.ua/catalog.html" style="display:inline-block;padding:12px 20px;background:#171717;color:#fff;text-decoration:none;font-size:13px;">Обрати повнорозмірний аромат</a></p></div>`;
 }
 
 async function resend(key:string,payload:unknown){const r=await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:`Bearer ${key}`,"Content-Type":"application/json"},body:JSON.stringify(payload)});const t=await r.text();if(!r.ok)throw new Error(`Resend ${r.status}: ${t}`);return t?JSON.parse(t):null;}

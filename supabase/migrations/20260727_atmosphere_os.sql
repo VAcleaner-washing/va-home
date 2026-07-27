@@ -132,7 +132,7 @@ declare
   generated_code text;
   created_promo_id uuid;
   credit_id uuid;
-  has_discovery boolean;
+  credit_amount numeric(12,2);
   attempt integer;
 begin
   select * into o from public.orders where id = p_order_id;
@@ -141,11 +141,18 @@ begin
   select id into existing_credit from public.discovery_credits where order_id = o.id;
   if existing_credit is not null then return existing_credit; end if;
 
-  select exists (
-    select 1 from jsonb_array_elements(coalesce(o.items,'[]'::jsonb)) item
-    where item->>'id' in ('discovery-6','discovery-18','discovery-17')
-  ) into has_discovery;
-  if not has_discovery then return null; end if;
+  select max(
+    case item->>'id'
+      when 'discovery-18' then 450
+      when 'discovery-17' then 450
+      when 'discovery-6' then 150
+      else null
+    end
+  )
+  into credit_amount
+  from jsonb_array_elements(coalesce(o.items,'[]'::jsonb)) item;
+
+  if credit_amount is null then return null; end if;
 
   for attempt in 1..6 loop
     generated_code := 'VA-DISC-' || upper(substr(replace(gen_random_uuid()::text,'-',''),1,8));
@@ -157,7 +164,7 @@ begin
       ) values (
         generated_code,
         'Discovery Credit · ' || o.client_order_id,
-        'fixed', 150, 799, 'fragrances',
+        'fixed', credit_amount, 799, 'fragrances',
         now(), now() + interval '60 days', 1, 0, true,
         lower(trim(o.customer_email)), 'discovery_credit', o.id, now()
       ) returning id into created_promo_id;
@@ -172,7 +179,7 @@ begin
   insert into public.discovery_credits (
     order_id, customer_email, promo_code_id, amount, expires_at
   ) values (
-    o.id, lower(trim(o.customer_email)), created_promo_id, 150, now() + interval '60 days'
+    o.id, lower(trim(o.customer_email)), created_promo_id, credit_amount, now() + interval '60 days'
   ) returning id into credit_id;
 
   return credit_id;

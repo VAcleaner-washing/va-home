@@ -1,13 +1,16 @@
 {
   "version": "14.0.0",
-  "channel": "RC1",
+  "channel": "RC3",
   "name": "ATMOSPHERE OS",
   "date": "2026-07-27",
   "base": "13.8.36-AUTOMATION-HARDENING-LIVE-TEST",
   "changes": [
+    "Replaces native Room Ritual dropdowns and number spinners with premium accessible controls",
+    "Displays the saved Room Ritual inside the customer Atmosphere hub with restore and delete actions",
+    "Clarifies Discovery Credit: 150/450 UAH, 18-fragrance full set, automatic code, 60-day validity",
     "Adds one-click Repeat Atmosphere actions in the customer account",
     "Persists Personal Scent Profile locally and in Supabase with match percentages",
-    "Adds Discovery Credit: personal 150 UAH code after completed Discovery Set orders",
+    "Adds Discovery Credit: personal 150/450 UAH code after completed Discovery Set orders",
     "Adds Room Ritual recommendations by room, area, presence and bottle placement",
     "Adds authenticated Private Preview infrastructure for releases 48 hours early",
     "Keeps promo use atomic through the production order redemption guard"

@@ -65,6 +65,11 @@
       try { await sb.rpc("claim_customer_orders"); } catch (_) { /* Current orders still load. */ }
     }
     await Promise.allSettled([loadOrders(), loadWishlist(), loadAtmosphereHub()]);
+    const requestedTab = new URLSearchParams(location.search).get("tab");
+    if (["orders", "wishlist", "atmosphere", "settings"].includes(requestedTab)) {
+      activateAccountTab(requestedTab);
+      if (location.hash) setTimeout(() => document.querySelector(location.hash)?.scrollIntoView({ block: "center" }), 80);
+    }
   }
   function showDashboard(currentUser) {
     if (dashboardPromise && user?.id === currentUser.id) return dashboardPromise;
@@ -260,6 +265,48 @@
   }
 
 
+
+  function roomRitualTitle(reeds, diameter) {
+    const count = Number(reeds || 0);
+    const word = count === 1 ? "паличка" : count > 1 && count < 5 ? "палички" : "паличок";
+    return `${count} ${word} · ${Number(diameter || 4)} мм`;
+  }
+
+  function loadSavedRoomRitual() {
+    const host = $("#accountRoomRitual");
+    if (!host) return;
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem("va_home_room_ritual_v14") || "null"); } catch (_) {}
+    const result = saved?.result || saved;
+    const productId = result?.product?.id || saved?.inputs?.product;
+    const item = product(productId);
+    if (!saved || !result || !item || !Number(result.reeds)) {
+      host.classList.remove("is-saved");
+      host.innerHTML = `<p class="eyebrow">ROOM RITUAL</p><h3>Налаштування дифузії під кімнату</h3><p>Кімната, площа, бажана присутність і розташування флакону формують точну кількість паличок та інтервал догляду.</p><a class="btn btn-primary btn-small" href="room-ritual.html">Створити Room Ritual</a>`;
+      return;
+    }
+    const savedAt = saved.savedAt ? new Date(saved.savedAt).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" }) : "на цьому пристрої";
+    const room = String(result.room || "вашій кімнаті");
+    const presence = String(result.presence || "збалансована");
+    host.classList.add("is-saved");
+    host.innerHTML = `<p class="eyebrow">ROOM RITUAL · ЗБЕРЕЖЕНО</p><h3>${esc(item.name)}</h3><p class="account-room-ritual__meta">${esc(result.area)} м² · ${esc(room)} · ${esc(presence)} присутність</p><div class="account-room-ritual__result"><span>Рекомендований старт</span><strong>${esc(roomRitualTitle(result.reeds, result.diameter))}</strong><small>Збережено ${esc(savedAt)}</small></div><div class="account-room-ritual__actions"><a class="btn btn-primary btn-small" href="room-ritual.html?restore=1">Відкрити ритуал</a><button class="account-room-ritual__remove" type="button" data-remove-room-ritual>Видалити</button></div>`;
+    host.querySelector("[data-remove-room-ritual]")?.addEventListener("click", () => {
+      try { localStorage.removeItem("va_home_room_ritual_v14"); } catch (_) {}
+      loadSavedRoomRitual();
+      window.VAHome?.showToast?.("Збережений ритуал видалено");
+    });
+  }
+
+  function activateAccountTab(tab) {
+    const button = document.querySelector(`[data-account-tab="${tab}"]`);
+    if (!button) return;
+    document.querySelectorAll("[data-account-tab]").forEach((item) => item.classList.toggle("is-active", item === button));
+    $("#accountOrders").hidden = tab !== "orders";
+    $("#accountWishlist").hidden = tab !== "wishlist";
+    $("#accountAtmosphere").hidden = tab !== "atmosphere";
+    $("#accountSettings").hidden = tab !== "settings";
+  }
+
   function profileProductCards(profile) {
     const ids = Array.isArray(profile?.recommendation_ids) ? profile.recommendation_ids.slice(0, 3) : [];
     return ids.map((id) => {
@@ -304,7 +351,7 @@
       return;
     }
     if (error || !data?.length) {
-      host.innerHTML = `<article class="account-credit account-credit--empty"><div><strong>Discovery Credit з’явиться тут</strong><p>Після завершеної покупки Discovery Set ви автоматично отримаєте 150 грн на повнорозмірний аромат.</p></div><a class="btn btn-secondary btn-small" href="discovery-set.html">Відкрити Discovery Set</a></article>`;
+      host.innerHTML = `<article class="account-credit account-credit--empty"><div><strong>Discovery Credit з’явиться тут</strong><p>Після завершеної покупки ви автоматично отримаєте 150 або 450 грн — відповідно до обраного Discovery Set.</p></div><a class="btn btn-secondary btn-small" href="discovery-set.html">Відкрити Discovery Set</a></article>`;
       return;
     }
     host.innerHTML = data.map((credit) => {
@@ -333,6 +380,7 @@
   }
 
   async function loadAtmosphereHub() {
+    loadSavedRoomRitual();
     await Promise.allSettled([loadScentProfileCard(), loadDiscoveryCredits(), loadPrivatePreviewStatus()]);
   }
 
@@ -541,11 +589,7 @@
       button.setAttribute("aria-label", show ? "Сховати пароль" : "Показати пароль");
     }));
     document.querySelectorAll("[data-account-tab]").forEach((button) => button.addEventListener("click", () => {
-      document.querySelectorAll("[data-account-tab]").forEach((item) => item.classList.toggle("is-active", item === button));
-      $("#accountOrders").hidden = button.dataset.accountTab !== "orders";
-      $("#accountWishlist").hidden = button.dataset.accountTab !== "wishlist";
-      $("#accountAtmosphere").hidden = button.dataset.accountTab !== "atmosphere";
-      $("#accountSettings").hidden = button.dataset.accountTab !== "settings";
+      activateAccountTab(button.dataset.accountTab);
     }));
   }
 

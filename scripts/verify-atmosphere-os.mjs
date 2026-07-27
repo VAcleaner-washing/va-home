@@ -17,6 +17,7 @@ const mustExist = [
   "supabase/migrations/20260727_atmosphere_os.sql",
   "supabase/migrations/20260727_atomic_promo_order_reservation.sql",
   "supabase/migrations/20260727_fix_discovery_credit_code.sql",
+  "supabase/migrations/20260727_discovery_credit_tier_amounts.sql",
   "supabase/functions/send-status-email/index.ts"
 ];
 for (const file of mustExist) if (!exists(file)) errors.push(`missing ${file}`);
@@ -32,6 +33,7 @@ const previewJs = read("js/private-preview.js");
 const productJs = read("js/product.js");
 const migration = read("supabase/migrations/20260727_atmosphere_os.sql");
 const promoMigration = read("supabase/migrations/20260727_atomic_promo_order_reservation.sql");
+const creditTierMigration = read("supabase/migrations/20260727_discovery_credit_tier_amounts.sql");
 const statusEmail = read("supabase/functions/send-status-email/index.ts");
 const robots = read("robots.txt");
 const sitemap = read("sitemap.xml");
@@ -43,6 +45,7 @@ for (const token of [
   'data-account-tab="atmosphere"',
   'id="accountAtmosphere"',
   'id="accountScentProfile"',
+  'id="accountRoomRitual"',
   'id="accountDiscoveryCredits"',
   'id="accountPrivatePreview"',
   'Повторити атмосферу'
@@ -51,6 +54,7 @@ for (const token of [
 for (const token of [
   "addOrderItemsToCart",
   "loadScentProfileCard",
+  "loadSavedRoomRitual",
   "loadDiscoveryCredits",
   "loadPrivatePreviewStatus",
   "loadAtmosphereHub"
@@ -77,7 +81,7 @@ for (const token of [
   'name="placement"',
   'meta name="robots" content="index,follow'
 ]) if (!ritualHtml.includes(token)) errors.push(`Room Ritual page missing ${token}`);
-for (const token of ["reedSetupByArea", "70–120 см", "24–48 годин", "va_home_room_ritual_v14"]) {
+for (const token of ["reedSetupByArea", "70–120 см", "24–48 годин", "va_home_room_ritual_v14", "room-ritual-select__trigger", "room-ritual-stepper", "Переглянути в кабінеті"]) {
   if (!ritualJs.includes(token)) errors.push(`Room Ritual engine missing ${token}`);
 }
 if (!productJs.includes("room-ritual.html?product=")) errors.push("product page does not link to Room Ritual");
@@ -104,21 +108,30 @@ for (const token of [
   "Customers read own discovery credits",
   "Members see private preview",
   "issue_discovery_credit_for_order",
-  "'fixed', 150, 799, 'fragrances'",
   "interval '60 days'",
   "usage_limit",
   "customer_email"
 ]) if (!migration.includes(token)) errors.push(`Atmosphere OS migration missing ${token}`);
 if (migration.includes("gen_random_bytes(6)")) errors.push("Discovery Credit still uses unavailable gen_random_bytes");
 if (!promoMigration.includes("mark_personal_credit_used")) errors.push("Discovery Credit use-state trigger missing");
+for (const token of ["when 'discovery-6' then 150", "when 'discovery-18' then 450", "when 'discovery-17' then 450", "'fixed', credit_amount, 799, 'fragrances'"]) {
+  if (!creditTierMigration.includes(token)) errors.push(`Discovery Credit tier migration missing ${token}`);
+}
 
 for (const token of [
   "issue_discovery_credit_for_order",
   "discovery_credits",
   "Discovery Credit",
-  "150 грн",
+  "money(credit.amount)",
   "notified_at"
 ]) if (!statusEmail.includes(token)) errors.push(`completed-order email missing ${token}`);
+
+
+const discoveryHtml = read("discovery-set.html");
+for (const token of ["150 грн за набір із 6 композицій", "450 грн за повний набір із 18", "діятиме 60 днів", "автоматично з’явиться в кабінеті"]) {
+  if (!discoveryHtml.includes(token)) errors.push(`Discovery Set copy missing ${token}`);
+}
+if (/30 дн|протягом 30|діє 30/.test(discoveryHtml)) errors.push("Discovery Set still contains stale 30-day credit copy");
 
 const productPages = fs.readdirSync(path.join(root, "products")).filter((name) => name.endsWith(".html"));
 for (const name of productPages) {
@@ -137,7 +150,7 @@ console.log(JSON.stringify({
   version: "14.0.0",
   repeatAtmosphere: true,
   personalScentProfile: true,
-  discoveryCreditUAH: 150,
+  discoveryCreditUAH: { discovery6: 150, discovery18: 450 },
   discoveryCreditValidityDays: 60,
   roomRitual: true,
   privatePreview: true,

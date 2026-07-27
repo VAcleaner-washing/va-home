@@ -1,8 +1,8 @@
-# VA HOME v14.0.0 RC1 — Atmosphere OS
+# VA HOME v14.0.0 RC3 — Atmosphere OS
 
 ## Production state
 
-Supabase migrations for Personal Scent Profile, Discovery Credit and Private Preview have already been applied to project `yweluzclearwrazdkahu`. `send-status-email` is deployed as version 10.
+Supabase migrations for Personal Scent Profile, Discovery Credit and Private Preview have already been applied to project `yweluzclearwrazdkahu`. `send-status-email` is deployed as version 11.
 
 The site archive still contains all migrations and Edge Function sources for backup and future environments.
 
@@ -42,7 +42,8 @@ insert into public.private_releases (
 
 - створюється лише після статусу `completed`;
 - Discovery Set IDs: `discovery-6`, `discovery-18`, legacy `discovery-17`;
-- 150 грн;
+- 150 грн для `discovery-6`;
+- 450 грн для `discovery-18` і legacy `discovery-17`;
 - мінімальна сума 799 грн;
 - лише повнорозмірні аромати;
 - 60 днів;

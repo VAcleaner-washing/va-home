@@ -63,3 +63,34 @@ begin
   return credit_id;
 end;
 $$;
+
+-- Repair previously issued, still-unused credits for full Discovery Set orders.
+update public.discovery_credits dc
+set amount = 450,
+    updated_at = now()
+from public.orders o,
+     public.promo_codes pc
+where dc.order_id = o.id
+  and pc.id = dc.promo_code_id
+  and coalesce(pc.usage_count, 0) = 0
+  and exists (
+    select 1
+    from jsonb_array_elements(coalesce(o.items, '[]'::jsonb)) item
+    where item->>'id' in ('discovery-18', 'discovery-17')
+  );
+
+update public.promo_codes pc
+set discount_value = 450,
+    updated_at = now()
+from public.discovery_credits dc,
+     public.orders o
+where dc.promo_code_id = pc.id
+  and dc.order_id = o.id
+  and coalesce(pc.usage_count, 0) = 0
+  and exists (
+    select 1
+    from jsonb_array_elements(coalesce(o.items, '[]'::jsonb)) item
+    where item->>'id' in ('discovery-18', 'discovery-17')
+  );
+
+revoke all on function public.issue_discovery_credit_for_order(bigint) from public, anon, authenticated;
