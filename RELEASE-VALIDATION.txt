@@ -1,4 +1,4 @@
-VA HOME v14.0.0 RC6.1 — ATMOSPHERE OS
+VA HOME v14.0.0 RC6.3 — ATMOSPHERE OS
 
 Static release verification: PASS
 HTML pages: 61
@@ -10,22 +10,23 @@ JavaScript / MJS syntax: PASS
 Local references and duplicate IDs: PASS
 Sitemap / image sitemap XML: PASS
 Manifest / release / product JSON: PASS
-PWA root version: 14.0.0 / cache revision rc6-1
+PWA root version: 14.0.0 / cache revision rc6-3
 PWA admin version: 14.0.0
 Gallery baseline v13.8.17: PRESERVED
 
 Guided Atmosphere next-step + hidden inactive surfaces: PASS
 Repeat Atmosphere: PASS
 Persistent Scent Profile: PASS
-Discovery Credit 150/450 UAH / 60 days: TRANSACTION TEST PASS
+Discovery Credit 150 / 250 / 450 UAH tiers / 60 days: PRODUCTION TEST PASS
 Welcome Credit 100 UAH / 7 days / first full-size purchase: TRANSACTION TEST PASS
 Atomic one-time promo reuse guard: TRANSACTION TEST PASS
 Room Ritual custom controls + expanded saved account guidance: PASS
 Private Preview + Admin Private Releases: PASS
 Repeat Purchase live Resend path: PASS
-Production send-status-email: ACTIVE v11
+Production send-status-email: ACTIVE v12
 Production issue-welcome-credit: ACTIVE v1
-Production validate-promo: ACTIVE v3
+Production create-order: ACTIVE v25
+Production validate-promo: ACTIVE v4
 
 Handoff ZIP integrity: PASS
 
@@ -33,3 +34,9 @@ RC6.2 UX regression check:
 - Hidden promo-code action without an active credit: PASS
 - Existing full-size customer receives FULL_SIZE_PURCHASE_EXISTS explanation: PASS
 - Welcome Credit remains restricted to first full-size purchase: PASS
+
+RC6.3 credit-tier check:
+- Discovery 6 + one fragrance = 150 UAH: PASS
+- Discovery 18 + one fragrance = 250 UAH: PASS
+- Discovery 18 + two fragrances = 450 UAH: PASS
+- Test orders, promos and redemptions removed: PASS

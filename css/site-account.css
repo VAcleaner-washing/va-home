@@ -2001,7 +2001,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 @media(max-width:620px){.account-room-ritual__guide>div{grid-template-columns:1fr;gap:6px;padding:13px 0}.account-room-ritual__note{padding:14px}}
 
 
-/* VA HOME v14.0.0 RC6.1 — account hierarchy polish */
+/* VA HOME v14.0.0 RC6.3 — account hierarchy polish */
 .account-atmosphere-intro{align-items:center;margin-bottom:18px;padding:24px 30px}
 .account-atmosphere-intro h2{max-width:700px;margin:5px 0 8px;font-size:clamp(34px,4.2vw,54px);line-height:.98}
 .account-atmosphere-intro p:last-child{max-width:700px;line-height:1.58}
@@ -2021,7 +2021,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 .account-credit-section{scroll-margin-top:120px}
 @media(max-width:620px){.account-credit-section{scroll-margin-top:92px}}
 
-/* VA HOME v14.0.0 RC6.2 — truthful Welcome Credit eligibility */
+/* VA HOME v14.0.0 RC6.3 — truthful Welcome Credit eligibility */
 .account-next-step__credit-link[hidden]{display:none!important}
 .account-welcome-eligibility[hidden]{display:none!important}
 .account-welcome-eligibility{margin:18px 0 2px;padding:14px 16px;border-left:1px solid rgba(195,145,70,.55);background:rgba(195,145,70,.055);color:rgba(255,255,255,.52);font-size:12px;line-height:1.65}

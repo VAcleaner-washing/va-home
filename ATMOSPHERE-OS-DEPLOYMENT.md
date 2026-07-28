@@ -1,8 +1,8 @@
-# VA HOME v14.0.0 RC6.1 — Atmosphere OS
+# VA HOME v14.0.0 RC6.3 — Atmosphere OS
 
 ## Production state
 
-Supabase migrations for Personal Scent Profile, Discovery Credit and Private Preview have already been applied to project `yweluzclearwrazdkahu`. `send-status-email` is deployed as version 11.
+Supabase migrations for Personal Scent Profile, Discovery Credit and Private Preview have already been applied to project `yweluzclearwrazdkahu`. Production Edge Functions: `create-order` v25, `validate-promo` v4, `send-status-email` v12, `issue-welcome-credit` v1.
 
 The site archive still contains all migrations and Edge Function sources for backup and future environments.
 
@@ -43,7 +43,7 @@ insert into public.private_releases (
 - створюється лише після статусу `completed`;
 - Discovery Set IDs: `discovery-6`, `discovery-18`, legacy `discovery-17`;
 - 150 грн для `discovery-6`;
-- 450 грн для `discovery-18` і legacy `discovery-17`;
+- для `discovery-18` і legacy `discovery-17`: 250 грн на один повнорозмірний аромат або 450 грн на два чи більше;
 - мінімальна сума 799 грн;
 - лише повнорозмірні аромати;
 - 60 днів;
@@ -59,5 +59,12 @@ insert into public.private_releases (
 
 - `welcome_credits` table with RLS for personal Welcome Credit.
 - `issue-welcome-credit` Edge Function v1 (JWT required).
-- `validate-promo` Edge Function v3 with first-purchase enforcement.
+- `validate-promo` Edge Function v4 with first-purchase enforcement and Discovery tier calculation.
 - Order insert trigger prevents Welcome Credit after any prior full-size purchase.
+
+
+## RC6.3 Discovery Credit tiers
+
+- Discovery 6: 150 UAH on one full-size fragrance.
+- Discovery 18: 250 UAH on one full-size fragrance or 450 UAH on two or more.
+- Production components: `validate-promo`, `create-order`, `send-status-email`, and `atomic_promo_redemption_guard`.

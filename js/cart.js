@@ -30,13 +30,47 @@
     try { sessionStorage.removeItem("vahome_checkout_request_id"); } catch (_) {}
   }
 
+  function fullSizeQuantity(items) {
+    return (Array.isArray(items) ? items : []).reduce((sum, item) => {
+      const id = String(item?.id || "");
+      if (!id || id.startsWith("discovery-")) return sum;
+      return sum + Math.max(1, Number(item.quantity || 1));
+    }, 0);
+  }
+
+  function promoDiscountForCart(promo, items, subtotal) {
+    if (!promo?.code) return 0;
+    const fullSizeCount = fullSizeQuantity(items);
+    if (promo.campaign_type === "discovery_credit") {
+      const creditAmount = Number(promo.credit_amount || promo.discount_value || promo.discount_amount || 0);
+      if (fullSizeCount < 1) return 0;
+      if (creditAmount >= 450) return Math.min(subtotal, fullSizeCount >= 2 ? 450 : 250);
+      return Math.min(subtotal, Math.min(150, creditAmount));
+    }
+    return Math.min(Number(promo.discount_amount || 0), subtotal);
+  }
+
+  function promoStatusText(pricing) {
+    if (!pricing.promoCode) return "";
+    if (pricing.freeShipping) return "Промокод застосовано: безкоштовна доставка";
+    if (pricing.promo?.campaign_type === "discovery_credit") {
+      if (pricing.fullSizeCount < 1) return "Додайте повнорозмірний аромат, щоб застосувати Discovery Credit.";
+      if (Number(pricing.promo?.credit_amount || 0) >= 450) {
+        return pricing.fullSizeCount >= 2
+          ? `Discovery Credit застосовано повністю: −${formatUAH(pricing.discount)}`
+          : `Застосовано 250 грн. Додайте другий повнорозмірний аромат, щоб використати всі 450 грн.`;
+      }
+    }
+    return `Промокод застосовано: −${formatUAH(pricing.discount)}`;
+  }
+
   function pricingFor(items) {
     const safeItems = Array.isArray(items) ? items : [];
     const subtotal = safeItems.reduce((sum, item) => sum + Number(item.lineTotal || 0), 0);
     const promo = readAppliedPromo();
     const promoCode = normalizePromoCode(promo?.code || "");
-    const discount = promoCode ? Math.min(Number(promo.discount_amount || 0), subtotal) : 0;
-    return { subtotal, promoCode, discount, total: Math.max(0, subtotal - discount), freeShipping: Boolean(promo?.free_shipping) };
+    const discount = promoCode ? promoDiscountForCart(promo, safeItems, subtotal) : 0;
+    return { subtotal, promoCode, promo, discount, fullSizeCount: fullSizeQuantity(safeItems), total: Math.max(0, subtotal - discount), freeShipping: Boolean(promo?.free_shipping) };
   }
 
   // Non-catalog items sellable from the cart (Discovery Set variants).
@@ -248,6 +282,11 @@
     if (promoRow) promoRow.hidden = !pricing.discount;
     if (promoLabel) promoLabel.textContent = pricing.promoCode ? pricing.promoCode.toUpperCase() : "";
     if (promoDiscount) promoDiscount.textContent = pricing.discount ? `−${formatUAH(pricing.discount)}` : "−0 грн";
+    const promoStatus = document.getElementById("promoStatus");
+    if (promoStatus && pricing.promoCode) {
+      promoStatus.textContent = promoStatusText(pricing);
+      promoStatus.className = "promo-status is-success";
+    }
 
     const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - pricing.subtotal);
     const progress = Math.min(100, (pricing.subtotal / FREE_SHIPPING_THRESHOLD) * 100);
@@ -1294,8 +1333,8 @@
   function initPromoCode(form) {
     const input=document.getElementById("promoCode"),button=document.getElementById("applyPromoCode"),status=document.getElementById("promoStatus"),details=document.getElementById("promoDetails");
     if(!input||!button||!status)return;
-    const showCurrent=()=>{const promo=readAppliedPromo();if(promo?.code){input.value=String(promo.code).toUpperCase();status.textContent=promo.free_shipping?"Промокод застосовано: безкоштовна доставка":`Промокод застосовано: −${formatUAH(promo.discount_amount||0)}`;status.className="promo-status is-success";if(details)details.open=true;}};
-    const apply=async()=>{const code=normalizePromoCode(input.value);if(!code){writeAppliedPromo(null);resetCheckoutRequestId();status.textContent="Промокод прибрано.";status.className="promo-status";renderCartPage();return;}button.disabled=true;status.textContent="Перевіряємо промокод…";status.className="promo-status";try{const items=getItems().map(i=>({id:i.id,quantity:i.quantity,line_total:i.lineTotal}));const subtotal=items.reduce((sum,i)=>sum+Number(i.line_total||0),0);const response=await fetch(`${window.SITE_CONFIG.supabase.url}/functions/v1/validate-promo`,{method:"POST",headers:{"Content-Type":"application/json","apikey":window.SITE_CONFIG.supabase.publishableKey,"Authorization":`Bearer ${window.SITE_CONFIG.supabase.publishableKey}`},body:JSON.stringify({code,items,subtotal,customer_email:form?.elements?.customerEmail?.value?.trim()?.toLowerCase()||""})});const data=await response.json().catch(()=>({}));if(!response.ok||!data.valid){writeAppliedPromo(null);status.textContent=data.message||"Промокод не знайдено або він уже не діє.";status.className="promo-status is-error";renderCartPage();return;}writeAppliedPromo(data.promo);resetCheckoutRequestId();status.textContent=data.promo.free_shipping?"Промокод застосовано: безкоштовна доставка":`Промокод застосовано: −${formatUAH(data.promo.discount_amount||0)}`;status.className="promo-status is-success";renderCartPage();}catch(_){status.textContent="Не вдалося перевірити промокод. Спробуйте ще раз.";status.className="promo-status is-error";}finally{button.disabled=false;}};
+    const showCurrent=()=>{const promo=readAppliedPromo();if(promo?.code){input.value=String(promo.code).toUpperCase();status.textContent=promoStatusText(pricingFor(getItems()));status.className="promo-status is-success";if(details)details.open=true;}};
+    const apply=async()=>{const code=normalizePromoCode(input.value);if(!code){writeAppliedPromo(null);resetCheckoutRequestId();status.textContent="Промокод прибрано.";status.className="promo-status";renderCartPage();return;}button.disabled=true;status.textContent="Перевіряємо промокод…";status.className="promo-status";try{const items=getItems().map(i=>({id:i.id,quantity:i.quantity,line_total:i.lineTotal}));const subtotal=items.reduce((sum,i)=>sum+Number(i.line_total||0),0);const response=await fetch(`${window.SITE_CONFIG.supabase.url}/functions/v1/validate-promo`,{method:"POST",headers:{"Content-Type":"application/json","apikey":window.SITE_CONFIG.supabase.publishableKey,"Authorization":`Bearer ${window.SITE_CONFIG.supabase.publishableKey}`},body:JSON.stringify({code,items,subtotal,customer_email:form?.elements?.customerEmail?.value?.trim()?.toLowerCase()||""})});const data=await response.json().catch(()=>({}));if(!response.ok||!data.valid){writeAppliedPromo(null);status.textContent=data.message||"Промокод не знайдено або він уже не діє.";status.className="promo-status is-error";renderCartPage();return;}writeAppliedPromo(data.promo);resetCheckoutRequestId();renderCartPage();status.textContent=promoStatusText(pricingFor(getItems()));status.className="promo-status is-success";}catch(_){status.textContent="Не вдалося перевірити промокод. Спробуйте ще раз.";status.className="promo-status is-error";}finally{button.disabled=false;}};
     const emailField=form?.elements?.customerEmail;
     if(emailField)emailField.addEventListener("input",()=>{const promo=readAppliedPromo();if(!promo?.email_bound)return;const current=String(emailField.value||"").trim().toLowerCase();if(current&&current===String(promo.validated_email||"").toLowerCase())return;writeAppliedPromo(null);resetCheckoutRequestId();status.textContent="Персональний промокод прибрано після зміни email.";status.className="promo-status";renderCartPage();});
     button.addEventListener("click",apply);input.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();apply();}});showCurrent();

@@ -1,4 +1,4 @@
-# VA HOME v14.0.0 RC6.1 — live та transactional test report
+# VA HOME v14.0.0 RC6.3 — live та production test report
 
 ## Repeat Purchase
 
@@ -14,7 +14,7 @@
 Результат:
 
 - набір 6 ароматів — 150 грн;
-- набір 18 ароматів — 450 грн;
+- набір 18 ароматів створює номінал 450 грн; під час покупки застосовується 250 грн на один флакон або 450 грн на два;
 - статус — `active`;
 - термін — 60 днів;
 - `usage_limit = 1`;
@@ -23,7 +23,7 @@
 
 Під час першого тесту виявлено несумісний виклик `gen_random_bytes`; функцію виправлено на `gen_random_uuid`, після чого повторний тест пройшов.
 
-Після виправлення tier-логіки окремо підтверджено: `discovery-6` створює 150 грн, а `discovery-18` і legacy `discovery-17` — 450 грн.
+Після оновлення redemption-логіки окремо підтверджено: `discovery-6` застосовує 150 грн на один аромат; `discovery-18` / legacy `discovery-17` застосовує 250 грн на один або 450 грн на два аромати. Тестові записи після перевірки видалено.
 
 ## Atomic Promo Guard
 
@@ -38,5 +38,7 @@
 ## Production deployment
 
 - міграції Atmosphere OS застосовані до `yweluzclearwrazdkahu`;
-- `send-status-email` розгорнуто як version 11 і має статус ACTIVE;
+- `create-order` розгорнуто як version 25;
+- `validate-promo` розгорнуто як version 4;
+- `send-status-email` розгорнуто як version 12;
 - вигаданий Private Preview release не додавався.

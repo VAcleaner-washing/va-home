@@ -28,6 +28,21 @@ const PRODUCTS: Record<string, { name: string; price: number }> = {
 };
 const FRAGRANCE_IDS = Object.keys(PRODUCTS).filter(id => !id.startsWith("discovery-"));
 
+function fullSizeQuantity(items: Array<{ id: string; quantity: number }>) {
+  return items.reduce((sum, item) => FRAGRANCE_IDS.includes(item.id) ? sum + Math.max(1, Number(item.quantity || 1)) : sum, 0);
+}
+
+function fixedPromoDiscount(promo: Record<string, unknown>, items: Array<{ id: string; quantity: number }>, subtotal: number) {
+  if (promo.campaign_type === "discovery_credit") {
+    const creditAmount = Number(promo.discount_value || 0);
+    const quantity = fullSizeQuantity(items);
+    if (quantity < 1) return 0;
+    if (creditAmount >= 450) return Math.min(subtotal, quantity >= 2 ? 450 : 250);
+    return Math.min(subtotal, Math.min(150, creditAmount));
+  }
+  return Math.min(subtotal, Number(promo.discount_value || 0));
+}
+
 function cors(req: Request) {
   const origin = req.headers.get("origin") || "";
   return {
@@ -239,7 +254,7 @@ Deno.serve(async req => {
       }
       if (!promoRow || !promoRow.active || !validTime || !withinLimit || subtotal < Number(promoRow.min_order_amount || 0) || !eligibleItems || !emailEligible || !firstPurchaseEligible) return json(req, { error: "INVALID_PROMO" }, 400);
       promo = promoRow;
-      if (promoRow.discount_type === "fixed") discountAmount = Math.min(subtotal, Number(promoRow.discount_value || 0));
+      if (promoRow.discount_type === "fixed") discountAmount = fixedPromoDiscount(promoRow, items, subtotal);
       if (promoRow.discount_type === "percent") discountAmount = Math.min(subtotal, Math.round(subtotal * Number(promoRow.discount_value || 0)) / 100);
       if (promoRow.discount_type === "free_shipping") promoFreeShipping = true;
     }

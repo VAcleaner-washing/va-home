@@ -196,15 +196,20 @@
     } else if (activeCredit) {
       const expires = new Date(activeCredit.expires_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long" });
       const isWelcome = activeCredit.credit_type === "welcome";
+      const isFullDiscovery = !isWelcome && Number(activeCredit.amount || 0) >= 450;
       next = {
         eyebrow: `ВАШ НАСТУПНИЙ КРОК · ${isWelcome ? "WELCOME CREDIT" : "DISCOVERY CREDIT"}`,
         title: isWelcome
           ? `${money(activeCredit.amount)} на ваш перший повнорозмірний аромат`
-          : `На вашому акаунті — ${money(activeCredit.amount)} на повнорозмірний аромат`,
+          : isFullDiscovery
+            ? `На вашому акаунті — до ${money(activeCredit.amount)} на повнорозмірні аромати`
+            : `На вашому акаунті — ${money(activeCredit.amount)} на повнорозмірний аромат`,
         text: isWelcome
           ? `Персональний код діє до ${expires}, лише на першу повнорозмірну покупку та не сумується з іншими пропозиціями.`
-          : `Персональний код діє до ${expires}, прив’язаний до вашого email і використовується один раз.`,
-        label: "Обрати аромат із кредитом",
+          : isFullDiscovery
+            ? `250 грн діють на один аромат або всі 450 грн — на замовлення від двох флаконів. Код активний до ${expires}.`
+            : `Персональний код діє до ${expires}, прив’язаний до вашого email і використовується один раз.`,
+        label: isFullDiscovery ? "Обрати аромати з кредитом" : "Обрати аромат із кредитом",
         href: "catalog.html",
         showCreditLink: true
       };
@@ -510,14 +515,23 @@
       const status = creditStatus(credit, promo);
       const expires = new Date(credit.expires_at).toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" });
       const welcomeCredit = credit.credit_type === "welcome";
-      const label = welcomeCredit ? "WELCOME CREDIT · ПЕРША ПОКУПКА" : "DISCOVERY CREDIT · ДЕПОЗИТ ПІСЛЯ НАБОРУ";
+      const fullDiscovery = !welcomeCredit && Number(credit.amount || 0) >= 450;
+      const label = welcomeCredit
+        ? "WELCOME CREDIT · ПЕРША ПОКУПКА"
+        : fullDiscovery
+          ? "DISCOVERY CREDIT · ПОВНИЙ НАБІР"
+          : "DISCOVERY CREDIT · НАБІР ІЗ 6";
       const title = welcomeCredit
         ? `${money(credit.amount)} на першу повнорозмірну покупку`
-        : `На акаунті зараховано ${money(credit.amount)} на повнорозмірний аромат`;
+        : fullDiscovery
+          ? `До ${money(credit.amount)} на повнорозмірні аромати`
+          : `${money(credit.amount)} на один повнорозмірний аромат`;
       const copy = welcomeCredit
         ? `Код діє до ${esc(expires)}, лише на першу повнорозмірну покупку і не сумується з іншими кодами.`
-        : `Код діє до ${esc(expires)}, прив’язаний до вашого email і застосовується один раз.`;
-      return `<article class="account-credit account-credit--${status.cls}"><div><span class="account-credit__status">${status.label} · ${label}</span><strong>${title}</strong><p>${copy}</p><a class="account-credit__cta" href="catalog.html">Обрати аромат із кредитом →</a></div><div class="account-credit__code"><span>Персональний промокод</span><strong>${esc(promo?.code || "—")}</strong><button type="button" data-copy-credit="${esc(promo?.code || "")}">Скопіювати код</button></div></article>`;
+        : fullDiscovery
+          ? `250 грн застосуються до одного аромату або всі 450 грн — до замовлення від двох флаконів. Код діє до ${esc(expires)} і використовується один раз.`
+          : `Код діє до ${esc(expires)}, прив’язаний до вашого email і застосовується один раз.`;
+      return `<article class="account-credit account-credit--${status.cls}"><div><span class="account-credit__status">${status.label} · ${label}</span><strong>${title}</strong><p>${copy}</p><a class="account-credit__cta" href="catalog.html">${fullDiscovery ? "Обрати аромати з кредитом" : "Обрати аромат із кредитом"} →</a></div><div class="account-credit__code"><span>Персональний промокод</span><strong>${esc(promo?.code || "—")}</strong><button type="button" data-copy-credit="${esc(promo?.code || "")}">Скопіювати код</button></div></article>`;
     }).join("");
     host.querySelectorAll("[data-copy-credit]").forEach((button) => button.addEventListener("click", async () => {
       try { await navigator.clipboard.writeText(button.dataset.copyCredit); window.VAHome?.showToast("Персональний код скопійовано"); } catch (_) {}

@@ -21,7 +21,8 @@ const mustExist = [
   "supabase/functions/send-status-email/index.ts",
   "supabase/functions/issue-welcome-credit/index.ts",
   "supabase/migrations/20260727_welcome_credit_after_scent_profile.sql",
-  "supabase/migrations/20260727_enforce_welcome_credit_first_purchase.sql"
+  "supabase/migrations/20260727_enforce_welcome_credit_first_purchase.sql",
+  "supabase/migrations/20260728_discovery_credit_order_tiers.sql"
 ];
 for (const file of mustExist) if (!exists(file)) errors.push(`missing ${file}`);
 
@@ -37,6 +38,7 @@ const productJs = read("js/product.js");
 const migration = read("supabase/migrations/20260727_atmosphere_os.sql");
 const promoMigration = read("supabase/migrations/20260727_atomic_promo_order_reservation.sql");
 const creditTierMigration = read("supabase/migrations/20260727_discovery_credit_tier_amounts.sql");
+const orderTierMigration = read("supabase/migrations/20260728_discovery_credit_order_tiers.sql");
 const statusEmail = read("supabase/functions/send-status-email/index.ts");
 const robots = read("robots.txt");
 const sitemap = read("sitemap.xml");
@@ -133,8 +135,11 @@ for (const token of [
 
 
 const discoveryHtml = read("discovery-set.html");
-for (const token of ["150 грн за набір із 6 композицій", "450 грн за повний набір із 18", "діятиме 60 днів", "автоматично з’явиться в кабінеті"]) {
+for (const token of ["150 грн після набору з 6 композицій", "250 грн діють на один", "всі 450 грн", "діятиме 60 днів"]) {
   if (!discoveryHtml.includes(token)) errors.push(`Discovery Set copy missing ${token}`);
+}
+for (const token of ["v_full_size_quantity", "when v_full_size_quantity >= 2 then 450 else 250", "campaign_type = 'discovery_credit'"]) {
+  if (!orderTierMigration.includes(token)) errors.push(`Discovery Credit order-tier migration missing ${token}`);
 }
 if (/30 дн|протягом 30|діє 30/.test(discoveryHtml)) errors.push("Discovery Set still contains stale 30-day credit copy");
 
@@ -165,7 +170,7 @@ console.log(JSON.stringify({
   version: "14.0.0",
   repeatAtmosphere: true,
   personalScentProfile: true,
-  discoveryCreditUAH: { discovery6: 150, discovery18: 450 },
+  discoveryCreditUAH: { discovery6: 150, discovery18OneBottle: 250, discovery18TwoBottles: 450 },
   discoveryCreditValidityDays: 60,
   roomRitual: true,
   privatePreview: true,
