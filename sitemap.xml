@@ -50,7 +50,7 @@
   </url>
   <url>
     <loc>https://vahome.com.ua/guides/index.html</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -308,5 +308,35 @@
     <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.76</priority>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/guides/ukrainskyi-chy-importnyi-aromadyfuzor.html</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.74</priority>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/guides/aromadyfuzor-chy-aromatychna-svichka.html</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.74</priority>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/guides/premialnyi-aromadyfuzor-proty-masmarketu.html</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.74</priority>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/guides/aromadyfuzor-bez-rizkoho-zapakhu.html</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.74</priority>
+  </url>
+  <url>
+    <loc>https://vahome.com.ua/guides/premialnyi-aromadyfuzor-u-podarunok.html</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.74</priority>
   </url>
 </urlset>

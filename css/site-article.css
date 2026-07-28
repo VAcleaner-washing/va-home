@@ -31,3 +31,46 @@
 @media(hover:hover){.related-guides__list a:hover img{transform:scale(1.035)}}
 @media(max-width:800px){.article-content h1{font-size:clamp(48px,14vw,74px)}.article-hero-image{width:calc(100vw - 24px);margin-bottom:52px}.related-guides{width:calc(100vw - 24px)}.related-guides__list{grid-template-columns:1fr;gap:22px}.related-guides__list a{display:grid!important;grid-template-columns:132px minmax(0,1fr)!important;gap:17px;align-items:center}.related-guide-card__media{aspect-ratio:4/3}.related-guide-card__body{padding:0}.related-guide-card__title{max-width:none;font-size:clamp(23px,7vw,30px)}.article-cta .btn{width:100%;margin-right:0}}
 @media(prefers-reduced-motion:reduce){.related-guide-card__media img{transition:none}}
+
+/* RC6.4 — editorial decision system */
+.article-answer{margin:0 0 68px;padding:28px 30px 30px;border-left:1px solid #c89a5d;background:linear-gradient(90deg,rgba(200,154,93,.11),rgba(200,154,93,.015))}
+.article-answer>span,.article-cta__eyebrow,.article-scorecard>span{display:block;margin-bottom:13px;color:#cda36b;font-size:9px;letter-spacing:.18em;text-transform:uppercase}
+.article-answer p{margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.72;color:rgba(243,238,231,.86)}
+.article-inline-link{color:#e0b77d;text-decoration-color:rgba(224,183,125,.42);text-underline-offset:4px}
+.article-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:44px 0 76px}
+.article-compare article,.article-gift-paths article{padding:clamp(25px,4vw,40px);border:1px solid rgba(255,255,255,.13);background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(205,163,107,.035))}
+.article-compare span,.article-gift-paths span,.article-picks span{display:block;margin-bottom:17px;color:#cda36b;font-size:9px;letter-spacing:.15em;text-transform:uppercase}
+.article-compare h3,.article-gift-paths h3{margin:0 0 14px;font-family:var(--font-display);font-size:clamp(27px,3vw,39px);font-weight:500;line-height:1.06}
+.article-compare p,.article-gift-paths p{margin:0;color:rgba(243,238,231,.66);font-size:15px;line-height:1.72}
+.article-checklist{display:grid;gap:0;margin:34px 0 70px;padding:0!important;list-style:none;counter-reset:va-check}
+.article-checklist li{display:grid;grid-template-columns:minmax(140px,.42fr) 1fr;gap:30px;padding:23px 0;border-top:1px solid rgba(255,255,255,.12);counter-increment:va-check}
+.article-checklist li:last-child{border-bottom:1px solid rgba(255,255,255,.12)}
+.article-checklist strong{color:#f3eee7;font-size:15px;letter-spacing:.02em}
+.article-checklist span{color:rgba(243,238,231,.64);font-size:15px;line-height:1.65}
+.article-table-wrap{width:min(1040px,calc(100vw - 40px));margin:38px 50% 76px;transform:translateX(-50%);overflow-x:auto;border:1px solid rgba(255,255,255,.12);background:#0e0e0c}
+.article-table{width:100%;min-width:690px;border-collapse:collapse}
+.article-table th,.article-table td{padding:20px 22px;text-align:left;border-bottom:1px solid rgba(255,255,255,.09);vertical-align:top}
+.article-table th{color:#cda36b;font-size:9px;letter-spacing:.15em;text-transform:uppercase;background:rgba(205,163,107,.06)}
+.article-table td{color:rgba(243,238,231,.72);font-size:14px;line-height:1.58}
+.article-table td:first-child{color:#f3eee7;font-weight:600}
+.article-scenarios{display:grid;gap:16px;margin:30px 0 70px;padding:0!important;list-style:none}
+.article-scenarios li{padding:22px 24px;border-left:1px solid rgba(205,163,107,.5);background:rgba(255,255,255,.025);color:rgba(243,238,231,.7);font-size:15px;line-height:1.65}
+.article-scenarios strong{color:#f3eee7}
+.article-scorecard{margin:58px 0 76px;padding:clamp(28px,5vw,50px);border:1px solid rgba(205,163,107,.35);background:linear-gradient(145deg,rgba(205,163,107,.1),rgba(255,255,255,.018))}
+.article-scorecard h3{margin:0 0 24px;font-family:var(--font-display);font-size:clamp(31px,4vw,48px);font-weight:500;line-height:1.06}
+.article-scorecard ul{display:grid;gap:12px;margin:0;padding-left:20px;color:rgba(243,238,231,.72);font-size:15px;line-height:1.62}
+.article-picks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:min(1040px,calc(100vw - 40px));margin:40px 50% 76px;transform:translateX(-50%)}
+.article-picks a{display:flex!important;flex-direction:column;min-height:230px;padding:28px!important;border:1px solid rgba(255,255,255,.13)!important;background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(205,163,107,.025))!important;color:inherit!important;text-decoration:none!important;transition:border-color .25s,transform .25s}
+.article-picks strong{font-family:var(--font-display);font-size:clamp(28px,3vw,39px);font-weight:500;line-height:1.02}
+.article-picks em{margin-top:auto;padding-top:26px;color:rgba(243,238,231,.62);font-size:13px;font-style:normal;line-height:1.55}
+.article-gift-paths{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:min(1080px,calc(100vw - 40px));margin:40px 50% 76px;transform:translateX(-50%)}
+.article-faq{margin-top:88px;padding-top:8px}
+.article-faq details{border-top:1px solid rgba(255,255,255,.13)}
+.article-faq details:last-child{border-bottom:1px solid rgba(255,255,255,.13)}
+.article-faq summary{position:relative;padding:23px 44px 23px 0;color:#f3eee7;font-family:var(--font-display);font-size:clamp(24px,3vw,34px);line-height:1.12;cursor:pointer;list-style:none}
+.article-faq summary::-webkit-details-marker{display:none}
+.article-faq summary::after{content:'+';position:absolute;right:4px;top:22px;color:#cda36b;font-family:var(--font-body);font-size:24px;font-weight:300}
+.article-faq details[open] summary::after{content:'–'}
+.article-faq details p{margin:0;padding:0 50px 26px 0;color:rgba(243,238,231,.67);font-size:15px;line-height:1.72}
+@media(hover:hover){.article-picks a:hover{transform:translateY(-3px);border-color:rgba(205,163,107,.5)!important}}
+@media(max-width:800px){.article-answer{padding:23px 21px}.article-compare,.article-gift-paths,.article-picks{grid-template-columns:1fr;width:auto;margin-left:0;margin-right:0;transform:none}.article-checklist li{grid-template-columns:1fr;gap:8px}.article-table-wrap{width:calc(100vw - 24px)}.article-picks a{min-height:190px}.article-faq details p{padding-right:8px}}

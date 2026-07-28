@@ -116,7 +116,7 @@ console.log(JSON.stringify({
   atmosphereOS: true,
   centralizedCatalogFilters: true,
   scentGuideProfilesTested: 1728,
-  journalArticles: 21,
+  journalArticles: 26,
   publicFeaturePages: 2,
   fragranceDnaAxes: 6,
   base: "13.8.36"

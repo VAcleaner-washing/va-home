@@ -3,7 +3,7 @@ VA HOME v14.0.0 RC6.3 — ATMOSPHERE OS
 Static release verification: PASS
 HTML pages: 61
 Product pages: 18
-Journal articles: 21
+Journal articles: 26
 Scent-guide answer profiles tested: 1,728
 Product DNA axes: 6
 JavaScript / MJS syntax: PASS

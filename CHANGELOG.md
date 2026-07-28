@@ -1,3 +1,11 @@
+# VA HOME v14.0.0 RC6.4 — Journal Decision Edition
+
+- Збережено чинний порядок і зміст матеріалів 01–21.
+- Додано Chapter V та п’ять нових матеріалів 22–26 за затвердженим планом.
+- Кожен новий матеріал має унікальний SEO title, description, canonical, OG/Twitter, Article, BreadcrumbList і FAQPage.
+- Додано редакційні блоки порівняння, таблиці рішень, добірки ароматів і окремий доречний CTA.
+- Оновлено sitemap.xml, image-sitemap.xml, Journal ItemList і PWA cache revision.
+
 # VA HOME v14.0.0 RC6.3 — Discovery Credit Tiers
 
 - Повний Discovery Set тепер дає 250 грн на один повнорозмірний аромат або всі 450 грн при замовленні від двох флаконів.
