@@ -1,10 +1,15 @@
 {
   "version": "14.0.0",
-  "channel": "RC6.4",
-  "name": "ATMOSPHERE OS — JOURNAL DECISION EDITION",
+  "channel": "RC6.5",
+  "name": "ATMOSPHERE OS — REVIEW PHOTO WEBP EDITION",
   "date": "2026-07-28",
   "base": "13.8.36-AUTOMATION-HARDENING-LIVE-TEST",
   "changes": [
+    "Converts every newly submitted review photo to WebP in the browser before upload",
+    "Limits the width to 1600 px and uses 0.82 WebP quality with high-quality canvas resampling",
+    "Accepts source JPG, PNG or WebP files up to 25 MB while keeping the uploaded WebP under the existing 10 MB server limit",
+    "Shows a clear optimization state while the customer submits a review and preserves graceful photo-specific errors",
+    "Updates all 18 product review forms to explain the automatic WebP optimization",
     "Preserves the complete existing Journal order from 01 through 21 without rewriting or removing any article",
     "Adds Chapter V with five high-intent editorial comparisons numbered 22 through 26",
     "Adds Ukrainian versus imported diffuser, diffuser versus candle, premium versus mass market, soft-scent selection and premium gift guides",

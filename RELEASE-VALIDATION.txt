@@ -1,7 +1,7 @@
-VA HOME v14.0.0 RC6.3 — ATMOSPHERE OS
+VA HOME v14.0.0 RC6.5 — REVIEW PHOTO WEBP
 
 Static release verification: PASS
-HTML pages: 61
+HTML pages: 66
 Product pages: 18
 Journal articles: 26
 Scent-guide answer profiles tested: 1,728
@@ -10,7 +10,7 @@ JavaScript / MJS syntax: PASS
 Local references and duplicate IDs: PASS
 Sitemap / image sitemap XML: PASS
 Manifest / release / product JSON: PASS
-PWA root version: 14.0.0 / cache revision rc6-3
+PWA root version: 14.0.0 / cache revision rc6-5
 PWA admin version: 14.0.0
 Gallery baseline v13.8.17: PRESERVED
 
@@ -40,3 +40,10 @@ RC6.3 credit-tier check:
 - Discovery 18 + one fragrance = 250 UAH: PASS
 - Discovery 18 + two fragrances = 450 UAH: PASS
 - Test orders, promos and redemptions removed: PASS
+RC6.5 review-photo check:
+- JPG / PNG / WebP source files up to 25 MB: PASS
+- Browser conversion to WebP before upload: PASS
+- Maximum output width 1600 px / quality 0.82 / sRGB high-quality resampling: PASS
+- Uploaded MIME image/webp / 10 MB server and Storage limit preserved: PASS
+- All 18 review forms updated and cache-busted: PASS
+

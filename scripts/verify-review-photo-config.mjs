@@ -11,7 +11,12 @@ const files = {
 
 const read = (file) => fs.readFileSync(file, 'utf8');
 const checks = [
-  [files.client, /MAX_PHOTO_BYTES\s*=\s*10\s*\*\s*1024\s*\*\s*1024/, 'client photo limit is not 10 MB'],
+  [files.client, /MAX_PHOTO_BYTES\s*=\s*10\s*\*\s*1024\s*\*\s*1024/, 'client output photo limit is not 10 MB'],
+  [files.client, /MAX_SOURCE_PHOTO_BYTES\s*=\s*25\s*\*\s*1024\s*\*\s*1024/, 'client source photo limit is not 25 MB'],
+  [files.client, /MAX_PHOTO_WIDTH\s*=\s*1600/, 'client WebP maximum width is not 1600 px'],
+  [files.client, /WEBP_QUALITY\s*=\s*0\.82/, 'client WebP quality is not 0.82'],
+  [files.client, /async function toWebP\(/, 'client WebP conversion function is missing'],
+  [files.client, /photoType\s*=\s*["']image\/webp["']/, 'client does not submit converted photos as image/webp'],
   [files.edge, /MAX_PHOTO_BYTES\s*=\s*10\s*\*\s*1024\s*\*\s*1024/, 'Edge Function photo limit is not 10 MB'],
   [files.edge, /REVIEW_PHOTO_BUCKET\s*=\s*["']review-photos["']/, 'Edge Function bucket name is inconsistent'],
   [files.migration, /10485760/, 'Storage migration does not set 10 MB'],
@@ -34,4 +39,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log('Review photo configuration is synchronized: client, Edge Function and Storage migration all use 10 MB.');
+console.log('Review photo configuration is synchronized: 25 MB source images are converted to WebP with a maximum width of 1600 px at 0.82 quality; uploaded output, Edge Function and Storage stay capped at 10 MB.');

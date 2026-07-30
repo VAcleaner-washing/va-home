@@ -1,4 +1,4 @@
-# VA HOME v14.0.0 RC6.4 — Journal Decision Edition
+# VA HOME v14.0.0 RC6.5 — Journal Decision Edition
 
 - Збережено чинний порядок і зміст матеріалів 01–21.
 - Додано Chapter V та п’ять нових матеріалів 22–26 за затвердженим планом.

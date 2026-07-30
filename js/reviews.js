@@ -5,6 +5,9 @@
   const MAX_TEXT = 1000;
   const COOLDOWN_MS = 60 * 1000;
   const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
+  const MAX_SOURCE_PHOTO_BYTES = 25 * 1024 * 1024;
+  const MAX_PHOTO_WIDTH = 1600;
+  const WEBP_QUALITY = 0.82;
   const PHOTO_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
   const PHOTO_SOURCE_EXTENSIONS = /\.(?:jpe?g|png|webp)$/i;
 
@@ -38,6 +41,49 @@
 
   function looksLikeImage(file) {
     return Boolean(normalisePhotoType(file)) && PHOTO_SOURCE_EXTENSIONS.test(String(file?.name || ""));
+  }
+
+  async function toWebP(file, maxWidth = MAX_PHOTO_WIDTH, quality = WEBP_QUALITY) {
+    const bitmap = await createImageBitmap(file);
+
+    try {
+      const scale = Math.min(1, maxWidth / bitmap.width);
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(bitmap.width * scale);
+      canvas.height = Math.round(bitmap.height * scale);
+
+      const ctx = canvas.getContext("2d", {
+        alpha: true,
+        colorSpace: "srgb"
+      }) || canvas.getContext("2d");
+
+      if (!ctx) throw new Error("PHOTO_CONVERSION_FAILED");
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+      return await new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error("PHOTO_CONVERSION_FAILED"));
+            return;
+          }
+          resolve(blob);
+        }, "image/webp", quality);
+      });
+    } finally {
+      bitmap.close();
+    }
+  }
+
+  function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || "").split(",")[1] || null);
+      reader.onerror = () => reject(new Error("PHOTO_READ_FAILED"));
+      reader.readAsDataURL(blob);
+    });
   }
 
   function stars(rating) {
@@ -174,13 +220,13 @@
         return;
       }
 
-      if (photoNameEl) photoNameEl.textContent = `${selected.name} · ${formatFileSize(selected.size)}`;
+      if (photoNameEl) photoNameEl.textContent = `${selected.name} · ${formatFileSize(selected.size)} · буде оптимізовано`;
       if (photoRemoveBtn) photoRemoveBtn.hidden = false;
 
       if (!looksLikeImage(selected)) {
         setMessage("Оберіть фотографію у форматі JPG, PNG або WebP — або видаліть файл і надішліть відгук без фото.", "error");
-      } else if (selected.size > MAX_PHOTO_BYTES) {
-        setMessage("Фото має бути не більше 10 МБ. Видаліть його або оберіть інше.", "error");
+      } else if (selected.size > MAX_SOURCE_PHOTO_BYTES) {
+        setMessage("Початкове фото має бути не більше 25 МБ. Видаліть його або оберіть інше.", "error");
       } else {
         clearPhotoError();
       }
@@ -217,18 +263,20 @@
 
       const photo = photoInput?.files?.[0] || null;
       if (photo && !looksLikeImage(photo)) return setMessage("Оберіть фотографію у форматі JPG, PNG або WebP.", "error");
-      if (photo && photo.size > MAX_PHOTO_BYTES) return setMessage("Фото має бути не більше 10 МБ. Видаліть його або оберіть інше.", "error");
+      if (photo && photo.size > MAX_SOURCE_PHOTO_BYTES) return setMessage("Початкове фото має бути не більше 25 МБ. Видаліть його або оберіть інше.", "error");
       submit.disabled = true;
-      submit.textContent = "Надсилаємо…";
+      submit.textContent = photo ? "Оптимізуємо фото…" : "Надсилаємо…";
       try {
         let photoData = null;
+        let photoType = null;
         if (photo) {
-          const dataUrl = await new Promise((resolve, reject) => {
-            const reader = new FileReader(); reader.onload = () => resolve(String(reader.result || "")); reader.onerror = reject; reader.readAsDataURL(photo);
-          });
-          photoData = String(dataUrl).split(",")[1] || null;
+          const webpBlob = await toWebP(photo);
+          if (webpBlob.size > MAX_PHOTO_BYTES) throw new Error("PHOTO_TOO_LARGE");
+          photoData = await blobToBase64(webpBlob);
+          photoType = "image/webp";
+          submit.textContent = "Надсилаємо…";
         }
-        const result = await window.VAHomeSupabase.submitReview({ product_slug: PRODUCT_ID, customer_name: name, rating, review_text: text, photo_data: photoData, photo_type: photo ? normalisePhotoType(photo) : null });
+        const result = await window.VAHomeSupabase.submitReview({ product_slug: PRODUCT_ID, customer_name: name, rating, review_text: text, photo_data: photoData, photo_type: photoType });
         localStorage.setItem(cooldownKey, String(Date.now()));
         form.reset();
         clearPhotoSelection();
@@ -237,6 +285,8 @@
       } catch (error) {
         if (error?.message === "PHOTO_TOO_LARGE") {
           setMessage("Фото має бути не більше 10 МБ. Видаліть його або оберіть інше.", "error");
+        } else if (error?.message === "PHOTO_CONVERSION_FAILED" || error?.message === "PHOTO_READ_FAILED") {
+          setMessage("Не вдалося оптимізувати фото. Оберіть інше зображення або надішліть відгук без нього.", "error");
         } else if (error?.message === "INVALID_PHOTO") {
           setMessage("Не вдалося прочитати фото. Оберіть JPG, PNG або WebP.", "error");
         } else if (error?.message === "PHOTO_UPLOAD_FAILED") {
