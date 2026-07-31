@@ -142,7 +142,7 @@
           <time datetime="${escapeHTML(row.created_at)}">${escapeHTML(formatDate(row.created_at))}</time>
         </div>
         <p class="review-card__text">${escapeHTML(row.review_text)}</p>
-        ${row.photo_url ? `<img class="review-card__photo" src="${escapeHTML(row.photo_url)}" alt="Фото покупця до відгуку" loading="lazy" decoding="async">` : ""}
+        ${row.photo_url ? `<img class="review-card__photo" src="${escapeHTML(row.photo_url)}" alt="Фото покупця до відгуку" width="800" height="600" loading="lazy" decoding="async">` : ""}
         <div class="review-card__author">
           <strong>${escapeHTML(row.customer_name)}</strong>
           ${row.verified_purchase ? '<span class="verified-badge">Перевірена покупка</span>' : ""}

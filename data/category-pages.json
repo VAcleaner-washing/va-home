@@ -1,0 +1,124 @@
+{
+  "categories": [
+    {
+      "slug": "aromadyfuzory-dlya-spalni",
+      "title": "Аромадифузори для спальні",
+      "eyebrow": "Аромат для тихого простору",
+      "description": "Добірка м’яких, чистих і теплих композицій, які підтримують атмосферу спальні без різкого ароматичного тиску.",
+      "intro": "Для спальні важлива не гучність, а відчуття спокою. Почніть із 2–3 паличок, дайте композиції 24–48 годин і лише потім регулюйте інтенсивність.",
+      "heroImage": "images/journal/aromat-dlya-spalni.webp",
+      "productIds": ["pure-zen", "signature-relax", "silk-molecule", "silent-temple", "evening-ritual", "mineral-salt"],
+      "selectionTitle": "Тиша, яку відчуваєш",
+      "selectionNote": "М’які композиції з делікатною дифузією — для повільного вечора, спокійного сну й ранку без поспіху.",
+      "guide": "guides/aromat-dlya-spalni.html",
+      "guideEyebrow": "VA HOME Journal · Спальня",
+      "guideTitle": "Аромат, після якого кімната стає тихішою",
+      "guideExcerpt": "Про ноти, що не втомлюють біля ліжка, правильну кількість паличок і місце, де композиція звучить м’яко, а не надто близько.",
+      "guideCta": "Відкрити матеріал",
+      "guideImage": "images/product-story/pure-zen/interior.webp",
+      "guideImageWidth": 1254,
+      "guideImageHeight": 1254,
+      "guideImagePosition": "center",
+      "faq": [
+        ["Скільки паличок ставити у спальні?", "Для делікатного старту достатньо 2–3 паличок. Через 24–48 годин оцініть звучання і, за потреби, додайте ще одну."],
+        ["Де поставити дифузор?", "Не біля узголів’я, батареї або відкритого вікна. Краще на стійкій поверхні в зоні природної циркуляції повітря."]
+      ]
+    },
+    {
+      "slug": "aromadyfuzory-dlya-vitalni",
+      "title": "Аромадифузори для вітальні",
+      "eyebrow": "Атмосфера, яку помічають",
+      "description": "Композиції для простору, де збирається дім: від чистої готельної свіжості до теплого вечірнього характеру.",
+      "intro": "У вітальні аромат має бути відчутним у русі, але не перекривати розмову, їжу й інтер’єр. Обирайте характер під сценарій кімнати, а інтенсивність налаштовуйте паличками.",
+      "heroImage": "images/journal/aromadyfuzor-dlya-vitalni.webp",
+      "productIds": ["hotel-luxe", "pure-imagination", "evening-ritual", "old-money", "hotel-spring", "moss-and-shadow"],
+      "selectionTitle": "Характер дому — у повітрі",
+      "selectionNote": "Від чистої готельної свіжості до теплого вечора: композиції, що збирають простір навколо себе.",
+      "guide": "guides/aromadyfuzor-dlya-vitalni.html",
+      "guideEyebrow": "VA HOME Journal · Вітальня",
+      "guideTitle": "Як дати вітальні власне звучання",
+      "guideExcerpt": "Обираємо не під колір дивана, а під ритм кімнати: для розмов, спокійного вечора або першого враження при вході.",
+      "guideCta": "Відкрити матеріал",
+      "guideImage": "images/product-story/pure-imagination/interior.webp",
+      "guideImageWidth": 1672,
+      "guideImageHeight": 941,
+      "guideImagePosition": "center",
+      "faq": [
+        ["Який аромат підійде для великої вітальні?", "Для відкритого простору обирайте композиції з виразною дифузією та починайте з 4 паличок. Розташування часто впливає сильніше, ніж додаткова паличка."],
+        ["Чи можна ставити дифузор біля телевізора?", "Краще залишити відстань від техніки та поверхонь, чутливих до ароматичної рідини. Використовуйте підставку."]
+      ]
+    },
+    {
+      "slug": "aromadyfuzory-dlya-vannoi",
+      "title": "Аромадифузори для ванної",
+      "eyebrow": "Відчуття приватного SPA",
+      "description": "Чисті, мінеральні та wellness-композиції для ванної кімнати — свіжі, але не побутово різкі.",
+      "intro": "У невеликій ванній аромат розкривається швидше через тепло й вологість. Тут особливо важливий м’який старт із 2 паличок і відстань від води та рушників.",
+      "heroImage": "images/journal/aromadyfuzor-dlya-vannoi.webp",
+      "productIds": ["mineral-salt", "velvet-spa", "pure-zen", "silent-temple", "wild-berry-way"],
+      "selectionTitle": "Ваш приватний SPA-ритуал",
+      "selectionNote": "Мінеральні, чайні та чисті композиції — відчуття свіжості без побутового ефекту.",
+      "guide": "guides/aromadyfuzor-dlya-vannoi.html",
+      "guideEyebrow": "VA HOME Journal · Ритуал",
+      "guideTitle": "Свіжість без побутового звучання",
+      "guideExcerpt": "Як тепло, вологість і невелика площа змінюють аромат — і чому у ванній майже завжди варто починати лише з двох паличок.",
+      "guideCta": "Відкрити матеріал",
+      "guideImage": "images/product-story/mineral-salt/interior.webp",
+      "guideImageWidth": 1254,
+      "guideImageHeight": 1254,
+      "guideImagePosition": "center",
+      "faq": [
+        ["Які ноти найкраще працюють у ванній?", "Мінеральні, чисті, чайні, зелені та м’які деревні акорди підтримують відчуття свіжості без ефекту побутового освіжувача."],
+        ["Скільки паличок потрібно?", "Зазвичай 2 палички достатньо для старту. У просторій ванній кількість можна поступово збільшити."]
+      ]
+    },
+    {
+      "slug": "podarunkovi-aromadyfuzory",
+      "title": "Подарункові аромадифузори",
+      "eyebrow": "Подарунок із відчуттям",
+      "description": "Аромати, які легко дарувати: зрозумілий характер, преміальне оформлення та атмосфера, що залишається після розпакування.",
+      "intro": "Якщо не знаєте точних уподобань, обирайте чисті, готельні або м’яко молекулярні композиції. Для персональнішого подарунка скористайтеся гідом або Discovery Set.",
+      "heroImage": "images/journal/premialnyi-aromadyfuzor-u-podarunok.webp",
+      "productIds": ["hotel-luxe", "pure-zen", "mineral-salt", "silk-molecule", "pure-imagination", "evening-ritual"],
+      "selectionTitle": "Подарунок, який залишається в домі",
+      "selectionNote": "Зрозумілі, але не банальні композиції — коли хочеться подарувати атмосферу, а не просто річ.",
+      "guide": "guides/premialnyi-aromadyfuzor-u-podarunok.html",
+      "guideEyebrow": "VA HOME Journal · Подарунок",
+      "guideTitle": "Як вгадати з ароматом, не знаючи улюблених нот",
+      "guideExcerpt": "Орієнтуємося не на парфуми людини, а на її дім, ритм і відчуття, до якого їй хочеться повертатися.",
+      "guideCta": "Відкрити матеріал",
+      "guideImage": "images/journal/premialnyi-aromadyfuzor-u-podarunok.webp",
+      "guideImageWidth": 1672,
+      "guideImageHeight": 941,
+      "guideImagePosition": "center",
+      "faq": [
+        ["Який аромат найбезпечніше дарувати без тестування?", "Найуніверсальніші — чисті, готельні та м’яко молекулярні композиції. Якщо сумніваєтесь, Discovery Set дає людині право вибору."],
+        ["Чи підходить дифузор як корпоративний подарунок?", "Так, якщо аромат нейтрально-преміальний, а оформлення не потребує додаткового пакування."]
+      ]
+    },
+    {
+      "slug": "hotelni-aromaty-dlya-domu",
+      "title": "Готельні аромати для дому",
+      "eyebrow": "Чистота без побутового звучання",
+      "description": "Композиції з відчуттям лобі, чистого текстилю, мінерального повітря та спокійної дороговизни.",
+      "intro": "Готельний аромат — це не один запах, а баланс чистоти, повітря й м’якої бази. Саме база відділяє преміальну атмосферу від різкого освіжувача.",
+      "heroImage": "images/journal/hotelni-aromaty-dlya-domu.webp",
+      "productIds": ["hotel-luxe", "hotel-spring", "mineral-salt", "pure-imagination", "signature-relax", "silent-temple"],
+      "selectionTitle": "Те саме відчуття дорогого простору",
+      "selectionNote": "Чистий текстиль, мінеральне повітря й м’яка база — без різкої «свіжості».",
+      "guide": "guides/hotelni-aromaty-dlya-domu.html",
+      "guideEyebrow": "VA HOME Journal · Атмосфера",
+      "guideTitle": "Чому в хорошому готелі пахне дорого, але ненав’язливо",
+      "guideExcerpt": "Розбираємо не окремі ноти, а архітектуру враження: повітря, чистоту, м’який шлейф і тишу між ними.",
+      "guideCta": "Відкрити матеріал",
+      "guideImage": "images/product-story/hotel-luxe/interior.webp",
+      "guideImageWidth": 1254,
+      "guideImageHeight": 1254,
+      "guideImagePosition": "center",
+      "faq": [
+        ["Що означає «готельний аромат»?", "Це композиція з відчуттям чистого простору, текстилю, повітря та стриманої бази — без різкої побутової свіжості."],
+        ["Який готельний аромат обрати для першого знайомства?", "Hotel Luxe — найбільш прямий напрям чистого текстилю й морських мінералів. Pure Imagination звучить сучасніше й молекулярніше."]
+      ]
+    }
+  ]
+}

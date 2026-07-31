@@ -145,7 +145,7 @@
         const eager = index < 2;
 
         return `<a class="home-review-card home-review-card--${index + 1}" href="${href}" aria-label="Відгук ${name} про ${productName}" data-review-signature="${esc(rowSignature(row))}">
-          <img class="home-review-card__photo" src="${esc(row.photo_url)}" alt="Фото клієнта до відгуку про ${productName}" loading="${eager ? "eager" : "lazy"}" decoding="async"${eager ? ' fetchpriority="high"' : ""}>
+          <img class="home-review-card__photo" src="${esc(row.photo_url)}" alt="Фото клієнта до відгуку про ${productName}" width="800" height="1000" loading="${eager ? "eager" : "lazy"}" decoding="async"${eager ? ' fetchpriority="high"' : ""}>
           <span class="home-review-card__product">${productName}</span>
           <div class="home-review-card__overlay">
             <p>${review}</p>

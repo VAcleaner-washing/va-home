@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-07-26T18:00:00+03:00",
+  "generated_at": "2026-07-31T14:00:00+03:00",
   "source": "Supabase approved reviews",
   "products": {
     "evening-ritual": {
       "review_count": 1,
-      "average_rating": 5.0,
+      "average_rating": 5,
       "verified_count": 0,
       "latest_reviews": [
         {
@@ -19,7 +19,7 @@
     },
     "forbidden-fruit": {
       "review_count": 1,
-      "average_rating": 5.0,
+      "average_rating": 5,
       "verified_count": 0,
       "latest_reviews": [
         {
@@ -34,7 +34,7 @@
     },
     "hotel-luxe": {
       "review_count": 1,
-      "average_rating": 5.0,
+      "average_rating": 5,
       "verified_count": 0,
       "latest_reviews": [
         {
@@ -49,7 +49,7 @@
     },
     "hotel-spring": {
       "review_count": 1,
-      "average_rating": 5.0,
+      "average_rating": 5,
       "verified_count": 1,
       "latest_reviews": [
         {
@@ -64,7 +64,7 @@
     },
     "mineral-salt": {
       "review_count": 1,
-      "average_rating": 5.0,
+      "average_rating": 5,
       "verified_count": 0,
       "latest_reviews": [
         {
@@ -77,9 +77,39 @@
         }
       ]
     },
+    "pure-imagination": {
+      "review_count": 1,
+      "average_rating": 5,
+      "verified_count": 1,
+      "latest_reviews": [
+        {
+          "rating": 5,
+          "photo_url": "https://yweluzclearwrazdkahu.supabase.co/storage/v1/object/public/review-photos/pure-imagination/2284e930-52d5-49ee-bc28-564e15ad114c.jpg",
+          "created_at": "2026-07-26T16:51:21.136303+00:00",
+          "review_text": "Дуже стильний і дорогий ароматВзяла наосліп і не прогадала. Аромат неймовірний — свіжий, але глибокий.",
+          "customer_name": "Ксенія",
+          "verified_purchase": true
+        }
+      ]
+    },
+    "pure-zen": {
+      "review_count": 1,
+      "average_rating": 5,
+      "verified_count": 1,
+      "latest_reviews": [
+        {
+          "rating": 5,
+          "photo_url": "https://yweluzclearwrazdkahu.supabase.co/storage/v1/object/public/review-photos/pure-zen/464b4b50-7307-479c-98cd-c58515ba0302.jpg",
+          "created_at": "2026-07-27T15:05:03.490505+00:00",
+          "review_text": "Неймовірний дифузор! Аромат Pure Zen повністю виправдовує свою назву — справжня релаксація вдома.",
+          "customer_name": "Вікторія",
+          "verified_purchase": true
+        }
+      ]
+    },
     "silent-temple": {
       "review_count": 1,
-      "average_rating": 5.0,
+      "average_rating": 5,
       "verified_count": 1,
       "latest_reviews": [
         {

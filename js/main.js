@@ -91,6 +91,7 @@
     let footerVisualPath = 'images/pages/footer-home.webp';
     if (path.includes('/products/')) footerVisualPath = 'images/pages/footer-product.webp';
     else if (path.includes('collections')) footerVisualPath = 'images/pages/footer-collections.webp';
+    else if (path.includes('/categories/')) footerVisualPath = 'images/pages/footer-catalog.webp';
     else if (path.includes('catalog')) footerVisualPath = 'images/pages/footer-catalog.webp';
     else if (path.includes('discovery')) footerVisualPath = 'images/pages/footer-discovery.webp';
     else if (path.includes('scent-guide')) footerVisualPath = 'images/pages/footer-scent-guide.webp';
@@ -128,6 +129,16 @@
               <li><a href="${root}guides/index.html">Journal</a></li>
               <li><a href="${root}delivery.html">Доставка й пакування</a></li>
               <li><a href="${root}contacts.html">Контакти</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3 class="footer-col__title">Для простору</h3>
+            <ul>
+              <li><a href="${root}categories/aromadyfuzory-dlya-spalni.html">Для спальні</a></li>
+              <li><a href="${root}categories/aromadyfuzory-dlya-vitalni.html">Для вітальні</a></li>
+              <li><a href="${root}categories/aromadyfuzory-dlya-vannoi.html">Для ванної</a></li>
+              <li><a href="${root}categories/podarunkovi-aromadyfuzory.html">На подарунок</a></li>
+              <li><a href="${root}categories/hotelni-aromaty-dlya-domu.html">Готельні аромати</a></li>
             </ul>
           </div>
           <div class="footer-col">
@@ -527,7 +538,7 @@
     }
     if (window.SITE_CONFIG && typeof PRODUCTS !== "undefined" && !document.querySelector('script[data-vahome-wishlist]')) {
       const script = document.createElement("script");
-      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=14.0.0`;
+      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=15.1.0`;
       script.dataset.vahomeWishlist = "true";
       document.body.appendChild(script);
     }

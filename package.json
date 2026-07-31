@@ -1,0 +1,16 @@
+{
+  "name": "va-home-storefront",
+  "version": "15.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:images": "node scripts/build-responsive-images.mjs",
+    "build:reviews": "node scripts/prerender-approved-reviews.mjs",
+    "build:categories": "node scripts/build-category-pages.mjs",
+    "verify": "node scripts/verify-final-release.mjs",
+    "build": "npm run build:reviews && npm run build:categories && npm run build:images && npm run verify"
+  },
+  "devDependencies": {
+    "sharp": "0.35.3"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "project_id": "yweluzclearwrazdkahu",
+  "captured_at": "2026-07-31T14:30:00+03:00",
+  "release": "15.1.0",
+  "migrations": [
+    {"version":"20260725120810","name":"create_generated_builds_bucket_for_rc12","local_source":"historical_remote_only"},
+    {"version":"20260725121015","name":"enable_http_for_rc12_builder","local_source":"historical_remote_only"},
+    {"version":"20260726132804","name":"add_order_promo_columns","local_source":"migrations/20260726_add_order_promo_columns.sql"},
+    {"version":"20260726145827","name":"review_photo_storage_10mb_hardening","local_source":"migrations/20260726_review_photo_storage_10mb.sql"},
+    {"version":"20260726145852","name":"review_photo_storage_10mb_hardening","local_source":"migrations/20260726_review_photo_storage_10mb.sql"},
+    {"version":"20260726150006","name":"review_photo_storage_10mb_hardening_verify","local_source":"historical_remote_only"},
+    {"version":"20260726150021","name":"review_photo_storage_10mb_hardening_check","local_source":"historical_remote_only"},
+    {"version":"20260727122627","name":"repeat_purchase_email_campaign","local_source":"migrations/20260727_repeat_purchase_email_campaign.sql"},
+    {"version":"20260727143414","name":"repeat_purchase_automation_hardening","local_source":"migrations/20260727_repeat_purchase_email_campaign.sql"},
+    {"version":"20260727143741","name":"atomic_promo_redemption_guard","local_source":"migrations/20260727_atomic_promo_order_reservation.sql"},
+    {"version":"20260727161448","name":"atmosphere_os_v14","local_source":"migrations/20260727_atmosphere_os.sql"},
+    {"version":"20260727161739","name":"atomic_promo_order_reservation_v14","local_source":"migrations/20260727_atomic_promo_order_reservation.sql"},
+    {"version":"20260727162227","name":"fix_discovery_credit_code_generation","local_source":"migrations/20260727_fix_discovery_credit_code.sql"},
+    {"version":"20260727162544","name":"remove_conflicting_promo_reservation_trigger","local_source":"migrations/20260727_atomic_promo_order_reservation.sql"},
+    {"version":"20260727162748","name":"drop_unused_atomic_promo_rpc","local_source":"migrations/20260727_atomic_promo_order_reservation.sql"},
+    {"version":"20260727172753","name":"discovery_credit_tier_amounts","local_source":"migrations/20260727_discovery_credit_tier_amounts.sql"},
+    {"version":"20260727193148","name":"welcome_credit_after_scent_profile","local_source":"migrations/20260727_welcome_credit_after_scent_profile.sql"},
+    {"version":"20260727193642","name":"enforce_welcome_credit_first_purchase","local_source":"migrations/20260727_enforce_welcome_credit_first_purchase.sql"},
+    {"version":"20260728045726","name":"discovery_credit_order_tiers","local_source":"migrations/20260728_discovery_credit_order_tiers.sql"},
+    {"version":"20260731063021","name":"secure_public_order_status_v15","local_source":"migrations/20260731063021_secure_public_order_status_v15.sql"}
+  ]
+}

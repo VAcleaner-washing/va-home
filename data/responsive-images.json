@@ -1,0 +1,538 @@
+{
+  "generated_at": "2026-07-31T08:22:45.230Z",
+  "widths": [
+    640,
+    960,
+    1280
+  ],
+  "sources": {
+    "images/home/hero-main.webp": {
+      "width": 1672,
+      "variants": {
+        "640": {
+          "webp": "images/home/hero-main-640.webp",
+          "avif": "images/home/hero-main-640.avif"
+        },
+        "960": {
+          "webp": "images/home/hero-main-960.webp",
+          "avif": "images/home/hero-main-960.avif"
+        },
+        "1280": {
+          "webp": "images/home/hero-main-1280.webp",
+          "avif": "images/home/hero-main-1280.avif"
+        }
+      }
+    },
+    "images/home/hero-discovery.webp": {
+      "width": 3344,
+      "variants": {
+        "640": {
+          "webp": "images/home/hero-discovery-640.webp",
+          "avif": "images/home/hero-discovery-640.avif"
+        },
+        "960": {
+          "webp": "images/home/hero-discovery-960.webp",
+          "avif": "images/home/hero-discovery-960.avif"
+        },
+        "1280": {
+          "webp": "images/home/hero-discovery-1280.webp",
+          "avif": "images/home/hero-discovery-1280.avif"
+        }
+      }
+    },
+    "images/home/hero-noir.webp": {
+      "width": 3344,
+      "variants": {
+        "640": {
+          "webp": "images/home/hero-noir-640.webp",
+          "avif": "images/home/hero-noir-640.avif"
+        },
+        "960": {
+          "webp": "images/home/hero-noir-960.webp",
+          "avif": "images/home/hero-noir-960.avif"
+        },
+        "1280": {
+          "webp": "images/home/hero-noir-1280.webp",
+          "avif": "images/home/hero-noir-1280.avif"
+        }
+      }
+    },
+    "images/pages/about-hero.webp": {
+      "width": 1672,
+      "variants": {
+        "640": {
+          "webp": "images/pages/about-hero-640.webp",
+          "avif": "images/pages/about-hero-640.avif"
+        },
+        "960": {
+          "webp": "images/pages/about-hero-960.webp",
+          "avif": "images/pages/about-hero-960.avif"
+        },
+        "1280": {
+          "webp": "images/pages/about-hero-1280.webp",
+          "avif": "images/pages/about-hero-1280.avif"
+        }
+      }
+    },
+    "images/pages/catalog-hero.webp": {
+      "width": 1600,
+      "variants": {
+        "640": {
+          "webp": "images/pages/catalog-hero-640.webp",
+          "avif": "images/pages/catalog-hero-640.avif"
+        },
+        "960": {
+          "webp": "images/pages/catalog-hero-960.webp",
+          "avif": "images/pages/catalog-hero-960.avif"
+        },
+        "1280": {
+          "webp": "images/pages/catalog-hero-1280.webp",
+          "avif": "images/pages/catalog-hero-1280.avif"
+        }
+      }
+    },
+    "images/pages/collections-hero.webp": {
+      "width": 1672,
+      "variants": {
+        "640": {
+          "webp": "images/pages/collections-hero-640.webp",
+          "avif": "images/pages/collections-hero-640.avif"
+        },
+        "960": {
+          "webp": "images/pages/collections-hero-960.webp",
+          "avif": "images/pages/collections-hero-960.avif"
+        },
+        "1280": {
+          "webp": "images/pages/collections-hero-1280.webp",
+          "avif": "images/pages/collections-hero-1280.avif"
+        }
+      }
+    },
+    "images/pages/discovery-hero.webp": {
+      "width": 3344,
+      "variants": {
+        "640": {
+          "webp": "images/pages/discovery-hero-640.webp",
+          "avif": "images/pages/discovery-hero-640.avif"
+        },
+        "960": {
+          "webp": "images/pages/discovery-hero-960.webp",
+          "avif": "images/pages/discovery-hero-960.avif"
+        },
+        "1280": {
+          "webp": "images/pages/discovery-hero-1280.webp",
+          "avif": "images/pages/discovery-hero-1280.avif"
+        }
+      }
+    },
+    "images/pages/journal-hero.webp": {
+      "width": 1672,
+      "variants": {
+        "640": {
+          "webp": "images/pages/journal-hero-640.webp",
+          "avif": "images/pages/journal-hero-640.avif"
+        },
+        "960": {
+          "webp": "images/pages/journal-hero-960.webp",
+          "avif": "images/pages/journal-hero-960.avif"
+        },
+        "1280": {
+          "webp": "images/pages/journal-hero-1280.webp",
+          "avif": "images/pages/journal-hero-1280.avif"
+        }
+      }
+    },
+    "images/pages/scent-guide-hero.webp": {
+      "width": 1672,
+      "variants": {
+        "640": {
+          "webp": "images/pages/scent-guide-hero-640.webp",
+          "avif": "images/pages/scent-guide-hero-640.avif"
+        },
+        "960": {
+          "webp": "images/pages/scent-guide-hero-960.webp",
+          "avif": "images/pages/scent-guide-hero-960.avif"
+        },
+        "1280": {
+          "webp": "images/pages/scent-guide-hero-1280.webp",
+          "avif": "images/pages/scent-guide-hero-1280.avif"
+        }
+      }
+    },
+    "images/journal/aromat-dlya-spalni.webp": {
+      "width": 1672,
+      "variants": {
+        "640": {
+          "webp": "images/journal/aromat-dlya-spalni-640.webp",
+          "avif": "images/journal/aromat-dlya-spalni-640.avif"
+        },
+        "960": {
+          "webp": "images/journal/aromat-dlya-spalni-960.webp",
+          "avif": "images/journal/aromat-dlya-spalni-960.avif"
+        },
+        "1280": {
+          "webp": "images/journal/aromat-dlya-spalni-1280.webp",
+          "avif": "images/journal/aromat-dlya-spalni-1280.avif"
+        }
+      }
+    },
+    "images/journal/aromadyfuzor-dlya-vitalni.webp": {
+      "width": 1672,
+      "variants": {
+        "640": {
+          "webp": "images/journal/aromadyfuzor-dlya-vitalni-640.webp",
+          "avif": "images/journal/aromadyfuzor-dlya-vitalni-640.avif"
+        },
+        "960": {
+          "webp": "images/journal/aromadyfuzor-dlya-vitalni-960.webp",
+          "avif": "images/journal/aromadyfuzor-dlya-vitalni-960.avif"
+        },
+        "1280": {
+          "webp": "images/journal/aromadyfuzor-dlya-vitalni-1280.webp",
+          "avif": "images/journal/aromadyfuzor-dlya-vitalni-1280.avif"
+        }
+      }
+    },
+    "images/journal/aromadyfuzor-dlya-vannoi.webp": {
+      "width": 1672,
+      "variants": {
+        "640": {
+          "webp": "images/journal/aromadyfuzor-dlya-vannoi-640.webp",
+          "avif": "images/journal/aromadyfuzor-dlya-vannoi-640.avif"
+        },
+        "960": {
+          "webp": "images/journal/aromadyfuzor-dlya-vannoi-960.webp",
+          "avif": "images/journal/aromadyfuzor-dlya-vannoi-960.avif"
+        },
+        "1280": {
+          "webp": "images/journal/aromadyfuzor-dlya-vannoi-1280.webp",
+          "avif": "images/journal/aromadyfuzor-dlya-vannoi-1280.avif"
+        }
+      }
+    },
+    "images/journal/premialnyi-aromadyfuzor-u-podarunok.webp": {
+      "width": 1672,
+      "variants": {
+        "640": {
+          "webp": "images/journal/premialnyi-aromadyfuzor-u-podarunok-640.webp",
+          "avif": "images/journal/premialnyi-aromadyfuzor-u-podarunok-640.avif"
+        },
+        "960": {
+          "webp": "images/journal/premialnyi-aromadyfuzor-u-podarunok-960.webp",
+          "avif": "images/journal/premialnyi-aromadyfuzor-u-podarunok-960.avif"
+        },
+        "1280": {
+          "webp": "images/journal/premialnyi-aromadyfuzor-u-podarunok-1280.webp",
+          "avif": "images/journal/premialnyi-aromadyfuzor-u-podarunok-1280.avif"
+        }
+      }
+    },
+    "images/journal/hotelni-aromaty-dlya-domu.webp": {
+      "width": 1672,
+      "variants": {
+        "640": {
+          "webp": "images/journal/hotelni-aromaty-dlya-domu-640.webp",
+          "avif": "images/journal/hotelni-aromaty-dlya-domu-640.avif"
+        },
+        "960": {
+          "webp": "images/journal/hotelni-aromaty-dlya-domu-960.webp",
+          "avif": "images/journal/hotelni-aromaty-dlya-domu-960.avif"
+        },
+        "1280": {
+          "webp": "images/journal/hotelni-aromaty-dlya-domu-1280.webp",
+          "avif": "images/journal/hotelni-aromaty-dlya-domu-1280.avif"
+        }
+      }
+    },
+    "images/product-story/pure-zen/interior.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/pure-zen/interior-640.webp",
+          "avif": "images/product-story/pure-zen/interior-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/pure-zen/interior-960.webp",
+          "avif": "images/product-story/pure-zen/interior-960.avif"
+        }
+      }
+    },
+    "images/product-story/pure-imagination/interior.webp": {
+      "width": 1672,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/pure-imagination/interior-640.webp",
+          "avif": "images/product-story/pure-imagination/interior-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/pure-imagination/interior-960.webp",
+          "avif": "images/product-story/pure-imagination/interior-960.avif"
+        },
+        "1280": {
+          "webp": "images/product-story/pure-imagination/interior-1280.webp",
+          "avif": "images/product-story/pure-imagination/interior-1280.avif"
+        }
+      }
+    },
+    "images/product-story/mineral-salt/interior.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/mineral-salt/interior-640.webp",
+          "avif": "images/product-story/mineral-salt/interior-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/mineral-salt/interior-960.webp",
+          "avif": "images/product-story/mineral-salt/interior-960.avif"
+        }
+      }
+    },
+    "images/product-story/hotel-luxe/interior.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/hotel-luxe/interior-640.webp",
+          "avif": "images/product-story/hotel-luxe/interior-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/hotel-luxe/interior-960.webp",
+          "avif": "images/product-story/hotel-luxe/interior-960.avif"
+        }
+      }
+    },
+    "images/product-story/dark-bloom/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/dark-bloom/hero-640.webp",
+          "avif": "images/product-story/dark-bloom/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/dark-bloom/hero-960.webp",
+          "avif": "images/product-story/dark-bloom/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/doux-moment/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/doux-moment/hero-640.webp",
+          "avif": "images/product-story/doux-moment/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/doux-moment/hero-960.webp",
+          "avif": "images/product-story/doux-moment/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/evening-ritual/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/evening-ritual/hero-640.webp",
+          "avif": "images/product-story/evening-ritual/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/evening-ritual/hero-960.webp",
+          "avif": "images/product-story/evening-ritual/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/forbidden-fruit/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/forbidden-fruit/hero-640.webp",
+          "avif": "images/product-story/forbidden-fruit/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/forbidden-fruit/hero-960.webp",
+          "avif": "images/product-story/forbidden-fruit/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/hotel-luxe/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/hotel-luxe/hero-640.webp",
+          "avif": "images/product-story/hotel-luxe/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/hotel-luxe/hero-960.webp",
+          "avif": "images/product-story/hotel-luxe/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/hotel-spring/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/hotel-spring/hero-640.webp",
+          "avif": "images/product-story/hotel-spring/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/hotel-spring/hero-960.webp",
+          "avif": "images/product-story/hotel-spring/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/linstinct/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/linstinct/hero-640.webp",
+          "avif": "images/product-story/linstinct/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/linstinct/hero-960.webp",
+          "avif": "images/product-story/linstinct/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/mineral-salt/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/mineral-salt/hero-640.webp",
+          "avif": "images/product-story/mineral-salt/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/mineral-salt/hero-960.webp",
+          "avif": "images/product-story/mineral-salt/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/moss-and-shadow/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/moss-and-shadow/hero-640.webp",
+          "avif": "images/product-story/moss-and-shadow/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/moss-and-shadow/hero-960.webp",
+          "avif": "images/product-story/moss-and-shadow/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/old-money/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/old-money/hero-640.webp",
+          "avif": "images/product-story/old-money/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/old-money/hero-960.webp",
+          "avif": "images/product-story/old-money/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/pure-imagination/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/pure-imagination/hero-640.webp",
+          "avif": "images/product-story/pure-imagination/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/pure-imagination/hero-960.webp",
+          "avif": "images/product-story/pure-imagination/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/pure-zen/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/pure-zen/hero-640.webp",
+          "avif": "images/product-story/pure-zen/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/pure-zen/hero-960.webp",
+          "avif": "images/product-story/pure-zen/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/signature-relax/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/signature-relax/hero-640.webp",
+          "avif": "images/product-story/signature-relax/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/signature-relax/hero-960.webp",
+          "avif": "images/product-story/signature-relax/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/silent-temple/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/silent-temple/hero-640.webp",
+          "avif": "images/product-story/silent-temple/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/silent-temple/hero-960.webp",
+          "avif": "images/product-story/silent-temple/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/silk-molecule/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/silk-molecule/hero-640.webp",
+          "avif": "images/product-story/silk-molecule/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/silk-molecule/hero-960.webp",
+          "avif": "images/product-story/silk-molecule/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/the-archive/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/the-archive/hero-640.webp",
+          "avif": "images/product-story/the-archive/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/the-archive/hero-960.webp",
+          "avif": "images/product-story/the-archive/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/velvet-spa/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/velvet-spa/hero-640.webp",
+          "avif": "images/product-story/velvet-spa/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/velvet-spa/hero-960.webp",
+          "avif": "images/product-story/velvet-spa/hero-960.avif"
+        }
+      }
+    },
+    "images/product-story/wild-berry-way/hero.webp": {
+      "width": 1254,
+      "variants": {
+        "640": {
+          "webp": "images/product-story/wild-berry-way/hero-640.webp",
+          "avif": "images/product-story/wild-berry-way/hero-640.avif"
+        },
+        "960": {
+          "webp": "images/product-story/wild-berry-way/hero-960.webp",
+          "avif": "images/product-story/wild-berry-way/hero-960.avif"
+        }
+      }
+    }
+  }
+}

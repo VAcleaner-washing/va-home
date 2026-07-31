@@ -6,6 +6,7 @@ import process from "node:process";
 const root = path.resolve(process.argv[2] || path.join(path.dirname(new URL(import.meta.url).pathname), ".."));
 const errors = [];
 const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+  if (entry.name === "node_modules") return [];
   const full = path.join(dir, entry.name);
   return entry.isDirectory() ? walk(full) : [full];
 });
@@ -51,7 +52,7 @@ try {
 
 for (const file of htmlFiles) {
   const html = fs.readFileSync(file, "utf8");
-  if (/\?v=(?!14\.0\.0\b)\d+\.\d+\.\d+/.test(html)) errors.push(`stale asset version: ${path.relative(root, file)}`);
+  if (/\?v=(?!15\.1\.0\b)\d+\.\d+\.\d+/.test(html)) errors.push(`stale asset version: ${path.relative(root, file)}`);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
   const duplicates = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
   if (duplicates.length) errors.push(`duplicate IDs ${duplicates.join(", ")}: ${path.relative(root, file)}`);
@@ -98,9 +99,66 @@ const homeReviewsJs = fs.readFileSync(path.join(root, "js", "home-reviews.js"), 
 if (!homeReviewsJs.includes("preloadPhoto") || !homeReviewsJs.includes("Keep the server-rendered cards visible")) errors.push("home review photo preloading/stable fallback is missing");
 
 const release = JSON.parse(fs.readFileSync(path.join(root, "release.json"), "utf8"));
-if (release.version !== "14.0.0") errors.push(`release.json version is ${release.version}`);
+if (release.version !== "15.1.0") errors.push(`release.json version is ${release.version}`);
 if (!fs.existsSync(path.join(root, "data", "product-content.json"))) errors.push("central product content missing");
 if (!fs.existsSync(path.join(root, "PRODUCT-CONTENT-MASTER.md"))) errors.push("product content documentation missing");
+
+const categoryConfig = JSON.parse(fs.readFileSync(path.join(root, "data", "category-pages.json"), "utf8"));
+for (const category of categoryConfig.categories || []) {
+  for (const field of [
+    "selectionTitle",
+    "selectionNote",
+    "guideEyebrow",
+    "guideTitle",
+    "guideExcerpt",
+    "guideCta",
+    "guideImage",
+    "guideImageWidth",
+    "guideImageHeight"
+  ]) {
+    if (!category[field]) errors.push(`category editorial field ${field} missing: ${category.slug}`);
+  }
+  if (!fs.existsSync(path.join(root, category.guideImage || ""))) {
+    errors.push(`category editorial image missing: ${category.slug}`);
+  }
+  const categoryFile = path.join(root, "categories", `${category.slug}.html`);
+  if (!fs.existsSync(categoryFile)) errors.push(`category landing page missing: ${category.slug}`);
+  else {
+    const html = fs.readFileSync(categoryFile, "utf8");
+    if (!html.includes('"@type": "ItemList"')) errors.push(`category ItemList schema missing: ${category.slug}`);
+    if (!html.includes('"@type": "FAQPage"')) errors.push(`category FAQ schema missing: ${category.slug}`);
+    if (!html.includes('class="category-editorial"')) errors.push(`premium category editorial block missing: ${category.slug}`);
+    if (!html.includes('class="product-card__image"')) errors.push(`category product image sizing hook missing: ${category.slug}`);
+    if (/Не SEO-текст|короткий практичний матеріал|Аромати для цього сценарію/.test(html)) {
+      errors.push(`internal or generic category copy leaked into production: ${category.slug}`);
+    }
+  }
+}
+
+const responsiveManifestPath = path.join(root, "data", "responsive-images.json");
+if (!fs.existsSync(responsiveManifestPath)) errors.push("responsive image manifest missing");
+else {
+  const responsiveManifest = JSON.parse(fs.readFileSync(responsiveManifestPath, "utf8"));
+  if (Object.keys(responsiveManifest.sources || {}).length < 30) errors.push("responsive image source coverage is incomplete");
+  for (const entry of Object.values(responsiveManifest.sources || {})) {
+    for (const variants of Object.values(entry.variants || {})) {
+      if (!fs.existsSync(path.join(root, variants.webp))) errors.push(`missing responsive WebP: ${variants.webp}`);
+      if (!fs.existsSync(path.join(root, variants.avif))) errors.push(`missing responsive AVIF: ${variants.avif}`);
+    }
+  }
+}
+
+const reviewSnapshot = JSON.parse(fs.readFileSync(path.join(root, "data", "review-seo-snapshot.json"), "utf8"));
+const approvedReviewCount = Object.values(reviewSnapshot.products || {}).reduce(
+  (sum, entry) => sum + Number(entry.review_count || 0),
+  0
+);
+if (approvedReviewCount < 8) errors.push(`review SEO snapshot contains only ${approvedReviewCount} approved reviews`);
+for (const slug of Object.keys(reviewSnapshot.products || {})) {
+  const html = fs.readFileSync(path.join(root, "products", `${slug}.html`), "utf8");
+  if (!html.includes('"aggregateRating"')) errors.push(`AggregateRating missing: ${slug}`);
+  if (!html.includes('class="review-card"')) errors.push(`static review card missing: ${slug}`);
+}
 
 if (errors.length) {
   console.error("\nFinal release verification failed:");
@@ -109,9 +167,14 @@ if (errors.length) {
 }
 console.log(JSON.stringify({
   ok: true,
-  version: "14.0.0",
+  version: "15.1.0",
   htmlPages: htmlFiles.length,
   productPages: htmlFiles.filter((file) => file.includes(`${path.sep}products${path.sep}`)).length,
+  categoryPages: (categoryConfig.categories || []).length,
+  approvedReviewsPrerendered: approvedReviewCount,
+  responsiveImageSources: fs.existsSync(responsiveManifestPath)
+    ? Object.keys(JSON.parse(fs.readFileSync(responsiveManifestPath, "utf8")).sources || {}).length
+    : 0,
   centralProductSource: true,
   atmosphereOS: true,
   centralizedCatalogFilters: true,

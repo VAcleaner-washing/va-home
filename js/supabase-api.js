@@ -131,11 +131,36 @@
   }
 
 
-  function getPublicOrderStatus(orderNumber, phoneLast4) {
-    return request("rpc/get_public_order_status", {
-      method: "POST",
-      body: JSON.stringify({ p_order_number: orderNumber, p_phone_last4: phoneLast4 })
-    });
+  async function getPublicOrderStatus(orderNumber, phoneLast4) {
+    if (!configured()) throw new Error("Supabase is not configured");
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12000);
+    let response;
+    try {
+      response = await fetch(`${cfg.url}/functions/v1/order-status`, {
+        method: "POST",
+        headers: {
+          apikey: cfg.publishableKey,
+          Authorization: `Bearer ${cfg.publishableKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          order_number: orderNumber,
+          phone_last4: phoneLast4
+        }),
+        signal: controller.signal
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error(data.error || `Order status failed (${response.status})`);
+      error.status = response.status;
+      throw error;
+    }
+    return data.order ? [data.order] : [];
   }
 
   async function submitOrder(payload) {

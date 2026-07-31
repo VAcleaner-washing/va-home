@@ -1,3 +1,18 @@
+# VA HOME v15.1.0 — Production
+
+- Усі 66 HTML-сторінок отримали єдиний release marker `15.1.0 Production`.
+- Усі 906 підключень CSS/JS використовують один cache token `?v=15.1.0`.
+- Root та Admin PWA переведені на окремий production cache namespace.
+- Публічна перевірка статусу замовлення перенесена в Edge Function `order-status`.
+- Додано атомарний ліміт: не більше 5 перевірок за 15 хвилин для одного клієнта.
+- Прямий анонімний доступ до `get_public_order_status` закрито.
+- Привілеї службових `SECURITY DEFINER` функцій звужені до потрібних ролей.
+- Статичні й динамічні фото відгуків отримали intrinsic dimensions для стабільного макета.
+- Збережено затверджені Noir та Personal Scent Consultation hero-зображення.
+- Повний валідатор: 66 сторінок, 18 продуктів, 26 матеріалів Journal, 1 728 профілів гіда — PASS.
+
+---
+
 # VA HOME v14.0.0 RC6.5 — Journal Decision Edition
 
 - Збережено чинний порядок і зміст матеріалів 01–21.
