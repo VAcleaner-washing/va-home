@@ -13,10 +13,10 @@
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <link href="favicon/favicon.ico" rel="icon" sizes="any"/>
 <link href="favicon/favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="css/core.css?v=15.2.0" rel="stylesheet"/><link href="css/site-cart.css?v=15.2.0" rel="stylesheet"/>
+<link href="css/core.css?v=15.2.1" rel="stylesheet"/><link href="css/site-cart.css?v=15.2.1" rel="stylesheet"/>
 <link as="image" fetchpriority="high" href="images/home/hero-discovery.webp" rel="preload"/>
-<meta content="15.2.0 Production" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
-<script defer="" src="js/hero-font-reveal.js?v=15.2.0"></script>
+<meta content="15.2.1 Production" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
+<script defer="" src="js/hero-font-reveal.js?v=15.2.1"></script>
 <link href="/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
 
@@ -214,10 +214,19 @@
 <span aria-hidden="true" class="payment-option__mark"></span>
 <span><strong>Оплата при отриманні</strong><small>Комісія Нової пошти за переказ коштів — за тарифами перевізника.</small></span>
 </label>
-<label class="payment-option" hidden="" id="cardOnlinePaymentOption">
+<label class="payment-option payment-option--card" hidden="" id="cardOnlinePaymentOption">
 <input disabled="" name="paymentChoice" type="radio" value="card_online"/>
 <span aria-hidden="true" class="payment-option__mark"></span>
-<span><strong>Карткою онлайн</strong><small>Visa або Mastercard на захищеній сторінці monobank.</small></span>
+<span class="payment-option__content">
+<span class="payment-option__title-row"><strong>Карткою онлайн</strong><img alt="plata by mono" class="payment-option__mono" height="24" loading="lazy" src="images/payment/plata-by-mono.svg" width="116"/></span>
+<small>Visa, Mastercard, Apple Pay або Google Pay на захищеній платіжній сторінці.</small>
+<span aria-label="Підтримувані платіжні системи" class="payment-option__brands" role="img">
+<img alt="Visa" height="15" loading="lazy" src="images/payment/visa.svg" width="47"/>
+<img alt="Mastercard" height="18" loading="lazy" src="images/payment/mastercard.svg" width="29"/>
+<img alt="Apple Pay" height="18" loading="lazy" src="images/payment/apple-pay.svg" width="43"/>
+<img alt="Google Pay" height="18" loading="lazy" src="images/payment/google-pay.svg" width="46"/>
+</span>
+</span>
 </label>
 </div>
 <p class="form-error" id="err-paymentMethod">Оберіть спосіб оплати.</p>
@@ -275,15 +284,15 @@
 </section>
 </main>
 <div data-root="" id="site-footer"></div>
-<script defer="" src="js/config.js?v=15.2.0"></script>
-<script defer="" src="js/supabase-api.js?v=15.2.0"></script>
-<script defer="" src="js/products.js?v=15.2.0"></script>
-<script defer src="js/scent-profile.js?v=15.2.0"></script>
-<script defer="" src="js/compare.js?v=15.2.0"></script>
-<script defer="" src="js/cart.js?v=15.2.0"></script>
-<script defer="" src="js/ratings.js?v=15.2.0"></script>
-<script defer="" src="js/main.js?v=15.2.0"></script>
-<script defer="" src="js/motion.js?v=15.2.0"></script>
-<script defer="" src="/js/pwa.js?v=15.2.0"></script>
+<script defer="" src="js/config.js?v=15.2.1"></script>
+<script defer="" src="js/supabase-api.js?v=15.2.1"></script>
+<script defer="" src="js/products.js?v=15.2.1"></script>
+<script defer src="js/scent-profile.js?v=15.2.1"></script>
+<script defer="" src="js/compare.js?v=15.2.1"></script>
+<script defer="" src="js/cart.js?v=15.2.1"></script>
+<script defer="" src="js/ratings.js?v=15.2.1"></script>
+<script defer="" src="js/main.js?v=15.2.1"></script>
+<script defer="" src="js/motion.js?v=15.2.1"></script>
+<script defer="" src="/js/pwa.js?v=15.2.1"></script>
 </body>
 </html>

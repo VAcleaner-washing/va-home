@@ -160,6 +160,15 @@
             <p>Щодня, 9:00–19:00</p>
           </div>
         </div>
+        <div class="container footer-payment-trust" aria-label="Підтримувані платіжні системи">
+          <div class="footer-payment-trust__provider"><span>Безпечна карткова оплата</span><img src="${root}images/payment/plata-by-mono.svg" width="116" height="24" alt="plata by mono" loading="lazy"></div>
+          <div class="footer-payment-trust__brands">
+            <img src="${root}images/payment/visa.svg" width="47" height="15" alt="Visa" loading="lazy">
+            <img src="${root}images/payment/mastercard.svg" width="29" height="18" alt="Mastercard" loading="lazy">
+            <img src="${root}images/payment/apple-pay.svg" width="43" height="18" alt="Apple Pay" loading="lazy">
+            <img src="${root}images/payment/google-pay.svg" width="46" height="18" alt="Google Pay" loading="lazy">
+          </div>
+        </div>
         <div class="container footer-bottom">
           <span>&copy; <span id="footerYear">${year}</span> VA HOME</span>
           <span>Створено в Полтаві. Відправляємо по Україні.</span>
@@ -538,7 +547,7 @@
     }
     if (window.SITE_CONFIG && typeof PRODUCTS !== "undefined" && !document.querySelector('script[data-vahome-wishlist]')) {
       const script = document.createElement("script");
-      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=15.2.0`;
+      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=15.2.1`;
       script.dataset.vahomeWishlist = "true";
       document.body.appendChild(script);
     }
