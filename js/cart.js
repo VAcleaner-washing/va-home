@@ -1207,6 +1207,7 @@
         customerName: order.customer_name,
         customerEmail: order.customer_email,
         paymentMethod: order.payment_method,
+        paymentStatus: order.payment_status || "unpaid",
         items: order.items,
         total: order.total_amount,
         discount: Number(result.discount_amount || order.discount_amount || 0),

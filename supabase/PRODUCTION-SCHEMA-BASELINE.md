@@ -2,7 +2,7 @@
 
 Captured: 2026-07-31  
 Project: `yweluzclearwrazdkahu`  
-Storefront release: `15.1.0`
+Storefront release: `15.1.1`
 
 This file records the verified production state. It is a baseline and audit
 artifact, not a migration to apply. Historic remote-only migrations are not

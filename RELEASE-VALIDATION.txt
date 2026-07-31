@@ -1,9 +1,12 @@
-VA HOME v15.1.0 — PRODUCTION
+VA HOME v15.1.1 — PRODUCTION
 
 Static release verification: PASS
-HTML pages: 66
+HTML pages: 71
 Product pages: 18
+Category landing pages: 5
 Journal articles: 26
+Approved reviews prerendered: 8
+Responsive image sources: 37
 Scent-guide answer profiles tested: 1,728
 Product DNA axes: 6
 JavaScript / MJS syntax: PASS
@@ -15,10 +18,10 @@ Missing image alt attributes: 0
 Missing intrinsic image dimensions: 0
 
 Release markers:
-- HTML release marker: 15.1.0 Production on 66 / 66 pages
-- Shared asset query version: 15.1.0 on 906 / 906 references
-- Root PWA version: 15.1.0 / production-1
-- Admin PWA version: 15.1.0
+- HTML release marker: 15.1.1 Production on 71 / 71 pages
+- Shared asset query version: 15.1.1 on all validated local references
+- Root PWA version: 15.1.1 / production-7
+- Admin PWA version: 15.1.1
 
 Commerce and product logic:
 - Products: 18
@@ -40,7 +43,7 @@ Order-status security:
 - Invalid / unknown order response: no customer data returned — PASS
 
 Preserved production services:
-- create-order: ACTIVE v25
+- create-order: ACTIVE v26; local unified payment-status response prepared for the next controlled deployment
 - submit-review: ACTIVE v12
 - nova-poshta-locations: ACTIVE v6
 - validate-promo: ACTIVE v4
@@ -49,3 +52,11 @@ Preserved production services:
 - issue-welcome-credit: ACTIVE v1
 
 Handoff ZIP integrity: PASS
+
+Checkout hardening in this archive:
+- account shows payment method and payment status
+- public order-status UI supports the same payment state when the RPC returns it
+- admin cannot manually confirm or alter card-provider payment state
+- bank-transfer manual confirmation requires an explicit operator confirmation
+- pending RLS policy consolidation is included but not auto-applied to production
+- online acquiring and webhook remain disabled until owner-controlled activation and testing

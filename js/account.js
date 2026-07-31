@@ -10,6 +10,17 @@
     new: "Опрацьовується", awaiting_payment: "Очікує оплату", pending: "Підтверджується", paid: "Оплачено",
     shipped: "Передано перевізнику", completed: "Доставлено", cancelled: "Скасовано"
   };
+  const paymentMethodLabels = {
+    bank_transfer: "на рахунок",
+    cash_on_delivery: "при отриманні",
+    card_online: "карткою онлайн"
+  };
+  const paymentStatusLabels = {
+    unpaid: "очікує оплати",
+    verification: "перевіряється",
+    paid: "оплачено",
+    refunded: "повернено"
+  };
   const REQUEST_TIMEOUT_MS = 12000;
   let sb = null;
   let mode = "login";
@@ -308,7 +319,7 @@
     let data, error;
     try {
       ({ data, error } = await withTimeout(sb.from("orders")
-        .select("client_order_id,created_at,completed_at,status,total_amount,tracking_number,items,payment_method")
+        .select("client_order_id,created_at,completed_at,status,total_amount,tracking_number,items,payment_method,payment_status")
         .order("created_at", { ascending: false }), "ORDERS_TIMEOUT"));
     } catch (_) {
       list.innerHTML = '<p class="account-message">Сервер довго не відповідає. Оновіть сторінку або спробуйте трохи пізніше.</p>';
@@ -354,7 +365,7 @@
         </div>
         <div class="account-order__details" hidden>
           ${orderProgressHtml(order.status)}
-          <p class="account-order__payment"><strong>Оплата:</strong> ${order.payment_method === "cash_on_delivery" ? "при отриманні" : "на рахунок"}</p>
+          <p class="account-order__payment"><strong>Оплата:</strong> ${esc(paymentMethodLabels[order.payment_method] || "уточнюється")} · ${esc(paymentStatusLabels[order.payment_status] || "статус уточнюється")}</p>
           ${order.tracking_number ? `<p class="account-order__tracking">ТТН: <strong>${esc(order.tracking_number)}</strong></p>` : ""}
         </div>
       </article>`;

@@ -1,7 +1,15 @@
 {
   "project_id": "yweluzclearwrazdkahu",
   "captured_at": "2026-07-31T14:30:00+03:00",
-  "release": "15.1.0",
+  "release": "15.1.1",
+  "pending_local_migrations": [
+    {
+      "version": "20260731162852",
+      "name": "harden_order_admin_policies",
+      "local_source": "migrations/20260731162852_harden_order_admin_policies.sql",
+      "status": "review_and_test_before_production"
+    }
+  ],
   "migrations": [
     {"version":"20260725120810","name":"create_generated_builds_bucket_for_rc12","local_source":"historical_remote_only"},
     {"version":"20260725121015","name":"enable_http_for_rc12_builder","local_source":"historical_remote_only"},

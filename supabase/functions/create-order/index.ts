@@ -270,7 +270,7 @@ Deno.serve(async req => {
     if (checkoutRequestId) {
       const { data: existing, error: existingError } = await supabase
         .from("orders")
-        .select("id,client_order_id,customer_name,customer_phone,customer_email,delivery_method,delivery_details,payment_method,items,total_amount,confirmation_email_status,marketing_consent")
+        .select("id,client_order_id,customer_name,customer_phone,customer_email,delivery_method,delivery_details,payment_method,payment_status,items,total_amount,confirmation_email_status,marketing_consent")
         .eq("checkout_request_id", checkoutRequestId)
         .maybeSingle();
       if (existingError) throw existingError;
@@ -288,6 +288,7 @@ Deno.serve(async req => {
             customer_name: existing.customer_name,
             customer_email: existing.customer_email,
             payment_method: existing.payment_method,
+            payment_status: existing.payment_status,
             items: existing.items,
             total_amount: existing.total_amount,
           },
@@ -337,6 +338,7 @@ Deno.serve(async req => {
               customer_name: racedOrder.customer_name,
               customer_email: racedOrder.customer_email,
               payment_method: racedOrder.payment_method,
+              payment_status: racedOrder.payment_status,
               items: racedOrder.items,
               total_amount: racedOrder.total_amount,
             },
@@ -518,7 +520,7 @@ Deno.serve(async req => {
           iban: text(Deno.env.get("PAYMENT_IBAN"), 50) || null,
         }
       : null;
-    return json(req, { order: { client_order_id: order.client_order_id, customer_name: name, customer_email: email, payment_method: paymentMethod, items, total_amount: total, discount_amount: discountAmount, promo_code: promo ? String(promo.code).toLowerCase() : null }, email_status: emailStatus, discount_amount: discountAmount, promo_code: promo ? String(promo.code).toLowerCase() : null, payment_details: paymentDetails?.recipient && paymentDetails?.iban ? paymentDetails : null }, 201);
+    return json(req, { order: { client_order_id: order.client_order_id, customer_name: name, customer_email: email, payment_method: paymentMethod, payment_status: order.payment_status || "unpaid", items, total_amount: total, discount_amount: discountAmount, promo_code: promo ? String(promo.code).toLowerCase() : null }, email_status: emailStatus, discount_amount: discountAmount, promo_code: promo ? String(promo.code).toLowerCase() : null, payment_details: paymentDetails?.recipient && paymentDetails?.iban ? paymentDetails : null }, 201);
   } catch (error) {
     console.error("create-order failed", {
       requestId,

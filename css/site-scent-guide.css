@@ -3110,12 +3110,12 @@ button, input, select, textarea, a{ min-width: 0; }
   }
 }
 
-/* VA HOME v15.1.0 RC6 — Welcome Credit after Personal Scent Profile */
+/* VA HOME v15.1.1 RC6 — Welcome Credit after Personal Scent Profile */
 .guide-welcome-credit{display:flex;align-items:center;justify-content:space-between;gap:34px;margin:24px 0 42px;padding:clamp(26px,4vw,42px);border:1px solid rgba(195,145,70,.38);background:radial-gradient(circle at 86% 12%,rgba(195,145,70,.15),transparent 32%),linear-gradient(135deg,rgba(25,20,14,.98),rgba(10,8,6,.99))}
 .guide-welcome-credit[hidden]{display:none!important}.guide-welcome-credit>div{max-width:760px}.guide-welcome-credit h2{margin:8px 0 10px;font-family:var(--font-display);font-size:clamp(32px,4vw,52px);font-weight:500;line-height:.98}.guide-welcome-credit p:last-child{margin:0;color:rgba(255,255,255,.54);font-size:13px;line-height:1.7}.guide-welcome-credit .btn{flex:0 0 auto}
 @media(max-width:820px){.guide-welcome-credit{align-items:flex-start;flex-direction:column}.guide-welcome-credit .btn{width:100%}}
 
-/* VA HOME v15.1.0 RC6.3 — clear ineligible Welcome Credit state */
+/* VA HOME v15.1.1 RC6.3 — clear ineligible Welcome Credit state */
 .guide-welcome-credit.is-ineligible{border-color:rgba(255,255,255,.13);background:linear-gradient(135deg,rgba(20,18,16,.98),rgba(9,8,7,.99))}
 .guide-welcome-credit.is-ineligible .scent-profile__eyebrow{color:rgba(255,255,255,.42)}
 

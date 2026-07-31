@@ -1,5 +1,5 @@
 {
-  "version": "15.1.0",
+  "version": "15.1.1",
   "channel": "Production",
   "name": "ATMOSPHERE OS — PRODUCTION",
   "date": "2026-07-31",
@@ -33,8 +33,8 @@
     "Adds responsive srcset markup to key home, product and editorial images",
     "Captures the verified production Supabase migration ledger and public-schema RLS baseline",
     "Defines the versioned migration and RLS workflow for all database changes after 15.1",
-    "Releases VA HOME 15.1.0 as the synchronized production build",
-    "Aligns every HTML release marker and every shared asset query version to 15.1.0",
+    "Releases VA HOME 15.1.1 as the synchronized production build",
+    "Aligns every HTML release marker and every shared asset query version to 15.1.1",
     "Advances the public and admin PWA cache namespaces for a clean production update",
     "Routes public order tracking through a dedicated rate-limited Edge Function",
     "Removes anonymous access to the privileged order-status database function",
