@@ -5,6 +5,11 @@
   "date": "2026-07-31",
   "base": "14.0.0-RC6.6-VISUAL-REALISM",
   "changes": [
+    "Replaces the generic Noir collection still life with a faithful six-bottle VA HOME collection portrait in warm architectural light",
+    "Adds a distinct daylight Noir editorial inside the Journal article to reinforce that Noir means depth rather than darkness",
+    "Adds a candid real-box Noir composition to the homepage Instagram grid without repeating the collection-page frame",
+    "Preserves the exact square amber bottle geometry, gold collars, six real labels and authentic kraft packaging across all three new images",
+    "Advances the PWA cache revision so the corrected Noir photography appears immediately after deployment",
     "Unifies every commercial Discovery Set mention around the accurate six-scent kraft-box master visual instead of inconsistent AI packaging",
     "Replaces the old five-pouch CTA, the black gift box and ribbon-styled product Discovery frames with faithful responsive crops of the real set",
     "Keeps the atmospheric Discovery landing hero product-free so the same package image is not repeated in every section",
