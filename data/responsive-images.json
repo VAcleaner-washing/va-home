@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-31T08:22:45.230Z",
+  "generated_at": "2026-07-31T09:31:20.998Z",
   "widths": [
     640,
     960,
@@ -24,7 +24,7 @@
       }
     },
     "images/home/hero-discovery.webp": {
-      "width": 3344,
+      "width": 1672,
       "variants": {
         "640": {
           "webp": "images/home/hero-discovery-640.webp",
@@ -37,6 +37,15 @@
         "1280": {
           "webp": "images/home/hero-discovery-1280.webp",
           "avif": "images/home/hero-discovery-1280.avif"
+        }
+      }
+    },
+    "images/home/hero-discovery-mobile.webp": {
+      "width": 941,
+      "variants": {
+        "640": {
+          "webp": "images/home/hero-discovery-mobile-640.webp",
+          "avif": "images/home/hero-discovery-mobile-640.avif"
         }
       }
     },

@@ -97,6 +97,24 @@ const scentGuideJs = fs.readFileSync(path.join(root, "js", "scent-guide.js"), "u
 if (!scentGuideJs.includes("guide-result-reason__row") || !scentGuideJs.includes("renderReason")) errors.push("scent-guide recommendation details are not separated into readable rows");
 const homeReviewsJs = fs.readFileSync(path.join(root, "js", "home-reviews.js"), "utf8");
 if (!homeReviewsJs.includes("preloadPhoto") || !homeReviewsJs.includes("Keep the server-rendered cards visible")) errors.push("home review photo preloading/stable fallback is missing");
+const homeHtml = fs.readFileSync(path.join(root, "index.html"), "utf8");
+if (!homeHtml.includes("hero-discovery-mobile.webp")) errors.push("dedicated portrait Discovery hero is missing");
+if (!homeHtml.includes("шість тестерів у матових пакетах")) errors.push("Discovery hero alternative text is stale");
+if (!fs.existsSync(path.join(root, "images", "home", "hero-discovery-mobile.webp"))) errors.push("portrait Discovery hero asset is missing");
+const scentGuideHtml = fs.readFileSync(path.join(root, "scent-guide.html"), "utf8");
+if (!scentGuideHtml.includes("шість тестерів для знайомства вдома")) errors.push("scent-guide Discovery visual is stale");
+for (const discoveryAsset of [
+  "images/discovery/discovery-set.webp",
+  "images/pages/discovery-ritual.webp",
+  "images/pages/footer-discovery.webp",
+  "images/product-story/pure-imagination/discovery.webp",
+  "images/product-story/silk-molecule/discovery.webp",
+  "images/product-story/the-archive/discovery.webp"
+]) {
+  if (!fs.existsSync(path.join(root, discoveryAsset))) errors.push(`Discovery visual missing: ${discoveryAsset}`);
+}
+const serviceWorkerJs = fs.readFileSync(path.join(root, "service-worker.js"), "utf8");
+if (!serviceWorkerJs.includes("production-5")) errors.push("public PWA cache revision is stale after Discovery visual update");
 
 const release = JSON.parse(fs.readFileSync(path.join(root, "release.json"), "utf8"));
 if (release.version !== "15.1.0") errors.push(`release.json version is ${release.version}`);

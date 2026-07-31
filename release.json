@@ -5,6 +5,13 @@
   "date": "2026-07-31",
   "base": "14.0.0-RC6.6-VISUAL-REALISM",
   "changes": [
+    "Unifies every commercial Discovery Set mention around the accurate six-scent kraft-box master visual instead of inconsistent AI packaging",
+    "Replaces the old five-pouch CTA, the black gift box and ribbon-styled product Discovery frames with faithful responsive crops of the real set",
+    "Keeps the atmospheric Discovery landing hero product-free so the same package image is not repeated in every section",
+    "Replaces the homepage Discovery hero with an accurate six-scent VA HOME set based on the real kraft box, frosted pouches, circular labels and amber 5 ml tester",
+    "Adds a dedicated vertical Discovery hero for portrait phones instead of cropping the desktop composition",
+    "Corrects the Discovery hero alternative text and intrinsic dimensions",
+    "Advances the PWA cache revision so the corrected Discovery imagery appears immediately after deployment",
     "Rebuilds all five category landing pages with distinct VA HOME editorial copy instead of repeated technical placeholder language",
     "Replaces the oversized category Journal bridge with a balanced premium editorial composition and a dedicated image for each room or gifting context",
     "Adds intrinsic square dimensions and responsive sizing hints to category product-card imagery",

@@ -36,6 +36,12 @@
   z-index: 0;
 }
 
+.hero-slide__picture {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
 .hero-slide__media::after {
   content: '';
   position: absolute;
