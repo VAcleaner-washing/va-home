@@ -17,7 +17,10 @@
   };
   const paymentStatusLabels = {
     unpaid: "очікує оплати",
+    pending: "очікує підтвердження банку",
     verification: "перевіряється",
+    failed: "не завершено",
+    expired: "посилання прострочене",
     paid: "оплачено",
     refunded: "повернено"
   };
@@ -343,6 +346,9 @@
       const tracking = order.tracking_number
         ? `<a class="account-order__track-button" href="https://novaposhta.ua/tracking/?cargo_number=${encodeURIComponent(order.tracking_number)}" target="_blank" rel="noopener">Відстежити</a>`
         : "";
+      const cardPaymentAction = order.payment_method === "card_online" && !["paid", "refunded"].includes(order.payment_status)
+        ? `<button class="account-order__pay-card" type="button" data-card-payment="${safeId}">Оплатити карткою</button>`
+        : "";
       return `<article class="account-order">
         <div class="account-order__header">
           <div>
@@ -359,6 +365,7 @@
         <div class="account-order__footer">
           <button class="account-order__toggle" type="button" aria-expanded="false">Деталі</button>
           <div class="account-order__actions">
+            ${cardPaymentAction}
             <button class="account-order__repeat" type="button" data-repeat='${repeatData}'>Повторити замовлення</button>
             ${tracking}
           </div>
@@ -377,6 +384,25 @@
       button.setAttribute("aria-expanded", String(!open));
       button.textContent = open ? "Деталі" : "Згорнути";
       if (details) details.hidden = open;
+    }));
+    document.querySelectorAll("[data-card-payment]").forEach((button) => button.addEventListener("click", async () => {
+      if (!window.VAHomeSupabase?.cardPayment) return window.VAHome?.showToast("Оплата тимчасово недоступна");
+      const original = button.textContent;
+      button.disabled = true;
+      button.textContent = "Створюємо оплату…";
+      try {
+        const result = await window.VAHomeSupabase.cardPayment({
+          action: "retry",
+          order_number: button.dataset.cardPayment,
+          token: ""
+        });
+        if (!result.payment_url) throw new Error("NO_PAYMENT_URL");
+        window.location.assign(result.payment_url);
+      } catch (_) {
+        button.disabled = false;
+        button.textContent = original;
+        window.VAHome?.showToast("Не вдалося відкрити оплату. Спробуйте ще раз.");
+      }
     }));
     document.querySelectorAll("[data-repeat]").forEach((button) => button.addEventListener("click", () => {
       try {

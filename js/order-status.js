@@ -1,7 +1,7 @@
 (function(){"use strict";
 const labels={new:"Нове",awaiting_payment:"Очікує оплату",paid:"Оплачено",shipped:"Відправлено",completed:"Виконано",cancelled:"Скасовано"};
 const paymentMethodLabels={bank_transfer:"на рахунок",cash_on_delivery:"при отриманні",card_online:"карткою онлайн"};
-const paymentStatusLabels={unpaid:"очікує оплати",verification:"перевіряється",paid:"оплачено",refunded:"повернено"};
+const paymentStatusLabels={unpaid:"очікує оплати",pending:"очікує підтвердження банку",verification:"перевіряється",failed:"не завершено",expired:"посилання прострочене",paid:"оплачено",refunded:"повернено"};
 const steps=["new","paid","shipped","completed"];
 function esc(v){return String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));}
 function money(v){return `${Number(v||0).toLocaleString("uk-UA",{maximumFractionDigits:2})} грн`;}

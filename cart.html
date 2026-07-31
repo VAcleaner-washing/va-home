@@ -13,10 +13,10 @@
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <link href="favicon/favicon.ico" rel="icon" sizes="any"/>
 <link href="favicon/favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="css/core.css?v=15.1.2" rel="stylesheet"/><link href="css/site-cart.css?v=15.1.2" rel="stylesheet"/>
+<link href="css/core.css?v=15.2.0" rel="stylesheet"/><link href="css/site-cart.css?v=15.2.0" rel="stylesheet"/>
 <link as="image" fetchpriority="high" href="images/home/hero-discovery.webp" rel="preload"/>
-<meta content="15.1.2 Production" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
-<script defer="" src="js/hero-font-reveal.js?v=15.1.2"></script>
+<meta content="15.2.0 Production" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
+<script defer="" src="js/hero-font-reveal.js?v=15.2.0"></script>
 <link href="/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
 
@@ -201,6 +201,7 @@
 <select aria-describedby="err-paymentMethod" class="payment-native-select" id="paymentMethod" name="paymentMethod" required="">
 <option selected="" value="bank_transfer">Оплата на рахунок</option>
 <option value="cash_on_delivery">Оплата при отриманні</option>
+<option disabled="" hidden="" id="cardOnlineSelectOption" value="card_online">Оплата карткою онлайн</option>
 </select>
 <div aria-label="Спосіб оплати" class="payment-options" role="radiogroup">
 <label class="payment-option is-selected">
@@ -212,6 +213,11 @@
 <input name="paymentChoice" type="radio" value="cash_on_delivery"/>
 <span aria-hidden="true" class="payment-option__mark"></span>
 <span><strong>Оплата при отриманні</strong><small>Комісія Нової пошти за переказ коштів — за тарифами перевізника.</small></span>
+</label>
+<label class="payment-option" hidden="" id="cardOnlinePaymentOption">
+<input disabled="" name="paymentChoice" type="radio" value="card_online"/>
+<span aria-hidden="true" class="payment-option__mark"></span>
+<span><strong>Карткою онлайн</strong><small>Visa або Mastercard на захищеній сторінці monobank.</small></span>
 </label>
 </div>
 <p class="form-error" id="err-paymentMethod">Оберіть спосіб оплати.</p>
@@ -269,15 +275,15 @@
 </section>
 </main>
 <div data-root="" id="site-footer"></div>
-<script defer="" src="js/config.js?v=15.1.2"></script>
-<script defer="" src="js/supabase-api.js?v=15.1.2"></script>
-<script defer="" src="js/products.js?v=15.1.2"></script>
-<script defer src="js/scent-profile.js?v=15.1.2"></script>
-<script defer="" src="js/compare.js?v=15.1.2"></script>
-<script defer="" src="js/cart.js?v=15.1.2"></script>
-<script defer="" src="js/ratings.js?v=15.1.2"></script>
-<script defer="" src="js/main.js?v=15.1.2"></script>
-<script defer="" src="js/motion.js?v=15.1.2"></script>
-<script defer="" src="/js/pwa.js?v=15.1.2"></script>
+<script defer="" src="js/config.js?v=15.2.0"></script>
+<script defer="" src="js/supabase-api.js?v=15.2.0"></script>
+<script defer="" src="js/products.js?v=15.2.0"></script>
+<script defer src="js/scent-profile.js?v=15.2.0"></script>
+<script defer="" src="js/compare.js?v=15.2.0"></script>
+<script defer="" src="js/cart.js?v=15.2.0"></script>
+<script defer="" src="js/ratings.js?v=15.2.0"></script>
+<script defer="" src="js/main.js?v=15.2.0"></script>
+<script defer="" src="js/motion.js?v=15.2.0"></script>
+<script defer="" src="/js/pwa.js?v=15.2.0"></script>
 </body>
 </html>

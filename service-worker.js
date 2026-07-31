@@ -1,5 +1,5 @@
-const VERSION = '15.1.2';
-const CACHE_REVISION = 'production-7';
+const VERSION = '15.2.0';
+const CACHE_REVISION = 'production-9';
 const CACHE_PREFIX = 'vahome-';
 const STATIC_CACHE = `${CACHE_PREFIX}static-${VERSION}-${CACHE_REVISION}`;
 

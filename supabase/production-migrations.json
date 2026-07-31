@@ -1,7 +1,7 @@
 {
   "project_id": "yweluzclearwrazdkahu",
   "captured_at": "2026-07-31T14:30:00+03:00",
-  "release": "15.1.2",
+  "release": "15.2.0",
   "pending_local_migrations": [
     {
       "version": "20260731162852",

@@ -1131,11 +1131,14 @@
 
   function setCheckoutState(button, status, message, isError) {
     if (button) {
+      const cardSelected = document.getElementById("paymentMethod")?.value === "card_online";
       button.disabled = status === "loading";
       button.classList.toggle("is-loading", status === "loading");
+      const idleLabel = cardSelected ? "Перейти до оплати" : "Оформити замовлення";
+      const loadingLabel = cardSelected ? "Створюємо платіж…" : "Оформлюємо…";
       const label = button.querySelector("span");
-      if (label) label.textContent = status === "loading" ? "Оформлюємо…" : "Оформити замовлення";
-      else button.textContent = status === "loading" ? "Оформлюємо…" : "Оформити замовлення";
+      if (label) label.textContent = status === "loading" ? loadingLabel : idleLabel;
+      else button.textContent = status === "loading" ? loadingLabel : idleLabel;
     }
     const statusEl = document.getElementById("checkoutStatus");
     if (statusEl) {
@@ -1151,6 +1154,7 @@
       INVALID_DELIVERY: "Перевірте місто та дані доставки Нової пошти.",
       DELIVERY_VALIDATION_UNAVAILABLE: "Нова пошта тимчасово не підтвердила дані доставки. Кошик збережено — повторіть спробу трохи пізніше.",
       INVALID_PAYMENT: "Оберіть доступний спосіб оплати.",
+      CARD_PAYMENT_UNAVAILABLE: "Оплата карткою тимчасово недоступна. Оберіть оплату на рахунок або при отриманні.",
       INVALID_PROMO: "Промокод недійсний для цього замовлення. Перевірте код або приберіть його.",
       INVALID_ITEMS: "У кошику є некоректний товар. Оновіть кошик і повторіть спробу.",
       INVALID_ITEM: "Один із товарів більше недоступний. Оновіть кошик і повторіть спробу.",
@@ -1214,6 +1218,8 @@
         promoCode: result.promo_code || order.promo_code || null,
         emailStatus: result.email_status,
         paymentDetails: result.payment_details || null,
+        paymentReturnToken: result.payment_return_token || null,
+        paymentRetryRequired: Boolean(result.payment_retry_required),
         createdAt: new Date().toISOString()
       };
       sessionStorage.setItem("vahome_last_order", JSON.stringify(confirmation));
@@ -1222,6 +1228,18 @@
       sessionStorage.removeItem("vahome_checkout_draft_v66");
 
       clear();
+      if (order.payment_method === "card_online" && result.payment_url) {
+        window.location.assign(result.payment_url);
+        return;
+      }
+      if (order.payment_method === "card_online") {
+        const returnUrl = new URL("thank-you.html", window.location.href);
+        returnUrl.searchParams.set("payment", "pending");
+        returnUrl.searchParams.set("order", order.client_order_id);
+        if (result.payment_return_token) returnUrl.searchParams.set("token", result.payment_return_token);
+        window.location.assign(returnUrl.toString());
+        return;
+      }
       window.location.href = "thank-you.html";
     } catch (error) {
       
@@ -1287,7 +1305,9 @@
       const hint = document.getElementById('paymentMethodHint');
       if (hint) hint.textContent = value === 'cash_on_delivery'
         ? 'Нова пошта додатково стягує комісію за переказ коштів за чинними тарифами.'
-        : 'Реквізити для оплати надійдуть після підтвердження замовлення менеджером.';
+        : value === 'card_online'
+          ? 'Після оформлення відкриється захищена платіжна сторінка monobank.'
+          : 'Реквізити для оплати надійдуть після підтвердження замовлення менеджером.';
       cards.forEach((card) => {
         const radio = card.querySelector('input[type="radio"]');
         const selected = radio && radio.value === value;
@@ -1295,12 +1315,39 @@
         card.classList.toggle('is-selected', selected);
       });
       select.dispatchEvent(new Event('change', { bubbles: true }));
+      setCheckoutState(document.getElementById("placeOrderBtn"), "idle", "", false);
     };
     cards.forEach((card) => card.addEventListener('click', () => {
       const radio = card.querySelector('input[type="radio"]');
       if (radio) sync(radio.value);
     }));
     sync(select.value || 'bank_transfer');
+  }
+
+  async function initCardPaymentAvailability(form) {
+    const option = document.getElementById("cardOnlinePaymentOption");
+    const selectOption = document.getElementById("cardOnlineSelectOption");
+    const radio = option?.querySelector('input[value="card_online"]');
+    if (!option || !selectOption || !radio || !window.VAHomeSupabase?.getPaymentConfig) return;
+    try {
+      const config = await window.VAHomeSupabase.getPaymentConfig();
+      if (!config?.enabled) {
+        if (form.elements.paymentMethod.value === "card_online") {
+          form.elements.paymentMethod.value = "bank_transfer";
+          form.querySelector('input[name="paymentChoice"][value="bank_transfer"]')?.click();
+        }
+        return;
+      }
+      option.hidden = false;
+      selectOption.hidden = false;
+      selectOption.disabled = false;
+      radio.disabled = false;
+    } catch (_) {
+      option.hidden = true;
+      selectOption.hidden = true;
+      selectOption.disabled = true;
+      radio.disabled = true;
+    }
   }
 
   function initCheckoutDraft(form) {
@@ -1432,6 +1479,7 @@
     initDeliveryMethod(form);
     initNovaPoshtaCheckout(form);
     initPaymentCards(form);
+    initCardPaymentAvailability(form);
     initPromoCode(form);
     initMobileCheckoutAction();
 

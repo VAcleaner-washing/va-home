@@ -1,62 +1,32 @@
-VA HOME v15.1.2 — PRODUCTION
+VA HOME v15.2.0 — PRODUCTION
 
 Static release verification: PASS
 HTML pages: 71
 Product pages: 18
 Category landing pages: 5
 Journal articles: 26
-Approved reviews prerendered: 8
-Responsive image sources: 37
-Scent-guide answer profiles tested: 1,728
-Product DNA axes: 6
-JavaScript / MJS syntax: PASS
+JavaScript / TypeScript syntax: PASS
 Local references and duplicate IDs: PASS
-JSON-LD: PASS
-Sitemap / image sitemap XML: PASS
-Manifest / release / product JSON: PASS
-Missing image alt attributes: 0
-Missing intrinsic image dimensions: 0
+JSON-LD and sitemaps: PASS
+Root PWA: 15.2.0 / production-9
+Admin PWA: 15.2.0
 
-Release markers:
-- HTML release marker: 15.1.2 Production on 71 / 71 pages
-- Shared asset query version: 15.1.2 on all validated local references
-- Root PWA version: 15.1.2 / production-7
-- Admin PWA version: 15.1.2
+Card payments:
+- provider: monobank acquiring
+- server feature flag: ENABLED
+- server secret: CONFIGURED
+- create-order: ACTIVE v29
+- payment-config: ACTIVE v1
+- mono-webhook: ACTIVE v2
+- card-payment: ACTIVE v2
+- signed webhook verification: PASS
+- invalid signature response: HTTP 401
+- payment RPC privileges: service_role only
+- browser token exposure: NONE
+- server-side amount validation: PASS
+- retry from thank-you page: PASS
+- retry from authenticated account: PASS
+- bank transfer and cash on delivery: PRESERVED
 
-Commerce and product logic:
-- Products: 18
-- Catalog filters: 47
-- Personal Scent Profile: PASS
-- All products appear in scent-guide top 3: PASS
-- Discovery Credit 150 / 250 / 450 UAH: PASS
-- Welcome Credit 100 UAH / 7 days: PASS
-- Room Ritual: PASS
-- Repeat Atmosphere: PASS
-- Private Preview: PASS
-- Repeat Purchase automation: PASS
-
-Order-status security:
-- Production order-status Edge Function: ACTIVE v1
-- Direct anonymous RPC access: DENIED
-- Rate limit: 5 attempts / 15 minutes
-- Rate-limit verification: 200, 200, 200, 200, 200, 429 — PASS
-- Invalid / unknown order response: no customer data returned — PASS
-
-Preserved production services:
-- create-order: ACTIVE v26; local unified payment-status response prepared for the next controlled deployment
-- submit-review: ACTIVE v12
-- nova-poshta-locations: ACTIVE v6
-- validate-promo: ACTIVE v4
-- process-repeat-purchase: ACTIVE v2
-- marketing-unsubscribe: ACTIVE v1
-- issue-welcome-credit: ACTIVE v1
-
-Handoff ZIP integrity: PASS
-
-Checkout hardening in this archive:
-- account shows payment method and payment status
-- public order-status UI supports the same payment state when the RPC returns it
-- admin cannot manually confirm or alter card-provider payment state
-- bank-transfer manual confirmation requires an explicit operator confirmation
-- pending RLS policy consolidation is included but not auto-applied to production
-- online acquiring and webhook remain disabled until owner-controlled activation and testing
+Full automated verification: PASS
+Real paid control transaction: REQUIRED AFTER STATIC SITE DEPLOYMENT

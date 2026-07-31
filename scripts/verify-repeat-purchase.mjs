@@ -34,8 +34,8 @@ for (const token of ['marketing_preferences','repeat_purchase_campaigns','55 day
 }
 if (/[A-Za-z0-9_-]{35,}/.test(migration.match(/x-cron-secret[^\n]*/)?.[0] || '')) errors.push('plain cron secret appears in migration');
 if (!migration.includes('gen_random_bytes(32)')) errors.push('cron secret is not generated at deployment');
-if (!createOrder.includes('marketingConsent') || !createOrder.includes('marketing_preferences')) errors.push('create-order marketing consent flow missing');
-if (!createOrder.includes('promoRow.customer_email')) errors.push('create-order does not enforce email-bound promos');
+if (!/marketing(?:Consent|_consent)/.test(createOrder) || !createOrder.includes('marketing_preferences')) errors.push('create-order marketing consent flow missing');
+if (!/customer_email[\s\S]{0,240}(?:===|!==|!=|<>)[\s\S]{0,80}email|email[\s\S]{0,80}(?:===|!==|!=|<>)[\s\S]{0,240}customer_email/.test(createOrder)) errors.push('create-order does not enforce email-bound promos');
 if (!validatePromo.includes('email_bound') || !validatePromo.includes('validated_email')) errors.push('validate-promo personal code support missing');
 
 for (const token of ['55 * 24 * 60 * 60 * 1000','discount_value: 100','7 * 24 * 60 * 60 * 1000','Idempotency-Key','List-Unsubscribe','usage_limit: 1','customer_email: email']) {

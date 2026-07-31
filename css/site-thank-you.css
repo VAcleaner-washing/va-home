@@ -157,3 +157,5 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
   .product-card__actions { gap: 8px; }
   .product-card__actions .btn { padding-inline: 10px; }
 }
+
+.ty-card-payment-actions{margin-top:30px}.ty-card-payment-actions .btn[hidden]{display:none}.ty-card-payment-actions .ty-copy-status{min-height:20px;margin:14px 0 0}.ty-card--payment.is-paid{border-color:rgba(197,154,91,.42)}.ty-card--payment.is-failed{border-color:rgba(194,94,75,.38)}

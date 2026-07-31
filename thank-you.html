@@ -10,12 +10,13 @@
 <title>Замовлення прийнято — VA HOME</title>
 <meta content="Підтвердження оформлення замовлення VA HOME." name="description"/>
 <meta content="noindex, nofollow, noarchive" name="robots"/>
+<meta content="no-referrer" name="referrer"/>
 
 <meta content="telephone=no" name="format-detection"/>
-<meta content="15.1.2 Production" name="va-home-release"/>
+<meta content="15.2.0 Production" name="va-home-release"/>
 <link href="favicon/favicon.ico" rel="icon" sizes="any"/>
 <link href="favicon/favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="css/core.css?v=15.1.2" rel="stylesheet"/><link href="css/site-thank-you.css?v=15.1.2" rel="stylesheet"/>
+<link href="css/core.css?v=15.2.0" rel="stylesheet"/><link href="css/site-thank-you.css?v=15.2.0" rel="stylesheet"/>
 <link href="/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
 
@@ -70,6 +71,17 @@
 <p aria-live="polite" class="ty-copy-status" id="copyStatus" role="status"></p>
 </div>
 </section>
+<section aria-labelledby="cardPaymentTitle" class="ty-card ty-card--payment" hidden="" id="cardPaymentPanel">
+<div class="ty-card__header">
+<p class="ty-kicker">Карткова оплата</p>
+<h2 id="cardPaymentTitle">Перевіряємо оплату</h2>
+<p aria-live="polite" id="cardPaymentMessage">Зачекайте кілька секунд — звіряємо статус платежу з monobank.</p>
+</div>
+<div class="ty-card-payment-actions">
+<button class="btn btn-primary btn-block" hidden="" id="retryCardPaymentBtn" type="button">Повторити оплату</button>
+<p aria-live="polite" class="ty-copy-status" id="cardPaymentStatus" role="status"></p>
+</div>
+</section>
 <section aria-labelledby="codTitle" class="ty-card ty-card--payment" hidden="" id="codPanel">
 <div class="ty-card__header">
 <p class="ty-kicker">Оплата</p>
@@ -113,10 +125,11 @@
 </section>
 </main>
 <div data-root="" id="site-footer"></div>
-<script defer="" src="js/config.js?v=15.1.2"></script>
-<script defer="" src="js/thank-you.js?v=15.1.2"></script>
-<script defer="" src="js/main.js?v=15.1.2"></script>
-<script defer="" src="js/motion.js?v=15.1.2"></script>
-<script defer="" src="/js/pwa.js?v=15.1.2"></script>
+<script defer="" src="js/config.js?v=15.2.0"></script>
+<script defer="" src="js/supabase-api.js?v=15.2.0"></script>
+<script defer="" src="js/thank-you.js?v=15.2.0"></script>
+<script defer="" src="js/main.js?v=15.2.0"></script>
+<script defer="" src="js/motion.js?v=15.2.0"></script>
+<script defer="" src="/js/pwa.js?v=15.2.0"></script>
 </body>
 </html>

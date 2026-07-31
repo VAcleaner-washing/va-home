@@ -1,4 +1,4 @@
-/* VA HOME v15.1.2 — Private Preview */
+/* VA HOME v15.2.0 — Private Preview */
 (function () {
   "use strict";
   const state = document.getElementById("privatePreviewState");

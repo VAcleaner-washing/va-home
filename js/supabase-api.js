@@ -209,6 +209,44 @@
     return data;
   }
 
+  async function publicFunction(name, payload, timeoutMs = 15000) {
+    if (!configured()) throw new Error("Supabase is not configured");
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const response = await fetch(`${cfg.url}/functions/v1/${name}`, {
+        method: "POST",
+        headers: {
+          apikey: cfg.publishableKey,
+          Authorization: `Bearer ${storedAccessToken() || cfg.publishableKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload || {}),
+        signal: controller.signal
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const error = new Error(data.error || `${name.toUpperCase().replaceAll("-", "_")}_HTTP_${response.status}`);
+        error.status = response.status;
+        throw error;
+      }
+      return data;
+    } catch (cause) {
+      if (cause && cause.name === "AbortError") throw new Error("PAYMENT_TIMEOUT");
+      throw cause;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  function getPaymentConfig() {
+    return publicFunction("payment-config", {}, 8000);
+  }
+
+  function cardPayment(payload) {
+    return publicFunction("card-payment", payload, 18000);
+  }
+
   async function issueWelcomeCredit() {
     if (!configured()) throw new Error("Supabase is not configured");
     const token = storedAccessToken();
@@ -269,5 +307,5 @@
     }
   }
 
-  window.VAHomeSupabase = { configured, getApprovedReviews, getRecentApprovedReviews, getApprovedRatings, getStoredAuthUser, getAuthenticatedUser, submitReview, getPublicOrderStatus, submitOrder, issueWelcomeCredit, novaPoshtaLookup };
+  window.VAHomeSupabase = { configured, getApprovedReviews, getRecentApprovedReviews, getApprovedRatings, getStoredAuthUser, getAuthenticatedUser, submitReview, getPublicOrderStatus, submitOrder, getPaymentConfig, cardPayment, issueWelcomeCredit, novaPoshtaLookup };
 })();
