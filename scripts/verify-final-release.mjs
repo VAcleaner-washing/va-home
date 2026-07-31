@@ -52,7 +52,7 @@ try {
 
 for (const file of htmlFiles) {
   const html = fs.readFileSync(file, "utf8");
-  if (/\?v=(?!15\.1\.1\b)\d+\.\d+\.\d+/.test(html)) errors.push(`stale asset version: ${path.relative(root, file)}`);
+  if (/\?v=(?!15\.1\.2\b)\d+\.\d+\.\d+/.test(html)) errors.push(`stale asset version: ${path.relative(root, file)}`);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
   const duplicates = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
   if (duplicates.length) errors.push(`duplicate IDs ${duplicates.join(", ")}: ${path.relative(root, file)}`);
@@ -117,7 +117,7 @@ const serviceWorkerJs = fs.readFileSync(path.join(root, "service-worker.js"), "u
 if (!serviceWorkerJs.includes("production-7")) errors.push("public PWA cache revision is stale after authentic Noir packaging update");
 
 const release = JSON.parse(fs.readFileSync(path.join(root, "release.json"), "utf8"));
-if (release.version !== "15.1.1") errors.push(`release.json version is ${release.version}`);
+if (release.version !== "15.1.2") errors.push(`release.json version is ${release.version}`);
 if (!fs.existsSync(path.join(root, "data", "product-content.json"))) errors.push("central product content missing");
 if (!fs.existsSync(path.join(root, "PRODUCT-CONTENT-MASTER.md"))) errors.push("product content documentation missing");
 
@@ -185,7 +185,7 @@ if (errors.length) {
 }
 console.log(JSON.stringify({
   ok: true,
-  version: "15.1.1",
+  version: "15.1.2",
   htmlPages: htmlFiles.length,
   productPages: htmlFiles.filter((file) => file.includes(`${path.sep}products${path.sep}`)).length,
   categoryPages: (categoryConfig.categories || []).length,

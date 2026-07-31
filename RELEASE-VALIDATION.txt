@@ -1,4 +1,4 @@
-VA HOME v15.1.1 — PRODUCTION
+VA HOME v15.1.2 — PRODUCTION
 
 Static release verification: PASS
 HTML pages: 71
@@ -18,10 +18,10 @@ Missing image alt attributes: 0
 Missing intrinsic image dimensions: 0
 
 Release markers:
-- HTML release marker: 15.1.1 Production on 71 / 71 pages
-- Shared asset query version: 15.1.1 on all validated local references
-- Root PWA version: 15.1.1 / production-7
-- Admin PWA version: 15.1.1
+- HTML release marker: 15.1.2 Production on 71 / 71 pages
+- Shared asset query version: 15.1.2 on all validated local references
+- Root PWA version: 15.1.2 / production-7
+- Admin PWA version: 15.1.2
 
 Commerce and product logic:
 - Products: 18

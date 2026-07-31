@@ -156,7 +156,7 @@ for (const token of ["Розміщення", "Догляд", "Корекція",
 const productPages = fs.readdirSync(path.join(root, "products")).filter((name) => name.endsWith(".html"));
 for (const name of productPages) {
   const html = read(`products/${name}`);
-  if (!html.includes("js/scent-profile.js?v=15.1.1")) errors.push(`${name}: Personal Scent Profile script missing`);
+  if (!html.includes("js/scent-profile.js?v=15.1.2")) errors.push(`${name}: Personal Scent Profile script missing`);
 }
 
 if (errors.length) {
@@ -167,7 +167,7 @@ if (errors.length) {
 
 console.log(JSON.stringify({
   ok: true,
-  version: "15.1.1",
+  version: "15.1.2",
   repeatAtmosphere: true,
   personalScentProfile: true,
   discoveryCreditUAH: { discovery6: 150, discovery18OneBottle: 250, discovery18TwoBottles: 450 },
