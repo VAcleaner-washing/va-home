@@ -1222,6 +1222,18 @@
         paymentRetryRequired: Boolean(result.payment_retry_required),
         createdAt: new Date().toISOString()
       };
+      if (order.payment_method === "card_online" && !result.payment_url && confirmation.paymentReturnToken && window.VAHomeSupabase?.cardPayment) {
+        try {
+          const payment = await window.VAHomeSupabase.cardPayment({ action: "retry", order_number: order.client_order_id, token: confirmation.paymentReturnToken });
+          if (payment.return_token) confirmation.paymentReturnToken = payment.return_token;
+          if (payment.payment_url) result.payment_url = payment.payment_url;
+          confirmation.paymentStatus = payment.payment_status || "pending";
+          confirmation.paymentRetryRequired = !payment.payment_url;
+        } catch (_) {
+          confirmation.paymentStatus = "pending";
+          confirmation.paymentRetryRequired = true;
+        }
+      }
       sessionStorage.setItem("vahome_last_order", JSON.stringify(confirmation));
       sessionStorage.removeItem("vahome_checkout_request_id");
       sessionStorage.removeItem("vahome_checkout_draft_v65");

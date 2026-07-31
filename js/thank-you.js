@@ -13,16 +13,23 @@
     document.body.appendChild(area); area.select(); document.execCommand("copy"); area.remove(); return Promise.resolve();
   }
   function setText(id, value) { const node = document.getElementById(id); if (node) node.textContent = value; }
+  function setTitleLines(lines) {
+    const node = document.getElementById("tyTitle"); if (!node) return;
+    node.innerHTML = lines.map((line) => `<span class="ty-title-line">${line}</span>`).join("");
+    node.classList.toggle("is-long", lines.join(" ").length > 18);
+  }
   function normalizePaymentRecipient(value) {
     const recipient = String(value || "").trim().normalize("NFC");
     return recipient && !recipient.includes("\uFFFD") ? recipient : DEFAULT_PAYMENT_RECIPIENT;
   }
+  function paymentContext() { try { return JSON.parse(sessionStorage.getItem("vahome_payment_return_context") || "null") || {}; } catch (_) { return {}; } }
   function queryPaymentIdentity(order) {
     const params = new URLSearchParams(location.search);
+    const context = paymentContext();
     return {
-      orderNumber: params.get("order") || order?.orderNumber || order?.client_order_id || "",
-      token: params.get("token") || order?.paymentReturnToken || "",
-      isReturn: params.get("payment") === "return" || params.get("payment") === "pending"
+      orderNumber: params.get("order") || context.order || order?.orderNumber || order?.client_order_id || "",
+      token: params.get("token") || context.token || order?.paymentReturnToken || "",
+      isReturn: params.get("payment") === "return" || params.get("payment") === "pending" || Boolean(context.payment)
     };
   }
   function cleanPaymentQuery() {
@@ -75,6 +82,13 @@
     }
     try {
       const result = await window.VAHomeSupabase.cardPayment({ action: "status", order_number: identity.orderNumber, token: identity.token });
+      if (result.payment_status === "pending" && !result.payment_url && (order.paymentRetryRequired || result.error_code === "INVOICE_RETRY_REQUIRED")) {
+        try {
+          const retried = await window.VAHomeSupabase.cardPayment({ action: "retry", order_number: identity.orderNumber, token: identity.token });
+          if (retried.return_token) { order.paymentReturnToken = retried.return_token; saveOrder(order); }
+          if (retried.payment_url) { location.assign(retried.payment_url); return; }
+        } catch (_) {}
+      }
       const view = cardMessage(result.payment_status, result.failure_reason);
       setText("cardPaymentTitle", view.title);
       setText("cardPaymentMessage", view.message);
@@ -85,7 +99,7 @@
       order.paymentReturnToken = identity.token;
       saveOrder(order);
       if (result.payment_status === "paid") {
-        setText("tyTitle", "Оплату\nпідтверджено.");
+        setTitleLines(["Оплату", "підтверджено."]);
         setText("orderSuccessLead", "Замовлення оплачено. Ми вже готуємо його до відправлення.");
         setText("paymentNote", "Після комплектації надішлемо номер ТТН.");
       }
@@ -134,7 +148,7 @@
       setText("paymentNote", "Відправимо замовлення Новою поштою протягом 1–2 робочих днів. Оплата — під час отримання.");
     }
     if (isCard) {
-      setText("tyTitle", "Замовлення\nзбережено.");
+      setTitleLines(["Замовлення", "збережено."]);
       setText("orderSuccessLead", "Перевіряємо карткову оплату та одразу оновимо статус замовлення.");
       setText("paymentNote", "Після підтвердження банком замовлення автоматично перейде на комплектацію.");
       syncCardPayment(order);

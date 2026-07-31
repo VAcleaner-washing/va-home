@@ -161,3 +161,8 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 .ty-card-payment-actions{margin-top:30px}.ty-card-payment-actions .btn[hidden]{display:none}.ty-card-payment-actions .ty-copy-status{min-height:20px;margin:14px 0 0}.ty-card--payment.is-paid{border-color:rgba(197,154,91,.42)}.ty-card--payment.is-failed{border-color:rgba(194,94,75,.38)}
 
 .ty-payment-provider{display:flex;align-items:center;gap:14px;margin:-4px 0 22px}.ty-payment-provider img{display:block;width:116px;height:auto}.ty-payment-provider span{color:var(--text-secondary);font-size:10px;letter-spacing:.08em;text-transform:uppercase}@media(max-width:480px){.ty-payment-provider{align-items:flex-start;flex-direction:column;gap:8px}}
+
+/* v15.3.0 — controlled title wrapping */
+.ty-title-line{display:block;white-space:nowrap;word-break:normal;overflow-wrap:normal;hyphens:none}
+.ty-intro h1.is-long{max-width:none;font-size:clamp(3.35rem,5.25vw,5.9rem)}
+@media(max-width:600px){.ty-intro h1.is-long{font-size:clamp(2.75rem,13.2vw,4.35rem);letter-spacing:-.04em}}
