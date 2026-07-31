@@ -114,7 +114,7 @@ for (const discoveryAsset of [
   if (!fs.existsSync(path.join(root, discoveryAsset))) errors.push(`Discovery visual missing: ${discoveryAsset}`);
 }
 const serviceWorkerJs = fs.readFileSync(path.join(root, "service-worker.js"), "utf8");
-if (!serviceWorkerJs.includes("production-6")) errors.push("public PWA cache revision is stale after Noir visual update");
+if (!serviceWorkerJs.includes("production-7")) errors.push("public PWA cache revision is stale after authentic Noir packaging update");
 
 const release = JSON.parse(fs.readFileSync(path.join(root, "release.json"), "utf8"));
 if (release.version !== "15.1.0") errors.push(`release.json version is ${release.version}`);

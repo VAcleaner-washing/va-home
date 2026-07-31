@@ -5,6 +5,9 @@
   "date": "2026-07-31",
   "base": "14.0.0-RC6.6-VISUAL-REALISM",
   "changes": [
+    "Corrects the Noir kraft-box artwork by transferring the authentic distressed VA HOME stamp from the real packaging reference instead of generating replacement lettering",
+    "Preserves the exact VA HOME, ULTRA MOLECULAR, Ukrainian atmosphere line and va_home.aroma hierarchy in both box-bearing Noir frames",
+    "Advances the PWA cache revision after the authentic packaging correction",
     "Replaces the generic Noir collection still life with a faithful six-bottle VA HOME collection portrait in warm architectural light",
     "Adds a distinct daylight Noir editorial inside the Journal article to reinforce that Noir means depth rather than darkness",
     "Adds a candid real-box Noir composition to the homepage Instagram grid without repeating the collection-page frame",
