@@ -1,12 +1,13 @@
 {
-  "version": "15.5.0-RC1.15",
+  "version": "15.5.0-RC1.16",
   "channel": "Release Candidate",
-  "name": "MOBILE CATALOGUE CTA ALIGNMENT",
+  "name": "GALLERY SOURCE FIX + FULL MOBILE QA",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1.14",
+  "base": "15.5.0-RC1.15",
   "changes": [
-    "Aligns all mobile catalogue add-to-cart buttons to one baseline within each product row",
-    "Reserves consistent space for collection, title, description and rating without truncating the core purchase information",
-    "Keeps the one-column layout below 391 px unchanged"
+    "Fixes product gallery on mobile and desktop by removing the static hero srcset after gallery mount",
+    "Removes the duplicate foreground transition image that could leave the first image visible over the selected slide",
+    "Adds site-wide mobile QA corrections for product pages, cards, reviews, forms, Room Ritual, Discovery, comparison and footer",
+    "Synchronizes frontend, PWA, service workers and backend release references"
   ]
 }

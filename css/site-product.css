@@ -3866,3 +3866,18 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
   .product-journal-proof{grid-template-columns:1fr;gap:5px;padding-block:11px}
   .product-journal-proof__title{font-size:18px}
 }
+
+/* ===== VA HOME v15.5.0-RC1.16 — deterministic gallery foreground ===== */
+.product-gallery .product-hero__media > img.product-main-image-transition{
+  display:none!important;
+}
+.product-gallery .product-hero__media > img#productMainImage{
+  opacity:1!important;
+  transition:opacity .3s cubic-bezier(.22,.61,.36,1)!important;
+}
+.product-gallery .product-hero__media > img#productMainImage.is-gallery-switching{
+  opacity:.14!important;
+}
+@media(prefers-reduced-motion:reduce){
+  .product-gallery .product-hero__media > img#productMainImage{transition:none!important}
+}
