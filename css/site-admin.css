@@ -1139,3 +1139,54 @@ img,video,canvas,svg{max-width:100%}
 
 /* v15.1.1 — Private Release management */
 .admin-release-card{grid-template-columns:minmax(0,1.4fr) minmax(180px,.8fr) auto;cursor:pointer}.admin-release-card:hover{border-color:rgba(200,162,124,.5)}.admin-release-dialog{width:min(760px,calc(100vw - 28px));padding:0}.admin-release-shell{background:#0d0c0a;color:#f3efe9;border:1px solid rgba(200,162,124,.25);max-height:min(88vh,900px);overflow:auto}.admin-release-form{display:grid;gap:20px;padding:28px 32px 34px}.admin-release-form>label,.admin-release-grid>label{display:grid;gap:8px;color:#c9c1b8;font-size:13px}.admin-release-form input,.admin-release-form textarea,.admin-release-form select{width:100%;border:1px solid #332c24;background:#15120f;color:#f7f2ec;padding:13px 14px;font:inherit}.admin-release-form textarea{resize:vertical}.admin-release-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.admin-release-auto{justify-self:start}.admin-release-form .admin-promo-footer{margin:8px -32px -34px;padding:20px 32px}@media(max-width:760px){.admin-release-card{grid-template-columns:1fr}.admin-release-grid{grid-template-columns:1fr}.admin-release-form{padding:22px 18px 28px}.admin-release-form .admin-promo-footer{margin:6px -18px -28px;padding:18px}.admin-tabs{overflow-x:auto;justify-content:flex-start}.admin-tabs button{flex:0 0 auto}}
+
+/* VA HOME v15.3.2 — provider-led card-payment states in admin */
+.admin-payment-state{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:10px;
+  padding:7px 9px;
+  border:1px solid rgba(255,255,255,.13);
+  font-size:11px;
+}
+.admin-payment-state span{
+  color:#8f8579;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.admin-payment-state strong{font-weight:500}
+.admin-payment-state--pending strong{color:#e8c78d}
+.admin-payment-state--paid strong{color:#8fd1a8}
+.admin-payment-state--failed strong{color:#df8d8d}
+.admin-payment-state--refunded strong{color:#8ab9de}
+.admin-card-payment-box{
+  display:grid;
+  gap:9px;
+  padding:18px 20px;
+  border:1px solid rgba(199,151,77,.28);
+  background:linear-gradient(135deg,rgba(199,151,77,.08),rgba(255,255,255,.015));
+}
+.admin-card-payment-box>div{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  align-items:center;
+}
+.admin-card-payment-box span{
+  color:#c7974d;
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.admin-card-payment-box strong{font-family:var(--font-display);font-size:23px;font-weight:400}
+.admin-card-payment-box p,.admin-card-payment-box small{margin:0;color:#a99e91;line-height:1.55}
+.admin-card-payment-box--paid strong{color:#8fd1a8}
+.admin-card-payment-box--failed strong{color:#df8d8d}
+.admin-card-payment-box--refunded strong{color:#8ab9de}
+.admin-field select:disabled{opacity:.68;cursor:not-allowed}
+.admin-field option:disabled{color:#6f675e}
+@media(max-width:850px){
+  .admin-card-payment-box>div{align-items:flex-start;flex-direction:column;gap:5px}
+  .admin-card-payment-box strong{font-size:26px}
+}

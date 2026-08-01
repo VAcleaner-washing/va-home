@@ -1,11 +1,53 @@
 (function(){"use strict";
 const cfg=window.SITE_CONFIG.supabase;
 const sb=window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-const statusLabels={new:"Нове",pending:"Очікує підтвердження",awaiting_payment:"Очікує оплату",paid:"Оплачено",shipped:"Відправлено",completed:"Виконано",cancelled:"Скасовано"};
+const statusLabels={new:"Нове",awaiting_payment:"Очікує оплату",paid:"Оплачено",shipped:"Відправлено",completed:"Виконано",cancelled:"Скасовано"};
+const orderStatusOrder=["new","awaiting_payment","paid","shipped","completed","cancelled"];
 const paymentMethodLabels={bank_transfer:"На рахунок",cash_on_delivery:"При отриманні",card_online:"Карткою онлайн"};
 const paymentStatusLabels={unpaid:"Не оплачено",pending:"Очікує банк",verification:"Перевіряємо",failed:"Не завершено",expired:"Прострочено",paid:"Оплачено",refunded:"Повернено"};
 let orders=[],reviews=[],promos=[],releases=[],activeOrder=null,activePromo=null,activeRelease=null;
 const $=s=>document.querySelector(s);const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));const money=v=>`${Number(v||0).toLocaleString("uk-UA",{maximumFractionDigits:2})} грн`;const date=v=>new Intl.DateTimeFormat("uk-UA",{dateStyle:"medium",timeStyle:"short"}).format(new Date(v));
+function isCardOrder(order){return order?.payment_method==="card_online";}
+function effectiveOrderStatus(order){
+  if(!isCardOrder(order))return order?.status||"new";
+  const payment=String(order?.payment_status||"pending");
+  if(payment==="paid")return ["shipped","completed"].includes(order.status)?order.status:"paid";
+  if(payment==="refunded")return "cancelled";
+  return "awaiting_payment";
+}
+function isActiveCardPayment(order){return isCardOrder(order)&&["unpaid","pending","verification"].includes(String(order.payment_status||"pending"));}
+function cardPaymentUi(order){
+  const status=String(order?.payment_status||"pending");
+  const states={
+    unpaid:{key:"pending",label:"Очікує створення рахунку",detail:"Платіж ще не підтверджений банком."},
+    pending:{key:"pending",label:"Очікує оплату",detail:"Активний рахунок plata by mono."},
+    verification:{key:"pending",label:"Перевіряється",detail:"Банк завершує перевірку платежу."},
+    failed:{key:"failed",label:"Не завершено",detail:order?.payment_failure_reason||"Банк відхилив або не завершив платіж."},
+    expired:{key:"failed",label:"Рахунок прострочено",detail:"Для оплати потрібно створити новий рахунок."},
+    paid:{key:"paid",label:"Оплачено",detail:"Оплату підтверджено plata by mono."},
+    refunded:{key:"refunded",label:"Кошти повернено",detail:"Повернення підтверджене платіжним сервісом."}
+  };
+  return states[status]||{key:"pending",label:paymentStatusLabels[status]||status,detail:"Статус отримано від платіжного сервісу."};
+}
+function cardAllowedStatuses(order){
+  if(!isCardOrder(order))return orderStatusOrder;
+  const payment=String(order.payment_status||"pending");
+  if(payment==="paid")return ["paid","shipped","completed"];
+  if(payment==="refunded")return ["cancelled"];
+  if(["failed","expired"].includes(payment))return ["awaiting_payment","cancelled"];
+  return ["new","awaiting_payment"];
+}
+function canSetOrderStatus(order,nextStatus){return !isCardOrder(order)||cardAllowedStatuses(order).includes(nextStatus);}
+function orderStatusOptions(order){
+  const current=effectiveOrderStatus(order);
+  const allowed=new Set(cardAllowedStatuses(order));
+  if(current)allowed.add(current);
+  return orderStatusOrder.map(value=>{
+    const disabled=isCardOrder(order)&&!allowed.has(value);
+    return `<option value="${value}" ${current===value?"selected":""} ${disabled?"disabled":""}>${statusLabels[value]}${disabled?" — недоступно":""}</option>`;
+  }).join("");
+}
+
 function toast(text){const el=document.createElement("div");el.className="admin-toast";el.textContent=text;document.body.appendChild(el);setTimeout(()=>el.remove(),2800)}
 async function requireAdmin(){const {data:{user}}=await sb.auth.getUser();if(!user)return false;const {data,error}=await sb.from("admin_users").select("user_id,email").eq("user_id",user.id).maybeSingle();if(error||!data){await sb.auth.signOut();throw new Error("Цей акаунт не має доступу до адмін-панелі.");}$("#adminIdentity").textContent=data.email;return true;}
 
@@ -16,37 +58,126 @@ async function loadAll(){document.body.classList.add("admin-loading");try{const 
 
 function renderStats(){
   const counts={new:0,awaiting_payment:0,paid:0,shipped:0,completed:0,cancelled:0};
-  orders.forEach(o=>{if(counts[o.status]!==undefined)counts[o.status]++});
+  orders.forEach(order=>{const status=effectiveOrderStatus(order);if(counts[status]!==undefined)counts[status]++});
   $("#ordersStats").innerHTML=Object.entries(counts).map(([s,n])=>`<button class="admin-stat" data-status-jump="${s}" type="button"><strong>${n}</strong><span>${statusLabels[s]}</span></button>`).join("");
   document.querySelectorAll("[data-status-jump]").forEach(button=>button.addEventListener("click",()=>{
     $("#orderStatusFilter").value=button.dataset.statusJump;
     renderOrders();
     $("#ordersList").scrollIntoView({behavior:"smooth",block:"start"});
   }));
-  $("#ordersBadge").textContent=orders.filter(o=>["new","awaiting_payment"].includes(o.status)).length||"";
+  $("#ordersBadge").textContent=orders.filter(order=>["new","awaiting_payment"].includes(effectiveOrderStatus(order))).length||"";
   const now=new Date(),startDay=new Date(now.getFullYear(),now.getMonth(),now.getDate()),startWeek=new Date(startDay);startWeek.setDate(startDay.getDate()-6);const startMonth=new Date(now.getFullYear(),now.getMonth(),1);
   const periods=[["Сьогодні",startDay],["7 днів",startWeek],["Цей місяць",startMonth]];
-  $("#periodStats").innerHTML=periods.map(([label,start])=>{const rows=orders.filter(o=>new Date(o.created_at)>=start&&o.status!=="cancelled");const total=rows.reduce((sum,o)=>sum+Number(o.total_amount||0),0);return `<article class="admin-period-card"><span>${label}</span><strong>${money(total)}</strong><small>${rows.length} замовлень</small></article>`}).join("");
+  $("#periodStats").innerHTML=periods.map(([label,start])=>{const rows=orders.filter(o=>new Date(o.created_at)>=start&&effectiveOrderStatus(o)!=="cancelled");const total=rows.reduce((sum,o)=>sum+Number(o.total_amount||0),0);return `<article class="admin-period-card"><span>${label}</span><strong>${money(total)}</strong><small>${rows.length} замовлень</small></article>`}).join("");
   renderChart();
 }
 
-function renderChart(){const days=[];for(let i=29;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i);days.push({date:d,total:0})}orders.filter(o=>o.status!=="cancelled").forEach(o=>{const d=new Date(o.created_at);d.setHours(0,0,0,0);const day=days.find(x=>x.date.getTime()===d.getTime());if(day)day.total+=Number(o.total_amount||0)});const max=Math.max(1,...days.map(d=>d.total));$("#salesChart").innerHTML=days.map(d=>`<div class="admin-chart__bar" style="--bar-height:${Math.max(2,d.total/max*100)}%"><span>${d.date.toLocaleDateString("uk-UA",{day:"2-digit",month:"2-digit"})}: ${money(d.total)}</span></div>`).join("");$("#chartTotal").textContent=money(days.reduce((s,d)=>s+d.total,0));}
+function renderChart(){const days=[];for(let i=29;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i);days.push({date:d,total:0})}orders.filter(o=>effectiveOrderStatus(o)!=="cancelled").forEach(o=>{const d=new Date(o.created_at);d.setHours(0,0,0,0);const day=days.find(x=>x.date.getTime()===d.getTime());if(day)day.total+=Number(o.total_amount||0)});const max=Math.max(1,...days.map(d=>d.total));$("#salesChart").innerHTML=days.map(d=>`<div class="admin-chart__bar" style="--bar-height:${Math.max(2,d.total/max*100)}%"><span>${d.date.toLocaleDateString("uk-UA",{day:"2-digit",month:"2-digit"})}: ${money(d.total)}</span></div>`).join("");$("#chartTotal").textContent=money(days.reduce((s,d)=>s+d.total,0));}
 
-function renderOrders(){renderStats();const q=$("#orderSearch").value.trim().toLowerCase(),filter=$("#orderStatusFilter").value;const list=orders.filter(o=>(!filter||o.status===filter)&&(!q||[o.client_order_id,o.customer_name,o.customer_phone,o.customer_email,o.customer_city,o.delivery_details].join(" ").toLowerCase().includes(q)));$("#ordersEmpty").hidden=!!list.length;$("#ordersList").innerHTML=list.map(o=>`<article class="admin-card admin-order-card" data-order="${esc(o.id)}"><div><div class="admin-card__title">${esc(o.client_order_id)}</div><div class="admin-card__meta">${date(o.created_at)}</div><div class="admin-quick-status">${o.status==="new"?`<button data-quick-status="awaiting_payment">До оплати</button>`:""}${!["paid","shipped","completed","cancelled"].includes(o.status)?`<button data-quick-status="paid">Оплачено</button>`:""}${o.status==="paid"?`<button data-quick-status="shipped">Відправлено</button>`:""}${o.status==="shipped"?`<button data-quick-status="completed">Виконано + відгук</button>`:""}</div></div><div><div>${esc(o.customer_name)}</div><div class="admin-card__meta">${esc(o.customer_phone)} · ${esc(o.customer_city)}</div></div><span class="status-pill status-${esc(o.status)}">${esc(statusLabels[o.status]||o.status)}</span><div class="admin-card__amount">${money(o.total_amount)}</div></article>`).join("");document.querySelectorAll("[data-order]").forEach(el=>el.addEventListener("click",()=>openOrder(el.dataset.order)));document.querySelectorAll("[data-quick-status]").forEach(btn=>btn.addEventListener("click",e=>{e.stopPropagation();quickStatus(btn.closest("[data-order]").dataset.order,btn.dataset.quickStatus)}));}
+function renderOrders(){
+  renderStats();
+  const q=$("#orderSearch").value.trim().toLowerCase(),filter=$("#orderStatusFilter").value;
+  const list=orders.filter(o=>(!filter||effectiveOrderStatus(o)===filter)&&(!q||[o.client_order_id,o.customer_name,o.customer_phone,o.customer_email,o.customer_city,o.delivery_details].join(" ").toLowerCase().includes(q)));
+  $("#ordersEmpty").hidden=!!list.length;
+  $("#ordersList").innerHTML=list.map(o=>{
+    const cardPayment=isCardOrder(o);
+    const displayedStatus=effectiveOrderStatus(o);
+    const bank=cardPayment?cardPaymentUi(o):null;
+    const quick=[];
+    if(cardPayment){
+      if(o.payment_status==="paid"&&displayedStatus==="paid")quick.push('<button data-quick-status="shipped">Відправлено</button>');
+      if(o.payment_status==="paid"&&displayedStatus==="shipped")quick.push('<button data-quick-status="completed">Виконано + відгук</button>');
+    }else{
+      if(o.status==="new")quick.push('<button data-quick-status="awaiting_payment">До оплати</button>');
+      if(!["paid","shipped","completed","cancelled"].includes(o.status))quick.push('<button data-quick-status="paid">Оплачено</button>');
+      if(o.status==="paid")quick.push('<button data-quick-status="shipped">Відправлено</button>');
+      if(o.status==="shipped")quick.push('<button data-quick-status="completed">Виконано + відгук</button>');
+    }
+    return `<article class="admin-card admin-order-card" data-order="${esc(o.id)}"><div><div class="admin-card__title">${esc(o.client_order_id)}</div><div class="admin-card__meta">${date(o.created_at)}</div>${cardPayment?`<div class="admin-payment-state admin-payment-state--${bank.key}"><span>Банк</span><strong>${esc(bank.label)}</strong></div>`:""}<div class="admin-quick-status">${quick.join("")}</div></div><div><div>${esc(o.customer_name)}</div><div class="admin-card__meta">${esc(o.customer_phone)} · ${esc(o.customer_city)}</div></div><span class="status-pill status-${esc(displayedStatus)}">${esc(statusLabels[displayedStatus]||displayedStatus)}</span><div class="admin-card__amount">${money(o.total_amount)}</div></article>`;
+  }).join("");
+  document.querySelectorAll("[data-order]").forEach(el=>el.addEventListener("click",()=>openOrder(el.dataset.order)));
+  document.querySelectorAll("[data-quick-status]").forEach(btn=>btn.addEventListener("click",e=>{e.stopPropagation();quickStatus(btn.closest("[data-order]").dataset.order,btn.dataset.quickStatus)}));
+}
 
-async function quickStatus(id,status){const order=orders.find(o=>String(o.id)===String(id));if(!order)return;if(status==="paid"&&order.payment_method==="card_online")return toast("Карткову оплату підтверджує тільки платіжний сервіс");if(status==="paid"&&!confirm("Підтвердити, що оплату фактично отримано?"))return;const old=order.status;const payload={status};if(status==="paid")payload.payment_status="paid";const {data,error}=await sb.from("orders").update(payload).eq("id",id).select().single();if(error)return toast("Помилка: "+error.message);Object.assign(order,data);renderOrders();toast("Статус змінено");if(old!==status)sb.functions.invoke("send-status-email",{body:{client_order_id:order.client_order_id}}).then(({error})=>{if(error)toast("Лист клієнту не надіслано")});}
+async function quickStatus(id,status){
+  const order=orders.find(o=>String(o.id)===String(id));
+  if(!order)return;
+  if(isCardOrder(order)&&!canSetOrderStatus(order,status)){
+    const message=order.payment_status==="paid"
+      ?"Оплачене карткове замовлення не скасовується вручну — спочатку оформіть повернення через платіжний сервіс"
+      :"Дочекайтеся актуального статусу plata by mono";
+    return toast(message);
+  }
+  if(status==="paid"&&isCardOrder(order))return toast("Карткову оплату підтверджує тільки plata by mono");
+  if(status==="paid"&&!confirm("Підтвердити, що оплату фактично отримано?"))return;
+  const old=effectiveOrderStatus(order);
+  const payload={status};
+  if(status==="paid"&&!isCardOrder(order))payload.payment_status="paid";
+  const {data,error}=await sb.from("orders").update(payload).eq("id",id).select().single();
+  if(error)return toast("Помилка: "+error.message);
+  Object.assign(order,data);renderOrders();toast("Статус змінено");
+  if(old!==effectiveOrderStatus(order))sb.functions.invoke("send-status-email",{body:{client_order_id:order.client_order_id}}).then(({error})=>{if(error)toast("Лист клієнту не надіслано")});
+}
 
 function renderReviews(){const q=$("#reviewSearch").value.trim().toLowerCase(),filter=$("#reviewStatusFilter").value;const list=reviews.filter(r=>(!filter||r.status===filter)&&(!q||[r.product_slug,r.customer_name,r.review_text].join(" ").toLowerCase().includes(q)));$("#reviewsBadge").textContent=reviews.filter(r=>r.status==="pending").length||"";$("#reviewsAdminEmpty").hidden=!!list.length;$("#reviewsAdminList").innerHTML=list.map(r=>`<article class="admin-card review-admin-card"><div>${r.photo_url?`<img class="review-admin-card__photo" src="${esc(r.photo_url)}" alt="Фото до відгуку" loading="lazy">`:""}<div class="review-admin-card__stars">${"★".repeat(Number(r.rating)||0)}${"☆".repeat(5-(Number(r.rating)||0))}</div><div class="admin-card__title">${esc(r.product_slug)} · ${esc(r.customer_name)}</div><p>${esc(r.review_text)}</p><div class="admin-card__meta">${date(r.created_at)} · ${esc(r.status)}${r.verified_purchase?" · Перевірена покупка":""}</div></div><div class="review-admin-card__actions">${r.status!=="approved"?`<button class="btn btn-primary btn-small" data-review-action="approved" data-review-id="${r.id}">Схвалити</button>`:""}${r.status!=="rejected"?`<button class="btn btn-secondary btn-small" data-review-action="rejected" data-review-id="${r.id}">Відхилити</button>`:""}</div></article>`).join("");document.querySelectorAll("[data-review-action]").forEach(b=>b.addEventListener("click",()=>moderateReview(b.dataset.reviewId,b.dataset.reviewAction)));}
 async function moderateReview(id,status){const {error}=await sb.from("reviews").update({status}).eq("id",id);if(error)return toast("Помилка: "+error.message);const row=reviews.find(r=>String(r.id)===String(id));if(row)row.status=status;renderReviews();toast(status==="approved"?"Відгук схвалено":"Відгук відхилено");}
 
 function openOrder(id){
-activeOrder=orders.find(o=>String(o.id)===String(id));if(!activeOrder)return;const items=Array.isArray(activeOrder.items)?activeOrder.items:[];const cardPayment=activeOrder.payment_method==="card_online";$("#orderDialogContent").innerHTML=`<div class="admin-dialog__body"><div class="admin-dialog__head"><div><p class="eyebrow">Замовлення</p><h2>${esc(activeOrder.client_order_id)}</h2><p class="admin-card__meta">${date(activeOrder.created_at)}</p></div><strong class="admin-order-total">${money(activeOrder.total_amount)}</strong></div><div class="admin-detail-grid"><div class="admin-detail"><span>Клієнт</span>${esc(activeOrder.customer_name)}</div><div class="admin-detail"><span>Телефон</span><a href="tel:${esc(activeOrder.customer_phone)}">${esc(activeOrder.customer_phone)}</a></div><div class="admin-detail"><span>Email</span><a href="mailto:${esc(activeOrder.customer_email)}">${esc(activeOrder.customer_email)}</a></div><div class="admin-detail"><span>Доставка</span>${esc(activeOrder.delivery_method||"Нова пошта")} · ${esc(activeOrder.customer_city)}, ${esc(activeOrder.delivery_details)}</div><div class="admin-detail"><span>Спосіб оплати</span>${esc(paymentMethodLabels[activeOrder.payment_method]||activeOrder.payment_method||"Не вказано")}</div><div class="admin-detail"><span>Статус оплати</span>${esc(paymentStatusLabels[activeOrder.payment_status]||activeOrder.payment_status||"Не вказано")}</div><div class="admin-detail"><span>Запрошення на відгук</span>${activeOrder.review_invitation_sent_at?`Надіслано ${date(activeOrder.review_invitation_sent_at)}`:"Ще не надсилалося"}</div><div class="admin-detail"><span>Персональні пропозиції</span>${activeOrder.marketing_consent?"Згода надана":"Без згоди"}</div><div class="admin-detail"><span>Повторна пропозиція</span>${activeOrder.repeat_campaign_sent_at?`Надіслано ${date(activeOrder.repeat_campaign_sent_at)}`:activeOrder.marketing_consent&&activeOrder.status==="completed"?"Запланована через 55 днів після виконання":"Не запланована"}</div></div><div class="admin-items">${items.map(i=>`<div class="admin-item"><span>${esc(i.name)} × ${esc(i.quantity)}${Array.isArray(i.selections)&&i.selections.length?`<small>Обрано: ${i.selections.map(esc).join(" · ")}</small>`:""}</span><strong>${money(i.line_total)}</strong></div>`).join("")}</div><div class="admin-actions"><label class="admin-field">Статус<select id="editStatus">${Object.entries(statusLabels).map(([v,l])=>`<option value="${v}" ${activeOrder.status===v?"selected":""}>${l}</option>`).join("")}</select></label><label class="admin-field">Статус оплати<select id="editPayment" ${cardPayment?"disabled":""}><option value="unpaid" ${activeOrder.payment_status==="unpaid"?"selected":""}>Не оплачено</option><option value="pending" ${activeOrder.payment_status==="pending"?"selected":""}>Очікує банк</option><option value="verification" ${activeOrder.payment_status==="verification"?"selected":""}>Перевіряємо</option><option value="failed" ${activeOrder.payment_status==="failed"?"selected":""}>Не завершено</option><option value="expired" ${activeOrder.payment_status==="expired"?"selected":""}>Прострочено</option><option value="paid" ${activeOrder.payment_status==="paid"?"selected":""}>Оплачено</option><option value="refunded" ${activeOrder.payment_status==="refunded"?"selected":""}>Повернення</option></select>${cardPayment?"<small>Статус карткової оплати змінює тільки платіжний сервіс.</small>":""}</label><label class="admin-field">ТТН<input id="editTracking" value="${esc(activeOrder.tracking_number||"")}" placeholder="Номер ТТН"></label><label class="admin-field">Коментар адміністратора<textarea id="editNote">${esc(activeOrder.admin_note||"")}</textarea></label><div class="admin-actions__buttons"><button id="saveOrderBtn" class="btn btn-primary" type="button">Зберегти зміни</button></div></div></div>`;$("#saveOrderBtn").addEventListener("click",saveOrder);$("#orderDialog").showModal();}
-const openOrderPaymentBase=openOrder;
-openOrder=function(id){openOrderPaymentBase(id);const actions=$(".admin-actions");if(!actions||!activeOrder)return;const label=document.createElement("label");label.className="admin-field";const cardPayment=activeOrder.payment_method==="card_online";label.innerHTML=`Спосіб оплати<select id="editPaymentMethod" ${cardPayment?"disabled":""}><option value="bank_transfer" ${activeOrder.payment_method==="bank_transfer"?"selected":""}>На рахунок</option><option value="cash_on_delivery" ${activeOrder.payment_method==="cash_on_delivery"?"selected":""}>При отриманні</option>${cardPayment?'<option value="card_online" selected>Карткою онлайн</option>':""}</select>${cardPayment?"<small>Спосіб зафіксований платіжним замовленням.</small>":""}`;actions.insertBefore(label,actions.children[2]||null);if(!cardPayment)label.querySelector("select").addEventListener("change",async e=>{const {error}=await sb.from("orders").update({payment_method:e.target.value}).eq("id",activeOrder.id);if(error)return toast("Не вдалося змінити спосіб оплати");activeOrder.payment_method=e.target.value;toast("Спосіб оплати змінено")})};
+  activeOrder=orders.find(o=>String(o.id)===String(id));
+  if(!activeOrder)return;
+  const items=Array.isArray(activeOrder.items)?activeOrder.items:[];
+  const cardPayment=isCardOrder(activeOrder);
+  const bank=cardPayment?cardPaymentUi(activeOrder):null;
+  const paymentOptions=Object.entries(paymentStatusLabels).map(([value,label])=>`<option value="${value}" ${activeOrder.payment_status===value?"selected":""}>${label}</option>`).join("");
+  const paymentBox=cardPayment?`<div class="admin-card-payment-box admin-card-payment-box--${bank.key}"><div><span>plata by mono</span><strong>${esc(bank.label)}</strong></div><p>${esc(bank.detail)}</p>${activeOrder.payment_error_code?`<small>Код банку: ${esc(activeOrder.payment_error_code)}</small>`:""}</div>`:"";
+  $("#orderDialogContent").innerHTML=`<div class="admin-dialog__body"><div class="admin-dialog__head"><div><p class="eyebrow">Замовлення</p><h2>${esc(activeOrder.client_order_id)}</h2><p class="admin-card__meta">${date(activeOrder.created_at)}</p></div><strong class="admin-order-total">${money(activeOrder.total_amount)}</strong></div>${paymentBox}<div class="admin-detail-grid"><div class="admin-detail"><span>Клієнт</span>${esc(activeOrder.customer_name)}</div><div class="admin-detail"><span>Телефон</span><a href="tel:${esc(activeOrder.customer_phone)}">${esc(activeOrder.customer_phone)}</a></div><div class="admin-detail"><span>Email</span><a href="mailto:${esc(activeOrder.customer_email)}">${esc(activeOrder.customer_email)}</a></div><div class="admin-detail"><span>Доставка</span>${esc(activeOrder.delivery_method||"Нова пошта")} · ${esc(activeOrder.customer_city)}, ${esc(activeOrder.delivery_details)}</div><div class="admin-detail"><span>Спосіб оплати</span>${esc(paymentMethodLabels[activeOrder.payment_method]||activeOrder.payment_method||"Не вказано")}</div><div class="admin-detail"><span>Статус оплати</span>${esc(paymentStatusLabels[activeOrder.payment_status]||activeOrder.payment_status||"Не вказано")}</div><div class="admin-detail"><span>Запрошення на відгук</span>${activeOrder.review_invitation_sent_at?`Надіслано ${date(activeOrder.review_invitation_sent_at)}`:"Ще не надсилалося"}</div><div class="admin-detail"><span>Персональні пропозиції</span>${activeOrder.marketing_consent?"Згода надана":"Без згоди"}</div><div class="admin-detail"><span>Повторна пропозиція</span>${activeOrder.repeat_campaign_sent_at?`Надіслано ${date(activeOrder.repeat_campaign_sent_at)}`:activeOrder.marketing_consent&&activeOrder.status==="completed"?"Запланована через 55 днів після виконання":"Не запланована"}</div></div><div class="admin-items">${items.map(i=>`<div class="admin-item"><span>${esc(i.name)} × ${esc(i.quantity)}${Array.isArray(i.selections)&&i.selections.length?`<small>Обрано: ${i.selections.map(esc).join(" · ")}</small>`:""}</span><strong>${money(i.line_total)}</strong></div>`).join("")}</div><div class="admin-actions"><label class="admin-field">Статус замовлення<select id="editStatus">${orderStatusOptions(activeOrder)}</select>${cardPayment?"<small>Доступні лише етапи, які відповідають підтвердженому статусу банку.</small>":""}</label><label class="admin-field">Статус оплати<select id="editPayment" ${cardPayment?"disabled":""}>${paymentOptions}</select>${cardPayment?"<small>Це поле змінює тільки plata by mono.</small>":""}</label><label class="admin-field">Спосіб оплати<select id="editPaymentMethod" ${cardPayment?"disabled":""}><option value="bank_transfer" ${activeOrder.payment_method==="bank_transfer"?"selected":""}>На рахунок</option><option value="cash_on_delivery" ${activeOrder.payment_method==="cash_on_delivery"?"selected":""}>При отриманні</option>${cardPayment?'<option value="card_online" selected>Карткою онлайн</option>':""}</select>${cardPayment?"<small>Спосіб зафіксований платіжним замовленням.</small>":""}</label><label class="admin-field">ТТН<input id="editTracking" value="${esc(activeOrder.tracking_number||"")}" placeholder="Номер ТТН"></label><label class="admin-field">Коментар адміністратора<textarea id="editNote">${esc(activeOrder.admin_note||"")}</textarea></label><div class="admin-actions__buttons">${cardPayment?'<button id="refreshCardPaymentBtn" class="btn btn-secondary" type="button">Оновити дані</button>':""}<button id="saveOrderBtn" class="btn btn-primary" type="button">Зберегти зміни</button></div></div></div>`;
+  $("#saveOrderBtn").addEventListener("click",saveOrder);
+  if(cardPayment)$("#refreshCardPaymentBtn").addEventListener("click",refreshCardPaymentStatus);
+  if(!cardPayment)$("#editPaymentMethod").addEventListener("change",async e=>{
+    const {error}=await sb.from("orders").update({payment_method:e.target.value}).eq("id",activeOrder.id);
+    if(error)return toast("Не вдалося змінити спосіб оплати");
+    activeOrder.payment_method=e.target.value;toast("Спосіб оплати змінено");
+  });
+  $("#orderDialog").showModal();
+}
+
+async function refreshCardPaymentStatus(){
+  if(!activeOrder||!isCardOrder(activeOrder))return;
+  const id=activeOrder.id,button=$("#refreshCardPaymentBtn");
+  if(button){button.disabled=true;button.textContent="Оновлюємо…";}
+  const {data,error}=await sb.from("orders").select("*").eq("id",id).single();
+  if(error){if(button){button.disabled=false;button.textContent="Оновити дані";}return toast("Не вдалося оновити замовлення");}
+  const index=orders.findIndex(o=>String(o.id)===String(id));
+  if(index>=0)orders[index]=data;
+  renderOrders();
+  if($("#orderDialog").open)$("#orderDialog").close();
+  openOrder(id);
+  toast("Дані замовлення оновлено");
+}
 
 async function saveOrder(){
-const paymentStatus=activeOrder.payment_method==="card_online"?activeOrder.payment_status:$("#editPayment").value;const payload={status:$("#editStatus").value,payment_status:paymentStatus,tracking_number:$("#editTracking").value.trim()||null,admin_note:$("#editNote").value.trim()||null};const oldStatus=activeOrder.status;const {data,error}=await sb.from("orders").update(payload).eq("id",activeOrder.id).select().single();if(error)return toast("Помилка: "+error.message);Object.assign(activeOrder,data);renderOrders();$("#orderDialog").close();toast("Замовлення оновлено");if(payload.status!==oldStatus){const {error:fnError}=await sb.functions.invoke("send-status-email",{body:{client_order_id:activeOrder.client_order_id}});if(fnError)toast("Статус збережено, але лист не надіслано");else toast("Клієнту надіслано лист");}}
-
+  if(!activeOrder)return;
+  const nextStatus=$("#editStatus").value;
+  if(isCardOrder(activeOrder)&&!canSetOrderStatus(activeOrder,nextStatus)){
+    return toast("Цей етап недоступний для поточного статусу карткової оплати");
+  }
+  const payload={status:nextStatus,tracking_number:$("#editTracking").value.trim()||null,admin_note:$("#editNote").value.trim()||null};
+  if(!isCardOrder(activeOrder))payload.payment_status=$("#editPayment").value;
+  const oldStatus=effectiveOrderStatus(activeOrder);
+  const {data,error}=await sb.from("orders").update(payload).eq("id",activeOrder.id).select().single();
+  if(error){
+    const message=String(error.message||"");
+    if(message.includes("CARD_ORDER_MUST_BE_PAID_BY_PROVIDER"))return toast("Спочатку plata by mono має підтвердити оплату");
+    if(message.includes("CARD_ORDER_HAS_ACTIVE_INVOICE"))return toast("Не можна скасувати замовлення, доки рахунок mono активний");
+    if(message.includes("CARD_PAYMENT_FIELDS_ARE_SERVER_MANAGED"))return toast("Платіжні поля карткового замовлення змінює тільки сервер");
+    return toast("Помилка: "+message);
+  }
+  Object.assign(activeOrder,data);renderOrders();$("#orderDialog").close();toast("Замовлення оновлено");
+  if(effectiveOrderStatus(activeOrder)!==oldStatus){
+    const {error:fnError}=await sb.functions.invoke("send-status-email",{body:{client_order_id:activeOrder.client_order_id}});
+    if(fnError)toast("Статус збережено, але лист не надіслано");else toast("Клієнту надіслано лист");
+  }
+}
 
 function promoStatus(row){const now=Date.now();if(!row.active)return "inactive";if(row.starts_at&&new Date(row.starts_at).getTime()>now)return "scheduled";if(row.ends_at&&new Date(row.ends_at).getTime()<now)return "expired";if(row.usage_limit&&Number(row.usage_count||0)>=Number(row.usage_limit))return "exhausted";return "active";}
 function renderPromos(){const q=$("#promoSearch").value.trim().toLowerCase(),filter=$("#promoStatusFilter").value;const list=promos.filter(p=>{const st=promoStatus(p);return(!q||[p.code,p.name].join(" ").toLowerCase().includes(q))&&(!filter||(filter==="active"?st==="active":st!=="active"));});$("#promosBadge").textContent=promos.filter(p=>promoStatus(p)==="active").length||"";$("#promosEmpty").hidden=!!list.length;$("#promosList").innerHTML=list.map(p=>`<article class="admin-card admin-promo-card" data-promo="${esc(p.id)}"><div><div class="admin-card__title">${esc(String(p.code||"").toUpperCase())}</div><div class="admin-card__meta">${esc(p.name||"Без назви")}</div></div><div><strong>${p.discount_type==="percent"?`${Number(p.discount_value)}%`:p.discount_type==="free_shipping"?"Безкоштовна доставка":money(p.discount_value)}</strong><div class="admin-card__meta">Використано: ${Number(p.usage_count||0)}${p.usage_limit?` / ${Number(p.usage_limit)}`:""}</div></div><span class="status-pill status-${promoStatus(p)==="active"?"paid":"cancelled"}">${promoStatus(p)==="active"?"Активний":promoStatus(p)==="scheduled"?"Запланований":promoStatus(p)==="expired"?"Завершений":"Вимкнений"}</span></article>`).join("");document.querySelectorAll("[data-promo]").forEach(el=>el.addEventListener("click",()=>openPromo(el.dataset.promo)));}
