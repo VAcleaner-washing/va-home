@@ -1,6 +1,6 @@
 (function(){"use strict";
 const cfg=window.SITE_CONFIG.supabase;
-const sb=window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const sb=window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{storageKey:"vahome_admin_auth_v1",persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
 const statusLabels={new:"Нове",awaiting_payment:"Очікує оплату",paid:"Оплачено",shipped:"Відправлено",completed:"Виконано",cancelled:"Скасовано"};
 const orderStatusOrder=["new","awaiting_payment","paid","shipped","completed","cancelled"];
 const paymentMethodLabels={bank_transfer:"На рахунок",cash_on_delivery:"При отриманні",card_online:"Карткою онлайн"};
@@ -14,6 +14,44 @@ const money=v=>`${Number(v||0).toLocaleString("uk-UA",{maximumFractionDigits:2})
 const date=v=>v?new Intl.DateTimeFormat("uk-UA",{dateStyle:"medium",timeStyle:"short"}).format(new Date(v)):"—";
 const shortDate=v=>v?new Intl.DateTimeFormat("uk-UA",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}).format(new Date(v)):"—";
 const normalizePhone=v=>String(v||"").replace(/[^+\d]/g,"");
+
+async function sendStatusEmail(clientOrderId,{announce=true}={}){
+  const {data:{session},error:sessionError}=await sb.auth.getSession();
+  if(sessionError||!session){if(announce)toast("Адмінська сесія завершилася — увійдіть повторно","warning");return false;}
+  const {data,error}=await sb.functions.invoke("send-status-email",{body:{client_order_id:clientOrderId},headers:{Authorization:`Bearer ${session.access_token}`}});
+  if(error){if(announce)toast("Статус збережено, але лист не надіслано","warning");return false;}
+  if(announce)toast(data?.skipped?"Лист уже надсилався раніше":"Клієнту надіслано лист","success");
+  return true;
+}
+function setupPremiumScrollbar(dialog){
+  const rail=dialog?.querySelector(".admin-scroll-indicator"),thumb=rail?.querySelector("span");
+  if(!dialog||!rail||!thumb)return;
+  let raf=0;
+  const update=()=>{
+    raf=0;
+    if(!dialog.open){rail.hidden=true;return;}
+    const maxScroll=Math.max(0,dialog.scrollHeight-dialog.clientHeight);
+    if(maxScroll<4){rail.hidden=true;return;}
+    const rect=dialog.getBoundingClientRect();
+    const railTop=Math.max(rect.top+72,12);
+    const railBottom=Math.min(rect.bottom-24,window.innerHeight-12);
+    const railHeight=Math.max(90,railBottom-railTop);
+    const thumbHeight=Math.max(48,Math.min(railHeight,railHeight*(dialog.clientHeight/dialog.scrollHeight)));
+    const travel=Math.max(0,railHeight-thumbHeight);
+    const offset=maxScroll?travel*(dialog.scrollTop/maxScroll):0;
+    rail.hidden=false;
+    rail.style.left=`${Math.max(4,Math.min(window.innerWidth-8,rect.right-7))}px`;
+    rail.style.top=`${railTop}px`;
+    rail.style.height=`${railHeight}px`;
+    thumb.style.height=`${thumbHeight}px`;
+    thumb.style.transform=`translate3d(0,${offset}px,0)`;
+  };
+  const schedule=()=>{if(!raf)raf=requestAnimationFrame(update);};
+  dialog.addEventListener("scroll",schedule,{passive:true});
+  window.addEventListener("resize",schedule,{passive:true});
+  if("ResizeObserver" in window)new ResizeObserver(schedule).observe(dialog);
+  dialog._premiumScrollUpdate=schedule;
+}
 
 function isCardOrder(order){return order?.payment_method==="card_online";}
 function effectiveOrderStatus(order){
@@ -213,7 +251,7 @@ async function quickStatus(id,status){
   const {data,error}=await sb.from("orders").update(payload).eq("id",id).select().single();
   if(error)return toast("Помилка: "+error.message,"danger");
   Object.assign(order,data);renderOrders();toast("Статус змінено","success");
-  if(old!==effectiveOrderStatus(order))sb.functions.invoke("send-status-email",{body:{client_order_id:order.client_order_id}}).then(({error})=>{if(error)toast("Статус збережено, але лист не надіслано","warning");});
+  if(old!==effectiveOrderStatus(order))sendStatusEmail(order.client_order_id);
 }
 function renderReviews(){const q=$("#reviewSearch").value.trim().toLowerCase(),filter=$("#reviewStatusFilter").value;const list=reviews.filter(r=>(!filter||r.status===filter)&&(!q||[r.product_slug,r.customer_name,r.review_text].join(" ").toLowerCase().includes(q)));$("#reviewsBadge").textContent=reviews.filter(r=>r.status==="pending").length||"";$("#reviewsAdminEmpty").hidden=!!list.length;$("#reviewsAdminList").innerHTML=list.map(r=>`<article class="admin-card review-admin-card"><div>${r.photo_url?`<img class="review-admin-card__photo" src="${esc(r.photo_url)}" alt="Фото до відгуку" loading="lazy">`:""}<div class="review-admin-card__stars">${"★".repeat(Number(r.rating)||0)}${"☆".repeat(5-(Number(r.rating)||0))}</div><div class="admin-card__title">${esc(r.product_slug)} · ${esc(r.customer_name)}</div><p>${esc(r.review_text)}</p><div class="admin-card__meta">${date(r.created_at)} · ${esc(r.status)}${r.verified_purchase?" · Перевірена покупка":""}</div></div><div class="review-admin-card__actions">${r.status!=="approved"?`<button class="btn btn-primary btn-small" data-review-action="approved" data-review-id="${r.id}">Схвалити</button>`:""}${r.status!=="rejected"?`<button class="btn btn-secondary btn-small" data-review-action="rejected" data-review-id="${r.id}">Відхилити</button>`:""}</div></article>`).join("");document.querySelectorAll("[data-review-action]").forEach(b=>b.addEventListener("click",()=>moderateReview(b.dataset.reviewId,b.dataset.reviewAction)));}
 async function moderateReview(id,status){const {error}=await sb.from("reviews").update({status}).eq("id",id);if(error)return toast("Помилка: "+error.message,"danger");const row=reviews.find(r=>String(r.id)===String(id));if(row)row.status=status;renderReviews();toast(status==="approved"?"Відгук схвалено":"Відгук відхилено","success");}
@@ -272,7 +310,16 @@ function renderOrderDialog({loading=false}={}){
   if(loading){$("#orderDialogContent").innerHTML='<div class="admin-dialog__body"><div class="admin-order-loading"><span></span><p>Збираємо дані замовлення…</p></div></div>';return;}
   const items=Array.isArray(activeOrder.items)?activeOrder.items:[],cardPayment=isCardOrder(activeOrder),guidance=orderGuidance(activeOrder),displayedStatus=effectiveOrderStatus(activeOrder);
   $("#orderDialogContent").innerHTML=`<div class="admin-dialog__body admin-order-view">
-    <header class="admin-dialog__head admin-order-hero"><div><p class="eyebrow">Замовлення</p><h2>${esc(activeOrder.client_order_id)}</h2><div class="admin-order-hero__meta"><span>${date(activeOrder.created_at)}</span><span class="status-pill status-${esc(displayedStatus)}">${esc(statusLabels[displayedStatus]||displayedStatus)}</span></div></div><strong class="admin-order-total">${money(activeOrder.total_amount)}</strong></header>
+    <header class="admin-order-hero">
+      <img class="admin-order-hero__photo" src="/images/pages/delivery-cta.webp" alt="Пакування VA HOME" width="1672" height="941" loading="eager">
+      <div class="admin-order-hero__shade" aria-hidden="true"></div>
+      <div class="admin-order-hero__glass">
+        <p class="eyebrow">Замовлення</p>
+        <h2>${esc(activeOrder.client_order_id)}</h2>
+        <div class="admin-order-hero__meta"><span>${date(activeOrder.created_at)}</span><span class="status-pill status-${esc(displayedStatus)}">${esc(statusLabels[displayedStatus]||displayedStatus)}</span></div>
+        <strong class="admin-order-total">${money(activeOrder.total_amount)}</strong>
+      </div>
+    </header>
     <section class="admin-next-step admin-next-step--${guidance.tone}"><div><p class="eyebrow">Наступний крок</p><h3>${esc(guidance.title)}</h3><p>${esc(guidance.detail)}</p></div>${guidance.action?`<button class="btn btn-primary" type="button" data-dialog-primary-status="${guidance.action.status}">${esc(guidance.action.label)}</button>`:""}</section>
     <section class="admin-order-section"><div class="admin-order-section__head"><div><p class="eyebrow">Клієнт і доставка</p><h3>${esc(activeOrder.customer_name)}</h3></div><div class="admin-contact-actions"><a href="tel:${esc(normalizePhone(activeOrder.customer_phone))}">Подзвонити</a><a href="mailto:${esc(activeOrder.customer_email)}">Написати</a></div></div><div class="admin-detail-grid admin-detail-grid--premium">
       <div class="admin-detail"><span>Телефон</span><strong>${esc(activeOrder.customer_phone)}</strong><button type="button" data-copy="${esc(activeOrder.customer_phone)}" data-copy-label="Телефон скопійовано">Копіювати</button></div>
@@ -289,11 +336,13 @@ function renderOrderDialog({loading=false}={}){
       <label class="admin-field">Спосіб оплати<select id="editPaymentMethod" ${cardPayment?"disabled":""}><option value="bank_transfer" ${activeOrder.payment_method==="bank_transfer"?"selected":""}>На рахунок</option><option value="cash_on_delivery" ${activeOrder.payment_method==="cash_on_delivery"?"selected":""}>При отриманні</option>${cardPayment?'<option value="card_online" selected>Карткою онлайн</option>':""}</select>${cardPayment?"<small>Спосіб зафіксований платіжним замовленням.</small>":""}</label>
       <label class="admin-field">ТТН<input id="editTracking" value="${esc(activeOrder.tracking_number||"")}" placeholder="Номер ТТН"><small>Клієнт побачить номер у своєму кабінеті.</small></label>
       <label class="admin-field admin-field--wide">Коментар адміністратора<textarea id="editNote" placeholder="Внутрішня примітка — клієнт її не бачить">${esc(activeOrder.admin_note||"")}</textarea></label>
-      <div class="admin-actions__buttons"><button id="saveOrderBtn" class="btn btn-primary" type="button">Зберегти ТТН і примітку</button></div>
+      <div class="admin-actions__buttons"><button id="resendStatusEmailBtn" class="btn btn-secondary" type="button">Надіслати лист повторно</button><button id="saveOrderBtn" class="btn btn-primary" type="button">Зберегти ТТН і примітку</button></div>
     </div></section>
   </div>`;
   $("#saveOrderBtn").addEventListener("click",saveOrder);
+  $("#resendStatusEmailBtn").addEventListener("click",()=>sendStatusEmail(activeOrder.client_order_id));
   $("#editStatus").addEventListener("change",saveOrderStatusImmediately);
+  requestAnimationFrame(()=>$("#orderDialog")?._premiumScrollUpdate?.());
   if(cardPayment)$("#refreshCardPaymentBtn")?.addEventListener("click",refreshCardPaymentStatus);
   if(!cardPayment)$("#editPaymentMethod").addEventListener("change",async e=>{const {error}=await sb.from("orders").update({payment_method:e.target.value}).eq("id",activeOrder.id);if(error)return toast("Не вдалося змінити спосіб оплати","danger");activeOrder.payment_method=e.target.value;renderOrderDialog();toast("Спосіб оплати змінено","success");});
   $("#orderDialogContent").querySelectorAll("[data-copy]").forEach(button=>button.addEventListener("click",()=>copyText(button.dataset.copy,button.dataset.copyLabel)));
@@ -301,7 +350,7 @@ function renderOrderDialog({loading=false}={}){
 }
 async function openOrder(id){
   activeOrder=orders.find(o=>String(o.id)===String(id));if(!activeOrder)return;
-  const dialog=$("#orderDialog");renderOrderDialog({loading:true});if(!dialog.open)dialog.showModal();
+  const dialog=$("#orderDialog");renderOrderDialog({loading:true});if(!dialog.open)dialog.showModal();dialog._premiumScrollUpdate?.();
   await loadOrderPaymentHistory(activeOrder.id);renderOrderDialog();
 }
 async function reloadActiveOrder(){
@@ -321,7 +370,7 @@ async function saveOrderStatusImmediately(){
   const {data,error}=await sb.from("orders").update(payload).eq("id",activeOrder.id).select().single();select.disabled=false;
   if(error){select.value=previousStatus;const message=String(error.message||"");if(message.includes("CARD_ORDER_MUST_BE_PAID_BY_PROVIDER"))return toast("Спочатку plata by mono має підтвердити оплату","warning");if(message.includes("CARD_ORDER_HAS_ACTIVE_INVOICE"))return toast("Не можна скасувати замовлення, доки рахунок mono активний","warning");if(message.includes("CARD_PAYMENT_FIELDS_ARE_SERVER_MANAGED"))return toast("Платіжні поля карткового замовлення змінює тільки сервер","warning");return toast("Помилка: "+message,"danger");}
   activeOrder=data;const index=orders.findIndex(order=>String(order.id)===String(data.id));if(index>=0)orders[index]=data;renderOrders();renderOrderDialog();toast(`Статус: ${statusLabels[effectiveOrderStatus(activeOrder)]||effectiveOrderStatus(activeOrder)}`,"success");
-  if(effectiveOrderStatus(activeOrder)!==previousStatus)sb.functions.invoke("send-status-email",{body:{client_order_id:activeOrder.client_order_id}}).then(({error:fnError})=>{if(fnError)toast("Статус збережено, але лист не надіслано","warning");});
+  if(effectiveOrderStatus(activeOrder)!==previousStatus)sendStatusEmail(activeOrder.client_order_id);
 }
 async function refreshCardPaymentStatus(){
   if(!activeOrder||!isCardOrder(activeOrder))return;
@@ -343,7 +392,7 @@ async function saveOrder(){
   const oldStatus=effectiveOrderStatus(activeOrder),{data,error}=await sb.from("orders").update(payload).eq("id",activeOrder.id).select().single();
   if(error){const message=String(error.message||"");if(message.includes("CARD_ORDER_MUST_BE_PAID_BY_PROVIDER"))return toast("Спочатку plata by mono має підтвердити оплату","warning");if(message.includes("CARD_ORDER_HAS_ACTIVE_INVOICE"))return toast("Не можна скасувати замовлення, доки рахунок mono активний","warning");if(message.includes("CARD_PAYMENT_FIELDS_ARE_SERVER_MANAGED"))return toast("Платіжні поля карткового замовлення змінює тільки сервер","warning");return toast("Помилка: "+message,"danger");}
   activeOrder=data;const index=orders.findIndex(order=>String(order.id)===String(data.id));if(index>=0)orders[index]=data;renderOrders();renderOrderDialog();toast("Замовлення оновлено","success");
-  if(effectiveOrderStatus(activeOrder)!==oldStatus){const {error:fnError}=await sb.functions.invoke("send-status-email",{body:{client_order_id:activeOrder.client_order_id}});if(fnError)toast("Статус збережено, але лист не надіслано","warning");else toast("Клієнту надіслано лист","success");}
+  if(effectiveOrderStatus(activeOrder)!==oldStatus){await sendStatusEmail(activeOrder.client_order_id);}
 }
 
 function promoStatus(row){const now=Date.now();if(!row.active)return "inactive";if(row.starts_at&&new Date(row.starts_at).getTime()>now)return "scheduled";if(row.ends_at&&new Date(row.ends_at).getTime()<now)return "expired";if(row.usage_limit&&Number(row.usage_count||0)>=Number(row.usage_limit))return "exhausted";return "active";}
@@ -390,6 +439,7 @@ function bind(){
   $("#releaseForm").elements.title.addEventListener("input",event=>{const slug=$("#releaseForm").elements.slug;if(!activeRelease&&!slug.dataset.edited)slug.value=releaseSlug(event.target.value);});
   $("#releaseForm").elements.slug.addEventListener("input",event=>{event.target.dataset.edited="1";event.target.value=releaseSlug(event.target.value);});
   const orderDialog=$("#orderDialog"),orderDialogClose=$("#orderDialogClose");
+  setupPremiumScrollbar(orderDialog);
   orderDialogClose.addEventListener("click",()=>{if(orderDialog.open)orderDialog.close();});
   orderDialog.addEventListener("cancel",()=>{activeOrder=null;activeOrderAttempts=[];activeOrderEvents=[];});
   orderDialog.addEventListener("close",()=>{activeOrder=null;activeOrderAttempts=[];activeOrderEvents=[];});

@@ -1509,3 +1509,236 @@ img,video,canvas,svg{max-width:100%}
   .admin-order-management .admin-actions__buttons .btn-primary{min-width:0;width:100%}
   .admin-field--wide{grid-column:auto}
 }
+
+
+/* VA HOME v15.4.2 — photographic order hero, premium scroll and unified markers */
+:root{
+  --admin-scroll-track:rgba(255,255,255,.035);
+  --admin-scroll-gold-1:#e1c18b;
+  --admin-scroll-gold-2:#9b6e3e;
+}
+html,
+.admin-dialog,
+.admin-promo-shell,
+.admin-release-shell{
+  scrollbar-width:thin;
+  scrollbar-color:rgba(202,169,115,.72) rgba(255,255,255,.025);
+}
+html::-webkit-scrollbar,
+.admin-dialog::-webkit-scrollbar,
+.admin-promo-shell::-webkit-scrollbar,
+.admin-release-shell::-webkit-scrollbar{width:10px;height:10px}
+html::-webkit-scrollbar-track,
+.admin-dialog::-webkit-scrollbar-track,
+.admin-promo-shell::-webkit-scrollbar-track,
+.admin-release-shell::-webkit-scrollbar-track{background:linear-gradient(180deg,#080807,#100e0c)}
+html::-webkit-scrollbar-thumb,
+.admin-dialog::-webkit-scrollbar-thumb,
+.admin-promo-shell::-webkit-scrollbar-thumb,
+.admin-release-shell::-webkit-scrollbar-thumb{
+  min-height:52px;
+  border:3px solid #0b0a09;
+  border-radius:999px;
+  background:linear-gradient(180deg,var(--admin-scroll-gold-1),var(--admin-scroll-gold-2));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 0 0 1px rgba(202,169,115,.12);
+}
+html::-webkit-scrollbar-thumb:hover,
+.admin-dialog::-webkit-scrollbar-thumb:hover,
+.admin-promo-shell::-webkit-scrollbar-thumb:hover,
+.admin-release-shell::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#efd3a2,#b4834d)}
+
+#orderDialog{scrollbar-width:none}
+#orderDialog::-webkit-scrollbar{display:none}
+.admin-scroll-indicator{
+  position:fixed;
+  z-index:140;
+  width:4px;
+  border-radius:999px;
+  background:rgba(255,255,255,.045);
+  box-shadow:0 0 0 1px rgba(202,169,115,.06);
+  pointer-events:none;
+  overflow:hidden;
+  opacity:.92;
+}
+.admin-scroll-indicator[hidden]{display:none}
+.admin-scroll-indicator span{
+  display:block;
+  width:100%;
+  border-radius:999px;
+  background:linear-gradient(180deg,#e5c58f 0%,#b9854e 62%,#80542d 100%);
+  box-shadow:0 0 12px rgba(202,169,115,.32),inset 0 1px 0 rgba(255,255,255,.38);
+  will-change:transform,height;
+  transition:height .18s ease;
+}
+
+/* Unified semantic markers */
+.status-pill,
+.admin-provider-badge,
+.admin-payment-state{
+  --marker-rgb:202,169,115;
+  --marker-color:#e7c98f;
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  width:max-content;
+  min-height:30px;
+  padding:6px 11px;
+  border:1px solid rgba(var(--marker-rgb),.32);
+  border-radius:999px;
+  background:linear-gradient(135deg,rgba(var(--marker-rgb),.13),rgba(var(--marker-rgb),.035));
+  color:var(--marker-color);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 8px 22px rgba(0,0,0,.08);
+  font-size:10px;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+}
+.status-pill::before,
+.admin-provider-badge::before,
+.admin-payment-state::before{
+  content:"";
+  flex:0 0 auto;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:rgb(var(--marker-rgb));
+  box-shadow:0 0 0 4px rgba(var(--marker-rgb),.10),0 0 12px rgba(var(--marker-rgb),.38);
+}
+.status-new{--marker-rgb:202,169,115;--marker-color:#e8c78d}
+.status-awaiting_payment,.status-pending,.status-verification{--marker-rgb:199,151,77;--marker-color:#e9c183}
+.status-paid{--marker-rgb:111,164,127;--marker-color:#a7d5b3}
+.status-shipped{--marker-rgb:102,142,175;--marker-color:#a9cbe4}
+.status-completed,.status-approved{--marker-rgb:99,157,116;--marker-color:#b7dfc3}
+.status-cancelled,.status-rejected,.status-failed,.status-expired{--marker-rgb:169,93,88;--marker-color:#e4aaa6}
+.status-refunded{--marker-rgb:94,132,164;--marker-color:#a9c8df}
+.admin-payment-state{margin-top:0;text-transform:none;letter-spacing:0}
+.admin-payment-state span{color:rgba(236,225,210,.58);font-size:9px;letter-spacing:.1em}
+.admin-payment-state strong{color:var(--marker-color)!important;font-size:11px}
+.admin-payment-state--pending{--marker-rgb:199,151,77;--marker-color:#e9c183}
+.admin-payment-state--paid{--marker-rgb:111,164,127;--marker-color:#a7d5b3}
+.admin-payment-state--failed{--marker-rgb:169,93,88;--marker-color:#e4aaa6}
+.admin-payment-state--refunded{--marker-rgb:94,132,164;--marker-color:#a9c8df}
+.admin-provider-badge--paid{--marker-rgb:111,164,127;--marker-color:#a7d5b3}
+.admin-provider-badge--failed{--marker-rgb:169,93,88;--marker-color:#e4aaa6}
+.admin-provider-badge--refunded{--marker-rgb:94,132,164;--marker-color:#a9c8df}
+.admin-tabs span,
+.admin-focus-filters strong{
+  border:1px solid rgba(202,169,115,.24);
+  background:linear-gradient(135deg,rgba(202,169,115,.16),rgba(202,169,115,.055));
+  color:#e5c187;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+.admin-tabs span{display:inline-grid;place-items:center;min-width:21px;height:21px;padding:0 6px;border-radius:999px;margin-left:5px}
+.admin-timeline-dot{
+  width:12px;height:12px;border:0;
+  background:#6f675e;
+  box-shadow:0 0 0 4px rgba(111,103,94,.12);
+}
+.admin-timeline-item--success .admin-timeline-dot{background:#6fa47f;box-shadow:0 0 0 4px rgba(111,164,127,.12)}
+.admin-timeline-item--danger .admin-timeline-dot{background:#a95d58;box-shadow:0 0 0 4px rgba(169,93,88,.12)}
+.admin-timeline-item--info .admin-timeline-dot{background:#668eaf;box-shadow:0 0 0 4px rgba(102,142,175,.12)}
+.admin-timeline-item--pending .admin-timeline-dot{background:#c7974d;box-shadow:0 0 0 4px rgba(199,151,77,.12)}
+.admin-timeline-item.is-latest .admin-timeline-dot{box-shadow:0 0 0 5px rgba(202,169,115,.12),0 0 16px rgba(202,169,115,.2)}
+
+/* Photo hero with a light blur only beneath the text */
+.admin-order-hero{
+  position:relative;
+  min-height:330px;
+  margin:-34px -34px 0;
+  padding:0;
+  overflow:hidden;
+  border:0;
+  border-bottom:1px solid rgba(202,169,115,.24);
+  background:#15110d;
+  isolation:isolate;
+}
+.admin-order-hero__photo{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center 48%;
+  filter:saturate(.88) contrast(1.03) brightness(.82);
+  transform:scale(1.012);
+}
+.admin-order-hero__shade{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(7,6,5,.06) 22%,rgba(7,6,5,.36) 62%,rgba(7,6,5,.82) 100%),linear-gradient(90deg,rgba(7,6,5,.28),transparent 62%);
+}
+.admin-order-hero__glass{
+  position:absolute;
+  z-index:2;
+  left:24px;
+  right:24px;
+  bottom:22px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:end;
+  gap:8px 20px;
+  padding:18px 20px;
+  border:1px solid rgba(238,211,170,.18);
+  background:rgba(13,11,9,.48);
+  box-shadow:0 18px 44px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.035);
+  backdrop-filter:blur(8px) saturate(112%);
+  -webkit-backdrop-filter:blur(8px) saturate(112%);
+}
+.admin-order-hero__glass .eyebrow{grid-column:1/-1;margin:0;color:#d1a866}
+.admin-order-hero__glass h2{
+  margin:0;
+  max-width:100%;
+  color:#f5eee3;
+  font-family:var(--font-display);
+  font-size:clamp(38px,6vw,58px);
+  font-weight:500;
+  line-height:.9;
+  letter-spacing:-.035em;
+  overflow-wrap:normal;
+  word-break:keep-all;
+  hyphens:none;
+  text-wrap:balance;
+  text-shadow:0 2px 20px rgba(0,0,0,.38);
+}
+.admin-order-hero__meta{grid-column:1;display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:8px;color:#d0c4b5;font-size:12px}
+.admin-order-total{
+  grid-column:2;
+  grid-row:2/4;
+  align-self:end;
+  display:inline-flex;
+  align-items:center;
+  min-height:48px;
+  padding:10px 15px;
+  border:1px solid rgba(202,169,115,.28);
+  border-radius:999px;
+  background:rgba(202,169,115,.10);
+  color:#f0d6a7;
+  font-family:var(--font-display);
+  font-size:24px;
+  font-weight:500;
+  white-space:nowrap;
+}
+.admin-order-management .admin-actions__buttons{align-items:center}
+.admin-order-management .admin-actions__buttons .btn-secondary{min-width:220px}
+
+@media(max-width:700px){
+  .admin-scroll-indicator{width:3px}
+  .admin-order-hero{min-height:390px;margin:-22px -16px 0}
+  #orderDialog .admin-order-hero{display:block;padding:0;border-bottom:1px solid rgba(202,169,115,.22)}
+  .admin-order-hero__photo{object-position:center 46%}
+  .admin-order-hero__glass{
+    left:14px;right:14px;bottom:14px;
+    grid-template-columns:1fr;
+    gap:9px;
+    padding:17px 16px;
+    background:rgba(12,10,8,.50);
+    backdrop-filter:blur(7px) saturate(110%);
+    -webkit-backdrop-filter:blur(7px) saturate(110%);
+  }
+  #orderDialog .admin-order-hero__glass h2{margin:0;max-width:calc(100% - 48px);font-size:clamp(37px,10.8vw,49px);line-height:.9}
+  .admin-order-hero__meta{grid-column:1;margin-top:2px}
+  .admin-order-total{grid-column:1;grid-row:auto;justify-self:start;min-height:42px;padding:8px 12px;font-size:21px}
+  #orderDialog .admin-dialog__close{background:rgba(17,15,13,.72);border-color:rgba(228,195,137,.28);box-shadow:0 12px 30px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.05)}
+  .admin-order-management .admin-actions__buttons{display:grid;grid-template-columns:1fr;gap:10px}
+  .admin-order-management .admin-actions__buttons .btn-secondary{min-width:0;width:100%}
+}
