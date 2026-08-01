@@ -1,4 +1,4 @@
-/* VA HOME v15.5.0-RC1.16 — certified responsive UX layer
+/* VA HOME v15.5.0-RC1.17 — certified responsive UX layer
    Final cascade for 390 / 430 / 768 px and desktop continuity. */
 
 html{max-width:100%;overflow-x:clip}
@@ -155,7 +155,7 @@ img,video,svg,canvas{max-width:100%}
   .account-order{height:auto!important}
 }
 
-/* ===== VA HOME v15.5.0-RC1.16 — equal mobile catalogue CTA alignment ===== */
+/* ===== VA HOME v15.5.0-RC1.17 — equal mobile catalogue CTA alignment ===== */
 @media (min-width:391px) and (max-width:620px){
   #catalogGrid.catalog-grid{
     align-items:stretch!important;
@@ -209,7 +209,7 @@ img,video,svg,canvas{max-width:100%}
   }
 }
 
-/* ===== VA HOME v15.5.0-RC1.16 — full mobile QA corrections ===== */
+/* ===== VA HOME v15.5.0-RC1.17 — full mobile QA corrections ===== */
 @media (max-width:620px){
   /* Product detail: predictable gallery, compact purchase flow, safe sticky bar. */
   .product-gallery{display:grid!important;grid-template-columns:1fr!important;gap:14px!important}
@@ -274,4 +274,35 @@ img,video,svg,canvas{max-width:100%}
   .product-card__name{font-size:23px!important}
   .product-card__desc{font-size:13px!important}
   .home-reviews__grid>.review-card,.reviews-grid>.review-card{flex-basis:88vw!important}
+}
+
+
+/* ===== VA HOME v15.5.0-RC1.17 — Home reviews mobile carousel repair ===== */
+@media (max-width:900px){
+  .home-reviews{overflow:hidden!important}
+  .home-reviews__viewport{overflow:visible!important;margin-right:calc(var(--container-pad,20px) * -1)!important}
+  .home-reviews__grid{
+    display:grid!important;
+    grid-auto-flow:column!important;
+    grid-auto-columns:min(84vw,360px)!important;
+    grid-template-columns:none!important;
+    gap:12px!important;
+    overflow-x:auto!important;
+    overscroll-behavior-inline:contain!important;
+    scroll-snap-type:x mandatory!important;
+    padding:2px var(--container-pad,20px) 12px 0!important;
+    scrollbar-width:none!important;
+  }
+  .home-reviews__grid::-webkit-scrollbar{display:none!important}
+  .home-reviews__grid>.home-review-card{
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    aspect-ratio:4 / 5!important;
+    scroll-snap-align:start!important;
+    scroll-snap-stop:always!important;
+  }
+}
+@media (max-width:430px){
+  .home-reviews__grid{grid-auto-columns:min(82vw,350px)!important}
 }

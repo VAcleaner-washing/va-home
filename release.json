@@ -1,13 +1,12 @@
 {
-  "version": "15.5.0-RC1.16",
+  "version": "15.5.0-RC1.17",
   "channel": "Release Candidate",
-  "name": "GALLERY SOURCE FIX + FULL MOBILE QA",
+  "name": "HOME REVIEWS MOBILE CAROUSEL REPAIR",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1.15",
+  "base": "15.5.0-RC1.16",
   "changes": [
-    "Fixes product gallery on mobile and desktop by removing the static hero srcset after gallery mount",
-    "Removes the duplicate foreground transition image that could leave the first image visible over the selected slide",
-    "Adds site-wide mobile QA corrections for product pages, cards, reviews, forms, Room Ritual, Discovery, comparison and footer",
-    "Synchronizes frontend, PWA, service workers and backend release references"
+    "Repairs the home reviews carousel on mobile after a selector mismatch caused all review cards to shrink into one viewport",
+    "Restores one premium review card per swipe with a visible hint of the next card",
+    "Keeps review navigation, proof metrics and desktop review layout unchanged"
   ]
 }

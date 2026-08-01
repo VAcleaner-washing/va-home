@@ -3018,7 +3018,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* ===== VA HOME v15.5.0-RC1.16 — Editorial rhythm & mobile readability ===== */
+/* ===== VA HOME v15.5.0-RC1.17 — Editorial rhythm & mobile readability ===== */
 .home-page .section{
   padding-block:clamp(64px,7vw,104px);
 }
@@ -3129,7 +3129,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* ===== VA HOME v15.5.0-RC1.16 — Full mobile rhythm pass ===== */
+/* ===== VA HOME v15.5.0-RC1.17 — Full mobile rhythm pass ===== */
 @media(max-width:620px){
   .home-page .section{padding-block:40px!important}
   .home-page .section--tight{padding-block:30px!important}
