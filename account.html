@@ -11,20 +11,19 @@
 <title>Мій кабінет — VA HOME</title>
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <link href="favicon/favicon.ico" rel="icon"/>
-<link href="css/core.css?v=15.5.0-RC1.13" rel="stylesheet"/><link href="css/site-account.css?v=15.5.0-RC1.13" rel="stylesheet"/>
+<link href="css/core.css?v=15.5.0-RC1.15" rel="stylesheet"/><link href="css/site-account.css?v=15.5.0-RC1.15" rel="stylesheet"/>
 <meta content="Особистий кабінет VA HOME: замовлення, адреси доставки, список бажань і налаштування профілю." name="description"/><meta content="15.5.0 RC1" name="va-home-release"/><meta content="telephone=no" name="format-detection"/>
-<script defer="" src="js/hero-font-reveal.js?v=15.5.0-RC1.13"></script>
+<script defer="" src="js/hero-font-reveal.js?v=15.5.0-RC1.15"></script>
 <link href="/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
-
 <meta content="VA HOME" name="application-name"/>
 <meta content="yes" name="mobile-web-app-capable"/>
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
 <meta content="VA HOME" name="apple-mobile-web-app-title"/>
 <link href="/pwa/apple-touch-icon.png" rel="apple-touch-icon"/>
-<link href="css/mobile-system.css?v=15.5.0-RC1.13" rel="stylesheet"/>
-</head>
+<link href="css/mobile-system.css?v=15.5.0-RC1.15" rel="stylesheet"/>
+<link href="css/mobile-certified.css?v=15.5.0-RC1.15" rel="stylesheet"/></head>
 <body>
 <div data-active="account" data-root="" id="site-header">
 </div>
@@ -74,7 +73,7 @@
 <p class="account-head__email" id="accountEmail"></p>
 </div>
 <div class="account-head__aside">
-<div class="account-overview" aria-label="Огляд кабінету">
+<div aria-label="Огляд кабінету" class="account-overview">
 <div><strong id="accountOrdersCount">—</strong><span>замовлень</span></div>
 <div><strong id="accountMemberSince">—</strong><span>разом із VA HOME</span></div>
 </div>
@@ -82,8 +81,8 @@
 </div>
 </header>
 <nav aria-label="Розділи кабінету" class="account-tabs" role="tablist">
-<button aria-controls="accountOrders" aria-selected="false" data-account-tab="orders" role="tab" type="button"><span>Замовлення</span><span class="account-tab-count" hidden id="accountOrdersActiveCount" aria-label="0 активних замовлень">0</span></button>
-<button aria-controls="accountWishlist" aria-selected="false" data-account-tab="wishlist" role="tab" type="button"><span>Обране</span><span class="account-tab-count" id="accountWishlistCount" aria-label="0 обраних ароматів">0</span></button>
+<button aria-controls="accountOrders" aria-selected="false" data-account-tab="orders" role="tab" type="button"><span>Замовлення</span><span aria-label="0 активних замовлень" class="account-tab-count" hidden="" id="accountOrdersActiveCount">0</span></button>
+<button aria-controls="accountWishlist" aria-selected="false" data-account-tab="wishlist" role="tab" type="button"><span>Обране</span><span aria-label="0 обраних ароматів" class="account-tab-count" id="accountWishlistCount">0</span></button>
 <button aria-controls="accountAtmosphere" aria-selected="true" class="is-active" data-account-tab="atmosphere" role="tab" type="button">Атмосфера</button>
 <button aria-controls="accountSettings" aria-selected="false" data-account-tab="settings" role="tab" type="button">Профіль</button>
 </nav>
@@ -105,17 +104,17 @@
 <div><p class="eyebrow">ATMOSPHERE OS</p><h2>Ваш персональний простір ароматів</h2><p>Поточний аромат, персональні збіги, налаштування паличок і доступні переваги — в одному зрозумілому просторі.</p></div>
 <a class="btn btn-secondary" href="scent-guide.html" id="accountProfileAction">Створити ароматичний профіль</a>
 </div>
-<article class="account-next-step" id="accountNextStep" hidden>
+<article class="account-next-step" hidden="" id="accountNextStep">
 <div><p class="eyebrow" id="accountNextStepEyebrow">ВАШ НАСТУПНИЙ КРОК</p><h2 id="accountNextStepTitle">Формуємо персональну рекомендацію…</h2><p id="accountNextStepText"></p></div>
-<div class="account-next-step__actions"><a class="btn btn-primary" href="scent-guide.html" id="accountNextStepAction">Продовжити</a><a class="account-next-step__credit-link" href="#accountCreditSection" id="accountNextStepCreditLink" hidden>Переглянути промокод</a></div>
+<div class="account-next-step__actions"><a class="btn btn-primary" href="scent-guide.html" id="accountNextStepAction">Продовжити</a><a class="account-next-step__credit-link" hidden="" href="#accountCreditSection" id="accountNextStepCreditLink">Переглянути промокод</a></div>
 </article>
-<div class="account-current-scent account-current-scent--atmosphere" hidden id="currentScent">
+<div class="account-current-scent account-current-scent--atmosphere" hidden="" id="currentScent">
 <div class="account-current-scent__media"><img alt="" decoding="async" height="1254" id="currentScentImage" loading="eager" width="1254"/></div>
 <div class="account-current-scent__content">
 <p class="eyebrow">ВАШ АРОМАТ ЗАРАЗ</p>
 <h2 id="currentScentName">—</h2>
 <p class="account-current-scent__date" id="currentScentDate"></p>
-<div class="account-cycle" aria-label="Рекомендований цикл використання">
+<div aria-label="Рекомендований цикл використання" class="account-cycle">
 <div class="account-cycle__line"><span id="currentScentProgress"></span></div>
 <div class="account-cycle__meta"><span>Рекомендований цикл</span><strong>8–12 тижнів</strong></div>
 </div>
@@ -139,11 +138,11 @@
 <a class="btn btn-primary btn-small" href="room-ritual.html">Налаштувати палички</a>
 </article>
 </div>
-<section class="account-credit-section" hidden id="accountCreditSection">
+<section class="account-credit-section" hidden="" id="accountCreditSection">
 <div class="account-section-heading account-section-heading--compact"><div><p class="eyebrow">PERSONAL CREDITS · ВАШІ ПЕРСОНАЛЬНІ ПЕРЕВАГИ</p><h2>Ваші доступні кредити</h2></div><p>Одноразові персональні коди на повнорозмірний аромат, прив’язані до вашого email.</p></div>
 <div class="account-credit-list" id="accountCredits"></div>
 </section>
-<div class="account-private-preview" hidden id="accountPrivatePreview">
+<div class="account-private-preview" hidden="" id="accountPrivatePreview">
 <div><p class="eyebrow">PRIVATE PREVIEW · РАННІЙ ДОСТУП</p><h2>Новий реліз доступний раніше</h2><p>Активний приватний реліз відкривається у вашому кабінеті за 48 годин до публічного старту.</p></div>
 <a class="btn btn-secondary" href="private-preview.html">Переглянути ранній доступ</a>
 </div>
@@ -184,19 +183,19 @@
 </div>
 <script defer="" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 </script>
-<script src="js/config.js?v=15.5.0-RC1.13">
+<script src="js/config.js?v=15.5.0-RC1.15">
 </script>
-<script src="js/products.js?v=15.5.0-RC1.13">
+<script src="js/products.js?v=15.5.0-RC1.15">
 </script>
-<script defer="" src="js/supabase-api.js?v=15.5.0-RC1.13"></script>
-<script src="js/cart.js?v=15.5.0-RC1.13">
+<script defer="" src="js/supabase-api.js?v=15.5.0-RC1.15"></script>
+<script src="js/cart.js?v=15.5.0-RC1.15">
 </script>
-<script defer="" src="js/main.js?v=15.5.0-RC1.13">
+<script defer="" src="js/main.js?v=15.5.0-RC1.15">
 </script>
-<script defer="" src="js/scent-profile.js?v=15.5.0-RC1.13"></script>
-<script defer="" src="js/account.js?v=15.5.0-RC1.13">
+<script defer="" src="js/scent-profile.js?v=15.5.0-RC1.15"></script>
+<script defer="" src="js/account.js?v=15.5.0-RC1.15">
 </script>
-<script defer="" src="js/motion.js?v=15.5.0-RC1.13"></script>
-<script defer="" src="/js/pwa.js?v=15.5.0-RC1.13"></script>
+<script defer="" src="js/motion.js?v=15.5.0-RC1.15"></script>
+<script defer="" src="/js/pwa.js?v=15.5.0-RC1.15"></script>
 </body>
 </html>

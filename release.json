@@ -1,12 +1,12 @@
 {
-  "version": "15.5.0-RC1.13",
+  "version": "15.5.0-RC1.15",
   "channel": "Release Candidate",
-  "name": "MOBILE REVIEWS RELIABILITY FIX",
+  "name": "MOBILE CATALOGUE CTA ALIGNMENT",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1.12",
+  "base": "15.5.0-RC1.14",
   "changes": [
-    "Prevents slow or failed review photos from reducing the visible mobile review count",
-    "Keeps up to five selected homepage reviews and falls back to product imagery when a customer photo fails",
-    "Synchronizes storefront, PWA, service worker and backend release references"
+    "Aligns all mobile catalogue add-to-cart buttons to one baseline within each product row",
+    "Reserves consistent space for collection, title, description and rating without truncating the core purchase information",
+    "Keeps the one-column layout below 391 px unchanged"
   ]
 }
