@@ -10,6 +10,7 @@ const $=s=>document.querySelector(s);const esc=v=>String(v??"").replace(/[&<>'"]
 function isCardOrder(order){return order?.payment_method==="card_online";}
 function effectiveOrderStatus(order){
   if(!isCardOrder(order))return order?.status||"new";
+  if(order?.status==="cancelled")return "cancelled";
   const payment=String(order?.payment_status||"pending");
   if(payment==="paid")return ["shipped","completed"].includes(order.status)?order.status:"paid";
   if(payment==="refunded")return "cancelled";
@@ -130,8 +131,9 @@ function openOrder(id){
   const bank=cardPayment?cardPaymentUi(activeOrder):null;
   const paymentOptions=Object.entries(paymentStatusLabels).map(([value,label])=>`<option value="${value}" ${activeOrder.payment_status===value?"selected":""}>${label}</option>`).join("");
   const paymentBox=cardPayment?`<div class="admin-card-payment-box admin-card-payment-box--${bank.key}"><div><span>plata by mono</span><strong>${esc(bank.label)}</strong></div><p>${esc(bank.detail)}</p>${activeOrder.payment_error_code?`<small>Код банку: ${esc(activeOrder.payment_error_code)}</small>`:""}</div>`:"";
-  $("#orderDialogContent").innerHTML=`<div class="admin-dialog__body"><div class="admin-dialog__head"><div><p class="eyebrow">Замовлення</p><h2>${esc(activeOrder.client_order_id)}</h2><p class="admin-card__meta">${date(activeOrder.created_at)}</p></div><strong class="admin-order-total">${money(activeOrder.total_amount)}</strong></div>${paymentBox}<div class="admin-detail-grid"><div class="admin-detail"><span>Клієнт</span>${esc(activeOrder.customer_name)}</div><div class="admin-detail"><span>Телефон</span><a href="tel:${esc(activeOrder.customer_phone)}">${esc(activeOrder.customer_phone)}</a></div><div class="admin-detail"><span>Email</span><a href="mailto:${esc(activeOrder.customer_email)}">${esc(activeOrder.customer_email)}</a></div><div class="admin-detail"><span>Доставка</span>${esc(activeOrder.delivery_method||"Нова пошта")} · ${esc(activeOrder.customer_city)}, ${esc(activeOrder.delivery_details)}</div><div class="admin-detail"><span>Спосіб оплати</span>${esc(paymentMethodLabels[activeOrder.payment_method]||activeOrder.payment_method||"Не вказано")}</div><div class="admin-detail"><span>Статус оплати</span>${esc(paymentStatusLabels[activeOrder.payment_status]||activeOrder.payment_status||"Не вказано")}</div><div class="admin-detail"><span>Запрошення на відгук</span>${activeOrder.review_invitation_sent_at?`Надіслано ${date(activeOrder.review_invitation_sent_at)}`:"Ще не надсилалося"}</div><div class="admin-detail"><span>Персональні пропозиції</span>${activeOrder.marketing_consent?"Згода надана":"Без згоди"}</div><div class="admin-detail"><span>Повторна пропозиція</span>${activeOrder.repeat_campaign_sent_at?`Надіслано ${date(activeOrder.repeat_campaign_sent_at)}`:activeOrder.marketing_consent&&activeOrder.status==="completed"?"Запланована через 55 днів після виконання":"Не запланована"}</div></div><div class="admin-items">${items.map(i=>`<div class="admin-item"><span>${esc(i.name)} × ${esc(i.quantity)}${Array.isArray(i.selections)&&i.selections.length?`<small>Обрано: ${i.selections.map(esc).join(" · ")}</small>`:""}</span><strong>${money(i.line_total)}</strong></div>`).join("")}</div><div class="admin-actions"><label class="admin-field">Статус замовлення<select id="editStatus">${orderStatusOptions(activeOrder)}</select>${cardPayment?"<small>Доступні лише етапи, які відповідають підтвердженому статусу банку.</small>":""}</label><label class="admin-field">Статус оплати<select id="editPayment" ${cardPayment?"disabled":""}>${paymentOptions}</select>${cardPayment?"<small>Це поле змінює тільки plata by mono.</small>":""}</label><label class="admin-field">Спосіб оплати<select id="editPaymentMethod" ${cardPayment?"disabled":""}><option value="bank_transfer" ${activeOrder.payment_method==="bank_transfer"?"selected":""}>На рахунок</option><option value="cash_on_delivery" ${activeOrder.payment_method==="cash_on_delivery"?"selected":""}>При отриманні</option>${cardPayment?'<option value="card_online" selected>Карткою онлайн</option>':""}</select>${cardPayment?"<small>Спосіб зафіксований платіжним замовленням.</small>":""}</label><label class="admin-field">ТТН<input id="editTracking" value="${esc(activeOrder.tracking_number||"")}" placeholder="Номер ТТН"></label><label class="admin-field">Коментар адміністратора<textarea id="editNote">${esc(activeOrder.admin_note||"")}</textarea></label><div class="admin-actions__buttons">${cardPayment?'<button id="refreshCardPaymentBtn" class="btn btn-secondary" type="button">Оновити дані</button>':""}<button id="saveOrderBtn" class="btn btn-primary" type="button">Зберегти зміни</button></div></div></div>`;
+  $("#orderDialogContent").innerHTML=`<div class="admin-dialog__body"><div class="admin-dialog__head"><div><p class="eyebrow">Замовлення</p><h2>${esc(activeOrder.client_order_id)}</h2><p class="admin-card__meta">${date(activeOrder.created_at)}</p></div><strong class="admin-order-total">${money(activeOrder.total_amount)}</strong></div>${paymentBox}<div class="admin-detail-grid"><div class="admin-detail"><span>Клієнт</span>${esc(activeOrder.customer_name)}</div><div class="admin-detail"><span>Телефон</span><a href="tel:${esc(activeOrder.customer_phone)}">${esc(activeOrder.customer_phone)}</a></div><div class="admin-detail"><span>Email</span><a href="mailto:${esc(activeOrder.customer_email)}">${esc(activeOrder.customer_email)}</a></div><div class="admin-detail"><span>Доставка</span>${esc(activeOrder.delivery_method||"Нова пошта")} · ${esc(activeOrder.customer_city)}, ${esc(activeOrder.delivery_details)}</div><div class="admin-detail"><span>Спосіб оплати</span>${esc(paymentMethodLabels[activeOrder.payment_method]||activeOrder.payment_method||"Не вказано")}</div><div class="admin-detail"><span>Статус оплати</span>${esc(paymentStatusLabels[activeOrder.payment_status]||activeOrder.payment_status||"Не вказано")}</div><div class="admin-detail"><span>Запрошення на відгук</span>${activeOrder.review_invitation_sent_at?`Надіслано ${date(activeOrder.review_invitation_sent_at)}`:"Ще не надсилалося"}</div><div class="admin-detail"><span>Персональні пропозиції</span>${activeOrder.marketing_consent?"Згода надана":"Без згоди"}</div><div class="admin-detail"><span>Повторна пропозиція</span>${activeOrder.repeat_campaign_sent_at?`Надіслано ${date(activeOrder.repeat_campaign_sent_at)}`:activeOrder.marketing_consent&&activeOrder.status==="completed"?"Запланована через 55 днів після виконання":"Не запланована"}</div></div><div class="admin-items">${items.map(i=>`<div class="admin-item"><span>${esc(i.name)} × ${esc(i.quantity)}${Array.isArray(i.selections)&&i.selections.length?`<small>Обрано: ${i.selections.map(esc).join(" · ")}</small>`:""}</span><strong>${money(i.line_total)}</strong></div>`).join("")}</div><div class="admin-actions"><label class="admin-field">Статус замовлення<select id="editStatus">${orderStatusOptions(activeOrder)}</select><small>${cardPayment?"Доступні лише етапи, які відповідають підтвердженому статусу банку. ":""}Зміна статусу зберігається одразу.</small></label><label class="admin-field">Статус оплати<select id="editPayment" ${cardPayment?"disabled":""}>${paymentOptions}</select>${cardPayment?"<small>Це поле змінює тільки plata by mono.</small>":""}</label><label class="admin-field">Спосіб оплати<select id="editPaymentMethod" ${cardPayment?"disabled":""}><option value="bank_transfer" ${activeOrder.payment_method==="bank_transfer"?"selected":""}>На рахунок</option><option value="cash_on_delivery" ${activeOrder.payment_method==="cash_on_delivery"?"selected":""}>При отриманні</option>${cardPayment?'<option value="card_online" selected>Карткою онлайн</option>':""}</select>${cardPayment?"<small>Спосіб зафіксований платіжним замовленням.</small>":""}</label><label class="admin-field">ТТН<input id="editTracking" value="${esc(activeOrder.tracking_number||"")}" placeholder="Номер ТТН"></label><label class="admin-field">Коментар адміністратора<textarea id="editNote">${esc(activeOrder.admin_note||"")}</textarea></label><div class="admin-actions__buttons">${cardPayment?'<button id="refreshCardPaymentBtn" class="btn btn-secondary" type="button">Оновити дані</button>':""}<button id="saveOrderBtn" class="btn btn-primary" type="button">Зберегти зміни</button></div></div></div>`;
   $("#saveOrderBtn").addEventListener("click",saveOrder);
+  $("#editStatus").addEventListener("change",saveOrderStatusImmediately);
   if(cardPayment)$("#refreshCardPaymentBtn").addEventListener("click",refreshCardPaymentStatus);
   if(!cardPayment)$("#editPaymentMethod").addEventListener("change",async e=>{
     const {error}=await sb.from("orders").update({payment_method:e.target.value}).eq("id",activeOrder.id);
@@ -139,6 +141,55 @@ function openOrder(id){
     activeOrder.payment_method=e.target.value;toast("Спосіб оплати змінено");
   });
   $("#orderDialog").showModal();
+}
+
+async function saveOrderStatusImmediately(){
+  if(!activeOrder)return;
+  const select=$("#editStatus");
+  const nextStatus=select.value;
+  const previousStatus=effectiveOrderStatus(activeOrder);
+  if(nextStatus===previousStatus)return;
+  if(isCardOrder(activeOrder)&&!canSetOrderStatus(activeOrder,nextStatus)){
+    select.value=previousStatus;
+    return toast("Цей етап недоступний для поточного статусу карткової оплати");
+  }
+  if(nextStatus==="paid"&&isCardOrder(activeOrder)){
+    select.value=previousStatus;
+    return toast("Карткову оплату підтверджує тільки plata by mono");
+  }
+  if(nextStatus==="paid"&&!isCardOrder(activeOrder)&&!confirm("Підтвердити, що оплату фактично отримано?")){
+    select.value=previousStatus;
+    return;
+  }
+  if(nextStatus==="cancelled"&&!confirm("Скасувати це замовлення?")){
+    select.value=previousStatus;
+    return;
+  }
+  select.disabled=true;
+  const payload={status:nextStatus};
+  if(nextStatus==="paid"&&!isCardOrder(activeOrder))payload.payment_status="paid";
+  const {data,error}=await sb.from("orders").update(payload).eq("id",activeOrder.id).select().single();
+  select.disabled=false;
+  if(error){
+    select.value=previousStatus;
+    const message=String(error.message||"");
+    if(message.includes("CARD_ORDER_MUST_BE_PAID_BY_PROVIDER"))return toast("Спочатку plata by mono має підтвердити оплату");
+    if(message.includes("CARD_ORDER_HAS_ACTIVE_INVOICE"))return toast("Не можна скасувати замовлення, доки рахунок mono активний");
+    if(message.includes("CARD_PAYMENT_FIELDS_ARE_SERVER_MANAGED"))return toast("Платіжні поля карткового замовлення змінює тільки сервер");
+    return toast("Помилка: "+message);
+  }
+  Object.assign(activeOrder,data);
+  const index=orders.findIndex(order=>String(order.id)===String(activeOrder.id));
+  if(index>=0)orders[index]=activeOrder;
+  renderOrders();
+  select.innerHTML=orderStatusOptions(activeOrder);
+  select.value=effectiveOrderStatus(activeOrder);
+  toast(`Статус: ${statusLabels[effectiveOrderStatus(activeOrder)]||effectiveOrderStatus(activeOrder)}`);
+  if(effectiveOrderStatus(activeOrder)!==previousStatus){
+    sb.functions.invoke("send-status-email",{body:{client_order_id:activeOrder.client_order_id}}).then(({error:fnError})=>{
+      if(fnError)toast("Статус збережено, але лист не надіслано");
+    });
+  }
 }
 
 async function refreshCardPaymentStatus(){
