@@ -1,15 +1,12 @@
 {
-  "version": "15.5.0-RC1",
+  "version": "15.5.0-RC1.2",
   "channel": "Release Candidate",
-  "name": "FULL-SYSTEM AUDIT RC1",
+  "name": "FULL-SYSTEM AUDIT RC1.2",
   "date": "2026-08-01",
-  "base": "15.4.3",
+  "base": "15.5.0-RC1",
   "changes": [
-    "Full storefront, checkout, account, administrator, PWA and backend audit",
-    "Keeps payable order total at a minimum of 1 UAH across cart, promo validation, order creation and database guard",
-    "Fixes promo code 1000 on a 999 UAH product: discount 998 UAH, payable 1 UAH",
-    "Enlarges cart product media without increasing the card footprint",
-    "Preserves server-managed card payment, status email dispatch and Nova Poshta delivery automation",
-    "Adds RC-specific verification for version drift, promo arithmetic, syntax, PWA caches and backend completeness"
+    "Changes ordered product thumbnails in the account orders view to a taller 4:5 ratio for every product",
+    "Increases desktop order-item media to 80×100 px and mobile media to 64×80 px",
+    "Updates account page asset query versions to force fresh CSS and JS after deploy"
   ]
 }

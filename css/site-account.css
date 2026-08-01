@@ -2031,3 +2031,46 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 .account-order__pay-card:hover{filter:brightness(1.06)}
 .account-order__pay-card:disabled{cursor:wait;opacity:.65}
 @media(max-width:620px){.account-order__pay-card{width:100%}.account-order__actions:has(.account-order__pay-card){grid-template-columns:1fr}}
+
+
+/* ===== VA HOME v15.5.0 RC1.2 — Order product thumbnails 4:5 ===== */
+.account-order__item{
+  align-items:flex-start;
+}
+.account-order__item-thumb{
+  width:80px;
+  height:100px;
+  aspect-ratio:4 / 5;
+  object-fit:cover;
+  border-radius:0;
+  background:#0c0b09;
+}
+.account-order__item>span{
+  padding-top:2px;
+}
+.account-order__item>strong{
+  align-self:flex-start;
+  padding-top:2px;
+  white-space:nowrap;
+}
+.account-order__products .account-order__item{
+  min-height:118px;
+}
+@media(max-width:900px){
+  .account-order__item-thumb{
+    width:76px;
+    height:95px;
+  }
+  .account-order__products .account-order__item{
+    min-height:112px;
+  }
+}
+@media(max-width:620px){
+  .account-order__item-thumb{
+    width:64px;
+    height:80px;
+  }
+  .account-order__products .account-order__item{
+    min-height:98px;
+  }
+}
