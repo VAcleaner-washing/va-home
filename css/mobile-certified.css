@@ -1,0 +1,308 @@
+/* VA HOME v15.5.0-RC1.20 — certified responsive UX layer
+   Final cascade for 390 / 430 / 768 px and desktop continuity. */
+
+html{max-width:100%;overflow-x:clip}
+body{max-width:100%;overflow-x:clip}
+img,video,svg,canvas{max-width:100%}
+
+@media (max-width:900px){
+  :root{
+    --qa-gutter:clamp(16px,4.65vw,28px);
+    --qa-section:clamp(52px,9vw,76px);
+    --qa-section-tight:clamp(34px,6.5vw,52px);
+    --qa-text:clamp(15px,2.1vw,17px);
+  }
+  .container,.site-container,.page-container{width:100%;padding-inline:var(--qa-gutter)!important}
+  main{min-width:0}
+  section,.section,.page-section{min-width:0}
+  h1,.page-title,.hero-title{max-width:100%;font-size:clamp(42px,8.5vw,72px)!important;line-height:.94!important;overflow-wrap:normal;word-break:normal}
+  h2,.section-title{max-width:100%;font-size:clamp(34px,6.9vw,56px)!important;line-height:.98!important;overflow-wrap:normal;word-break:normal}
+  h3{overflow-wrap:normal;word-break:normal}
+  p,li{font-size:var(--qa-text);line-height:1.58}
+  .eyebrow,.section-kicker,.kicker{font-size:11px!important;line-height:1.3;letter-spacing:.14em}
+  a,button,input,select,textarea,summary{touch-action:manipulation}
+  button,.btn,.button,[role="button"],summary{min-height:44px}
+  input,select,textarea{font-size:16px!important}
+  table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .site-footer{padding-block:var(--qa-section-tight) 26px!important}
+  .footer-grid,.site-footer__grid{gap:28px!important}
+  .site-footer a{overflow-wrap:anywhere}
+  .site-footer a[href^="mailto:"]{white-space:normal!important;word-break:break-word!important}
+
+  /* Shared page rhythm */
+  .catalog-hero,.collections-hero,.category-hero,.article-hero,.info-hero,.about-hero,.delivery-hero,.legal-hero,
+  .product-hero,.discovery-hero,.compare-hero{padding-block:var(--qa-section-tight)!important}
+  .home-manifesto,.brand-manifesto,.home-collections,.home-scent-finder,.home-editorial,.home-journal,.home-reviews,.home-instagram,
+  .product-story,.product-details,.product-ritual,.product-recommendations,.article-body,.info-content,.legal-content{
+    padding-block:var(--qa-section)!important;
+  }
+  .section-head,.section-heading,.editorial-heading{margin-bottom:clamp(24px,5vw,38px)!important}
+
+  /* Product and category pages */
+  .product-layout,.product-hero__grid,.product-story__grid,.category-layout,.catalog-layout{gap:clamp(24px,5vw,42px)!important}
+  .product-info{min-width:0}
+  .product-info h1{font-size:clamp(43px,8.7vw,70px)!important}
+  .product-gallery,.product-gallery-main{min-width:0}
+  .product-gallery-main img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover}
+  .product-gallery-thumbs{max-width:100%;overflow-x:auto;scrollbar-width:none}
+  .product-gallery-thumbs::-webkit-scrollbar{display:none}
+  .product-accordion__item summary{padding-block:14px}
+
+  /* Forms / checkout */
+  .cart-layout,.checkout-layout,.account-layout,.contact-layout{grid-template-columns:minmax(0,1fr)!important;gap:24px!important}
+  .checkout-card,.checkout-section,.cart-summary,.account-settings-block{padding:clamp(17px,4vw,26px)!important}
+  .form-row,.checkout-row,.admin-detail-grid{grid-template-columns:minmax(0,1fr)!important}
+  .checkout-payment-option{min-width:0}
+  .checkout-payment-option__logos,.payment-logos{flex-wrap:wrap}
+  .promo-row,.checkout-promo__row{grid-template-columns:minmax(0,1fr)!important}
+
+  /* Account order cards */
+  .account-order{height:auto!important;min-height:0!important}
+  .account-order__header{align-items:flex-start!important}
+  .account-order__products{grid-template-columns:minmax(0,1fr)!important}
+  .account-order__item{min-height:0!important;align-items:flex-start!important}
+  .account-order__item:nth-child(n){padding-inline:0!important;border-left:0!important}
+  .account-order__footer{align-items:flex-start!important;gap:12px!important}
+  .account-order__actions{flex-wrap:wrap!important}
+
+  /* Journal / legal readability */
+  .article-body,.journal-article,.info-content,.legal-content{max-width:760px;margin-inline:auto}
+  .article-body p,.journal-article p,.info-content p,.legal-content p{font-size:clamp(16px,2.1vw,18px)!important;line-height:1.72!important}
+  .article-body h2,.journal-article h2,.info-content h2,.legal-content h2{margin-top:1.55em!important}
+
+  /* Modals and sheets */
+  dialog,.modal,.drawer,.va-compare-modal{max-width:100vw!important}
+  .modal__content,.drawer__content,.va-compare-modal__body{min-width:0}
+}
+
+@media (max-width:620px){
+  :root{--qa-gutter:16px;--qa-section:54px;--qa-section-tight:36px;--qa-text:16px}
+  .site-header,.header-inner{min-height:72px}
+  .site-header__inner,.header-inner{padding-inline:16px!important}
+  .site-header nav{max-width:100%}
+  h1,.page-title,.hero-title{font-size:clamp(40px,11.5vw,58px)!important}
+  h2,.section-title{font-size:clamp(32px,9vw,46px)!important}
+  .btn,.button,button[type="submit"]{max-width:100%}
+
+  /* Home: keep a premium rhythm without dead screens */
+  .home-page .hero{min-height:min(76svh,720px)!important}
+  .home-page .brand-manifesto h2,.home-page .home-manifesto h2{font-size:clamp(42px,11.6vw,58px)!important;line-height:.94!important}
+  .home-page .section:has(#collections-heading){padding-block:50px!important}
+  .home-page #featuredGrid{margin-bottom:0!important}
+
+  /* Product grids: readable 2-column baseline; 1-column only on truly narrow screens */
+  .catalog-grid,.product-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+  .product-card{min-width:0!important;height:auto!important}
+  .product-card__body{min-height:0!important}
+  .product-card__name{font-size:clamp(20px,5.6vw,27px)!important;line-height:1.03!important}
+  .product-card__desc{font-size:14px!important;line-height:1.42!important}
+  .product-card__meta{font-size:14px!important}
+  .product-card__actions{margin-top:0!important}
+
+  /* Cart */
+  .cart-item{grid-template-columns:78px minmax(0,1fr)!important;gap:13px!important}
+  .cart-item__media{width:78px!important}
+  .cart-item__title{font-size:20px!important;line-height:1.08}
+  .cart-item__actions,.cart-item__price{grid-column:2!important}
+
+  /* Account */
+  .account-order__header{padding:18px 16px!important}
+  .account-order__products{padding:0 16px!important}
+  .account-order__footer,.account-order__details{padding-inline:16px!important}
+  .account-order__item-thumb{width:64px!important;height:80px!important;aspect-ratio:4/5!important}
+  .account-order__footer{flex-direction:column!important}
+  .account-order__actions{display:grid!important;grid-template-columns:1fr!important;width:100%!important}
+  .account-order__actions>*{width:100%!important}
+
+  /* Guide */
+  .scent-guide-layout,.scent-guide-step,.scent-profile-layout{grid-template-columns:minmax(0,1fr)!important}
+  .scent-guide-sidebar{position:static!important}
+  .scent-guide-options{grid-template-columns:minmax(0,1fr)!important}
+  .scent-guide-option{min-height:84px!important;padding:17px!important}
+  .scent-credit,.welcome-credit{margin-block:36px!important;padding:22px 18px!important}
+
+  /* Footer */
+  .footer-grid,.site-footer__grid{grid-template-columns:1fr!important}
+  .site-footer__bottom,.footer-bottom{flex-direction:column!important;align-items:flex-start!important;gap:12px!important}
+  .footer-payment-row{width:100%;justify-content:flex-start!important;gap:14px!important}
+}
+
+@media (max-width:430px){
+  :root{--qa-gutter:15px}
+  .home-page .collections-grid .collection-card{flex-basis:84vw!important}
+  #featuredGrid .product-card,#guideResultsGrid .product-card{flex-basis:82vw!important}
+  .product-card__wishlist{width:42px!important;height:42px!important}
+  .product-card__actions .product-card__cart-btn{font-size:12px!important}
+  .account-order__header h3{font-size:25px!important}
+  .account-order__summary>strong{font-size:20px!important}
+}
+
+@media (max-width:390px){
+  :root{--qa-gutter:14px}
+  h1,.page-title,.hero-title{font-size:clamp(38px,11.8vw,50px)!important}
+  h2,.section-title{font-size:clamp(30px,9.4vw,42px)!important}
+  .catalog-grid,.product-grid{grid-template-columns:minmax(0,1fr)!important;gap:18px!important}
+  .catalog-grid .product-card,.product-grid .product-card{max-width:100%!important}
+  .product-card__name{font-size:28px!important}
+  .product-card__desc{font-size:15px!important}
+  .cart-item{grid-template-columns:72px minmax(0,1fr)!important}
+  .cart-item__media{width:72px!important}
+}
+
+@media (min-width:901px){
+  /* Desktop guardrails after the mobile work. */
+  .site-footer a[href^="mailto:"]{white-space:nowrap}
+  .account-order{height:auto!important}
+}
+
+/* ===== VA HOME v15.5.0-RC1.20 — equal mobile catalogue CTA alignment ===== */
+@media (min-width:391px) and (max-width:620px){
+  #catalogGrid.catalog-grid{
+    align-items:stretch!important;
+  }
+  #catalogGrid .product-card{
+    height:100%!important;
+    min-height:0!important;
+  }
+  #catalogGrid .product-card__body{
+    display:flex!important;
+    flex:1 1 auto!important;
+    flex-direction:column!important;
+    min-height:252px!important;
+  }
+  #catalogGrid .product-card__collection{
+    display:flex!important;
+    align-items:flex-start;
+    min-height:27px!important;
+    white-space:normal!important;
+    overflow:hidden;
+    text-overflow:clip;
+  }
+  #catalogGrid .product-card__name{
+    display:-webkit-box!important;
+    min-height:50px!important;
+    overflow:hidden;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+  }
+  #catalogGrid .product-card__desc{
+    min-height:35px!important;
+  }
+  #catalogGrid .product-card__rating,
+  #catalogGrid .product-card__rating[hidden]{
+    display:block!important;
+    min-height:22px!important;
+    margin:0!important;
+  }
+  #catalogGrid .product-card__rating[hidden]{
+    visibility:hidden!important;
+  }
+  #catalogGrid .product-card__meta{
+    margin-top:auto!important;
+  }
+  #catalogGrid .product-card .va-compare-add{
+    flex:0 0 auto!important;
+  }
+  #catalogGrid .product-card__actions{
+    flex:0 0 auto!important;
+    margin-top:0!important;
+  }
+}
+
+/* ===== VA HOME v15.5.0-RC1.20 — full mobile QA corrections ===== */
+@media (max-width:620px){
+  /* Product detail: predictable gallery, compact purchase flow, safe sticky bar. */
+  .product-gallery{display:grid!important;grid-template-columns:1fr!important;gap:14px!important}
+  .product-gallery .product-hero__media{width:100%!important;min-height:0!important;height:auto!important;aspect-ratio:4/5!important}
+  .product-gallery .product-hero__media>img#productMainImage{width:100%!important;height:100%!important;object-fit:cover!important}
+  .product-gallery-thumbs{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:9px!important;width:100%!important;overflow:visible!important}
+  .product-gallery-thumb{width:100%!important;aspect-ratio:1/1!important;min-height:0!important}
+  .product-hero__info{padding-top:0!important}
+  .product-heading-row{gap:10px!important}
+  .product-stock-dot{font-size:10px!important}
+  .product-price-card{grid-template-columns:1fr auto!important;gap:14px!important}
+  .product-purchase-row .btn{min-height:56px!important}
+  .mobile-buy-bar{padding-bottom:max(12px,env(safe-area-inset-bottom))!important}
+
+  /* Global content rhythm: no empty half-screens between meaningful blocks. */
+  .section,.page-section{scroll-margin-top:82px}
+  .section+.section,.page-section+.page-section{margin-top:0!important}
+  .home-page .section,.catalog-page .section,.collections-page .section,.product-page .section,
+  .discovery-page .section,.scent-guide-page .section{padding-block:clamp(44px,11vw,62px)!important}
+
+  /* Cards and grids remain readable without horizontal overflow. */
+  .collection-card,.product-card,.review-card,.journal-card,.category-card{min-width:0!important}
+  .product-card__body,.collection-card__body{padding:16px!important}
+  .product-card__collection{font-size:10px!important;line-height:1.35!important}
+  .product-card__rating{font-size:12px!important}
+  .product-card__meta{gap:8px!important}
+  .product-card__cart-btn{min-height:52px!important}
+
+  /* Reviews: swipeable but never clipped to an accidental three-card viewport. */
+  .home-reviews__grid,.reviews-grid{display:flex!important;overflow-x:auto!important;scroll-snap-type:x mandatory!important;gap:14px!important;padding-bottom:8px!important;scrollbar-width:none}
+  .home-reviews__grid::-webkit-scrollbar,.reviews-grid::-webkit-scrollbar{display:none}
+  .home-reviews__grid>.review-card,.reviews-grid>.review-card{flex:0 0 min(86vw,380px)!important;scroll-snap-align:start!important}
+
+  /* Room Ritual, Discovery and comparison: remove desktop minimum heights. */
+  .room-ritual-page{padding-bottom:72px!important}
+  .room-ritual-hero{padding-block:44px 34px!important}
+  .room-ritual-shell{margin-top:28px!important}
+  .room-ritual-form,.room-ritual-card,.room-ritual-result__empty{padding:22px 17px!important;min-height:0!important}
+  .room-ritual-form__grid,.room-ritual-choice-grid,.room-ritual-principles__grid{grid-template-columns:1fr!important}
+  .room-ritual-card__primary{grid-template-columns:1fr!important;gap:8px!important;margin-block:28px 20px!important}
+  .room-ritual-card__steps>div{grid-template-columns:72px 1fr!important;gap:12px!important}
+  .discovery-ritual__media{min-height:300px!important}
+  .discovery-page .info-block-grid{grid-template-columns:1fr!important}
+  .va-compare-card{flex-basis:88vw!important}
+
+  /* Forms, dialogs and long values. */
+  dialog,.admin-dialog,.modal{max-height:100dvh!important}
+  input,select,textarea{max-width:100%!important}
+  .checkout-payment-option,.checkout-card,.cart-summary{overflow:hidden}
+  .checkout-payment-option__logos{gap:10px!important}
+  [data-long-value],.order-id,.tracking-number{overflow-wrap:anywhere}
+
+  /* Footer: readable columns and contact values. */
+  .site-footer__grid,.footer-grid{gap:34px!important}
+  .site-footer__column{min-width:0!important}
+  .site-footer a[href^="mailto:"],.site-footer a[href^="tel:"]{display:inline-block;max-width:100%;overflow-wrap:anywhere}
+}
+
+@media (max-width:430px){
+  .product-gallery-thumbs{gap:7px!important}
+  .product-card__body{padding:14px!important}
+  .product-card__name{font-size:23px!important}
+  .product-card__desc{font-size:13px!important}
+  .home-reviews__grid>.review-card,.reviews-grid>.review-card{flex-basis:88vw!important}
+}
+
+
+/* ===== VA HOME v15.5.0-RC1.20 — Home reviews mobile carousel repair ===== */
+@media (max-width:900px){
+  .home-reviews{overflow:hidden!important}
+  .home-reviews__viewport{overflow:visible!important;margin-right:calc(var(--container-pad,20px) * -1)!important}
+  .home-reviews__grid{
+    display:grid!important;
+    grid-auto-flow:column!important;
+    grid-auto-columns:min(84vw,360px)!important;
+    grid-template-columns:none!important;
+    gap:12px!important;
+    overflow-x:auto!important;
+    overscroll-behavior-inline:contain!important;
+    scroll-snap-type:x mandatory!important;
+    padding:2px var(--container-pad,20px) 12px 0!important;
+    scrollbar-width:none!important;
+  }
+  .home-reviews__grid::-webkit-scrollbar{display:none!important}
+  .home-reviews__grid>.home-review-card{
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    aspect-ratio:4 / 5!important;
+    scroll-snap-align:start!important;
+    scroll-snap-stop:always!important;
+  }
+}
+@media (max-width:430px){
+  .home-reviews__grid{grid-auto-columns:min(82vw,350px)!important}
+}

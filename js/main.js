@@ -505,6 +505,43 @@
     }, 2600);
   };
 
+
+
+  function initHomeCollectionsCarousel() {
+    const track = document.querySelector('.home-page .collections-grid');
+    const dots = Array.from(document.querySelectorAll('.collection-carousel__dots span'));
+    if (!track || !dots.length) return;
+
+    const cards = Array.from(track.querySelectorAll('.collection-card'));
+    if (!cards.length) return;
+
+    const setActive = (index) => {
+      dots.forEach((dot, dotIndex) => dot.classList.toggle('is-active', dotIndex === index));
+    };
+
+    let frame = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const trackLeft = track.getBoundingClientRect().left;
+        let closestIndex = 0;
+        let closestDistance = Infinity;
+        cards.forEach((card, index) => {
+          const distance = Math.abs(card.getBoundingClientRect().left - trackLeft);
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = index;
+          }
+        });
+        setActive(closestIndex);
+      });
+    };
+
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+  }
+
   function initAddToCartDelegation() {
     document.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-add-to-cart]");
@@ -540,6 +577,7 @@
     initProductGrids();
     initAllAccordions();
     initHeroSlider();
+    initHomeCollectionsCarousel();
     initAddToCartDelegation();
     initRevealOnScroll();
     if (window.Cart && typeof window.Cart.refreshCountBadge === "function") {
@@ -547,7 +585,7 @@
     }
     if (window.SITE_CONFIG && typeof PRODUCTS !== "undefined" && !document.querySelector('script[data-vahome-wishlist]')) {
       const script = document.createElement("script");
-      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=15.5.0-RC3.0`;
+      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=15.5.0-RC1.20`;
       script.dataset.vahomeWishlist = "true";
       document.body.appendChild(script);
     }

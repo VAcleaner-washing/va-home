@@ -1,22 +1,15 @@
 {
-  "version": "15.5.0-RC3.0",
+  "version": "15.5.0-RC1.20",
   "channel": "Release Candidate",
-  "name": "CLEAN 15.4.3 RECONSOLIDATION",
+  "name": "RC1.19 CART STATE HARDENING",
   "date": "2026-08-01",
-  "base": "15.4.3",
+  "base": "15.5.0-RC1.19",
   "changes": [
-    "Rebuilds from the stable 15.4.3 production release and keeps its protected admin email and Nova Poshta delivery automation",
-    "Transfers verified later fixes directly into their owning component files without global mobile override stylesheets",
-    "Clears an applied promo whenever the cart becomes empty, after a successful order, after invalidation, or after a bound email changes",
-    "Clears stale promo text and input state in the current page instead of only removing sessionStorage",
-    "Keeps every discounted order payable at a minimum of 1 UAH in cart, promo validation, order creation and the atomic database guard",
-    "Makes free-delivery progress, selected delivery method and order summary use one shared shipping state",
-    "Restores the established 15.4 gallery zoom and adds decoded atomic switching plus rapid-click protection against first-image flashes",
-    "Reduces the product breadcrumb-to-gallery gap to 20 px on desktop and 10 px on mobile",
-    "Allows useful text selection while keeping buttons and navigation non-selectable",
-    "Keeps card payment bank-controlled in admin and removes the manual paid quick action",
-    "Keeps admin autofill dark, article table labels readable, genuine review cards stable and account order images at 4:5",
-    "Simplifies scent-guide questions and places Welcome Credit after the personal recommendations",
-    "Adds one current release journal and one RC3 verification script for regression tracking"
+    "Keeps every RC1.19 storefront, mobile, gallery and UX change intact",
+    "Clears the complete promo UI and session state when the cart becomes empty, an order succeeds, promo validation fails, or a bound email changes",
+    "Uses one delivery-state calculation so courier and branch free-shipping labels cannot contradict each other",
+    "Enforces a minimum payable total of 1 UAH in cart pricing, validate-promo, create-order and a new Supabase database guard migration",
+    "Reduces the product breadcrumb-to-gallery spacing to 20 px on desktop and 10 px on mobile inside site-product.css",
+    "Preserves the RC1.19 decoded double-buffer gallery, subtle v15.4 zoom and no-flash commit"
   ]
 }
