@@ -1,4 +1,4 @@
-/* VA HOME v15.5.0-RC1.20 — certified responsive UX layer
+/* VA HOME v15.5.0-RC1.21 — certified responsive UX layer
    Final cascade for 390 / 430 / 768 px and desktop continuity. */
 
 html{max-width:100%;overflow-x:clip}
@@ -155,7 +155,7 @@ img,video,svg,canvas{max-width:100%}
   .account-order{height:auto!important}
 }
 
-/* ===== VA HOME v15.5.0-RC1.20 — equal mobile catalogue CTA alignment ===== */
+/* ===== VA HOME v15.5.0-RC1.21 — equal mobile catalogue CTA alignment ===== */
 @media (min-width:391px) and (max-width:620px){
   #catalogGrid.catalog-grid{
     align-items:stretch!important;
@@ -209,14 +209,18 @@ img,video,svg,canvas{max-width:100%}
   }
 }
 
-/* ===== VA HOME v15.5.0-RC1.20 — full mobile QA corrections ===== */
+/* ===== VA HOME v15.5.0-RC1.21 — full mobile QA corrections ===== */
 @media (max-width:620px){
   /* Product detail: predictable gallery, compact purchase flow, safe sticky bar. */
   .product-gallery{display:grid!important;grid-template-columns:1fr!important;gap:14px!important}
-  .product-gallery .product-hero__media{width:100%!important;min-height:0!important;height:auto!important;aspect-ratio:4/5!important}
-  .product-gallery .product-hero__media>img#productMainImage{width:100%!important;height:100%!important;object-fit:cover!important}
-  .product-gallery-thumbs{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:9px!important;width:100%!important;overflow:visible!important}
-  .product-gallery-thumb{width:100%!important;aspect-ratio:1/1!important;min-height:0!important}
+  .product-gallery .product-hero__media{order:1!important;position:relative!important;width:100%!important;min-height:0!important;height:auto!important;aspect-ratio:4/5!important;overflow:hidden!important;isolation:isolate}
+  .product-gallery .product-hero__media>img#productMainImage,
+  .product-gallery .product-hero__media>img.product-main-image-transition{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:cover!important}
+  .product-gallery-thumbs{order:2!important;position:relative!important;z-index:4!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;align-items:stretch!important;gap:9px!important;width:100%!important;overflow:hidden!important;isolation:isolate}
+  .product-gallery-thumbs>.product-gallery-thumb{position:relative!important;inset:auto!important;width:100%!important;aspect-ratio:1/1!important;min-height:0!important;margin:0!important;transform:none!important}
+  .product-gallery-thumbs>.product-gallery-thumb:hover,
+  .product-gallery-thumbs>.product-gallery-thumb:focus-visible,
+  .product-gallery-thumbs>.product-gallery-thumb.is-active{transform:none!important}
   .product-hero__info{padding-top:0!important}
   .product-heading-row{gap:10px!important}
   .product-stock-dot{font-size:10px!important}
@@ -277,7 +281,7 @@ img,video,svg,canvas{max-width:100%}
 }
 
 
-/* ===== VA HOME v15.5.0-RC1.20 — Home reviews mobile carousel repair ===== */
+/* ===== VA HOME v15.5.0-RC1.21 — Home reviews mobile carousel repair ===== */
 @media (max-width:900px){
   .home-reviews{overflow:hidden!important}
   .home-reviews__viewport{overflow:visible!important;margin-right:calc(var(--container-pad,20px) * -1)!important}

@@ -3872,7 +3872,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* ===== VA HOME v15.5.0-RC1.20 — deterministic gallery crossfade =====
+/* ===== VA HOME v15.5.0-RC1.21 — deterministic gallery crossfade =====
    Preserves the original subtle zoom while preventing the previous hero
    image from flashing during the final layer commit. */
 .product-image-switcher{
@@ -3916,5 +3916,48 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
   .product-gallery .product-image-switcher>img.product-main-image-transition{
     transition:none!important;
     transform:scale(var(--va-gallery-rest-scale))!important;
+  }
+}
+
+
+/* ===== VA HOME v15.5.0-RC1.21 — product gallery layer containment =====
+   Keeps both crossfade images inside the main media frame and prevents any
+   thumbnail — including Detail — from painting over the hero image. */
+.product-gallery .product-hero__media{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+}
+.product-gallery .product-hero__media>img#productMainImage,
+.product-gallery .product-hero__media>img.product-main-image-transition{
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:cover!important;
+}
+@media(max-width:620px){
+  .product-gallery .product-hero__media{order:1!important}
+  .product-gallery .product-gallery-thumbs{
+    order:2!important;
+    position:relative!important;
+    z-index:4!important;
+    align-items:stretch!important;
+    overflow:hidden!important;
+    isolation:isolate;
+  }
+  .product-gallery .product-gallery-thumbs>.product-gallery-thumb{
+    position:relative!important;
+    inset:auto!important;
+    margin:0!important;
+    transform:none!important;
+  }
+  .product-gallery .product-gallery-thumbs>.product-gallery-thumb:hover,
+  .product-gallery .product-gallery-thumbs>.product-gallery-thumb:focus-visible,
+  .product-gallery .product-gallery-thumbs>.product-gallery-thumb.is-active{
+    transform:none!important;
   }
 }

@@ -1,15 +1,14 @@
 {
-  "version": "15.5.0-RC1.20",
+  "version": "15.5.0-RC1.21",
   "channel": "Release Candidate",
-  "name": "RC1.19 CART STATE HARDENING",
+  "name": "FROZEN BASELINE — GALLERY LAYER CONTAINMENT",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1.19",
+  "base": "15.5.0-RC1.20",
   "changes": [
-    "Keeps every RC1.19 storefront, mobile, gallery and UX change intact",
-    "Clears the complete promo UI and session state when the cart becomes empty, an order succeeds, promo validation fails, or a bound email changes",
-    "Uses one delivery-state calculation so courier and branch free-shipping labels cannot contradict each other",
-    "Enforces a minimum payable total of 1 UAH in cart pricing, validate-promo, create-order and a new Supabase database guard migration",
-    "Reduces the product breadcrumb-to-gallery spacing to 20 px on desktop and 10 px on mobile inside site-product.css",
-    "Preserves the RC1.19 decoded double-buffer gallery, subtle v15.4 zoom and no-flash commit"
+    "Preserves every RC1.20 storefront, mobile, cart, promo, delivery, payment, account, admin and gallery behavior",
+    "Contains the main gallery image and decoded transition image inside the product media frame on desktop and mobile",
+    "Prevents the Detail thumbnail or any other gallery thumbnail from painting over the main product image",
+    "Keeps the four mobile thumbnails in one isolated grid row without active-state displacement",
+    "Freezes RC1.21 as the visual and functional baseline before CSS architecture cleanup"
   ]
 }

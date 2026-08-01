@@ -1207,7 +1207,7 @@ img,video,canvas,svg{max-width:100%}
   #orderDialog .admin-actions__buttons .btn{flex:1 1 100%;}
 }
 
-/* VA HOME v15.5.0-RC1.20 — premium, task-led admin operations */
+/* VA HOME v15.5.0-RC1.21 — premium, task-led admin operations */
 .admin-toolbar--orders{
   grid-template-columns:minmax(300px,1.4fr) minmax(190px,.55fr) minmax(190px,.55fr);
 }
@@ -1512,7 +1512,7 @@ img,video,canvas,svg{max-width:100%}
 }
 
 
-/* VA HOME v15.5.0-RC1.20 — photographic order hero, premium scroll and unified markers */
+/* VA HOME v15.5.0-RC1.21 — photographic order hero, premium scroll and unified markers */
 :root{
   --admin-scroll-track:rgba(255,255,255,.035);
   --admin-scroll-gold-1:#e1c18b;
@@ -1745,7 +1745,7 @@ html::-webkit-scrollbar-thumb:hover,
 }
 
 
-/* v15.5.0-RC1.20 — premium operational feedback */
+/* v15.5.0-RC1.21 — premium operational feedback */
 .admin-toast{
   top:max(22px,calc(env(safe-area-inset-top,0px) + 16px));right:24px;bottom:auto;z-index:2147483000;
   min-width:min(380px,calc(100vw - 48px));max-width:min(520px,calc(100vw - 48px));
@@ -1767,7 +1767,7 @@ html::-webkit-scrollbar-thumb:hover,
 #editTracking:focus{outline:none;border-color:rgba(218,178,108,.78);box-shadow:0 0 0 3px rgba(184,138,75,.11),inset 0 1px rgba(255,255,255,.05)}
 @media(max-width:640px){.admin-toast{left:16px;right:16px;top:max(16px,calc(env(safe-area-inset-top,0px) + 10px));min-width:0;max-width:none}}
 
-/* v15.5.0-RC1.20 — automatic Nova Poshta delivery state */
+/* v15.5.0-RC1.21 — automatic Nova Poshta delivery state */
 .admin-delivery-live{border-color:rgba(102,142,175,.28)!important;background:linear-gradient(145deg,rgba(62,91,116,.10),#0f0e0c 58%)!important}
 .admin-delivery-live strong{color:#c6dced}
 .admin-delivery-sync{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 18px;border:1px solid rgba(102,142,175,.28);background:linear-gradient(135deg,rgba(48,75,97,.14),rgba(13,12,10,.98))}
@@ -1778,7 +1778,7 @@ html::-webkit-scrollbar-thumb:hover,
 @media(max-width:700px){.admin-delivery-sync{align-items:stretch;flex-direction:column}.admin-delivery-sync .btn{width:100%;min-width:0}}
 
 
-/* ===== VA HOME v15.5.0-RC1.20 — Admin autofill dark theme fix ===== */
+/* ===== VA HOME v15.5.0-RC1.21 — Admin autofill dark theme fix ===== */
 .admin-body input:-webkit-autofill,
 .admin-body input:-webkit-autofill:hover,
 .admin-body input:-webkit-autofill:focus,
@@ -1804,7 +1804,7 @@ html::-webkit-scrollbar-thumb:hover,
 }
 
 
-/* ===== VA HOME v15.5.0-RC1.20 — final admin UX consolidation ===== */
+/* ===== VA HOME v15.5.0-RC1.21 — final admin UX consolidation ===== */
 .admin-body input,.admin-body select,.admin-body textarea{
   color-scheme:dark;
   background:#0c0b0a;
