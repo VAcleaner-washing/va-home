@@ -1,13 +1,14 @@
 {
-  "version": "15.5.0-RC1.5",
+  "version": "15.5.0-RC1.6",
   "channel": "Release Candidate",
-  "name": "PREMIUM COMPACT ACCOUNT ORDERS",
+  "name": "FULL UX AUDIT — ADMIN ACCOUNT CART",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1.4",
+  "base": "15.5.0-RC1.6",
   "changes": [
-    "Rebuilds account order cards into a tighter premium editorial layout",
-    "Keeps all ordered product images at a true 4:5 ratio without increasing card height",
-    "Reduces empty vertical space and improves price, product and action alignment",
-    "Updates all storefront, PWA, admin and backend version references to 15.5.0-RC1.5"
+    "Consolidates account order-card layout and removes inherited vertical stretching while preserving 4:5 product media",
+    "Audits and polishes cart product cards, checkout focus states, validation and disabled/loading feedback",
+    "Audits admin forms, autofill, keyboard focus, mobile dialogs and operational button states",
+    "Synchronizes all storefront, PWA, admin and backend release/cache references to 15.5.0-RC1.6",
+    "Regenerates release checksums and includes a full audit report"
   ]
 }

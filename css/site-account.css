@@ -2078,7 +2078,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* ===== VA HOME v15.5.0-RC1.5 — Premium compact order cards ===== */
+/* ===== VA HOME v15.5.0-RC1.6 — Premium compact order cards ===== */
 .account-list{
   gap:18px;
 }
@@ -2202,4 +2202,69 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
     padding:12px 18px 16px;
     gap:12px;
   }
+}
+
+
+/* ===== VA HOME v15.5.0-RC1.6 — final account UX consolidation ===== */
+.account-order{
+  display:grid!important;
+  grid-template-rows:auto auto auto auto!important;
+  height:auto!important;
+  min-height:0!important;
+  overflow:hidden;
+  background:linear-gradient(145deg,rgba(18,15,12,.98),rgba(9,8,7,.995));
+  border:1px solid rgba(195,145,70,.25);
+  box-shadow:0 18px 48px rgba(0,0,0,.18);
+}
+.account-order__header{padding:19px 28px 17px!important}
+.account-order__products{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  align-items:start!important;
+  align-self:start!important;
+  min-height:0!important;
+  padding:0 28px!important;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.account-order__products .account-order__item{
+  display:grid!important;
+  grid-template-columns:72px minmax(0,1fr) auto!important;
+  align-items:center!important;
+  align-content:center!important;
+  min-height:0!important;
+  height:auto!important;
+  padding:14px 0!important;
+  gap:16px!important;
+  border-bottom:0!important;
+}
+.account-order__item-thumb{width:72px!important;height:90px!important;aspect-ratio:4/5!important;object-fit:cover!important}
+.account-order__item>span{align-self:center!important;padding:0!important}
+.account-order__item>strong{align-self:center!important;padding:0!important;white-space:nowrap}
+.account-order__footer{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  align-self:start!important;
+  min-height:0!important;
+  height:auto!important;
+  margin:0!important;
+  padding:13px 28px 15px!important;
+}
+.account-order__toggle{display:inline-flex;align-items:center;gap:9px}
+.account-order__toggle::after{content:"+";font-size:14px;line-height:1;color:var(--color-gold)}
+.account-order__toggle[aria-expanded="true"]::after{content:"−"}
+.account-order__details{padding:18px 28px 24px!important;background:rgba(255,255,255,.012)}
+@media(max-width:900px){
+  .account-order__products{grid-template-columns:1fr!important}
+  .account-order__products .account-order__item{padding:13px 0!important}
+  .account-order__products .account-order__item+.account-order__item{border-top:1px solid rgba(255,255,255,.06)!important}
+}
+@media(max-width:620px){
+  .account-order__header{padding:17px 18px 15px!important}
+  .account-order__products{padding:0 18px!important}
+  .account-order__products .account-order__item{grid-template-columns:64px minmax(0,1fr) auto!important;gap:12px!important}
+  .account-order__item-thumb{width:64px!important;height:80px!important}
+  .account-order__footer{padding:12px 18px 16px!important;align-items:stretch!important;flex-direction:column!important}
+  .account-order__actions{display:grid!important;grid-template-columns:1fr!important;width:100%}
+  .account-order__actions>*{width:100%!important}
 }

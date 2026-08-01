@@ -2773,3 +2773,26 @@ body.np-sheet-open{overflow:hidden}
   body.cart-page .cart-item { --cart-mobile-media: clamp(136px, 38vw, 154px); }
   body.cart-page .cart-item__media { max-width: 154px; aspect-ratio: 1; }
 }
+
+
+/* ===== VA HOME v15.5.0-RC1.6 — cart premium and friendly UX ===== */
+body.cart-page .cart-item{
+  border-color:rgba(195,145,70,.20);
+  background:linear-gradient(145deg,rgba(18,15,12,.97),rgba(10,9,7,.99));
+  box-shadow:0 16px 42px rgba(0,0,0,.14);
+}
+body.cart-page .cart-item__media{overflow:hidden;border:1px solid rgba(255,255,255,.08);background:#0b0a08}
+body.cart-page .cart-item__media img{aspect-ratio:4/5;object-fit:cover}
+.checkout-form input:focus,.checkout-form select:focus,.checkout-form textarea:focus,
+.promo-entry input:focus{outline:none;border-color:rgba(218,178,108,.72);box-shadow:0 0 0 3px rgba(184,138,75,.10)}
+.checkout-form input:user-invalid,.checkout-form select:user-invalid,.checkout-form textarea:user-invalid{border-color:rgba(196,91,82,.72)}
+.checkout-submit:disabled,.promo-entry button:disabled{cursor:wait;opacity:.62;filter:saturate(.7)}
+.promo-status,.checkout-message{min-height:1.4em;line-height:1.5}
+@media(min-width:561px){
+  body.cart-page .cart-item{grid-template-columns:128px minmax(0,1fr) auto!important;min-height:184px!important;padding:14px!important}
+  body.cart-page .cart-item__media{width:128px!important;height:160px!important;aspect-ratio:4/5!important}
+}
+@media(max-width:560px){
+  body.cart-page .cart-item{--cart-mobile-media:112px!important;grid-template-columns:112px minmax(0,1fr)!important;align-items:start!important}
+  body.cart-page .cart-item__media{width:112px!important;height:140px!important;max-width:none!important;aspect-ratio:4/5!important}
+}
