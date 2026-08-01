@@ -10,8 +10,8 @@
 <title>VA HOME Admin</title>
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <link href="../favicon/favicon.ico" rel="icon" sizes="any"/>
-<link href="../css/core-admin.css?v=15.3.3" rel="stylesheet"/><link href="../css/site-admin.css?v=15.3.3" rel="stylesheet"/>
-<meta content="Службова панель керування VA HOME." name="description"/><meta content="15.3.3 Production" name="va-home-release"/>
+<link href="../css/core-admin.css?v=15.4.0" rel="stylesheet"/><link href="../css/site-admin.css?v=15.4.0" rel="stylesheet"/>
+<meta content="Службова панель керування VA HOME." name="description"/><meta content="15.4.0 Production" name="va-home-release"/>
 <link href="/admin/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
 <meta content="#0b0a08" name="msapplication-TileColor"/>
@@ -60,11 +60,12 @@
 </nav>
 <section class="admin-tab-panel" id="ordersTab">
 <div class="admin-orders-intro">
-<div><p class="eyebrow">Замовлення</p><h2>Усі замовлення</h2></div>
-<p>Спочатку — робота із замовленнями та статусами. Фінансова аналітика винесена в окремий розділ.</p>
+<div><p class="eyebrow">Операційний центр</p><h2>Замовлення без плутанини</h2></div>
+<p id="orderQueueSummary">Збираємо пріоритети на сьогодні…</p>
 </div>
-<div class="admin-toolbar">
-<input aria-label="Пошук замовлень" id="orderSearch" placeholder="Номер, ім'я, телефон, email…" type="search"/>
+<div class="admin-focus-filters" id="orderFocusFilters" aria-label="Швидкі фільтри замовлень"></div>
+<div class="admin-toolbar admin-toolbar--orders">
+<input aria-label="Пошук замовлень" id="orderSearch" placeholder="Номер, ім'я, телефон, email або товар…" type="search"/>
 <select aria-label="Фільтр статусу замовлень" id="orderStatusFilter">
 <option value="">Усі статуси</option>
 <option value="new">Нове</option>
@@ -73,6 +74,12 @@
 <option value="shipped">Відправлено</option>
 <option value="completed">Виконано</option>
 <option value="cancelled">Скасовано</option>
+</select>
+<select aria-label="Сортування замовлень" id="orderSort">
+<option value="priority">Спочатку важливі</option>
+<option value="newest">Спочатку нові</option>
+<option value="oldest">Спочатку старі</option>
+<option value="amount">За сумою</option>
 </select>
 </div>
 <div class="admin-stats" id="ordersStats"></div>
@@ -231,10 +238,10 @@
   </div>
 </dialog>
 <script defer="" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer="" src="../js/config.js?v=15.3.3"></script>
-<script defer="" src="../js/products.js?v=15.3.3"></script>
-<script defer="" src="../js/admin.js?v=15.3.3"></script>
-<script defer="" src="../js/motion.js?v=15.3.3"></script>
-<script defer="" src="/admin/pwa.js?v=15.3.3"></script>
+<script defer="" src="../js/config.js?v=15.4.0"></script>
+<script defer="" src="../js/products.js?v=15.4.0"></script>
+<script defer="" src="../js/admin.js?v=15.4.0"></script>
+<script defer="" src="../js/motion.js?v=15.4.0"></script>
+<script defer="" src="/admin/pwa.js?v=15.4.0"></script>
 </body>
 </html>
