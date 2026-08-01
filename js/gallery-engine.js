@@ -111,11 +111,6 @@
 
     mainImage.style.removeProperty("visibility");
     mainImage.removeAttribute("data-product-story-empty");
-    // The static hero markup uses a hero-only srcset. Once the gallery starts,
-    // `src` must be the single source of truth or the browser can keep showing
-    // the first hero candidate after a thumbnail change.
-    mainImage.removeAttribute("srcset");
-    mainImage.removeAttribute("sizes");
     media.removeAttribute("data-story-empty");
 
     let current = 0;
@@ -194,17 +189,9 @@
       return new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     }
 
-    async function decodeElementImage(image, src) {
-      image.src = src;
+    async function waitForDecoded(image) {
       if (typeof image.decode === "function") {
-        try {
-          await image.decode();
-          return;
-        } catch (error) {
-          // Safari can reject decode() for an already decoded image. Fall back
-          // to the normal load state before treating it as a real failure.
-          if (image.complete && image.naturalWidth > 0) return;
-        }
+        try { await image.decode(); return; } catch (_) {}
       }
       if (image.complete && image.naturalWidth > 0) return;
       await new Promise((resolve, reject) => {
@@ -213,11 +200,9 @@
       });
     }
 
-    function resetTransitionLayer() {
+    function resetOverlay() {
       transitionImage.style.transition = "none";
       transitionImage.classList.remove("is-visible");
-      // Force the incoming image back to its initial scale before the next
-      // frame. Without this flush, fast taps can skip the subtle zoom.
       void transitionImage.offsetWidth;
       transitionImage.style.removeProperty("transition");
     }
@@ -225,7 +210,6 @@
     function removeFailedItem(item) {
       const failedIndex = gallery.findIndex((entry) => entry === item);
       if (failedIndex !== -1) gallery.splice(failedIndex, 1);
-
       if (gallery.length) {
         current = Math.min(current, gallery.length - 1);
         mount({
@@ -238,7 +222,6 @@
         });
         return;
       }
-
       mainImage.removeAttribute("src");
       mainImage.alt = `${product.name} — фото тимчасово відсутнє`;
       mainImage.closest(".product-gallery")?.classList.add("product-gallery--missing");
@@ -252,65 +235,86 @@
       updateThumbs();
       setAmbient(item.src, animate);
 
-      const setMainMetadata = () => {
+      const setMetadata = () => {
         mainImage.alt = `${product.name} — ${item.label}`;
         mainImage.dataset.galleryIndex = String(current);
       };
 
       const applyDirectly = async () => {
         try {
-          await decodeElementImage(mainImage, item.src);
+          // Preserve the responsive hero srcset only for the initial first frame.
+          // After the gallery is controlled by JavaScript, src becomes authoritative.
+          if (current !== 0 || mainImage.dataset.galleryControlled === "true") {
+            mainImage.removeAttribute("srcset");
+            mainImage.removeAttribute("sizes");
+          }
+          mainImage.src = item.src;
+          await waitForDecoded(mainImage);
           if (token !== transitionToken) return;
-          setMainMetadata();
-          resetTransitionLayer();
+          setMetadata();
+          mainImage.dataset.galleryControlled = "true";
+          mainImage.style.removeProperty("opacity");
+          resetOverlay();
           transitionImage.removeAttribute("src");
-        } catch (error) {
+        } catch (_) {
           if (token === transitionToken) removeFailedItem(item);
         }
       };
 
       if (!animate || !mainImage.src || matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        applyDirectly();
+        void applyDirectly();
         return;
       }
 
-      // True double-buffer transition:
-      // 1) decode the incoming image inside the visible overlay;
-      // 2) let the complete v15.4-style zoom/crossfade finish;
-      // 3) decode the same image underneath;
-      // 4) remove the overlay only after two painted frames.
-      // This prevents the previous/first image from flashing for one frame.
+      // Keep the exact v15.4 visual rhythm (0.9 s crossfade with the same subtle
+      // scale movement), but make the final commit atomic. The base image is
+      // hidden only while the fully decoded overlay is still displaying the
+      // same target frame, so the initial hero can never flash between layers.
       (async () => {
+        const preload = new Image();
+        preload.decoding = "async";
+        preload.src = item.src;
         try {
-          resetTransitionLayer();
-          await decodeElementImage(transitionImage, item.src);
+          await waitForDecoded(preload);
           if (token !== transitionToken) return;
 
+          resetOverlay();
+          transitionImage.src = item.src;
           transitionImage.alt = `${product.name} — ${item.label}`;
+          await waitForDecoded(transitionImage);
+          if (token !== transitionToken) return;
           await nextPaint();
           if (token !== transitionToken) return;
           transitionImage.classList.add("is-visible");
 
-          // The original visual used 1.05 s opacity and 1.25 s transform.
-          // Waiting for the longer transform preserves the subtle zoom instead
-          // of cutting it off at the old 900 ms commit point.
-          await new Promise((resolve) => window.setTimeout(resolve, 1260));
+          await new Promise((resolve) => window.setTimeout(resolve, 900));
           if (token !== transitionToken) return;
 
-          await decodeElementImage(mainImage, item.src);
+          mainImage.style.transition = "none";
+          mainImage.style.opacity = "0";
+          mainImage.removeAttribute("srcset");
+          mainImage.removeAttribute("sizes");
+          mainImage.src = item.src;
+          await waitForDecoded(mainImage);
           if (token !== transitionToken) return;
-          setMainMetadata();
+          setMetadata();
+          mainImage.dataset.galleryControlled = "true";
           await nextPaint();
           if (token !== transitionToken) return;
 
-          // Both layers now contain the same decoded image at the same final
-          // scale, so the overlay can disappear without a flash or fade-back.
           transitionImage.style.transition = "none";
+          mainImage.style.transition = "none";
           transitionImage.classList.remove("is-visible");
-          void transitionImage.offsetWidth;
-          transitionImage.style.removeProperty("transition");
+          mainImage.style.opacity = "1";
+          void mainImage.offsetWidth;
+          mainImage.style.removeProperty("opacity");
+          void mainImage.offsetWidth;
           transitionImage.removeAttribute("src");
-        } catch (error) {
+          requestAnimationFrame(() => {
+            transitionImage.style.removeProperty("transition");
+            mainImage.style.removeProperty("transition");
+          });
+        } catch (_) {
           if (token === transitionToken) removeFailedItem(item);
         }
       })();

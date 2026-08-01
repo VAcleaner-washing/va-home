@@ -131,7 +131,7 @@
 
       // Keep the server-rendered cards visible while remote photos are warming the browser cache.
       // This prevents a loaded review card from turning into a black placeholder after API refresh.
-      // Warm remote photos, but never reduce the number of visible reviews because one image is slow.
+      // Warm remote photos without shrinking the carousel when a mobile network is slow.
       await Promise.allSettled(selectedRows.map((row) => preloadPhoto(row.photo_url)));
       const rows = selectedRows;
       if (!rows.length) return;
@@ -170,18 +170,12 @@
       cards.forEach((card) => {
         const image = card.querySelector("img");
         image?.addEventListener("error", () => {
-          const href = card.getAttribute("href") || "";
-          const slug = href.match(/products\/([^/.]+)\.html/)?.[1];
-          const product = slug && typeof window.getProduct === "function" ? window.getProduct(slug) : null;
-          const fallback = product?.images?.main;
-          if (fallback && image.src !== new URL(fallback, document.baseURI).href) {
-            image.src = fallback;
-            return;
-          }
-          image.style.opacity = ".28";
+          // Keep the genuine review visible, but never substitute a polished
+          // product hero and present it as a customer's photograph.
           image.removeAttribute("src");
+          image.alt = "Фото відгуку тимчасово недоступне";
           card.classList.add("is-photo-unavailable");
-        });
+        }, { once: true });
       });
 
       const ratings = allRows.map((row) => Number(row.rating)).filter((rating) => rating >= 1 && rating <= 5);

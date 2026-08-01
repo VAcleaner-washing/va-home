@@ -1,14 +1,24 @@
 {
-  "version": "15.5.0-RC1.19",
+  "version": "15.5.0-RC2.0",
   "channel": "Release Candidate",
-  "name": "GALLERY REGRESSION REPAIR",
+  "name": "STABLE BASE RECONSOLIDATION",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1.18",
+  "base": "15.4.0",
   "changes": [
-    "Repairs the confirmed product-gallery regression found by comparing v15.4.0 with RC1.18",
-    "Restores the full subtle zoom timing: desktop 1.045 to 1.075 and mobile 1.02 to 1.045 over 1.25 seconds",
-    "Uses decoded double buffering and a two-frame paint barrier so the first or previous image cannot flash during commit",
-    "Keeps src as the authoritative source after gallery mount to prevent hero srcset from overriding thumbnail selection",
-    "Adds an automated gallery transition regression check and synchronizes frontend, PWA and backend release versions"
+    "Rebuilds the release from the stable 15.4.0 storefront instead of stacking further global mobile override layers",
+    "Removes mobile-system.css, mobile-certified.css and admin-mobile-system.css from the production package and every HTML page",
+    "Keeps verified payment, promo, administrator email and Nova Poshta operational fixes from the later release line",
+    "Keeps the minimum payable order total at 1 UAH and clears an applied promo after order creation or cart reset",
+    "Keeps administrator and customer auth sessions isolated and uses the protected admin-order-update workflow",
+    "Keeps delivered order wording and automatic Nova Poshta delivery reconciliation",
+    "Restores the exact 15.4 product-gallery zoom rhythm while committing the decoded image atomically to prevent the first frame from flashing",
+    "Reduces the gap between product breadcrumbs and the product gallery on desktop and mobile",
+    "Allows customers to select and copy useful content while keeping button and navigation chrome non-selectable",
+    "Keeps administrator autofill fields dark and readable",
+    "Makes scent-profile questions easier to understand and moves Welcome Credit below the personal recommendations",
+    "Keeps genuine reviews visible on slow networks without substituting polished product photography for a customer photo",
+    "Uses 4:5 order-item photography in the customer account without increasing the established card height",
+    "Raises mobile article table headings from 9 px to 11 px",
+    "Synchronizes frontend, PWA, service-worker and backend release identifiers to 15.5.0-RC2.0"
   ]
 }

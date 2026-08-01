@@ -1,6 +1,6 @@
 {
   "schemaVersion": 4,
-  "release": "15.5.0-RC1.19",
+  "release": "15.5.0-RC2.0",
   "source": {
     "workbook": "VA HOME  Ultra Molecular +(3).xlsx",
     "worksheet": "VA HOME  Ultra Molecular 2.1",
@@ -3140,7 +3140,7 @@
       {
         "id": "atmosphere",
         "stepLabel": "Атмосфера",
-        "title": "Яке перше відчуття має створювати аромат?",
+        "title": "Яку атмосферу ви хочете відчути вдома?",
         "options": [
           {
             "id": "calm",
@@ -3316,7 +3316,7 @@
       {
         "id": "room",
         "stepLabel": "Простір",
-        "title": "Де аромат має звучати найкраще?",
+        "title": "Для якої кімнати ви обираєте аромат?",
         "options": [
           {
             "id": "living-room",
@@ -3416,7 +3416,7 @@
       {
         "id": "composition",
         "stepLabel": "Напрям",
-        "title": "До якого характеру ви повертаєтесь найчастіше?",
+        "title": "Які аромати вам зазвичай подобаються?",
         "options": [
           {
             "id": "fresh",
@@ -3543,7 +3543,7 @@
       {
         "id": "space",
         "stepLabel": "Естетика",
-        "title": "Який інтер’єр найближчий вам за характером?",
+        "title": "Який стиль інтер’єру вам найближчий?",
         "options": [
           {
             "id": "entry",

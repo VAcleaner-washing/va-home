@@ -1,5 +1,5 @@
-const VERSION = '15.5.0-RC1.19';
-const CACHE_REVISION = 'rc-110';
+const VERSION = '15.5.0-RC2.0';
+const CACHE_REVISION = 'rc2-stable-base-1';
 const CACHE_PREFIX = 'vahome-';
 const STATIC_CACHE = `${CACHE_PREFIX}static-${VERSION}-${CACHE_REVISION}`;
 
@@ -9,8 +9,7 @@ const CORE_ASSETS = [
   '/pwa/icon-192.png',
   '/pwa/icon-512.png',
   '/pwa/icon-maskable-512.png',
-  '/pwa/apple-touch-icon.png',
-  '/css/mobile-system.css?v=15.5.0-RC1.19'
+  '/pwa/apple-touch-icon.png'
 ];
 
 const PRIVATE_ROUTES = [
