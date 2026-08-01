@@ -131,8 +131,9 @@
 
       // Keep the server-rendered cards visible while remote photos are warming the browser cache.
       // This prevents a loaded review card from turning into a black placeholder after API refresh.
-      const readiness = await Promise.all(selectedRows.map(async (row) => ({ row, ready: await preloadPhoto(row.photo_url) })));
-      const rows = readiness.filter((item) => item.ready).map((item) => item.row);
+      // Warm remote photos, but never reduce the number of visible reviews because one image is slow.
+      await Promise.allSettled(selectedRows.map((row) => preloadPhoto(row.photo_url)));
+      const rows = selectedRows;
       if (!rows.length) return;
 
       const renderedRows = rows.map((row, index) => {
@@ -169,12 +170,18 @@
       cards.forEach((card) => {
         const image = card.querySelector("img");
         image?.addEventListener("error", () => {
-          card.remove();
-          cards = Array.from(grid.querySelectorAll(".home-review-card"));
-          grid.className = `home-reviews__grid home-reviews__grid--${cards.length}`;
-          buildDots();
-          if (!cards.length) section.hidden = true;
-        }, { once: true });
+          const href = card.getAttribute("href") || "";
+          const slug = href.match(/products\/([^/.]+)\.html/)?.[1];
+          const product = slug && typeof window.getProduct === "function" ? window.getProduct(slug) : null;
+          const fallback = product?.images?.main;
+          if (fallback && image.src !== new URL(fallback, document.baseURI).href) {
+            image.src = fallback;
+            return;
+          }
+          image.style.opacity = ".28";
+          image.removeAttribute("src");
+          card.classList.add("is-photo-unavailable");
+        });
       });
 
       const ratings = allRows.map((row) => Number(row.rating)).filter((rating) => rating >= 1 && rating <= 5);

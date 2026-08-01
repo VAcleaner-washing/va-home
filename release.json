@@ -1,14 +1,12 @@
 {
-  "version": "15.5.0-RC1.12",
+  "version": "15.5.0-RC1.13",
   "channel": "Release Candidate",
-  "name": "PREMIUM MOBILE PRODUCT CARDS",
+  "name": "MOBILE REVIEWS RELIABILITY FIX",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1.11",
+  "base": "15.5.0-RC1.12",
   "changes": [
-    "Rebuilds mobile product cards to remove excessive height and cramped two-column typography",
-    "Turns homepage featured products and scent-profile recommendations into premium swipe rails",
-    "Keeps the catalogue fast to scan with compact two-column cards and a single primary purchase action",
-    "Uses one-column editorial catalogue cards only on screens narrower than 380 px",
-    "Updates all storefront, PWA, admin and backend release references to 15.5.0-RC1.12"
+    "Prevents slow or failed review photos from reducing the visible mobile review count",
+    "Keeps up to five selected homepage reviews and falls back to product imagery when a customer photo fails",
+    "Synchronizes storefront, PWA, service worker and backend release references"
   ]
 }
