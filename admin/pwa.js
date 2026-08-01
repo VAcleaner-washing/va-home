@@ -2,7 +2,7 @@
   'use strict';
   if (!('serviceWorker' in navigator) || !window.isSecureContext) return;
 
-  const VERSION = '15.5.0-RC2.0';
+  const VERSION = '15.5.0-RC3.0';
   let refreshing = false;
 
   const showUpdate = (registration) => {

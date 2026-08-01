@@ -278,6 +278,18 @@
           await waitForDecoded(preload);
           if (token !== transitionToken) return;
 
+          // A rapid second click can arrive while the previous overlay is still
+          // visible. Commit that already-decoded frame to the base layer before
+          // reusing the overlay, otherwise the original hero can flash for one paint.
+          if (transitionImage.classList.contains("is-visible") && transitionImage.src) {
+            mainImage.style.transition = "none";
+            mainImage.src = transitionImage.currentSrc || transitionImage.src;
+            await waitForDecoded(mainImage);
+            if (token !== transitionToken) return;
+            await nextPaint();
+            if (token !== transitionToken) return;
+          }
+
           resetOverlay();
           transitionImage.src = item.src;
           transitionImage.alt = `${product.name} — ${item.label}`;

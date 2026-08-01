@@ -705,13 +705,13 @@ body.lightbox-open{overflow:hidden}
 
 
 /* Product flow: keep breadcrumbs visually connected to the gallery. */
-main > .container:has(> .breadcrumbs) .breadcrumbs{padding-bottom:.45rem}
+main > .container:has(> .breadcrumbs) .breadcrumbs{padding-bottom:0}
 
 /* ========================================================================== 
    VA HOME v7.3.14 — Compact premium flow + cinematic gallery transition
    ========================================================================== */
 @media (min-width:901px){
-  .section--tight:has(.product-hero){padding-top:clamp(.75rem,1.5vw,1.25rem);padding-bottom:clamp(3.25rem,5vw,5.5rem)}
+  .section--tight:has(.product-hero){padding-top:20px;padding-bottom:clamp(3.25rem,5vw,5.5rem)}
   .product-hero{gap:clamp(2.5rem,4.5vw,5.5rem);align-items:start}
   .product-hero__visual-stack{gap:0}
   .product-gallery .product-hero__media{max-height:min(72vh,760px)}
@@ -722,7 +722,7 @@ main > .container:has(> .breadcrumbs) .breadcrumbs{padding-bottom:.45rem}
   .product-substance .product-accordion__content{padding:0 1.35rem 1.4rem}
 }
 @media (max-width:900px){
-  .section--tight:has(.product-hero){padding-top:.65rem}
+  .section--tight:has(.product-hero){padding-top:10px}
   .product-substance{display:grid;gap:1.25rem;margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border-hairline)}
   .product-substance .product-formula-proof{margin:0}
   .product-substance .product-accordion{margin:0}

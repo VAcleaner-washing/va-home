@@ -26,6 +26,29 @@
   }
   function writeAppliedPromoCode(value){ if(!value) writeAppliedPromo(null); }
 
+  function clearAppliedPromoState(options = {}) {
+    const { closeDetails = true, clearMessage = true } = options;
+    writeAppliedPromo(null);
+    resetCheckoutRequestId();
+
+    const input = document.getElementById("promoCode");
+    const status = document.getElementById("promoStatus");
+    const details = document.getElementById("promoDetails");
+    const promoRow = document.getElementById("cartPromoRow");
+    const promoLabel = document.getElementById("cartPromoCodeLabel");
+    const promoDiscount = document.getElementById("cartPromoDiscount");
+
+    if (input) input.value = "";
+    if (status && clearMessage) {
+      status.textContent = "";
+      status.className = "promo-status";
+    }
+    if (details && closeDetails) details.open = false;
+    if (promoRow) promoRow.hidden = true;
+    if (promoLabel) promoLabel.textContent = "";
+    if (promoDiscount) promoDiscount.textContent = "−0 грн";
+  }
+
   function resetCheckoutRequestId() {
     try { sessionStorage.removeItem("vahome_checkout_request_id"); } catch (_) {}
   }
@@ -93,9 +116,11 @@
   }
 
   function writeRaw(items) {
+    const safeItems = Array.isArray(items) ? items : [];
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(safeItems));
       resetCheckoutRequestId();
+      if (!safeItems.length) clearAppliedPromoState();
       return true;
     } catch (e) {
       return false;
@@ -164,11 +189,6 @@
 
   function clear() {
     writeRaw([]);
-    // A promo belongs to the checkout that used it. Clearing the cart must
-    // also clear the applied promo so a completed or abandoned order cannot
-    // leak its discount into the next basket.
-    writeAppliedPromo(null);
-    resetCheckoutRequestId();
   }
 
   function getItems() {
@@ -234,36 +254,72 @@
     return "товарів";
   }
 
-  function syncShippingCopy(pricing) {
+  function shippingState(pricing) {
     const method = document.getElementById("deliveryMethod")?.value || "nova_poshta_branch";
     const courier = method === "nova_poshta_courier";
-    const branchFree = !courier && pricing.subtotal >= FREE_SHIPPING_THRESHOLD;
+    const branchEligible = Boolean(pricing.freeShipping || pricing.subtotal >= FREE_SHIPPING_THRESHOLD);
+    const branchFreeActive = !courier && branchEligible;
+    const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - pricing.subtotal);
+    return { method, courier, branchEligible, branchFreeActive, remaining };
+  }
+
+  function syncShippingCopy(pricing) {
+    const state = shippingState(pricing);
     const deliveryLabel = document.getElementById("cartDeliveryLabel");
     const summaryNote = document.getElementById("cartShippingNote");
     const methodHint = document.getElementById("deliveryMethodHint");
     const reassurance = document.getElementById("checkoutDeliveryCopy");
+    const progressWrap = document.getElementById("shippingProgress");
+    const progressBar = document.getElementById("shippingProgressBar");
+    const progressText = document.getElementById("shippingProgressText");
+    const progressValue = document.getElementById("shippingProgressValue");
 
-    if (deliveryLabel) deliveryLabel.textContent = branchFree ? "Безкоштовно" : "За тарифами НП";
+    if (deliveryLabel) deliveryLabel.textContent = state.branchFreeActive ? "Безкоштовно" : "За тарифами НП";
+
     if (summaryNote) {
-      summaryNote.textContent = courier
-        ? "Кур’єрська доставка оплачується за тарифами Нової пошти незалежно від суми замовлення."
-        : branchFree
+      summaryNote.textContent = state.courier
+        ? state.branchEligible
+          ? "Безкоштовна доставка доступна у відділення або поштомат. Кур’єрська доставка — за тарифами Нової пошти."
+          : "Кур’єрська доставка оплачується за тарифами Нової пошти незалежно від суми замовлення."
+        : state.branchFreeActive
           ? "Безкоштовна доставка у відділення або поштомат активована."
           : "Для замовлень від 1500 грн доставка у відділення або поштомат — за наш рахунок.";
     }
+
     if (methodHint) {
-      methodHint.textContent = courier
-        ? "Кур’єрська доставка оплачується за тарифами Нової пошти незалежно від суми замовлення."
-        : branchFree
+      methodHint.textContent = state.courier
+        ? state.branchEligible
+          ? "Оберіть відділення або поштомат, щоб скористатися безкоштовною доставкою. Кур’єр — за тарифами Нової пошти."
+          : "Кур’єрська доставка оплачується за тарифами Нової пошти незалежно від суми замовлення."
+        : state.branchFreeActive
           ? "Безкоштовна доставка у відділення або поштомат активована."
           : "Доставка у відділення або поштомат — за тарифами Нової пошти. Від 1500 грн — за наш рахунок.";
     }
+
     if (reassurance) {
-      reassurance.innerHTML = courier
-        ? "<strong>Доставка:</strong> кур’єром — за тарифами Нової пошти."
-        : branchFree
+      reassurance.innerHTML = state.courier
+        ? state.branchEligible
+          ? "<strong>Доставка:</strong> безкоштовно у відділення або поштомат; кур’єром — за тарифами Нової пошти."
+          : "<strong>Доставка:</strong> кур’єром — за тарифами Нової пошти."
+        : state.branchFreeActive
           ? "<strong>Доставка:</strong> у відділення або поштомат — безкоштовно."
           : "<strong>Доставка:</strong> у відділення або поштомат — безкоштовно від 1500 грн.";
+    }
+
+    const progress = state.branchEligible ? 100 : Math.min(100, (pricing.subtotal / FREE_SHIPPING_THRESHOLD) * 100);
+    if (progressBar) progressBar.style.width = `${progress}%`;
+    if (progressWrap) progressWrap.classList.toggle("is-complete", state.branchEligible);
+    if (progressText) {
+      progressText.textContent = state.branchEligible
+        ? state.branchFreeActive
+          ? "Безкоштовна доставка у відділення активована"
+          : "Безкоштовна доставка доступна у відділення"
+        : "До безкоштовної доставки у відділення";
+    }
+    if (progressValue) {
+      progressValue.textContent = state.branchEligible
+        ? state.branchFreeActive ? "Готово" : "Доступно"
+        : formatUAH(state.remaining);
     }
   }
 
@@ -291,18 +347,13 @@
     if (promoStatus && pricing.promoCode) {
       promoStatus.textContent = promoStatusText(pricing);
       promoStatus.className = "promo-status is-success";
+    } else if (promoStatus) {
+      promoStatus.textContent = "";
+      promoStatus.className = "promo-status";
+      const promoInput = document.getElementById("promoCode");
+      if (promoInput) promoInput.value = "";
     }
 
-    const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - pricing.subtotal);
-    const progress = Math.min(100, (pricing.subtotal / FREE_SHIPPING_THRESHOLD) * 100);
-    const progressWrap = document.getElementById("shippingProgress");
-    const progressBar = document.getElementById("shippingProgressBar");
-    const progressText = document.getElementById("shippingProgressText");
-    const progressValue = document.getElementById("shippingProgressValue");
-    if (progressBar) progressBar.style.width = `${progress}%`;
-    if (progressWrap) progressWrap.classList.toggle("is-complete", remaining === 0);
-    if (progressText) progressText.textContent = remaining === 0 ? "Безкоштовна доставка у відділення активована" : "До безкоштовної доставки у відділення";
-    if (progressValue) progressValue.textContent = remaining === 0 ? "Готово" : formatUAH(remaining);
     syncShippingCopy(pricing);
 
     const mobileBar = document.getElementById("checkoutMobileBar");
@@ -324,6 +375,7 @@
     const filledState = document.getElementById("cartFilledState");
 
     if (!items.length) {
+      clearAppliedPromoState();
       if (emptyState) emptyState.hidden = false;
       if (filledState) filledState.hidden = true;
       const progress = document.querySelector(".checkout-progress");
@@ -1245,7 +1297,7 @@
       sessionStorage.removeItem("vahome_checkout_draft_v66");
       // The promo is reserved/consumed by the created order. Do not leave a stale
       // "active" promo attached to a new checkout in this browser session.
-      writeAppliedPromo(null);
+      clearAppliedPromoState();
 
       clear();
       if (order.payment_method === "card_online" && result.payment_url) {
@@ -1401,11 +1453,11 @@
   function initPromoCode(form) {
     const input=document.getElementById("promoCode"),button=document.getElementById("applyPromoCode"),status=document.getElementById("promoStatus"),details=document.getElementById("promoDetails");
     if(!input||!button||!status)return;
-    if(!getItems().length) writeAppliedPromo(null);
-    const showCurrent=()=>{const promo=readAppliedPromo();if(promo?.code){input.value=String(promo.code).toUpperCase();status.textContent=promoStatusText(pricingFor(getItems()));status.className="promo-status is-success";if(details)details.open=true;}};
-    const apply=async()=>{const code=normalizePromoCode(input.value);if(!code){writeAppliedPromo(null);resetCheckoutRequestId();status.textContent="Промокод прибрано.";status.className="promo-status";renderCartPage();return;}button.disabled=true;status.textContent="Перевіряємо промокод…";status.className="promo-status";try{const items=getItems().map(i=>({id:i.id,quantity:i.quantity,line_total:i.lineTotal}));const subtotal=items.reduce((sum,i)=>sum+Number(i.line_total||0),0);const response=await fetch(`${window.SITE_CONFIG.supabase.url}/functions/v1/validate-promo`,{method:"POST",headers:{"Content-Type":"application/json","apikey":window.SITE_CONFIG.supabase.publishableKey,"Authorization":`Bearer ${window.SITE_CONFIG.supabase.publishableKey}`},body:JSON.stringify({code,items,subtotal,customer_email:form?.elements?.customerEmail?.value?.trim()?.toLowerCase()||""})});const data=await response.json().catch(()=>({}));if(!response.ok||!data.valid){writeAppliedPromo(null);status.textContent=data.message||"Промокод не знайдено або він уже не діє.";status.className="promo-status is-error";renderCartPage();return;}writeAppliedPromo(data.promo);resetCheckoutRequestId();renderCartPage();status.textContent=promoStatusText(pricingFor(getItems()));status.className="promo-status is-success";}catch(_){status.textContent="Не вдалося перевірити промокод. Спробуйте ще раз.";status.className="promo-status is-error";}finally{button.disabled=false;}};
+    if(!getItems().length) clearAppliedPromoState();
+    const showCurrent=()=>{const promo=readAppliedPromo();if(promo?.code){input.value=String(promo.code).toUpperCase();status.textContent=promoStatusText(pricingFor(getItems()));status.className="promo-status is-success";if(details)details.open=true;}else{input.value="";status.textContent="";status.className="promo-status";if(details)details.open=false;}};
+    const apply=async()=>{const code=normalizePromoCode(input.value);if(!code){clearAppliedPromoState({closeDetails:false});renderCartPage();status.textContent="Промокод прибрано.";status.className="promo-status";return;}button.disabled=true;status.textContent="Перевіряємо промокод…";status.className="promo-status";try{const items=getItems().map(i=>({id:i.id,quantity:i.quantity,line_total:i.lineTotal}));const subtotal=items.reduce((sum,i)=>sum+Number(i.line_total||0),0);const response=await fetch(`${window.SITE_CONFIG.supabase.url}/functions/v1/validate-promo`,{method:"POST",headers:{"Content-Type":"application/json","apikey":window.SITE_CONFIG.supabase.publishableKey,"Authorization":`Bearer ${window.SITE_CONFIG.supabase.publishableKey}`},body:JSON.stringify({code,items,subtotal,customer_email:form?.elements?.customerEmail?.value?.trim()?.toLowerCase()||""})});const data=await response.json().catch(()=>({}));if(!response.ok||!data.valid){clearAppliedPromoState({closeDetails:false});renderCartPage();status.textContent=data.message||"Промокод не знайдено або він уже не діє.";status.className="promo-status is-error";return;}writeAppliedPromo(data.promo);resetCheckoutRequestId();renderCartPage();status.textContent=promoStatusText(pricingFor(getItems()));status.className="promo-status is-success";}catch(_){status.textContent="Не вдалося перевірити промокод. Спробуйте ще раз.";status.className="promo-status is-error";}finally{button.disabled=false;}};
     const emailField=form?.elements?.customerEmail;
-    if(emailField)emailField.addEventListener("input",()=>{const promo=readAppliedPromo();if(!promo?.email_bound)return;const current=String(emailField.value||"").trim().toLowerCase();if(current&&current===String(promo.validated_email||"").toLowerCase())return;writeAppliedPromo(null);resetCheckoutRequestId();status.textContent="Персональний промокод прибрано після зміни email.";status.className="promo-status";renderCartPage();});
+    if(emailField)emailField.addEventListener("input",()=>{const promo=readAppliedPromo();if(!promo?.email_bound)return;const current=String(emailField.value||"").trim().toLowerCase();if(current&&current===String(promo.validated_email||"").toLowerCase())return;clearAppliedPromoState({closeDetails:false});renderCartPage();status.textContent="Персональний промокод прибрано після зміни email.";status.className="promo-status";});
     button.addEventListener("click",apply);input.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();apply();}});showCurrent();
   }
 

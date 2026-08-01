@@ -162,7 +162,18 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 
 .ty-payment-provider{display:flex;align-items:center;gap:14px;margin:-4px 0 22px}.ty-payment-provider img{display:block;width:116px;height:auto}.ty-payment-provider span{color:var(--text-secondary);font-size:10px;letter-spacing:.08em;text-transform:uppercase}@media(max-width:480px){.ty-payment-provider{align-items:flex-start;flex-direction:column;gap:8px}}
 
-/* v15.5.0-RC2.0 — controlled title wrapping */
+/* v15.3.0 — controlled title wrapping */
 .ty-title-line{display:block;white-space:nowrap;word-break:normal;overflow-wrap:normal;hyphens:none}
 .ty-intro h1.is-long{max-width:none;font-size:clamp(3.35rem,5.25vw,5.9rem)}
 @media(max-width:600px){.ty-intro h1.is-long{font-size:clamp(2.75rem,13.2vw,4.35rem);letter-spacing:-.04em}}
+
+
+/* v15.5.0-RC3.0 — local glass blur under order details */
+.ty-order-id{
+  padding:18px 20px 16px;margin-left:-20px;margin-right:-20px;
+  border:1px solid rgba(224,190,126,.28);
+  background:linear-gradient(115deg,rgba(12,10,8,.62),rgba(24,19,14,.34));
+  box-shadow:0 18px 42px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.045);
+  backdrop-filter:blur(12px) saturate(1.12);-webkit-backdrop-filter:blur(12px) saturate(1.12);
+}
+@media(max-width:600px){.ty-order-id{padding:15px 16px 14px;margin-left:-10px;margin-right:-10px}}

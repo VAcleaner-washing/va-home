@@ -2714,7 +2714,7 @@ body.np-sheet-open{overflow:hidden}
 
 @media(max-width:430px){.payment-option__title-row{align-items:flex-start;flex-direction:column;gap:8px}.payment-option__mono{max-width:132px}.payment-option__brands{gap:11px;flex-wrap:wrap}}
 
-/* VA HOME v15.5.0-RC2.0 — larger cart image, centered across the full card height */
+/* VA HOME v15.3.3 — larger cart image, centered across the full card height */
 @media (max-width: 560px) {
   body.cart-page .cart-item {
     --cart-mobile-media: clamp(124px, 34vw, 132px);
