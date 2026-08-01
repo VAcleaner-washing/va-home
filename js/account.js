@@ -109,7 +109,7 @@
       { key: "new", label: "Прийнято" },
       { key: "paid", label: "Оплачено" },
       { key: "shipped", label: "Відправлено" },
-      { key: "completed", label: "Виконано" },
+      { key: "completed", label: "Доставлено" },
     ];
     const order = ["new", "awaiting_payment", "pending", "paid", "shipped", "completed"];
     const currentIndex = order.indexOf(status);
@@ -840,7 +840,7 @@
     }));
     $("#accountLogout").addEventListener("click", async () => {
       setBusy($("#accountLogout"), true, "Виходимо…");
-      try { await withTimeout(sb.auth.signOut(), "LOGOUT_TIMEOUT"); } catch (_) {}
+      try { await withTimeout(sb.auth.signOut({scope:"local"}), "LOGOUT_TIMEOUT"); } catch (_) {}
       user = null;
       setBusy($("#accountLogout"), false, "");
       showAuth();

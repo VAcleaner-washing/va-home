@@ -44,10 +44,10 @@
     if (promo.campaign_type === "discovery_credit") {
       const creditAmount = Number(promo.credit_amount || promo.discount_value || promo.discount_amount || 0);
       if (fullSizeCount < 1) return 0;
-      if (creditAmount >= 450) return Math.min(subtotal, fullSizeCount >= 2 ? 450 : 250);
-      return Math.min(subtotal, Math.min(150, creditAmount));
+      if (creditAmount >= 450) return Math.min(Math.max(0, subtotal - 1), fullSizeCount >= 2 ? 450 : 250);
+      return Math.min(Math.max(0, subtotal - 1), Math.min(150, creditAmount));
     }
-    return Math.min(Number(promo.discount_amount || 0), subtotal);
+    return Math.min(Number(promo.discount_amount || 0), Math.max(0, subtotal - 1));
   }
 
   function promoStatusText(pricing) {
@@ -70,7 +70,7 @@
     const promo = readAppliedPromo();
     const promoCode = normalizePromoCode(promo?.code || "");
     const discount = promoCode ? promoDiscountForCart(promo, safeItems, subtotal) : 0;
-    return { subtotal, promoCode, promo, discount, fullSizeCount: fullSizeQuantity(safeItems), total: Math.max(0, subtotal - discount), freeShipping: Boolean(promo?.free_shipping) };
+    return { subtotal, promoCode, promo, discount, fullSizeCount: fullSizeQuantity(safeItems), total: Math.max(subtotal > 0 ? 1 : 0, subtotal - discount), freeShipping: Boolean(promo?.free_shipping) };
   }
 
   // Non-catalog items sellable from the cart (Discovery Set variants).
@@ -1238,6 +1238,9 @@
       sessionStorage.removeItem("vahome_checkout_request_id");
       sessionStorage.removeItem("vahome_checkout_draft_v65");
       sessionStorage.removeItem("vahome_checkout_draft_v66");
+      // The promo is reserved/consumed by the created order. Do not leave a stale
+      // "active" promo attached to a new checkout in this browser session.
+      writeAppliedPromo(null);
 
       clear();
       if (order.payment_method === "card_online" && result.payment_url) {

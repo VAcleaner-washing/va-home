@@ -1,7 +1,7 @@
 (function(){"use strict";
 const cfg=window.SITE_CONFIG.supabase;
 const sb=window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{storageKey:"vahome_admin_auth_v1",persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
-const statusLabels={new:"Нове",awaiting_payment:"Очікує оплату",paid:"Оплачено",shipped:"Відправлено",completed:"Виконано",cancelled:"Скасовано"};
+const statusLabels={new:"Нове",awaiting_payment:"Очікує оплату",paid:"Оплачено",shipped:"Відправлено",completed:"Доставлено",cancelled:"Скасовано"};
 const orderStatusOrder=["new","awaiting_payment","paid","shipped","completed","cancelled"];
 const paymentMethodLabels={bank_transfer:"На рахунок",cash_on_delivery:"При отриманні",card_online:"Карткою онлайн"};
 const paymentStatusLabels={unpaid:"Не оплачено",pending:"Очікує банк",verification:"Перевіряємо",failed:"Не завершено",expired:"Прострочено",paid:"Оплачено",refunded:"Повернено"};
@@ -15,13 +15,54 @@ const date=v=>v?new Intl.DateTimeFormat("uk-UA",{dateStyle:"medium",timeStyle:"s
 const shortDate=v=>v?new Intl.DateTimeFormat("uk-UA",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}).format(new Date(v)):"—";
 const normalizePhone=v=>String(v||"").replace(/[^+\d]/g,"");
 
+async function getAdminAccessToken(){
+  let {data:{session},error}=await sb.auth.getSession();
+  if(error||!session)throw new Error("SESSION_EXPIRED");
+  const expiresAt=Number(session.expires_at||0)*1000;
+  if(expiresAt&&expiresAt-Date.now()<90_000){
+    const refreshed=await sb.auth.refreshSession();
+    if(refreshed.error||!refreshed.data.session)throw new Error("SESSION_EXPIRED");
+    session=refreshed.data.session;
+  }
+  return session.access_token;
+}
+async function adminOrderRequest(body){
+  let token;
+  try{token=await getAdminAccessToken();}
+  catch(_){showLogin("Адмінська сесія завершилася. Увійдіть повторно.");throw new Error("SESSION_EXPIRED");}
+  const response=await fetch(`${cfg.url}/functions/v1/admin-order-update`,{
+    method:"POST",
+    headers:{Authorization:`Bearer ${token}`,apikey:cfg.publishableKey,"Content-Type":"application/json"},
+    body:JSON.stringify(body)
+  });
+  const payload=await response.json().catch(()=>({}));
+  if(response.status===401){await sb.auth.signOut({scope:"local"}).catch(()=>{});showLogin("Адмінська сесія завершилася. Увійдіть повторно.");throw new Error("SESSION_EXPIRED");}
+  if(!response.ok)throw new Error(String(payload.error||`HTTP_${response.status}`));
+  return payload;
+}
+function applyUpdatedOrder(data){
+  if(!data)return;
+  activeOrder=data;
+  const index=orders.findIndex(order=>String(order.id)===String(data.id));
+  if(index>=0)orders[index]=data;
+}
+function announceOrderResult(result,{fallback="Замовлення оновлено"}={}){
+  if(result?.status_changed){
+    if(result.email?.sent)return toast("Статус оновлено · лист надіслано","success");
+    if(result.email?.skipped)return toast("Статус оновлено · лист уже надсилався","success");
+    return toast("Статус оновлено, але лист не надіслано. Натисніть «Надіслати лист повторно».","danger");
+  }
+  toast(fallback,"success");
+}
 async function sendStatusEmail(clientOrderId,{announce=true}={}){
-  const {data:{session},error:sessionError}=await sb.auth.getSession();
-  if(sessionError||!session){if(announce)toast("Адмінська сесія завершилася — увійдіть повторно","warning");return false;}
-  const {data,error}=await sb.functions.invoke("send-status-email",{body:{client_order_id:clientOrderId},headers:{Authorization:`Bearer ${session.access_token}`}});
-  if(error){if(announce)toast("Статус збережено, але лист не надіслано","warning");return false;}
-  if(announce)toast(data?.skipped?"Лист уже надсилався раніше":"Клієнту надіслано лист","success");
-  return true;
+  try{
+    const result=await adminOrderRequest({action:"resend_email",client_order_id:clientOrderId});
+    if(announce)toast(result.email?.sent?"Лист клієнту надіслано":"Лист уже надсилався раніше","success");
+    return true;
+  }catch(error){
+    if(String(error.message)!=="SESSION_EXPIRED"&&announce)toast("Не вдалося надіслати лист. Спробуйте ще раз.","danger");
+    return false;
+  }
 }
 function setupPremiumScrollbar(dialog){
   const rail=dialog?.querySelector(".admin-scroll-indicator"),thumb=rail?.querySelector("span");
@@ -129,8 +170,8 @@ function orderGuidance(order){
   if(status==="awaiting_payment"&&method==="bank_transfer")return{tone:"attention",title:"Очікуємо переказ",detail:"Перевірте рахунок і підтвердьте оплату лише після надходження коштів.",action:{label:"Оплату отримано",status:"paid"}};
   if(["new","awaiting_payment"].includes(status)&&method==="cash_on_delivery")return{tone:"attention",title:"Підготуйте до відправлення",detail:"Клієнт оплатить замовлення у відділенні або поштоматі.",action:{label:"Позначити відправленим",status:"shipped"}};
   if(status==="paid")return{tone:"success",title:"Оплату підтверджено",detail:order.tracking_number?"ТТН уже додано — замовлення можна відправляти.":"Підготуйте замовлення, створіть ТТН і позначте його відправленим.",action:{label:"Позначити відправленим",status:"shipped"}};
-  if(status==="shipped")return{tone:order.tracking_number?"info":"attention",title:order.tracking_number?"Замовлення в дорозі":"Додайте номер ТТН",detail:order.tracking_number?`ТТН ${order.tracking_number}. Після отримання завершіть замовлення.`:"Номер ТТН допоможе клієнту відстежувати посилку.",action:{label:"Позначити виконаним",status:"completed"}};
-  if(status==="completed")return{tone:"success",title:"Замовлення виконано",detail:order.review_invitation_sent_at?"Запрошення залишити відгук уже надіслано.":"Клієнту можна надіслати запрошення залишити відгук.",action:null};
+  if(status==="shipped")return{tone:order.tracking_number?"info":"attention",title:order.tracking_number?"Замовлення в дорозі":"Додайте номер ТТН",detail:order.tracking_number?`ТТН ${order.tracking_number}. Статус зміниться автоматично після отримання.`:"Номер ТТН допоможе клієнту відстежувати посилку.",action:{label:"Позначити доставленим",status:"completed"}};
+  if(status==="completed")return{tone:"success",title:"Посилку доставлено",detail:order.review_invitation_sent_at?"Запрошення залишити відгук уже надіслано.":"Клієнту можна надіслати запрошення залишити відгук.",action:null};
   return{tone:"muted",title:"Перевірте замовлення",detail:"Уточніть дані клієнта, оплату та спосіб доставки.",action:null};
 }
 function orderPriority(order){
@@ -164,7 +205,7 @@ async function copyText(value,label="Скопійовано"){
   try{await navigator.clipboard.writeText(text);}catch(_){const input=document.createElement("textarea");input.value=text;input.style.position="fixed";input.style.opacity="0";document.body.appendChild(input);input.select();document.execCommand("copy");input.remove();}
   toast(label,"success");
 }
-async function requireAdmin(){const {data:{user}}=await sb.auth.getUser();if(!user)return false;const {data,error}=await sb.from("admin_users").select("user_id,email").eq("user_id",user.id).maybeSingle();if(error||!data){await sb.auth.signOut();throw new Error("Цей акаунт не має доступу до адмін-панелі.");}$("#adminIdentity").textContent=data.email;return true;}
+async function requireAdmin(){const {data:{user}}=await sb.auth.getUser();if(!user)return false;const {data,error}=await sb.from("admin_users").select("user_id,email").eq("user_id",user.id).maybeSingle();if(error||!data){await sb.auth.signOut({scope:"local"});throw new Error("Цей акаунт не має доступу до адмін-панелі.");}$("#adminIdentity").textContent=data.email;return true;}
 function showLogin(message=""){$("#loginView").hidden=false;$("#dashboardView").hidden=true;$("#logoutBtn").hidden=true;$("#loginMessage").textContent=message;}
 function showDashboard(){$("#loginView").hidden=true;$("#loginMessage").textContent="";$("#dashboardView").hidden=false;$("#logoutBtn").hidden=false;window.scrollTo({top:0,behavior:"auto"});}
 async function loadAll(){
@@ -222,14 +263,14 @@ function renderOrders(){
     const cardPayment=isCardOrder(o),displayedStatus=effectiveOrderStatus(o),bank=cardPayment?cardPaymentUi(o):null,guidance=orderGuidance(o),quick=[];
     if(cardPayment){
       if(o.payment_status==="paid"&&displayedStatus==="paid")quick.push('<button data-quick-status="shipped">Відправлено</button>');
-      if(o.payment_status==="paid"&&displayedStatus==="shipped")quick.push('<button data-quick-status="completed">Виконано + відгук</button>');
+      if(o.payment_status==="paid"&&displayedStatus==="shipped")quick.push('<button data-quick-status="completed">Доставлено + відгук</button>');
     }else if(o.payment_method==="cash_on_delivery"){
       if(["new","awaiting_payment"].includes(displayedStatus))quick.push('<button data-quick-status="shipped">Відправлено</button>');
-      if(displayedStatus==="shipped")quick.push('<button data-quick-status="completed">Виконано + відгук</button>');
+      if(displayedStatus==="shipped")quick.push('<button data-quick-status="completed">Доставлено + відгук</button>');
     }else{
       if(["new","awaiting_payment"].includes(displayedStatus))quick.push('<button data-quick-status="paid">Оплату отримано</button>');
       if(displayedStatus==="paid")quick.push('<button data-quick-status="shipped">Відправлено</button>');
-      if(displayedStatus==="shipped")quick.push('<button data-quick-status="completed">Виконано + відгук</button>');
+      if(displayedStatus==="shipped")quick.push('<button data-quick-status="completed">Доставлено + відгук</button>');
     }
     return `<article class="admin-card admin-order-card admin-order-card--${guidance.tone}" data-order="${esc(o.id)}">
       <header class="admin-order-card__head"><div><div class="admin-card__title">${esc(o.client_order_id)}</div><div class="admin-card__meta">${date(o.created_at)}</div></div><div class="admin-card__amount">${money(o.total_amount)}</div></header>
@@ -266,7 +307,7 @@ function buildPaymentTimeline(){
     entries.push({time:event.provider_modified_at||event.created_at,title:paymentEventLabel(event.provider_status),detail:`${event.reason==="APPLIED"?"plata by mono":event.reason||"Подія платежу"}${suffix}`,tone:paymentEventTone(event.provider_status)});
   });
   if(activeOrder.tracking_number)entries.push({time:activeOrder.status_changed_at||activeOrder.updated_at,title:"Додано ТТН",detail:activeOrder.tracking_number,tone:"info"});
-  if(activeOrder.status==="completed")entries.push({time:activeOrder.completed_at||activeOrder.status_changed_at||activeOrder.updated_at,title:"Замовлення виконано",detail:"Цикл замовлення завершено",tone:"success"});
+  if(activeOrder.status==="completed")entries.push({time:activeOrder.delivery_confirmed_at||activeOrder.completed_at||activeOrder.status_changed_at||activeOrder.updated_at,title:"Посилку доставлено",detail:activeOrder.nova_poshta_status_text||"Отримання підтверджено, цикл замовлення завершено",tone:"success"});
   return entries.sort((a,b)=>new Date(a.time)-new Date(b.time));
 }
 async function loadOrderPaymentHistory(orderId){
@@ -325,6 +366,7 @@ function renderOrderDialog({loading=false}={}){
       <div class="admin-detail"><span>Телефон</span><strong>${esc(activeOrder.customer_phone)}</strong><button type="button" data-copy="${esc(activeOrder.customer_phone)}" data-copy-label="Телефон скопійовано">Копіювати</button></div>
       <div class="admin-detail"><span>Email</span><strong>${esc(activeOrder.customer_email)}</strong><button type="button" data-copy="${esc(activeOrder.customer_email)}" data-copy-label="Email скопійовано">Копіювати</button></div>
       <div class="admin-detail admin-detail--wide"><span>Доставка</span><strong>${esc(activeOrder.delivery_method||"Нова пошта")}</strong><p>${esc([activeOrder.customer_city,activeOrder.delivery_details].filter(Boolean).join(", ")||"Дані доставки не вказані")}</p></div>
+      ${activeOrder.tracking_number?`<div class="admin-detail admin-detail--wide admin-delivery-live"><span>Нова пошта</span><strong>${esc(activeOrder.nova_poshta_status_text||"Очікуємо першу автоматичну перевірку")}</strong><p>${activeOrder.nova_poshta_checked_at?`Оновлено ${esc(date(activeOrder.nova_poshta_checked_at))}`:"Перевіряємо кожні 30 хвилин після відправлення."}</p></div>`:""}
       <div class="admin-detail"><span>Персональні пропозиції</span><strong>${activeOrder.marketing_consent?"Згода надана":"Без згоди"}</strong></div>
     </div></section>
     <section class="admin-order-section"><div class="admin-order-section__head"><div><p class="eyebrow">Склад замовлення</p><h3>${items.length} ${items.length===1?"позиція":"позиції"}</h3></div></div><div class="admin-items admin-items--premium">${items.map(item=>{const image=itemImage(item),selections=itemSelections(item);return `<article class="admin-item admin-item--premium">${image?`<img src="${esc(image)}" alt="" loading="lazy">`:""}<div><strong>${esc(item.name||item.id||"Товар")} × ${esc(item.quantity||1)}</strong>${selections.length?`<small>Обрано: ${selections.map(esc).join(" · ")}</small>`:""}</div><span>${money(item.line_total)}</span></article>`;}).join("")}</div>${activeOrder.discount_amount?`<div class="admin-order-discount"><span>Промокод ${esc(activeOrder.promo_code||"")}</span><strong>−${money(activeOrder.discount_amount)}</strong></div>`:""}</section>
@@ -335,6 +377,7 @@ function renderOrderDialog({loading=false}={}){
       <label class="admin-field">Статус оплати<select id="editPayment" ${cardPayment?"disabled":""}>${cardPayment?`<option>${esc(paymentStatusLabels[activeOrder.payment_status]||activeOrder.payment_status)}</option>`:manualPaymentOptions(activeOrder)}</select>${cardPayment?"<small>Статус змінює лише plata by mono.</small>":"<small>Підтверджуйте оплату тільки після фактичного надходження.</small>"}</label>
       <label class="admin-field">Спосіб оплати<select id="editPaymentMethod" ${cardPayment?"disabled":""}><option value="bank_transfer" ${activeOrder.payment_method==="bank_transfer"?"selected":""}>На рахунок</option><option value="cash_on_delivery" ${activeOrder.payment_method==="cash_on_delivery"?"selected":""}>При отриманні</option>${cardPayment?'<option value="card_online" selected>Карткою онлайн</option>':""}</select>${cardPayment?"<small>Спосіб зафіксований платіжним замовленням.</small>":""}</label>
       <label class="admin-field">ТТН<input id="editTracking" value="${esc(activeOrder.tracking_number||"")}" placeholder="Номер ТТН"><small>Клієнт побачить номер у своєму кабінеті.</small></label>
+      ${activeOrder.status==="shipped"&&activeOrder.tracking_number?`<div class="admin-delivery-sync"><div><strong>Автоматичне відстеження активне</strong><small>Після отримання Нова пошта змінить статус на «Доставлено» й клієнту піде лист.</small></div><button id="syncDeliveryBtn" class="btn btn-secondary" type="button">Перевірити зараз</button></div>`:""}
       <label class="admin-field admin-field--wide">Коментар адміністратора<textarea id="editNote" placeholder="Внутрішня примітка — клієнт її не бачить">${esc(activeOrder.admin_note||"")}</textarea></label>
       <div class="admin-actions__buttons"><button id="resendStatusEmailBtn" class="btn btn-secondary" type="button">Надіслати лист повторно</button><button id="saveOrderBtn" class="btn btn-primary" type="button">Зберегти ТТН і примітку</button></div>
     </div></section>
@@ -344,6 +387,7 @@ function renderOrderDialog({loading=false}={}){
   $("#editStatus").addEventListener("change",saveOrderStatusImmediately);
   requestAnimationFrame(()=>$("#orderDialog")?._premiumScrollUpdate?.());
   if(cardPayment)$("#refreshCardPaymentBtn")?.addEventListener("click",refreshCardPaymentStatus);
+  $("#syncDeliveryBtn")?.addEventListener("click",syncDeliveryStatus);
   if(!cardPayment)$("#editPaymentMethod").addEventListener("change",async e=>{const {error}=await sb.from("orders").update({payment_method:e.target.value}).eq("id",activeOrder.id);if(error)return toast("Не вдалося змінити спосіб оплати","danger");activeOrder.payment_method=e.target.value;renderOrderDialog();toast("Спосіб оплати змінено","success");});
   $("#orderDialogContent").querySelectorAll("[data-copy]").forEach(button=>button.addEventListener("click",()=>copyText(button.dataset.copy,button.dataset.copyLabel)));
   $("#orderDialogContent").querySelectorAll("[data-dialog-primary-status]").forEach(button=>button.addEventListener("click",async()=>{const select=$("#editStatus");select.value=button.dataset.dialogPrimaryStatus;await saveOrderStatusImmediately();}));
@@ -366,11 +410,21 @@ async function saveOrderStatusImmediately(){
   if(nextStatus==="paid"&&isCardOrder(activeOrder)){select.value=previousStatus;return toast("Карткову оплату підтверджує тільки plata by mono","warning");}
   if(nextStatus==="paid"&&!isCardOrder(activeOrder)&&!confirm("Підтвердити, що оплату фактично отримано?")){select.value=previousStatus;return;}
   if(nextStatus==="cancelled"&&!confirm("Скасувати це замовлення?")){select.value=previousStatus;return;}
-  select.disabled=true;const payload={status:nextStatus};if(nextStatus==="paid"&&!isCardOrder(activeOrder))payload.payment_status="paid";
-  const {data,error}=await sb.from("orders").update(payload).eq("id",activeOrder.id).select().single();select.disabled=false;
-  if(error){select.value=previousStatus;const message=String(error.message||"");if(message.includes("CARD_ORDER_MUST_BE_PAID_BY_PROVIDER"))return toast("Спочатку plata by mono має підтвердити оплату","warning");if(message.includes("CARD_ORDER_HAS_ACTIVE_INVOICE"))return toast("Не можна скасувати замовлення, доки рахунок mono активний","warning");if(message.includes("CARD_PAYMENT_FIELDS_ARE_SERVER_MANAGED"))return toast("Платіжні поля карткового замовлення змінює тільки сервер","warning");return toast("Помилка: "+message,"danger");}
-  activeOrder=data;const index=orders.findIndex(order=>String(order.id)===String(data.id));if(index>=0)orders[index]=data;renderOrders();renderOrderDialog();toast(`Статус: ${statusLabels[effectiveOrderStatus(activeOrder)]||effectiveOrderStatus(activeOrder)}`,"success");
-  if(effectiveOrderStatus(activeOrder)!==previousStatus)sendStatusEmail(activeOrder.client_order_id);
+  select.disabled=true;
+  const payload={action:"update",order_id:activeOrder.id,status:nextStatus};
+  if(nextStatus==="paid"&&!isCardOrder(activeOrder))payload.payment_status="paid";
+  try{
+    const result=await adminOrderRequest(payload);
+    applyUpdatedOrder(result.order);renderOrders();renderOrderDialog();announceOrderResult(result,{fallback:`Статус: ${statusLabels[effectiveOrderStatus(activeOrder)]||effectiveOrderStatus(activeOrder)}`});
+  }catch(error){
+    select.disabled=false;select.value=previousStatus;
+    const message=String(error.message||"");
+    if(message==="SESSION_EXPIRED")return;
+    if(message.includes("CARD_ORDER_NOT_PAID"))return toast("Спочатку plata by mono має підтвердити оплату","warning");
+    if(message.includes("CARD_ORDER_HAS_ACTIVE_INVOICE"))return toast("Не можна скасувати замовлення, доки рахунок mono активний","warning");
+    if(message.includes("CARD_PAYMENT_SERVER_MANAGED"))return toast("Платіжні поля карткового замовлення змінює тільки сервер","warning");
+    toast("Помилка: "+message,"danger");
+  }finally{if(select)select.disabled=false;}
 }
 async function refreshCardPaymentStatus(){
   if(!activeOrder||!isCardOrder(activeOrder))return;
@@ -379,20 +433,51 @@ async function refreshCardPaymentStatus(){
   if(error){if(button){button.disabled=false;button.textContent="Синхронізувати з mono";}return toast("Не вдалося отримати актуальний статус банку","danger");}
   try{await reloadActiveOrder();toast("Статус банку оновлено","success");}catch(_){toast("Банк відповів, але дані не вдалося оновити","warning");}
 }
+async function syncDeliveryStatus(){
+  if(!activeOrder||activeOrder.status!=="shipped"||!activeOrder.tracking_number)return;
+  const button=$("#syncDeliveryBtn");
+  if(button){button.disabled=true;button.textContent="Перевіряємо…";}
+  try{
+    const token=await getAdminAccessToken();
+    const response=await fetch(`${cfg.url}/functions/v1/sync-nova-poshta-deliveries`,{
+      method:"POST",
+      headers:{Authorization:`Bearer ${token}`,apikey:cfg.publishableKey,"Content-Type":"application/json"},
+      body:JSON.stringify({order_id:activeOrder.id})
+    });
+    const payload=await response.json().catch(()=>({}));
+    if(response.status===401){showLogin("Адмінська сесія завершилася. Увійдіть повторно.");return;}
+    if(!response.ok)throw new Error(String(payload.error||`HTTP_${response.status}`));
+    const result=Array.isArray(payload.results)?payload.results[0]:null;
+    await reloadActiveOrder();
+    if(result?.delivered)return toast("Нова пошта підтвердила отримання · статус «Доставлено»","success");
+    if(result?.found)return toast(result.status_text||"Посилка ще в дорозі","success");
+    toast("Нова пошта ще не повернула статус для цієї ТТН","warning");
+  }catch(error){
+    if(String(error.message)!=="SESSION_EXPIRED")toast("Не вдалося перевірити доставку. Спробуйте ще раз.","danger");
+  }finally{
+    if(button){button.disabled=false;button.textContent="Перевірити зараз";}
+  }
+}
 async function saveOrder(){
   if(!activeOrder)return;
   const nextStatus=$("#editStatus").value;if(isCardOrder(activeOrder)&&!canSetOrderStatus(activeOrder,nextStatus))return toast("Цей етап недоступний для поточного статусу карткової оплати","warning");
-  const payload={status:nextStatus,tracking_number:$("#editTracking").value.trim()||null,admin_note:$("#editNote").value.trim()||null};
+  const payload={action:"update",order_id:activeOrder.id,status:nextStatus,tracking_number:$("#editTracking").value.trim()||null,admin_note:$("#editNote").value.trim()||null};
   if(!isCardOrder(activeOrder)){
     const nextPayment=$("#editPayment").value;
     if(nextPayment==="paid"&&activeOrder.payment_status!=="paid"&&!confirm("Підтвердити, що оплату фактично отримано?"))return;
     payload.payment_status=nextPayment;
     if(activeOrder.payment_method==="bank_transfer"&&nextPayment==="paid"&&["new","awaiting_payment"].includes(nextStatus))payload.status="paid";
   }
-  const oldStatus=effectiveOrderStatus(activeOrder),{data,error}=await sb.from("orders").update(payload).eq("id",activeOrder.id).select().single();
-  if(error){const message=String(error.message||"");if(message.includes("CARD_ORDER_MUST_BE_PAID_BY_PROVIDER"))return toast("Спочатку plata by mono має підтвердити оплату","warning");if(message.includes("CARD_ORDER_HAS_ACTIVE_INVOICE"))return toast("Не можна скасувати замовлення, доки рахунок mono активний","warning");if(message.includes("CARD_PAYMENT_FIELDS_ARE_SERVER_MANAGED"))return toast("Платіжні поля карткового замовлення змінює тільки сервер","warning");return toast("Помилка: "+message,"danger");}
-  activeOrder=data;const index=orders.findIndex(order=>String(order.id)===String(data.id));if(index>=0)orders[index]=data;renderOrders();renderOrderDialog();toast("Замовлення оновлено","success");
-  if(effectiveOrderStatus(activeOrder)!==oldStatus){await sendStatusEmail(activeOrder.client_order_id);}
+  try{
+    const result=await adminOrderRequest(payload);
+    applyUpdatedOrder(result.order);renderOrders();renderOrderDialog();announceOrderResult(result);
+  }catch(error){
+    const message=String(error.message||"");if(message==="SESSION_EXPIRED")return;
+    if(message.includes("CARD_ORDER_NOT_PAID"))return toast("Спочатку plata by mono має підтвердити оплату","warning");
+    if(message.includes("CARD_ORDER_HAS_ACTIVE_INVOICE"))return toast("Не можна скасувати замовлення, доки рахунок mono активний","warning");
+    if(message.includes("CARD_PAYMENT_SERVER_MANAGED"))return toast("Платіжні поля карткового замовлення змінює тільки сервер","warning");
+    toast("Помилка: "+message,"danger");
+  }
 }
 
 function promoStatus(row){const now=Date.now();if(!row.active)return "inactive";if(row.starts_at&&new Date(row.starts_at).getTime()>now)return "scheduled";if(row.ends_at&&new Date(row.ends_at).getTime()<now)return "expired";if(row.usage_limit&&Number(row.usage_count||0)>=Number(row.usage_limit))return "exhausted";return "active";}
@@ -421,7 +506,7 @@ function bind(){
     if(error)return showLogin("Помилка входу: "+error.message);
     try{await requireAdmin();showDashboard();await loadAll();}catch(err){showLogin(err.message);}
   });
-  $("#logoutBtn").addEventListener("click",async()=>{await sb.auth.signOut();showLogin();});
+  $("#logoutBtn").addEventListener("click",async()=>{await sb.auth.signOut({scope:"local"});showLogin();});
   $("#refreshBtn").addEventListener("click",loadAll);
   ["#orderSearch","#orderStatusFilter","#orderSort"].forEach(selector=>$(selector)?.addEventListener("input",renderOrders));
   $("#orderFocusFilters")?.addEventListener("click",event=>{

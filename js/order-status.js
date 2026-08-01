@@ -1,5 +1,5 @@
 (function(){"use strict";
-const labels={new:"Нове",awaiting_payment:"Очікує оплату",paid:"Оплачено",shipped:"Відправлено",completed:"Виконано",cancelled:"Скасовано"};
+const labels={new:"Нове",awaiting_payment:"Очікує оплату",paid:"Оплачено",shipped:"Відправлено",completed:"Доставлено",cancelled:"Скасовано"};
 const paymentMethodLabels={bank_transfer:"на рахунок",cash_on_delivery:"при отриманні",card_online:"карткою онлайн"};
 const paymentStatusLabels={unpaid:"очікує оплати",pending:"очікує підтвердження банку",verification:"перевіряється",failed:"не завершено",expired:"посилання прострочене",paid:"оплачено",refunded:"повернено"};
 const steps=["new","paid","shipped","completed"];
