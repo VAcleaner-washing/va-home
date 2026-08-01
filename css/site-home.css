@@ -3016,3 +3016,114 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
     font-size: clamp(2.15rem, 10.2vw, 2.75rem) !important;
   }
 }
+
+
+/* ===== VA HOME v15.5.0-RC1.7 — Editorial rhythm & mobile readability ===== */
+.home-page .section{
+  padding-block:clamp(64px,7vw,104px);
+}
+.home-page .section--tight{
+  padding-block:clamp(48px,5.5vw,82px);
+}
+.home-page .section + .section{
+  padding-top:clamp(34px,4vw,64px);
+}
+.home-page .scent-finder{
+  min-height:auto;
+  padding-block:clamp(18px,2.8vw,38px);
+}
+.home-page .scent-finder__text{
+  align-self:center;
+}
+.home-page .brand-manifesto{
+  min-height:min(72vh,760px);
+}
+.home-page .brand-manifesto__content h2{
+  max-width:14ch;
+  margin-inline:auto;
+}
+.home-page .collections-grid{
+  align-items:start;
+}
+.home-page .collections-grid .collection-card:nth-child(even){
+  transform:translateY(24px);
+}
+@media(max-width:900px){
+  .home-page .section{
+    padding-block:clamp(48px,8vw,72px);
+  }
+  .home-page .section + .section{
+    padding-top:clamp(24px,5vw,42px);
+  }
+  .home-page .brand-manifesto{
+    min-height:68svh;
+  }
+}
+@media(max-width:767px){
+  .home-page .section{
+    padding-block:48px;
+  }
+  .home-page .section--tight{
+    padding-block:38px;
+  }
+  .home-page .section + .section{
+    padding-top:24px;
+  }
+  .home-page .brand-manifesto{
+    min-height:66svh;
+  }
+  .home-page .brand-manifesto__content{
+    width:calc(100% - 36px);
+  }
+  .home-page .brand-manifesto__content h2{
+    max-width:11.5ch;
+    font-size:clamp(2.7rem,12vw,4rem);
+    line-height:.96;
+  }
+  .home-page .collections-grid{
+    gap:30px 16px;
+  }
+  .home-page .collections-grid .collection-card:nth-child(even){
+    transform:none;
+  }
+  .home-page .collections-grid .collection-card__body{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 36px;
+    column-gap:10px;
+    padding-top:13px;
+  }
+  .home-page .collections-grid .collection-card__eyebrow{
+    font-size:clamp(17px,4.7vw,20px);
+    line-height:1.12;
+    margin-bottom:8px;
+  }
+  .home-page .collections-grid .collection-card__tagline{
+    font-size:15px;
+    line-height:1.42;
+    margin-bottom:8px;
+  }
+  .home-page .collections-grid .collection-card__price{
+    font-size:15px;
+    color:rgba(244,239,231,.74);
+  }
+  .home-page .collection-card__arrow{
+    width:34px;
+    height:34px;
+  }
+  .home-page .scent-finder{
+    gap:28px;
+    padding-block:0;
+  }
+}
+@media(max-width:430px){
+  .home-page .collections-grid{
+    gap:28px 14px;
+  }
+  .home-page .collections-grid .collection-card__eyebrow{
+    font-size:17px;
+  }
+  .home-page .collections-grid .collection-card__tagline,
+  .home-page .collections-grid .collection-card__price{
+    font-size:14px;
+  }
+}

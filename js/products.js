@@ -5,7 +5,7 @@
    Run: node scripts/build-product-content.mjs
    ========================================================================== */
 
-const PRODUCT_CONTENT_VERSION = "15.5.0-RC1.6";
+const PRODUCT_CONTENT_VERSION = "15.5.0-RC1.7";
 const PRODUCT_LABELS = {
   "character": {
     "clean": "Чисті",
@@ -286,7 +286,7 @@ const PRODUCT_SCENT_GUIDE = {
     {
       "id": "atmosphere",
       "stepLabel": "Атмосфера",
-      "title": "Яке перше відчуття має створювати аромат?",
+      "title": "Яку атмосферу ви хочете відчути вдома?",
       "options": [
         {
           "id": "calm",
@@ -462,7 +462,7 @@ const PRODUCT_SCENT_GUIDE = {
     {
       "id": "room",
       "stepLabel": "Простір",
-      "title": "Де аромат має звучати найкраще?",
+      "title": "Для якої кімнати ви обираєте аромат?",
       "options": [
         {
           "id": "living-room",
@@ -562,7 +562,7 @@ const PRODUCT_SCENT_GUIDE = {
     {
       "id": "composition",
       "stepLabel": "Напрям",
-      "title": "До якого характеру ви повертаєтесь найчастіше?",
+      "title": "Які аромати вам зазвичай подобаються?",
       "options": [
         {
           "id": "fresh",
@@ -689,7 +689,7 @@ const PRODUCT_SCENT_GUIDE = {
     {
       "id": "space",
       "stepLabel": "Естетика",
-      "title": "Який інтер’єр найближчий вам за характером?",
+      "title": "Який стиль інтер’єру вам найближчий?",
       "options": [
         {
           "id": "entry",

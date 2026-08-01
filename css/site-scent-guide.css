@@ -3142,3 +3142,65 @@ button, input, select, textarea, a{ min-width: 0; }
   .scent-experience__welcome-note{margin-top:18px;padding-top:14px;font-size:12px;line-height:1.65;}
   .scent-experience__welcome-note span{display:block;margin:0 0 5px;}
 }
+
+
+/* ===== VA HOME v15.5.0-RC1.7 — Clear guide questions & result hierarchy ===== */
+.guide-welcome-credit{
+  margin:clamp(30px,4vw,48px) 0 28px;
+}
+.guide-results__grid + .guide-welcome-credit{
+  margin-top:clamp(34px,5vw,58px);
+}
+.scent-guide-stage,
+.guide-results{
+  min-height:auto;
+}
+@media(max-width:900px){
+  .scent-guide-shell{
+    padding-top:clamp(36px,7vw,64px);
+    padding-bottom:clamp(52px,9vw,84px);
+  }
+  .guide-step__question{
+    max-width:15ch;
+    font-size:clamp(2.8rem,8vw,4.8rem);
+    line-height:.96;
+  }
+}
+@media(max-width:620px){
+  .scent-guide-shell{
+    padding-top:30px;
+    padding-bottom:56px;
+  }
+  .scent-guide-layout{
+    gap:32px;
+  }
+  .scent-guide-aside p{
+    max-width:32ch;
+  }
+  .guide-step__question{
+    max-width:12.5ch;
+    font-size:clamp(2.45rem,11vw,3.6rem);
+    line-height:.98;
+  }
+  .guide-options{
+    gap:10px;
+  }
+  .guide-option{
+    min-height:92px;
+    padding:20px 18px;
+  }
+  .guide-option__title{
+    font-size:clamp(1.35rem,6vw,1.75rem);
+  }
+  .guide-option__note{
+    font-size:13px;
+    line-height:1.45;
+  }
+  .guide-welcome-credit{
+    margin:30px 0 22px;
+    padding:24px 20px;
+  }
+  .guide-welcome-credit h2{
+    font-size:clamp(2rem,10vw,3rem);
+  }
+}

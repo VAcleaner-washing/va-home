@@ -1,14 +1,14 @@
 {
-  "version": "15.5.0-RC1.6",
+  "version": "15.5.0-RC1.7",
   "channel": "Release Candidate",
-  "name": "FULL UX AUDIT — ADMIN ACCOUNT CART",
+  "name": "SCENT GUIDE CLARITY & EDITORIAL RHYTHM",
   "date": "2026-08-01",
   "base": "15.5.0-RC1.6",
   "changes": [
-    "Consolidates account order-card layout and removes inherited vertical stretching while preserving 4:5 product media",
-    "Audits and polishes cart product cards, checkout focus states, validation and disabled/loading feedback",
-    "Audits admin forms, autofill, keyboard focus, mobile dialogs and operational button states",
-    "Synchronizes all storefront, PWA, admin and backend release/cache references to 15.5.0-RC1.6",
-    "Regenerates release checksums and includes a full audit report"
+    "Rewrites scent-guide questions in clearer customer language without changing recommendation logic",
+    "Moves the welcome-credit block below the personalized recommendation cards",
+    "Reduces excessive empty vertical space on the homepage while preserving premium editorial rhythm",
+    "Improves mobile collection typography, descriptions, prices and navigation affordances",
+    "Refines mobile scent-guide spacing, question scale and answer-card readability"
   ]
 }
