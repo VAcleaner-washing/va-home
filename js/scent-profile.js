@@ -113,13 +113,9 @@
           }
           return null;
         }
-        const local = readLocal();
-        const remoteTime = new Date(row.updated_at || 0).getTime();
-        const localTime = new Date(local?.saved_at || 0).getTime();
-        if (!local || remoteTime >= localTime) {
-          return writeLocal({ ...row, saved_at: row.updated_at });
-        }
-        return local;
+        // For an authenticated account, Supabase is the single source of truth.
+        // This keeps percentages identical in the account, catalogue and product pages.
+        return writeLocal({ ...row, saved_at: row.updated_at });
       } catch (_) {
         return readLocal();
       }

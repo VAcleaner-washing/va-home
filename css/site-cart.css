@@ -2713,3 +2713,27 @@ body.np-sheet-open{overflow:hidden}
 .checkout-account-email-hint[hidden]{display:none}
 
 @media(max-width:430px){.payment-option__title-row{align-items:flex-start;flex-direction:column;gap:8px}.payment-option__mono{max-width:132px}.payment-option__brands{gap:11px;flex-wrap:wrap}}
+
+/* VA HOME v15.3.1 — larger mobile product image without increasing cart card */
+@media (max-width: 560px) {
+  body.cart-page .cart-item {
+    grid-template-columns: 108px minmax(0, 1fr);
+    gap: 16px;
+    min-height: 0;
+  }
+  body.cart-page .cart-item__media {
+    width: 108px;
+    aspect-ratio: 4 / 5;
+    align-self: center;
+  }
+  body.cart-page .cart-item__media img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+  }
+  body.cart-page .cart-item__price-col {
+    grid-column: 2;
+  }
+}
