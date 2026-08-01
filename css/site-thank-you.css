@@ -168,7 +168,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 @media(max-width:600px){.ty-intro h1.is-long{font-size:clamp(2.75rem,13.2vw,4.35rem);letter-spacing:-.04em}}
 
 
-/* v15.5.0-RC1.8 — local glass blur under order details */
+/* v15.5.0-RC1.9 — local glass blur under order details */
 .ty-order-id{
   padding:18px 20px 16px;margin-left:-20px;margin-right:-20px;
   border:1px solid rgba(224,190,126,.28);

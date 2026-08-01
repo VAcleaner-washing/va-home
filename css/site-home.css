@@ -3018,7 +3018,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* ===== VA HOME v15.5.0-RC1.8 — Editorial rhythm & mobile readability ===== */
+/* ===== VA HOME v15.5.0-RC1.9 — Editorial rhythm & mobile readability ===== */
 .home-page .section{
   padding-block:clamp(64px,7vw,104px);
 }
@@ -3126,4 +3126,63 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
   .home-page .collections-grid .collection-card__price{
     font-size:14px;
   }
+}
+
+
+/* ===== VA HOME v15.5.0-RC1.9 — Full mobile rhythm pass ===== */
+@media(max-width:620px){
+  .home-page .section{padding-block:40px!important}
+  .home-page .section--tight{padding-block:30px!important}
+  .home-page .section + .section{padding-top:18px!important}
+  .home-page .collections-grid{
+    grid-template-columns:1fr!important;
+    gap:22px!important;
+  }
+  .home-page .collections-grid .collection-card{
+    display:grid!important;
+    grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr)!important;
+    gap:16px!important;
+    align-items:stretch!important;
+    transform:none!important;
+  }
+  .home-page .collections-grid .collection-card__media{
+    aspect-ratio:4/5!important;
+    min-height:0!important;
+  }
+  .home-page .collections-grid .collection-card__body{
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    padding:8px 0!important;
+    min-width:0!important;
+  }
+  .home-page .collections-grid .collection-card__eyebrow{
+    font-size:clamp(22px,6.2vw,27px)!important;
+    line-height:1.03!important;
+    margin-bottom:10px!important;
+  }
+  .home-page .collections-grid .collection-card__tagline{
+    font-size:16px!important;
+    line-height:1.35!important;
+    margin-bottom:14px!important;
+  }
+  .home-page .collections-grid .collection-card__price{
+    font-size:17px!important;
+    margin-top:auto!important;
+  }
+  .home-page .collection-card__arrow{
+    position:absolute!important;
+    right:10px!important;
+    bottom:10px!important;
+    width:42px!important;
+    height:42px!important;
+  }
+  .home-page .collections-grid .collection-card{position:relative!important}
+  .home-page .brand-manifesto{min-height:58svh!important}
+  .home-page .scent-finder{padding-block:22px!important}
+}
+@media(max-width:390px){
+  .home-page .collections-grid .collection-card{grid-template-columns:1fr!important}
+  .home-page .collections-grid .collection-card__media{aspect-ratio:16/11!important}
+  .home-page .collections-grid .collection-card__body{padding:12px 2px 4px!important}
 }

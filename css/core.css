@@ -2987,7 +2987,7 @@ body > footer {
 @media(max-width:680px){.footer-payment-trust{align-items:flex-start;flex-direction:column;gap:18px}.footer-payment-trust__provider{align-items:flex-start;flex-direction:column;gap:9px}.footer-payment-trust__brands{gap:15px;flex-wrap:wrap}}
 
 
-/* ===== VA HOME v15.5.0-RC1.8 — footer contact line integrity ===== */
+/* ===== VA HOME v15.5.0-RC1.9 — footer contact line integrity ===== */
 .site-footer--editorial .footer-col--contact li,
 .site-footer--editorial .footer-col--contact a{
   overflow-wrap:normal;

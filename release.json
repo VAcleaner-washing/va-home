@@ -1,13 +1,13 @@
 {
-  "version": "15.5.0-RC1.8",
+  "version": "15.5.0-RC1.9",
   "channel": "Release Candidate",
-  "name": "FOOTER CONTACT AND PROMO LIFECYCLE FIX",
+  "name": "FULL MOBILE RHYTHM AND ORDER CARD PASS",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1.7",
+  "base": "15.5.0-RC1.8",
   "changes": [
-    "Keeps the footer email address on one line at desktop widths without harming mobile wrapping",
-    "Clears the applied checkout promo whenever the cart is cleared or an order is successfully created",
-    "Removes stale promo session state when the cart is empty so a previous order discount cannot reappear",
-    "Updates storefront, PWA, admin and backend version references to 15.5.0-RC1.8"
+    "Completes the mobile spacing and typography pass on the home page",
+    "Rebuilds mobile collection cards into readable premium single-row compositions",
+    "Removes the oversized empty zone from desktop account order cards by placing actions beside ordered products",
+    "Synchronizes storefront, PWA, admin and backend version references"
   ]
 }
