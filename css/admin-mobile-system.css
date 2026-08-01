@@ -1,0 +1,37 @@
+/* VA HOME v15.5.0-RC1.10 — admin full mobile typography & spacing pass */
+@media (max-width: 900px) {
+  .admin-shell { padding: 14px 16px 48px; }
+  .admin-topbar { gap: 14px; padding-bottom: 18px; }
+  .admin-heading { padding-block: 30px 20px; }
+  .admin-heading h1 { font-size: clamp(2.5rem, 10vw, 4.4rem); line-height: .95; }
+  .admin-toolbar { grid-template-columns: 1fr; gap: 10px; }
+  .admin-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .admin-card { padding: 16px; }
+  .admin-order-card { grid-template-columns: 1fr; gap: 14px; }
+  .admin-card__amount { text-align: left; }
+  .admin-dialog { width: 100%; max-width: none; height: 100dvh; max-height: 100dvh; margin: 0; border: 0; }
+  .admin-dialog__body { padding: 22px 16px 40px; }
+  .admin-detail-grid,
+  .admin-actions { grid-template-columns: 1fr; }
+  .admin-actions__buttons { display: grid; grid-template-columns: 1fr; }
+  .admin-actions__buttons .btn { width: 100%; }
+  .admin-tabs { overflow-x: auto; scrollbar-width: none; }
+  .admin-tabs button { flex: 0 0 auto; min-height: 46px; }
+  .admin-form input,
+  .admin-toolbar input,
+  .admin-toolbar select,
+  .admin-field input,
+  .admin-field select,
+  .admin-field textarea { min-height: 50px; font-size: 16px; }
+}
+@media (max-width: 520px) {
+  .admin-shell { padding-inline: 12px; }
+  .admin-topbar { align-items: flex-start; flex-direction: column; }
+  .admin-topbar__actions { width: 100%; justify-content: space-between; }
+  .admin-login { min-height: calc(100dvh - 100px); align-items: start; padding-top: 34px; }
+  .admin-login__card { padding: 26px 20px; }
+  .admin-stats { grid-template-columns: 1fr 1fr; }
+  .admin-stat { padding: 14px; }
+  .admin-dialog__head { flex-direction: column; }
+  .admin-dialog__head h2 { font-size: 2rem; }
+}

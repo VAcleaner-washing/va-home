@@ -1,13 +1,14 @@
 {
-  "version": "15.5.0-RC1.9",
+  "version": "15.5.0-RC1.10",
   "channel": "Release Candidate",
-  "name": "FULL MOBILE RHYTHM AND ORDER CARD PASS",
+  "name": "FULL-SITE MOBILE TYPOGRAPHY & SPACING PASS",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1.8",
+  "base": "15.5.0-RC1.9",
   "changes": [
-    "Completes the mobile spacing and typography pass on the home page",
-    "Rebuilds mobile collection cards into readable premium single-row compositions",
-    "Removes the oversized empty zone from desktop account order cards by placing actions beside ordered products",
-    "Synchronizes storefront, PWA, admin and backend version references"
+    "Adds a final full-site mobile design layer across every storefront page and the administrator interface",
+    "Standardizes mobile typography, section rhythm, touch targets, forms, cards, grids, footers and content spacing",
+    "Improves mobile layouts for home, scent guide, catalog, collections, product pages, cart, account, editorial, legal and status pages",
+    "Keeps premium visual air while reducing dead vertical space and unnecessary scroll distance",
+    "Updates all active asset, PWA, service-worker and backend release references to 15.5.0-RC1.10"
   ]
 }
