@@ -1,14 +1,13 @@
 {
-  "version": "15.5.0-RC1.10",
+  "version": "15.5.0-RC1.11",
   "channel": "Release Candidate",
-  "name": "FULL-SITE MOBILE TYPOGRAPHY & SPACING PASS",
+  "name": "PREMIUM MOBILE COLLECTIONS UX",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1.9",
+  "base": "15.5.0-RC1.10",
   "changes": [
-    "Adds a final full-site mobile design layer across every storefront page and the administrator interface",
-    "Standardizes mobile typography, section rhythm, touch targets, forms, cards, grids, footers and content spacing",
-    "Improves mobile layouts for home, scent guide, catalog, collections, product pages, cart, account, editorial, legal and status pages",
-    "Keeps premium visual air while reducing dead vertical space and unnecessary scroll distance",
-    "Updates all active asset, PWA, service-worker and backend release references to 15.5.0-RC1.10"
+    "Rebuilds the four home-page collections as a premium one-card mobile carousel with a visible next-card cue",
+    "Adds native scroll snapping, compact progress dots and swipe guidance without adding heavy slider dependencies",
+    "Improves mobile collection typography, touch targets, card hierarchy and reduced-motion behavior",
+    "Keeps the existing editorial desktop collection grid unchanged"
   ]
 }

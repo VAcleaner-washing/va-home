@@ -1,4 +1,4 @@
-/* VA HOME v15.5.0-RC1.10 — full-site mobile typography & spacing system */
+/* VA HOME v15.5.0-RC1.11 — full-site mobile typography & spacing system */
 
 @media (max-width: 900px) {
   :root {
@@ -290,4 +290,143 @@
   .collection-world { grid-template-columns: 104px minmax(0, 1fr); gap: 13px; }
   .home-collections .collection-card__media,
   .collection-world__media { min-height: 166px; }
+}
+
+
+/* ===== VA HOME v15.5.0-RC1.11 — Premium home collections carousel ===== */
+.collection-carousel__footer{display:none}
+@media(max-width:620px){
+  .home-page .section:has(#collections-heading){
+    overflow:hidden;
+  }
+  .home-page .section:has(#collections-heading) .container{
+    padding-inline:0!important;
+  }
+  .home-page .section:has(#collections-heading) .section-head{
+    padding-inline:var(--mobile-page-pad,18px);
+    margin-bottom:22px!important;
+  }
+  .home-page .section:has(#collections-heading) .section-head .link-arrow{
+    display:none;
+  }
+  .home-page .collections-grid{
+    display:flex!important;
+    grid-template-columns:none!important;
+    gap:12px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    scroll-snap-type:x mandatory;
+    scroll-padding-inline:var(--mobile-page-pad,18px);
+    padding:0 var(--mobile-page-pad,18px) 8px!important;
+    margin:0!important;
+    overscroll-behavior-inline:contain;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .home-page .collections-grid::-webkit-scrollbar{display:none}
+  .home-page .collections-grid .collection-card{
+    flex:0 0 min(82vw,360px)!important;
+    display:block!important;
+    grid-template-columns:none!important;
+    gap:0!important;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+    border:1px solid rgba(211,183,132,.18);
+    background:linear-gradient(155deg,rgba(27,24,20,.96),rgba(12,11,9,.98));
+    box-shadow:0 18px 54px rgba(0,0,0,.22);
+    overflow:hidden;
+    transform:none!important;
+  }
+  .home-page .collections-grid .collection-card__media{
+    width:100%!important;
+    aspect-ratio:4/5!important;
+    min-height:0!important;
+  }
+  .home-page .collections-grid .collection-card__media::after{
+    background:linear-gradient(180deg,transparent 58%,rgba(8,7,6,.38));
+  }
+  .home-page .collections-grid .collection-card__body{
+    position:relative;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 44px!important;
+    align-content:start;
+    gap:7px 14px!important;
+    min-height:154px;
+    padding:18px 18px 20px!important;
+  }
+  .home-page .collections-grid .collection-card__eyebrow{
+    grid-column:1/-1;
+    margin:0!important;
+    font-size:clamp(23px,6.7vw,29px)!important;
+    line-height:1.02!important;
+    letter-spacing:-.025em;
+    text-wrap:balance;
+  }
+  .home-page .collections-grid .collection-card__tagline{
+    grid-column:1;
+    margin:0!important;
+    max-width:24ch;
+    color:rgba(244,239,231,.68);
+    font-size:15px!important;
+    line-height:1.45!important;
+  }
+  .home-page .collections-grid .collection-card__price{
+    grid-column:1;
+    margin:4px 0 0!important;
+    color:#efe4d4!important;
+    font-size:16px!important;
+    font-weight:600;
+    letter-spacing:.02em;
+  }
+  .home-page .collection-card__arrow{
+    position:static!important;
+    grid-column:2;
+    grid-row:2/4;
+    align-self:end;
+    justify-self:end;
+    width:44px!important;
+    height:44px!important;
+    border-color:rgba(211,183,132,.34);
+    background:rgba(211,183,132,.06);
+  }
+  .collection-carousel__footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:13px var(--mobile-page-pad,18px) 0;
+  }
+  .collection-carousel__dots{
+    display:flex;
+    align-items:center;
+    gap:7px;
+  }
+  .collection-carousel__dots span{
+    width:5px;
+    height:5px;
+    border-radius:999px;
+    background:rgba(244,239,231,.26);
+    transition:width .28s ease,background-color .28s ease;
+  }
+  .collection-carousel__dots span.is-active{
+    width:25px;
+    background:#c9a66b;
+  }
+  .collection-carousel__hint{
+    color:rgba(244,239,231,.43);
+    font-size:10px;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+  }
+}
+@media(max-width:390px){
+  .home-page .collections-grid .collection-card{
+    flex-basis:86vw!important;
+  }
+  .home-page .collections-grid .collection-card__media{
+    aspect-ratio:4/5!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .collection-carousel__dots span{transition:none}
 }
