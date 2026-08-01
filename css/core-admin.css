@@ -282,14 +282,37 @@ input, select, textarea {
   font-size: max(16px, 1rem);
 }
 
-/* VA HOME — text selection protection */
-html,
-body,
-body * {
+/* VA HOME — allow useful text selection; lock only interactive chrome. */
+html, body {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+button,
+[role="button"],
+nav,
+.site-header,
+.mobile-menu,
+.product-gallery-thumb,
+.icon-btn,
+.btn {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+input, textarea, select,
+.product-description,
+.product-copy,
+.article-content,
+.account-order,
+.order-status-page,
+.site-footer {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 body,
@@ -2653,7 +2676,7 @@ html { }
 }
 
 
-/* ===== VA HOME v15.5.0-RC1.17 — footer contact line integrity ===== */
+/* ===== VA HOME v15.5.0-RC1.18 — footer contact line integrity ===== */
 .site-footer--editorial .footer-col--contact li,
 .site-footer--editorial .footer-col--contact a{
   overflow-wrap:normal;

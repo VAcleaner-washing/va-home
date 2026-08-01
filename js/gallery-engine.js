@@ -111,9 +111,9 @@
 
     mainImage.style.removeProperty("visibility");
     mainImage.removeAttribute("data-product-story-empty");
-    // The static HTML hero carries a hero-only srcset. If it remains, browsers
-    // may keep selecting the first hero candidate even after JS changes `src`.
-    // The gallery uses exact story files, so src/srcset must have one authority.
+    // The static hero markup uses a hero-only srcset. Once the gallery starts,
+    // `src` must be the single source of truth or the browser can keep showing
+    // the first hero candidate after a thumbnail change.
     mainImage.removeAttribute("srcset");
     mainImage.removeAttribute("sizes");
     media.removeAttribute("data-story-empty");
@@ -123,11 +123,15 @@
     let startX = null;
     let transitionToken = 0;
 
-    // RC1.16: one authoritative foreground image only.
-    // The former two-image crossfade could leave the previous image painted above
-    // the newly selected slide in Safari/Chromium. Ambient layers still crossfade,
-    // while the sharp foreground image fades out, swaps source and fades back in.
-    media.querySelectorAll(".product-main-image-transition").forEach((node) => node.remove());
+    let transitionImage = media.querySelector(".product-main-image-transition");
+    if (!transitionImage) {
+      transitionImage = document.createElement("img");
+      transitionImage.className = "product-main-image-transition";
+      transitionImage.alt = "";
+      transitionImage.decoding = "async";
+      transitionImage.setAttribute("aria-hidden", "true");
+      media.appendChild(transitionImage);
+    }
 
     // Ambient background: a blurred copy of the active gallery image sits
     // beneath the sharp image and crossfades in sync with every 6-second slide.
@@ -193,32 +197,35 @@
       updateThumbs();
       setAmbient(item.src, animate);
 
-      const applyImage = () => {
-        if (token !== transitionToken) return;
+      const applyDirectly = () => {
         mainImage.src = item.src;
         mainImage.alt = `${product.name} — ${item.label}`;
         mainImage.dataset.galleryIndex = String(current);
-        mainImage.classList.remove("is-gallery-switching");
+        transitionImage.classList.remove("is-visible");
+        transitionImage.removeAttribute("src");
       };
 
       if (!animate || !mainImage.src || matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        applyImage();
+        applyDirectly();
         return;
       }
 
       const preload = new Image();
       preload.onload = () => {
         if (token !== transitionToken) return;
-        mainImage.classList.add("is-gallery-switching");
+        transitionImage.src = item.src;
+        transitionImage.alt = `${product.name} — ${item.label}`;
+        requestAnimationFrame(() => requestAnimationFrame(() => transitionImage.classList.add("is-visible")));
         window.setTimeout(() => {
           if (token !== transitionToken) return;
           mainImage.src = item.src;
           mainImage.alt = `${product.name} — ${item.label}`;
           mainImage.dataset.galleryIndex = String(current);
-          requestAnimationFrame(() => requestAnimationFrame(() => {
-            if (token === transitionToken) mainImage.classList.remove("is-gallery-switching");
-          }));
-        }, 150);
+          transitionImage.classList.remove("is-visible");
+          window.setTimeout(() => {
+            if (token === transitionToken) transitionImage.removeAttribute("src");
+          }, 980);
+        }, 900);
       };
       preload.onerror = () => {
         const failedIndex = gallery.findIndex((entry) => entry === item);

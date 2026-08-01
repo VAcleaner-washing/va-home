@@ -1,12 +1,13 @@
 {
-  "version": "15.5.0-RC1.17",
+  "version": "15.5.0-RC1.18",
   "channel": "Release Candidate",
-  "name": "HOME REVIEWS MOBILE CAROUSEL REPAIR",
+  "name": "GALLERY CROSSFADE RESTORE + UX FIXES",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1.16",
+  "base": "15.5.0-RC1.17",
   "changes": [
-    "Repairs the home reviews carousel on mobile after a selector mismatch caused all review cards to shrink into one viewport",
-    "Restores one premium review card per swipe with a visible hint of the next card",
-    "Keeps review navigation, proof metrics and desktop review layout unchanged"
+    "Restores the proven v15.4 two-image gallery crossfade and subtle zoom while keeping srcset neutralization so selected thumbnails always replace the hero image",
+    "Removes the global text-selection ban and limits user-select:none to interactive controls",
+    "Hides any manual paid quick action for card_online orders in the admin interface",
+    "Raises article table header text from 9 px to 11 px for mobile readability"
   ]
 }

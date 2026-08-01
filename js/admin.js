@@ -272,6 +272,12 @@ function renderOrders(){
       if(displayedStatus==="paid")quick.push('<button data-quick-status="shipped">Відправлено</button>');
       if(displayedStatus==="shipped")quick.push('<button data-quick-status="completed">Доставлено + відгук</button>');
     }
+    // Card payment status is bank-controlled; never expose a manual “paid” action.
+    if(cardPayment){
+      for(let i=quick.length-1;i>=0;i-=1){
+        if(quick[i].includes('data-quick-status="paid"'))quick.splice(i,1);
+      }
+    }
     return `<article class="admin-card admin-order-card admin-order-card--${guidance.tone}" data-order="${esc(o.id)}">
       <header class="admin-order-card__head"><div><div class="admin-card__title">${esc(o.client_order_id)}</div><div class="admin-card__meta">${date(o.created_at)}</div></div><div class="admin-card__amount">${money(o.total_amount)}</div></header>
       <div class="admin-order-card__customer"><strong>${esc(o.customer_name)}</strong><span>${esc(o.customer_phone)}${o.customer_city?` · ${esc(o.customer_city)}`:""}</span></div>
