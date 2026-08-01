@@ -1,10 +1,14 @@
 {
-  "version": "15.3.3",
+  "version": "15.3.4",
   "channel": "Production",
-  "name": "ADMIN STATUS SAVE & CANCEL FIX",
+  "name": "ACCOUNT ORDER ISOLATION FIX",
   "date": "2026-08-01",
-  "base": "15.3.2",
+  "base": "15.3.3",
   "changes": [
+    "Restricts the customer account order query to customer_user_id of the currently signed-in user",
+    "Prevents administrator accounts from seeing all store orders inside the ordinary customer account page",
+    "Keeps broad administrator order access only inside /admin/",
+    "Bumps the account script and public PWA cache version so the fix loads immediately",
     "Makes order-status changes in the admin editor save immediately instead of requiring a hidden lower-page button",
     "Shows a confirmation before cancelling an order and restores the previous value if the update is rejected",
     "Makes cancelled card orders render as Cancelled in cards, counters and filters instead of being forced back to Awaiting payment",

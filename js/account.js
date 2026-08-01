@@ -321,8 +321,10 @@
     list.innerHTML = '<div class="account-orders-skeleton" aria-label="Завантажуємо замовлення"><span></span><span></span></div>';
     let data, error;
     try {
+      if (!user?.id) throw new Error("ACCOUNT_USER_REQUIRED");
       ({ data, error } = await withTimeout(sb.from("orders")
         .select("client_order_id,created_at,completed_at,status,total_amount,tracking_number,items,payment_method,payment_status")
+        .eq("customer_user_id", user.id)
         .order("created_at", { ascending: false }), "ORDERS_TIMEOUT"));
     } catch (_) {
       list.innerHTML = '<p class="account-message">Сервер довго не відповідає. Оновіть сторінку або спробуйте трохи пізніше.</p>';
