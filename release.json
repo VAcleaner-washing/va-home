@@ -1,13 +1,14 @@
 {
-  "version": "15.5.0-RC1.11",
+  "version": "15.5.0-RC1.12",
   "channel": "Release Candidate",
-  "name": "PREMIUM MOBILE COLLECTIONS UX",
+  "name": "PREMIUM MOBILE PRODUCT CARDS",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1.10",
+  "base": "15.5.0-RC1.11",
   "changes": [
-    "Rebuilds the four home-page collections as a premium one-card mobile carousel with a visible next-card cue",
-    "Adds native scroll snapping, compact progress dots and swipe guidance without adding heavy slider dependencies",
-    "Improves mobile collection typography, touch targets, card hierarchy and reduced-motion behavior",
-    "Keeps the existing editorial desktop collection grid unchanged"
+    "Rebuilds mobile product cards to remove excessive height and cramped two-column typography",
+    "Turns homepage featured products and scent-profile recommendations into premium swipe rails",
+    "Keeps the catalogue fast to scan with compact two-column cards and a single primary purchase action",
+    "Uses one-column editorial catalogue cards only on screens narrower than 380 px",
+    "Updates all storefront, PWA, admin and backend release references to 15.5.0-RC1.12"
   ]
 }

@@ -1,4 +1,4 @@
-const VERSION = '1.0.0-15.5.0-RC1.11';
+const VERSION = '1.0.0-15.5.0-RC1.12';
 const CACHE_PREFIX = 'vahome-admin-';
 const SHELL_CACHE = `${CACHE_PREFIX}shell-${VERSION}`;
 
@@ -11,14 +11,14 @@ const SHELL_ASSETS = [
   '/admin/pwa/icon-512.png',
   '/admin/pwa/icon-maskable-512.png',
   '/admin/pwa/apple-touch-icon.png',
-  '/css/core-admin.css?v=15.5.0-RC1.11',
-  '/css/site-admin.css?v=15.5.0-RC1.11',
-  '/css/admin-mobile-system.css?v=15.5.0-RC1.11',
-  '/js/config.js?v=15.5.0-RC1.11',
-  '/js/products.js?v=15.5.0-RC1.11',
-  '/js/admin.js?v=15.5.0-RC1.11',
-  '/js/motion.js?v=15.5.0-RC1.11',
-  '/admin/pwa.js?v=15.5.0-RC1.11'
+  '/css/core-admin.css?v=15.5.0-RC1.12',
+  '/css/site-admin.css?v=15.5.0-RC1.12',
+  '/css/admin-mobile-system.css?v=15.5.0-RC1.12',
+  '/js/config.js?v=15.5.0-RC1.12',
+  '/js/products.js?v=15.5.0-RC1.12',
+  '/js/admin.js?v=15.5.0-RC1.12',
+  '/js/motion.js?v=15.5.0-RC1.12',
+  '/admin/pwa.js?v=15.5.0-RC1.12'
 ];
 
 const isSafeStatic = (request, url) =>
