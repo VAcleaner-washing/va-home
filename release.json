@@ -1,13 +1,13 @@
 {
-  "version": "15.5.0-RC1.3",
+  "version": "15.5.0-RC1.5",
   "channel": "Release Candidate",
-  "name": "FULL-SYSTEM AUDIT RC1.3",
+  "name": "PREMIUM COMPACT ACCOUNT ORDERS",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1.2",
+  "base": "15.5.0-RC1.4",
   "changes": [
-    "Keeps ordered product thumbnails in a 4:5 ratio for every product",
-    "Returns the order product row and overall order card to the previous height",
-    "Uses 72×90 px desktop thumbnails and 64×80 px mobile thumbnails",
-    "Raises embedded release and asset versions across 01-GITHUB and 02-BACKEND to RC1.3"
+    "Rebuilds account order cards into a tighter premium editorial layout",
+    "Keeps all ordered product images at a true 4:5 ratio without increasing card height",
+    "Reduces empty vertical space and improves price, product and action alignment",
+    "Updates all storefront, PWA, admin and backend version references to 15.5.0-RC1.5"
   ]
 }
