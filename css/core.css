@@ -2985,3 +2985,24 @@ body > footer {
 .footer-payment-trust{display:flex;align-items:center;justify-content:space-between;gap:28px;padding-block:22px;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
 .footer-payment-trust__provider,.footer-payment-trust__brands{display:flex;align-items:center;gap:16px}.footer-payment-trust__provider span{color:rgba(239,233,223,.52);font-size:10px;letter-spacing:.12em;text-transform:uppercase}.footer-payment-trust img{display:block;width:auto;object-fit:contain}.footer-payment-trust__provider img{width:116px;height:auto;opacity:.9}.footer-payment-trust__brands img{max-width:48px;max-height:18px}.footer-payment-trust__brands{gap:18px}
 @media(max-width:680px){.footer-payment-trust{align-items:flex-start;flex-direction:column;gap:18px}.footer-payment-trust__provider{align-items:flex-start;flex-direction:column;gap:9px}.footer-payment-trust__brands{gap:15px;flex-wrap:wrap}}
+
+
+/* ===== VA HOME v15.5.0-RC1.8 — footer contact line integrity ===== */
+.site-footer--editorial .footer-col--contact li,
+.site-footer--editorial .footer-col--contact a{
+  overflow-wrap:normal;
+  word-break:normal;
+}
+.site-footer--editorial .footer-col--contact a[href^="mailto:"]{
+  display:inline-block;
+  white-space:nowrap;
+  font-size:clamp(.68rem,.78vw,.78rem);
+  letter-spacing:-.015em;
+}
+@media(max-width:680px){
+  .site-footer--editorial .footer-col--contact a[href^="mailto:"]{
+    white-space:normal;
+    overflow-wrap:anywhere;
+    font-size:inherit;
+  }
+}

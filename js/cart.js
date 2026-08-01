@@ -164,6 +164,11 @@
 
   function clear() {
     writeRaw([]);
+    // A promo belongs to the checkout that used it. Clearing the cart must
+    // also clear the applied promo so a completed or abandoned order cannot
+    // leak its discount into the next basket.
+    writeAppliedPromo(null);
+    resetCheckoutRequestId();
   }
 
   function getItems() {
@@ -1396,6 +1401,7 @@
   function initPromoCode(form) {
     const input=document.getElementById("promoCode"),button=document.getElementById("applyPromoCode"),status=document.getElementById("promoStatus"),details=document.getElementById("promoDetails");
     if(!input||!button||!status)return;
+    if(!getItems().length) writeAppliedPromo(null);
     const showCurrent=()=>{const promo=readAppliedPromo();if(promo?.code){input.value=String(promo.code).toUpperCase();status.textContent=promoStatusText(pricingFor(getItems()));status.className="promo-status is-success";if(details)details.open=true;}};
     const apply=async()=>{const code=normalizePromoCode(input.value);if(!code){writeAppliedPromo(null);resetCheckoutRequestId();status.textContent="Промокод прибрано.";status.className="promo-status";renderCartPage();return;}button.disabled=true;status.textContent="Перевіряємо промокод…";status.className="promo-status";try{const items=getItems().map(i=>({id:i.id,quantity:i.quantity,line_total:i.lineTotal}));const subtotal=items.reduce((sum,i)=>sum+Number(i.line_total||0),0);const response=await fetch(`${window.SITE_CONFIG.supabase.url}/functions/v1/validate-promo`,{method:"POST",headers:{"Content-Type":"application/json","apikey":window.SITE_CONFIG.supabase.publishableKey,"Authorization":`Bearer ${window.SITE_CONFIG.supabase.publishableKey}`},body:JSON.stringify({code,items,subtotal,customer_email:form?.elements?.customerEmail?.value?.trim()?.toLowerCase()||""})});const data=await response.json().catch(()=>({}));if(!response.ok||!data.valid){writeAppliedPromo(null);status.textContent=data.message||"Промокод не знайдено або він уже не діє.";status.className="promo-status is-error";renderCartPage();return;}writeAppliedPromo(data.promo);resetCheckoutRequestId();renderCartPage();status.textContent=promoStatusText(pricingFor(getItems()));status.className="promo-status is-success";}catch(_){status.textContent="Не вдалося перевірити промокод. Спробуйте ще раз.";status.className="promo-status is-error";}finally{button.disabled=false;}};
     const emailField=form?.elements?.customerEmail;

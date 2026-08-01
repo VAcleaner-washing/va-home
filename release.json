@@ -1,14 +1,13 @@
 {
-  "version": "15.5.0-RC1.7",
+  "version": "15.5.0-RC1.8",
   "channel": "Release Candidate",
-  "name": "SCENT GUIDE CLARITY & EDITORIAL RHYTHM",
+  "name": "FOOTER CONTACT AND PROMO LIFECYCLE FIX",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1.6",
+  "base": "15.5.0-RC1.7",
   "changes": [
-    "Rewrites scent-guide questions in clearer customer language without changing recommendation logic",
-    "Moves the welcome-credit block below the personalized recommendation cards",
-    "Reduces excessive empty vertical space on the homepage while preserving premium editorial rhythm",
-    "Improves mobile collection typography, descriptions, prices and navigation affordances",
-    "Refines mobile scent-guide spacing, question scale and answer-card readability"
+    "Keeps the footer email address on one line at desktop widths without harming mobile wrapping",
+    "Clears the applied checkout promo whenever the cart is cleared or an order is successfully created",
+    "Removes stale promo session state when the cart is empty so a previous order discount cannot reappear",
+    "Updates storefront, PWA, admin and backend version references to 15.5.0-RC1.8"
   ]
 }
