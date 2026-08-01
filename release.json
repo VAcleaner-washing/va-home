@@ -1,12 +1,13 @@
 {
-  "version": "15.5.0-RC1.2",
+  "version": "15.5.0-RC1.3",
   "channel": "Release Candidate",
-  "name": "FULL-SYSTEM AUDIT RC1.2",
+  "name": "FULL-SYSTEM AUDIT RC1.3",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1",
+  "base": "15.5.0-RC1.2",
   "changes": [
-    "Changes ordered product thumbnails in the account orders view to a taller 4:5 ratio for every product",
-    "Increases desktop order-item media to 80×100 px and mobile media to 64×80 px",
-    "Updates account page asset query versions to force fresh CSS and JS after deploy"
+    "Keeps ordered product thumbnails in a 4:5 ratio for every product",
+    "Returns the order product row and overall order card to the previous height",
+    "Uses 72×90 px desktop thumbnails and 64×80 px mobile thumbnails",
+    "Raises embedded release and asset versions across 01-GITHUB and 02-BACKEND to RC1.3"
   ]
 }
