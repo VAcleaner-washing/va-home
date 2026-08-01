@@ -1,13 +1,14 @@
 {
-  "version": "15.5.0-RC1.18",
+  "version": "15.5.0-RC1.19",
   "channel": "Release Candidate",
-  "name": "GALLERY CROSSFADE RESTORE + UX FIXES",
+  "name": "GALLERY REGRESSION REPAIR",
   "date": "2026-08-01",
-  "base": "15.5.0-RC1.17",
+  "base": "15.5.0-RC1.18",
   "changes": [
-    "Restores the proven v15.4 two-image gallery crossfade and subtle zoom while keeping srcset neutralization so selected thumbnails always replace the hero image",
-    "Removes the global text-selection ban and limits user-select:none to interactive controls",
-    "Hides any manual paid quick action for card_online orders in the admin interface",
-    "Raises article table header text from 9 px to 11 px for mobile readability"
+    "Repairs the confirmed product-gallery regression found by comparing v15.4.0 with RC1.18",
+    "Restores the full subtle zoom timing: desktop 1.045 to 1.075 and mobile 1.02 to 1.045 over 1.25 seconds",
+    "Uses decoded double buffering and a two-frame paint barrier so the first or previous image cannot flash during commit",
+    "Keeps src as the authoritative source after gallery mount to prevent hero srcset from overriding thumbnail selection",
+    "Adds an automated gallery transition regression check and synchronizes frontend, PWA and backend release versions"
   ]
 }

@@ -3867,3 +3867,50 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
   .product-journal-proof__title{font-size:18px}
 }
 
+
+/* ===== VA HOME v15.5.0-RC1.19 — deterministic gallery crossfade =====
+   Preserves the original subtle zoom while preventing the previous hero
+   image from flashing during the final layer commit. */
+.product-image-switcher{
+  --va-gallery-rest-scale:1.075;
+  --va-gallery-enter-scale:1.045;
+}
+.product-gallery .product-image-switcher>img#productMainImage,
+.product-gallery .product-image-switcher>img.product-main-image-transition{
+  transform-origin:center center!important;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  object-fit:cover;
+}
+.product-gallery .product-image-switcher>img#productMainImage{
+  z-index:1;
+  opacity:1!important;
+  transform:scale(var(--va-gallery-rest-scale))!important;
+  transition:none!important;
+}
+.product-gallery .product-image-switcher>img.product-main-image-transition{
+  z-index:2;
+  opacity:0;
+  transform:scale(var(--va-gallery-enter-scale))!important;
+  transition:opacity 1.05s cubic-bezier(.22,.61,.36,1),
+             transform 1.25s cubic-bezier(.22,.61,.36,1)!important;
+  will-change:opacity,transform;
+  pointer-events:none;
+}
+.product-gallery .product-image-switcher>img.product-main-image-transition.is-visible{
+  opacity:1;
+  transform:scale(var(--va-gallery-rest-scale))!important;
+}
+@media(max-width:900px){
+  .product-image-switcher{
+    --va-gallery-rest-scale:1.045;
+    --va-gallery-enter-scale:1.02;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .product-gallery .product-image-switcher>img#productMainImage,
+  .product-gallery .product-image-switcher>img.product-main-image-transition{
+    transition:none!important;
+    transform:scale(var(--va-gallery-rest-scale))!important;
+  }
+}
