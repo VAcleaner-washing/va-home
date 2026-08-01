@@ -3872,7 +3872,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* ===== VA HOME v15.5.0-RC1.21 — deterministic gallery crossfade =====
+/* ===== VA HOME v15.5.0-RC1.22 — deterministic gallery crossfade =====
    Preserves the original subtle zoom while preventing the previous hero
    image from flashing during the final layer commit. */
 .product-image-switcher{
@@ -3920,7 +3920,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* ===== VA HOME v15.5.0-RC1.21 — product gallery layer containment =====
+/* ===== VA HOME v15.5.0-RC1.22 — product gallery layer containment =====
    Keeps both crossfade images inside the main media frame and prevents any
    thumbnail — including Detail — from painting over the hero image. */
 .product-gallery .product-hero__media{

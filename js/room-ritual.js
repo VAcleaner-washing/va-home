@@ -1,4 +1,4 @@
-/* VA HOME v15.5.0-RC1.21 RC6 — Room Ritual engine */
+/* VA HOME v15.5.0-RC1.22 RC6 — Room Ritual engine */
 (function () {
   "use strict";
   const STORAGE_KEY = "va_home_room_ritual_v14";

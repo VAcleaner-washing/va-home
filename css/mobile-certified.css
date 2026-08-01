@@ -1,4 +1,4 @@
-/* VA HOME v15.5.0-RC1.21 — certified responsive UX layer
+/* VA HOME v15.5.0-RC1.22 — certified responsive UX layer
    Final cascade for 390 / 430 / 768 px and desktop continuity. */
 
 html{max-width:100%;overflow-x:clip}
@@ -155,7 +155,7 @@ img,video,svg,canvas{max-width:100%}
   .account-order{height:auto!important}
 }
 
-/* ===== VA HOME v15.5.0-RC1.21 — equal mobile catalogue CTA alignment ===== */
+/* ===== VA HOME v15.5.0-RC1.22 — equal mobile catalogue CTA alignment ===== */
 @media (min-width:391px) and (max-width:620px){
   #catalogGrid.catalog-grid{
     align-items:stretch!important;
@@ -209,7 +209,7 @@ img,video,svg,canvas{max-width:100%}
   }
 }
 
-/* ===== VA HOME v15.5.0-RC1.21 — full mobile QA corrections ===== */
+/* ===== VA HOME v15.5.0-RC1.22 — full mobile QA corrections ===== */
 @media (max-width:620px){
   /* Product detail: predictable gallery, compact purchase flow, safe sticky bar. */
   .product-gallery{display:grid!important;grid-template-columns:1fr!important;gap:14px!important}
@@ -281,7 +281,7 @@ img,video,svg,canvas{max-width:100%}
 }
 
 
-/* ===== VA HOME v15.5.0-RC1.21 — Home reviews mobile carousel repair ===== */
+/* ===== VA HOME v15.5.0-RC1.22 — Home reviews mobile carousel repair ===== */
 @media (max-width:900px){
   .home-reviews{overflow:hidden!important}
   .home-reviews__viewport{overflow:visible!important;margin-right:calc(var(--container-pad,20px) * -1)!important}

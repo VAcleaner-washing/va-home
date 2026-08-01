@@ -1,4 +1,4 @@
-/* VA HOME v15.5.0-RC1.21 — full-site mobile typography & spacing system */
+/* VA HOME v15.5.0-RC1.22 — full-site mobile typography & spacing system */
 
 @media (max-width: 900px) {
   :root {
@@ -293,7 +293,7 @@
 }
 
 
-/* ===== VA HOME v15.5.0-RC1.21 — Premium home collections carousel ===== */
+/* ===== VA HOME v15.5.0-RC1.22 — Premium home collections carousel ===== */
 .collection-carousel__footer{display:none}
 @media(max-width:620px){
   .home-page .section:has(#collections-heading){
@@ -432,7 +432,7 @@
 }
 
 
-/* ===== VA HOME v15.5.0-RC1.21 — premium mobile product-card UX ===== */
+/* ===== VA HOME v15.5.0-RC1.22 — premium mobile product-card UX ===== */
 @media (max-width:620px){
   /* Core card: remove the tall desktop geometry on narrow screens. */
   .product-card{
