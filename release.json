@@ -1,16 +1,19 @@
 {
-  "version": "15.5.0-RC1.34",
-  "channel": "Release Candidate",
-  "name": "CATALOG MOBILE ACTION ALIGNMENT",
+  "version": "16.0.0",
+  "channel": "Stable",
+  "name": "ATMOSPHERE OS — STABLE RELEASE",
   "date": "2026-08-02",
   "base": "15.5.0-RC1.32",
   "changes": [
-    "Aligns all catalog add-to-cart controls to one consistent baseline in the two-column mobile grid",
-    "Uses a fixed internal content zone for product cards without changing product text or checkout logic",
-    "Preserves the one-column compact layout on narrow phones and the existing desktop catalog geometry",
-    "Refreshes related asset query versions, PWA caches and release metadata to RC1.34"
+    "Promotes the audited RC1.32 storefront, checkout, account, PWA and backend delivery package to the stable v16 line",
+    "Keeps catalogue purchase actions aligned by showing “Ще немає відгуків” in the existing review row when approved reviews are absent",
+    "Preserves the original RC1.32 catalogue geometry without fixed card-body heights or description clipping",
+    "Retains the refined post-purchase experience and direct Discovery Set route from an empty cart",
+    "Removes the unsupported frame-ancestors directive from meta CSP policies to eliminate misleading console warnings",
+    "Synchronizes public assets, generated product content, PWA caches, admin PWA and verification tooling to 16.0.0"
   ],
   "notes": [
-    "Shows “Ще немає відгуків” on catalogue cards without approved reviews, keeping card actions aligned"
+    "Card payment code is included and boundary-tested; one real owner-card transaction remains the required live production acceptance test.",
+    "frame-ancestors can only be enforced through an HTTP response header, not a meta tag."
   ]
 }
