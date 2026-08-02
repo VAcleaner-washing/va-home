@@ -3,9 +3,10 @@
 
   if (!("serviceWorker" in navigator) || !window.isSecureContext) return;
 
-  const VERSION = "16.0.6";
+  const VERSION = "16.0.7";
   const UPDATE_INTERVAL = 60 * 60 * 1000;
   const RELOAD_KEY = `vahome_sw_reloaded_${VERSION}`;
+  const hadControllerAtStart = Boolean(navigator.serviceWorker.controller);
   const privateRoutes = [
     /^\/admin(?:\/|$)/,
     /^\/account(?:\.html)?\/?$/,
@@ -51,7 +52,7 @@
   }, { once: true });
 
   navigator.serviceWorker.addEventListener("controllerchange", () => {
-    if (refreshing || isPrivatePage()) return;
+    if (!hadControllerAtStart || refreshing || isPrivatePage()) return;
     if (sessionStorage.getItem(RELOAD_KEY) === "1") return;
 
     refreshing = true;

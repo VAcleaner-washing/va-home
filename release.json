@@ -1,19 +1,19 @@
 {
-  "version": "16.0.6",
+  "version": "16.0.7",
   "channel": "Stable",
-  "name": "ATMOSPHERE OS — ALIGNED SCENT CARDS",
+  "name": "ATMOSPHERE OS — SEO INDEXABILITY & PWA NAVIGATION",
   "date": "2026-08-02",
-  "base": "16.0.5",
+  "base": "16.0.6",
   "changes": [
-    "Aligns all mobile Scent Consultation recommendation cards to the same top and bottom rhythm",
-    "Reserves consistent space for product names, descriptions and recommendation rationale",
-    "Normalizes the Why it fits, Reeds and Care rows without moving alternative cards downward",
-    "Keeps price and Add to cart actions aligned at the bottom of every swipe card",
-    "Preserves the one-card swipe rail, next-card preview and desktop layouts from v16.0.5"
+    "Keeps the homepage explicitly indexable with one robots directive, one meta description and the root canonical URL",
+    "Prevents a first-time Service Worker installation from reloading the page during Lighthouse and PageSpeed audits",
+    "Retries the real navigation request when Navigation Preload fails before showing the offline document",
+    "Adds SEO/indexability regression checks across all 71 HTML pages",
+    "Refreshes homepage sitemap metadata and synchronizes active storefront release markers to v16.0.7"
   ],
   "notes": [
-    "The alignment override applies only at 680 px and below.",
-    "Long recommendation copy is limited to a readable mobile preview to keep card geometry consistent.",
-    "No product data, scoring, checkout, payment, Supabase schema or Edge Function logic changed."
+    "The noindex result in the supplied PageSpeed screenshot matched the offline fallback document, not the actual homepage source.",
+    "Cart, account, thank-you, order status, admin, compare and offline utility pages intentionally remain noindex.",
+    "No catalog, product, cart, payment, promo, account data, Supabase schema or Edge Function logic changed."
   ]
 }

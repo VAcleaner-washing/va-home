@@ -1,4 +1,4 @@
-const VERSION = "16.0.6";
+const VERSION = "16.0.7";
 const CACHE_REVISION = "v16";
 const CACHE_PREFIX = "vahome-";
 const STATIC_CACHE = `${CACHE_PREFIX}static-${VERSION}-${CACHE_REVISION}`;
@@ -107,11 +107,20 @@ function staleWhileRevalidate(event) {
 }
 
 async function networkFirstNavigation(event) {
+  let preloaded = null;
+
   try {
-    const preloaded = await event.preloadResponse;
-    if (preloaded) return preloaded;
+    preloaded = await event.preloadResponse;
+  } catch {
+    // Navigation preload may fail independently. Retry the real request before showing offline.
+  }
+
+  if (preloaded?.ok) return preloaded;
+
+  try {
     return await fetch(event.request);
   } catch {
+    // Use the offline document only when both preload and the direct navigation fail.
     return await caches.match("/offline.html") || Response.error();
   }
 }
