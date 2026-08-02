@@ -1,7 +1,7 @@
 {
-  "version": "16.0.0",
+  "version": "16.0.1",
   "channel": "Stable",
-  "name": "ATMOSPHERE OS — STABLE RELEASE",
+  "name": "ATMOSPHERE OS — PAYMENT BADGE ALIGNMENT",
   "date": "2026-08-02",
   "base": "15.5.0-RC1.32",
   "changes": [
@@ -10,7 +10,8 @@
     "Preserves the original RC1.32 catalogue geometry without fixed card-body heights or description clipping",
     "Retains the refined post-purchase experience and direct Discovery Set route from an empty cart",
     "Removes the unsupported frame-ancestors directive from meta CSP policies to eliminate misleading console warnings",
-    "Synchronizes public assets, generated product content, PWA caches, admin PWA and verification tooling to 16.0.0"
+    "Synchronizes public assets, generated product content, PWA caches, admin PWA and verification tooling to 16.0.1",
+    "Raises the plata by mono badge by 3 px in the online-card option for cleaner optical alignment with the payment title"
   ],
   "notes": [
     "Card payment code is included and boundary-tested; one real owner-card transaction remains the required live production acceptance test.",

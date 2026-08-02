@@ -292,7 +292,7 @@
 .payment-option.is-selected .payment-option__mark::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--color-gold)}
 .payment-option strong{display:block;margin-bottom:3px;font-size:var(--fs-small);font-weight:600;color:var(--text-primary)}
 .payment-option small{display:block;color:var(--text-secondary);font-size:var(--fs-caption);line-height:1.5}
-.payment-option__content{min-width:0}.payment-option__title-row{display:flex;align-items:center;justify-content:space-between;gap:14px}.payment-option__title-row strong{margin-bottom:0}.payment-option__mono{display:block;width:116px;height:auto;max-width:42%;opacity:.92}.payment-option__brands{display:flex;align-items:center;gap:14px;min-height:22px;margin-top:12px}.payment-option__brands img{display:block;width:auto;max-width:52px;max-height:18px;object-fit:contain}.payment-option--card.is-selected .payment-option__mono,.payment-option--card.is-selected .payment-option__brands{opacity:1}
+.payment-option__content{min-width:0}.payment-option__title-row{display:flex;align-items:center;justify-content:space-between;gap:14px}.payment-option__title-row strong{margin-bottom:0}.payment-option__mono{display:block;width:116px;height:auto;max-width:42%;opacity:.92;transform:translateY(-3px)}.payment-option__brands{display:flex;align-items:center;gap:14px;min-height:22px;margin-top:12px}.payment-option__brands img{display:block;width:auto;max-width:52px;max-height:18px;object-fit:contain}.payment-option--card.is-selected .payment-option__mono,.payment-option--card.is-selected .payment-option__brands{opacity:1}
 
 #placeOrderBtn{display:flex;justify-content:space-between;align-items:center;gap:20px;min-height:58px;padding-inline:20px}
 #placeOrderBtn strong{font-weight:600;white-space:nowrap}
@@ -2766,7 +2766,7 @@ body.np-sheet-open{overflow:hidden}
 }
 
 
-/* ===== VA HOME v16.0.0 — cart premium and friendly UX ===== */
+/* ===== VA HOME v16.0.1 — cart premium and friendly UX ===== */
 body.cart-page .cart-item{
   border-color:rgba(195,145,70,.20);
   background:linear-gradient(145deg,rgba(18,15,12,.97),rgba(10,9,7,.99));

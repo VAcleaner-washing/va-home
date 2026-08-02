@@ -3116,7 +3116,7 @@ button, input, select, textarea, a{ min-width: 0; }
 }
 
 
-/* ===== VA HOME v16.0.0 — Clear guide questions & result hierarchy ===== */
+/* ===== VA HOME v16.0.1 — Clear guide questions & result hierarchy ===== */
 .guide-welcome-credit{
   margin:clamp(30px,4vw,48px) 0 28px;
 }
