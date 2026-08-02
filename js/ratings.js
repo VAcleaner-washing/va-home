@@ -33,11 +33,12 @@
       if (!el) return;
       const data = map[id];
       const hasRating = Boolean(data && data.count);
-      el.hidden = !hasRating;
+      el.hidden = false;
       el.textContent = hasRating
         ? `★ ${data.average.toFixed(1)} · ${data.count} ${reviewsLabel(data.count)}`
-        : "";
+        : "Ще немає відгуків";
       el.classList.toggle("has-rating", hasRating);
+      el.classList.toggle("is-empty", !hasRating);
     });
   }
 

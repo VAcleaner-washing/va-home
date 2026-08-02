@@ -2214,3 +2214,34 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 .catalog-page .section{padding-block:clamp(44px,11vw,62px)!important;}
 .category-card{min-width:0!important;}
 }
+
+/* RC1.34 — mobile catalogue card action alignment */
+@media (min-width:391px) and (max-width:620px){
+  #catalogGrid .product-card{
+    align-self:stretch!important;
+  }
+  #catalogGrid .product-card__body{
+    box-sizing:border-box;
+    flex:0 0 252px;
+    height:252px;
+    min-height:252px;
+    overflow:hidden;
+  }
+  #catalogGrid .product-card__desc{
+    max-height:35px;
+  }
+  #catalogGrid .product-card__meta{
+    flex:0 0 auto;
+  }
+  #catalogGrid .product-card .va-compare-add,
+  #catalogGrid .product-card__actions{
+    flex:0 0 auto!important;
+  }
+}
+
+
+/* RC1.34 — honest empty-review state keeps catalogue cards aligned */
+#catalogGrid .product-card__rating.is-empty{
+  color:var(--color-text-muted,#8f877b);
+  opacity:.78;
+}

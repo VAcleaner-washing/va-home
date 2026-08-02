@@ -1,14 +1,16 @@
 {
-  "version": "15.5.0-RC1.32",
+  "version": "15.5.0-RC1.34",
   "channel": "Release Candidate",
-  "name": "PREMIUM POST-PURCHASE TOUCHES",
+  "name": "CATALOG MOBILE ACTION ALIGNMENT",
   "date": "2026-08-02",
-  "base": "15.5.0-RC1.31",
+  "base": "15.5.0-RC1.32",
   "changes": [
-    "Refines the thank-you hero with warmer VA HOME brand copy while preserving payment-specific states",
-    "Expands the four post-order steps with clearer confirmation, hand-packing, shipping and first-use guidance",
-    "Adds a restrained closing brand moment below the order journey",
-    "Rewrites the empty-cart state and adds a direct Discovery Set path",
-    "Keeps the existing motion and button feedback system instead of introducing duplicate CSS and JavaScript"
+    "Aligns all catalog add-to-cart controls to one consistent baseline in the two-column mobile grid",
+    "Uses a fixed internal content zone for product cards without changing product text or checkout logic",
+    "Preserves the one-column compact layout on narrow phones and the existing desktop catalog geometry",
+    "Refreshes related asset query versions, PWA caches and release metadata to RC1.34"
+  ],
+  "notes": [
+    "Shows “Ще немає відгуків” on catalogue cards without approved reviews, keeping card actions aligned"
   ]
 }

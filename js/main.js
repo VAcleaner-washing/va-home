@@ -580,7 +580,7 @@
     }
     if (window.SITE_CONFIG && typeof PRODUCTS !== "undefined" && !document.querySelector('script[data-vahome-wishlist]')) {
       const script = document.createElement("script");
-      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=15.5.0-RC1.32`;
+      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=15.5.0-RC1.34`;
       script.dataset.vahomeWishlist = "true";
       document.body.appendChild(script);
     }
