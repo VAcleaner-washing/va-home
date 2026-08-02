@@ -39,3 +39,14 @@
 @media(max-width:900px){.journal-section-head{grid-template-columns:1fr}.journal-feature{grid-template-columns:1fr}.journal-card,.journal-card--wide{grid-column:span 6}.journal-card--wide .journal-card__media{aspect-ratio:4/5}}
 @media(max-width:620px){.journal-hero{min-height:720px}.journal-hero::before{background-position:68% center}.journal-hero::after{background:linear-gradient(0deg,rgba(7,7,6,.97),rgba(7,7,6,.55) 72%,rgba(7,7,6,.2))}.journal-hero .container{padding-bottom:58px}.journal-hero h1{font-size:clamp(58px,20vw,84px);line-height:.84}.journal-section-head{gap:20px}.journal-grid{display:block}.journal-card,.journal-card--wide{display:block;margin-bottom:52px}.journal-card__media,.journal-card--wide .journal-card__media{aspect-ratio:16/10}.journal-card h3{font-size:34px}.journal-feature{margin-bottom:90px}}
 @media(prefers-reduced-motion:reduce){.journal-feature__media img,.journal-card__media img{transition:none}}
+
+
+/* ===== Journal responsive component — consolidated from legacy mobile layers ===== */
+@media (max-width: 900px){
+.journal-grid,
+  .guide-grid{gap: var(--va-mobile-card-gap);}
+.journal-card__body{padding: 16px;}
+}
+@media (max-width:620px){
+.journal-card{min-width:0;}
+}

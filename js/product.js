@@ -393,13 +393,9 @@
     const collection = typeof getCollection === "function" ? getCollection(product.collection) : null;
     const insight = product.insights || {};
     const storyMap = product.images.story || {};
-    const storyAsset = (name) => storyMap[name] || "";
-    const heroStoryImage = storyAsset("hero");
-    const atmosphereStoryImage = storyAsset("atmosphere");
+    const storyAsset = (name) => storyMap[name] || "";    const atmosphereStoryImage = storyAsset("atmosphere");
     const interiorStoryImage = storyAsset("interior");
-    const macroStoryImage = storyAsset("macro");
-    const detailStoryImage = storyAsset("detail");
-    const topStoryImage = storyAsset("top");
+    const macroStoryImage = storyAsset("macro");    const topStoryImage = storyAsset("top");
     const heartStoryImage = storyAsset("heart");
     const baseStoryImage = storyAsset("base");
     const discoveryStoryImage = storyAsset("discovery") || "images/discovery/discovery-set.webp";
@@ -535,103 +531,7 @@
     heroSection.insertAdjacentElement("afterend", story);
     similarSection.classList.add("story-similar");
     document.body.classList.add("has-editorial-product-story", "has-product-story-v10");
-  }
-
-  function initCompactDetails() {
-    const info = document.querySelector(".product-hero__info");
-    if (!info) return;
-    const sections = Array.from(info.children).filter((el) => el.classList && el.classList.contains("product-detail-section"));
-    if (sections.length < 3) return;
-
-    const byTitle = new Map();
-    sections.forEach((section) => {
-      const title = section.querySelector(".product-detail-section__title");
-      if (title) byTitle.set(title.textContent.trim(), section);
-    });
-
-    ["Ароматичний профіль", "Ноти"].forEach((title) => {
-      const section = byTitle.get(title);
-      if (section) section.classList.add("product-detail-section--compact");
-    });
-
-    const groups = [
-      { label: "Характер та інтенсивність", titles: ["Візуальні шкали", "Інтенсивність"] },
-      { label: "Для якого простору", titles: ["Для якої кімнати", "Яку атмосферу створює"] },
-      { label: "Комплектація та використання", titles: ["Комплектація та використання"] },
-      { label: "Безпечне використання", titles: ["Безпечне використання"] }
-    ];
-
-    const accordion = document.createElement("div");
-    accordion.className = "product-accordion";
-    groups.forEach((group) => {
-      const sources = group.titles.map((title) => byTitle.get(title)).filter((section) => section && !section.hidden);
-      if (!sources.length) return;
-      const details = document.createElement("details");
-      details.className = "product-accordion__item";
-      const summary = document.createElement("summary");
-      summary.textContent = group.label;
-      const content = document.createElement("div");
-      content.className = "product-accordion__content";
-
-      sources.forEach((section) => {
-        const title = section.querySelector(".product-detail-section__title");
-        if (sources.length > 1 && title) {
-          const subheading = document.createElement("h3");
-          subheading.className = "product-accordion__subheading";
-          subheading.textContent = title.textContent.trim();
-          content.appendChild(subheading);
-        }
-        Array.from(section.children).forEach((child) => {
-          if (child !== title) content.appendChild(child);
-        });
-        section.remove();
-      });
-
-      details.append(summary, content);
-      accordion.appendChild(details);
-    });
-
-    const notes = byTitle.get("Ноти");
-    const accordionAnchor = document.querySelector(".product-formula-proof") || notes;
-    if (accordionAnchor && accordion.children.length) accordionAnchor.insertAdjacentElement("afterend", accordion);
-    info.classList.add("is-compact");
-
-    accordion.querySelectorAll("details").forEach((item) => {
-      item.addEventListener("toggle", () => {
-        if (!item.open) return;
-        accordion.querySelectorAll("details[open]").forEach((other) => {
-          if (other !== item) other.open = false;
-        });
-      });
-    });
-  }
-
-  function initProductSubstanceLayout() {
-    const hero = document.querySelector(".product-hero");
-    const gallery = document.querySelector(".product-gallery");
-    const proof = document.querySelector(".product-formula-proof");
-    const accordion = document.querySelector(".product-accordion");
-    if (!hero || !gallery || !proof || !accordion || hero.classList.contains("has-premium-substance")) return;
-
-    // Keep the purchase hero visually balanced: image and buying information only.
-    // Deeper product information becomes a full-width editorial block below it,
-    // preventing either column from creating a large empty vertical area.
-    const visualStack = document.createElement("div");
-    visualStack.className = "product-hero__visual-stack";
-    hero.insertBefore(visualStack, gallery);
-    visualStack.appendChild(gallery);
-
-    const substance = document.createElement("div");
-    substance.className = "product-substance";
-    substance.setAttribute("aria-label", "Детальна інформація про аромат");
-    substance.append(proof, accordion);
-    hero.insertAdjacentElement("afterend", substance);
-
-    hero.classList.add("has-premium-substance");
-  }
-
-
-  document.addEventListener("DOMContentLoaded", () => {
+  }document.addEventListener("DOMContentLoaded", () => {
     hydrateProductPage();
     initQtyStepper();
     initAddToCart();

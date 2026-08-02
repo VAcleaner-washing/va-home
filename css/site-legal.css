@@ -441,11 +441,7 @@ body[class*="has-product-story"] h1, body[class*="has-product-story"] h2{overflo
     font-size: .98rem;
   }
 }
-@media (min-width:901px) and (max-height:820px) {
-  .home-page .hero.hero--editorial .hero-slide__title{font-size:clamp(3.55rem,4.7vw,4.65rem)}
-  .home-page .hero.hero--editorial .hero-slide__subtitle{font-size:1.05rem;margin-bottom:1.25rem}
-  .home-page .hero.hero--editorial .hero-slide__actions .btn{min-height:52px}
-}
+
 
 
 /* ===== v11-3-final-polish.css ===== */
@@ -1154,4 +1150,20 @@ button, input, select, textarea, a{ min-width: 0; }
   .container{ width: min(100% - 28px, var(--container-max)); }
   
   
+}
+
+
+/* ===== Legal responsive component — consolidated from legacy mobile layers ===== */
+@media (max-width: 900px){
+.legal-hero{padding-block: clamp(46px, 10vw, 78px);}
+.legal-content{padding-block: var(--va-mobile-section-tight);}
+.legal-content h2{margin-top: 2em; margin-bottom: .65em;}
+.legal-content p{font-size: clamp(1rem, 3.8vw, 1.12rem);}
+}
+@media (max-width:900px){
+.legal-hero{padding-block:var(--qa-section-tight);}
+.legal-content{padding-block:var(--qa-section);}
+.legal-content{max-width:760px;margin-inline:auto;}
+.legal-content p{font-size:clamp(16px,2.1vw,18px);line-height:1.72;}
+.legal-content h2{margin-top:1.55em!important;}
 }

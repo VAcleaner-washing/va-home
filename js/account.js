@@ -94,14 +94,7 @@
     if (dashboardPromise && user?.id === currentUser.id) return dashboardPromise;
     dashboardPromise = renderDashboard(currentUser).finally(() => { dashboardPromise = null; });
     return dashboardPromise;
-  }
-
-  function productImage(id) {
-    const product = (window.PRODUCTS || []).find((item) => item.id === id);
-    return product?.images?.main || `images/product-story/${id}/hero.webp`;
-  }
-
-  function orderProgressHtml(status) {
+  }  function orderProgressHtml(status) {
     if (status === "cancelled") {
       return `<div class="account-order__progress account-order__progress--cancelled"><span>Замовлення скасовано</span></div>`;
     }
@@ -118,21 +111,7 @@
       const done = currentIndex >= stepIndex(step.key);
       return `<div class="account-order__progress-step${done ? " is-done" : ""}"><span class="account-order__progress-dot"></span><span>${step.label}</span></div>`;
     }).join("")}</div>`;
-  }
-
-  function orderPreviewHtml(items) {
-    const safeItems = (Array.isArray(items) ? items : []).slice(0, 4);
-    if (!safeItems.length) return "";
-    const thumbs = safeItems.map((item) => {
-      const hasProductPage = item.id && !String(item.id).startsWith("discovery-");
-      const src = hasProductPage ? `images/product-story/${esc(item.id)}/hero.webp` : "images/discovery/discovery-set.webp";
-      return `<span class="account-order__preview-thumb"><img src="${src}" alt="" loading="lazy" onerror="this.parentElement.remove()"></span>`;
-    }).join("");
-    const extra = Math.max(0, (Array.isArray(items) ? items.length : 0) - safeItems.length);
-    return `<div class="account-order__preview" aria-label="Товари в замовленні">${thumbs}${extra ? `<span class="account-order__preview-more">+${extra}</span>` : ""}</div>`;
-  }
-
-  function fullSizeItems(order) {
+  }  function fullSizeItems(order) {
     return (Array.isArray(order?.items) ? order.items : []).filter((item) => item?.id && !String(item.id).startsWith("discovery-"));
   }
 

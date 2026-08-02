@@ -23,12 +23,7 @@
     { key: "about", label: "Про VA HOME", href: "about.html" },
     { key: "delivery", label: "Доставка і оплата", href: "delivery.html" },
     { key: "contacts", label: "Контакти", href: "contacts.html" }
-  ];
-
-  function iconSearch() {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
-  }
-  function iconBag() {
+  ];  function iconBag() {
     return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>`;
   }
   function iconInstagram() {
@@ -585,7 +580,7 @@
     }
     if (window.SITE_CONFIG && typeof PRODUCTS !== "undefined" && !document.querySelector('script[data-vahome-wishlist]')) {
       const script = document.createElement("script");
-      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=15.5.0-RC1.22`;
+      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=15.5.0-RC1.31`;
       script.dataset.vahomeWishlist = "true";
       document.body.appendChild(script);
     }

@@ -220,9 +220,7 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+  
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
@@ -389,18 +387,14 @@ body {
   padding-top: var(--header-height-mobile);
 }
 
-body.home-page #main-content {
-  padding-top: 0;
-}
+
 
 @media (min-width: 1024px) {
   #main-content {
     padding-top: var(--header-height);
   }
 
-  body.home-page #main-content {
-    padding-top: 0;
-  }
+  
 }
 
 h1, h2, h3, h4 {
@@ -439,14 +433,7 @@ p.lead {
   padding-block: var(--space-7);
 }
 
-@media (max-width: 640px) {
-  .section {
-    padding-block: var(--space-6);
-  }
-  .section--tight {
-    padding-block: var(--space-5);
-  }
-}
+
 
 .section-head {
   display: flex;
@@ -1604,6 +1591,89 @@ body.menu-open {
 
 .breadcrumbs__sep {
   opacity: 0.5;
+}
+
+
+
+/* ===== VA HOME v15.5.0-RC1.31 — unified hero breadcrumbs ===== */
+.about-editorial-hero,
+.editorial-page-hero,
+.collections-v2-hero,
+.discovery-hero,
+.scent-experience__hero,
+.contact-hero,
+.delivery-hero {
+  position: relative;
+}
+
+/* One shared position on every inner-page hero: directly below the header. */
+.hero-breadcrumb-layer {
+  position: absolute;
+  z-index: 12;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding-top: clamp(16px, 1.35vw, 20px);
+  pointer-events: none;
+}
+
+.hero-breadcrumb-layer .container {
+  pointer-events: none;
+}
+
+/* Plain editorial breadcrumbs, matching the approved About VA HOME reference. */
+.hero-breadcrumbs {
+  display: flex;
+  width: max-content;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  color: rgba(242,237,229,.64);
+  font-size: var(--fs-caption);
+  line-height: 1.45;
+  text-shadow: 0 1px 2px rgba(0,0,0,.95), 0 0 18px rgba(0,0,0,.7);
+  pointer-events: auto;
+  animation: heroBreadcrumbEnter 520ms cubic-bezier(.22,.61,.36,1) both;
+}
+
+.hero-breadcrumbs a {
+  color: inherit;
+}
+
+.hero-breadcrumbs [aria-current="page"] {
+  color: rgba(255,249,241,.96);
+}
+
+.hero-breadcrumbs .breadcrumbs__sep {
+  color: rgba(210,166,92,.78);
+  opacity: 1;
+}
+
+@keyframes heroBreadcrumbEnter {
+  from { opacity: 0; transform: translate3d(0,-4px,0); }
+  to { opacity: 1; transform: translate3d(0,0,0); }
+}
+
+@media (max-width: 760px) {
+  .hero-breadcrumb-layer {
+    padding-top: 12px;
+  }
+
+  .hero-breadcrumbs {
+    gap: .4rem;
+    font-size: .7rem;
+    line-height: 1.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-breadcrumbs { animation: none; }
 }
 
 /* ---- Collections page: aroma list inside editorial section ---- */
@@ -3010,11 +3080,46 @@ body > footer {
 @media(max-width:680px){.footer-payment-trust{align-items:flex-start;flex-direction:column;gap:18px}.footer-payment-trust__provider{align-items:flex-start;flex-direction:column;gap:9px}.footer-payment-trust__brands{gap:15px;flex-wrap:wrap}}
 
 
-/* ===== VA HOME v15.5.0-RC1.22 — footer contact line integrity ===== */
+/* ===== VA HOME v15.5.0-RC1.31 — footer contact line integrity ===== */
 .site-footer--editorial .footer-col--contact li,
 .site-footer--editorial .footer-col--contact a{
   overflow-wrap:normal;
   word-break:normal;
+}
+
+/* Mobile drawer footer — same balance as on the homepage everywhere. */
+@media (max-width: 760px) {
+  .mobile-menu__footer {
+    grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr);
+    column-gap: 14px;
+    row-gap: 9px;
+    font-size: .72rem;
+  }
+
+  .mobile-menu__footer a {
+    min-width: 0;
+  }
+
+  .mobile-menu__footer a:nth-child(1) {
+    grid-column: 1;
+    white-space: nowrap;
+  }
+
+  .mobile-menu__footer a:nth-child(2) {
+    grid-column: 2;
+    text-align: right;
+    white-space: nowrap;
+    color: var(--color-gold);
+  }
+
+  .mobile-menu__footer a:nth-child(3) {
+    grid-column: 1;
+  }
+
+  .mobile-menu__footer a:nth-child(4) {
+    grid-column: 2;
+    text-align: right;
+  }
 }
 .site-footer--editorial .footer-col--contact a[href^="mailto:"]{
   display:inline-block;
@@ -3028,4 +3133,19 @@ body > footer {
     overflow-wrap:anywhere;
     font-size:inherit;
   }
+}
+
+/* RC1.30 — shared product-card action alignment without touching product-page baseline. */
+.product-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card__body,
+.product-card__actions {
+  flex-shrink: 0;
+}
+
+.product-card__actions {
+  margin-top: auto;
 }

@@ -1,7 +1,545 @@
-.room-ritual-page{padding-bottom:110px}.room-ritual-hero{padding:clamp(72px,9vw,132px) 0 58px;border-bottom:1px solid rgba(195,145,70,.18);background:radial-gradient(circle at 78% 20%,rgba(185,137,73,.09),transparent 34%),#080706}.room-ritual-hero__grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.65fr);gap:clamp(36px,7vw,110px);align-items:end}.room-ritual-hero h1{max-width:780px;margin:10px 0 0;font-family:var(--font-display);font-size:clamp(54px,7.5vw,108px);font-weight:500;line-height:.88;letter-spacing:-.035em}.room-ritual-hero__grid>p{margin:0;color:rgba(255,255,255,.56);font-size:15px;line-height:1.85}.room-ritual-shell{display:grid;grid-template-columns:minmax(360px,.8fr) minmax(0,1.2fr);gap:0;margin-top:64px;border:1px solid rgba(195,145,70,.22);background:#0b0907}.room-ritual-form{padding:clamp(28px,4vw,54px);border-right:1px solid rgba(195,145,70,.18)}.room-ritual-form__head{display:flex;gap:18px;align-items:flex-start;margin-bottom:32px}.room-ritual-form__head>span{font-family:var(--font-display);font-size:58px;line-height:.8;color:rgba(255,255,255,.13)}.room-ritual-form h2{margin:3px 0 0;font-family:var(--font-display);font-size:42px;font-weight:500}.room-ritual-form label,.room-ritual-form legend{display:grid;gap:9px;margin-bottom:20px;color:rgba(255,255,255,.66);font-size:12px;letter-spacing:.03em}.room-ritual-form select,.room-ritual-form input[type=number]{width:100%;min-height:56px;padding:0 16px;border:1px solid rgba(195,145,70,.24);background:#13100d;color:#f1eadf;font:inherit}.room-ritual-form select{appearance:none;-webkit-appearance:none;padding-right:46px;background-image:linear-gradient(45deg,transparent 50%,#c39146 50%),linear-gradient(135deg,#c39146 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px,6px 6px;background-repeat:no-repeat}.room-ritual-form select:focus-visible,.room-ritual-form input[type=number]:focus-visible{outline:1px solid rgba(195,145,70,.72);outline-offset:2px}.room-ritual-form__grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.room-ritual-form fieldset{padding:0;border:0;margin:4px 0 22px}.room-ritual-choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.room-ritual-choice-grid label{position:relative;margin:0}.room-ritual-choice-grid input{position:absolute;opacity:0}.room-ritual-choice-grid span{display:grid;gap:5px;min-height:86px;padding:16px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.018);cursor:pointer}.room-ritual-choice-grid strong{color:#ece5da;font-size:12px}.room-ritual-choice-grid small{color:rgba(255,255,255,.4);font-size:10px;line-height:1.45}.room-ritual-choice-grid input:checked+span{border-color:var(--color-gold);background:rgba(195,145,70,.1)}.room-ritual-result{min-height:720px;position:relative;background:linear-gradient(145deg,#100d0a,#080706)}.room-ritual-result__empty{display:grid;place-content:center;gap:22px;height:100%;min-height:720px;padding:50px;text-align:center}.room-ritual-result__empty span{font-family:var(--font-display);font-size:110px;color:rgba(255,255,255,.07)}.room-ritual-result__empty p{max-width:440px;margin:0 auto;color:rgba(255,255,255,.46);line-height:1.8}.room-ritual-card{min-height:720px;padding:clamp(34px,5vw,70px);display:flex;flex-direction:column}.room-ritual-card__eyebrow{color:var(--color-gold);font-size:10px;letter-spacing:.16em;text-transform:uppercase}.room-ritual-card h2{max-width:600px;margin:14px 0 12px;font-family:var(--font-display);font-size:clamp(46px,5.8vw,82px);font-weight:500;line-height:.92}.room-ritual-card__summary{max-width:610px;color:rgba(255,255,255,.56);line-height:1.8}.room-ritual-card__primary{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;margin:42px 0 30px;padding:28px 0;border-top:1px solid rgba(195,145,70,.24);border-bottom:1px solid rgba(195,145,70,.24)}.room-ritual-card__primary span{color:rgba(255,255,255,.45);font-size:11px;letter-spacing:.08em;text-transform:uppercase}.room-ritual-card__primary strong{font-family:var(--font-display);font-size:44px;font-weight:500;color:#f2e9dd}.room-ritual-card__steps{display:grid;gap:0;margin:0}.room-ritual-card__steps>div{display:grid;grid-template-columns:92px 1fr;gap:22px;padding:19px 0;border-bottom:1px solid rgba(255,255,255,.07)}.room-ritual-card__steps dt{color:var(--color-gold);font-size:10px;letter-spacing:.1em;text-transform:uppercase}.room-ritual-card__steps dd{margin:0;color:rgba(255,255,255,.68);line-height:1.65}.room-ritual-card__note{margin:26px 0 0;padding:18px 20px;border-left:1px solid var(--color-gold);background:rgba(195,145,70,.055);color:rgba(255,255,255,.55);line-height:1.7}.room-ritual-card__actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;padding-top:34px}.room-ritual-principles{display:grid;grid-template-columns:.85fr 1.15fr;gap:70px;margin-top:90px}.room-ritual-principles h2{font-family:var(--font-display);font-size:clamp(42px,5vw,70px);font-weight:500;line-height:.95}.room-ritual-principles__grid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid rgba(195,145,70,.16)}.room-ritual-principles article{padding:28px 22px}.room-ritual-principles article+article{border-left:1px solid rgba(195,145,70,.16)}.room-ritual-principles span{font-family:var(--font-display);font-size:30px;color:var(--color-gold)}.room-ritual-principles p{margin:12px 0 0;color:rgba(255,255,255,.48);font-size:12px;line-height:1.65}
-@media(max-width:900px){.room-ritual-hero__grid,.room-ritual-shell,.room-ritual-principles{grid-template-columns:1fr}.room-ritual-shell{margin-top:34px}.room-ritual-form{border-right:0;border-bottom:1px solid rgba(195,145,70,.18)}.room-ritual-result,.room-ritual-card,.room-ritual-result__empty{min-height:0}.room-ritual-principles{gap:28px}.room-ritual-principles__grid{grid-template-columns:1fr}.room-ritual-principles article+article{border-left:0;border-top:1px solid rgba(195,145,70,.16)}}
-@media(max-width:620px){.room-ritual-page{padding-bottom:70px}.room-ritual-hero{padding:54px 0 38px}.room-ritual-hero h1{font-size:58px}.room-ritual-form{padding:26px 18px}.room-ritual-form__grid,.room-ritual-choice-grid{grid-template-columns:1fr}.room-ritual-choice-grid span{min-height:0}.room-ritual-card{padding:34px 20px}.room-ritual-card h2{font-size:52px}.room-ritual-card__primary{grid-template-columns:1fr}.room-ritual-card__steps>div{grid-template-columns:1fr;gap:7px}.room-ritual-card__actions{display:grid}.room-ritual-card__actions .btn{width:100%}}
-
+.room-ritual-page {
+  padding-bottom: 110px;
+}
+.room-ritual-hero {
+  padding: clamp(72px,9vw,132px) 0 58px;
+  border-bottom: 1px solid rgba(195,145,70,.18);
+  background: radial-gradient(circle at 78% 20%,rgba(185,137,73,.09),transparent 34%),#080706;
+}
+.room-ritual-hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0,1.1fr) minmax(300px,.65fr);
+  gap: clamp(36px,7vw,110px);
+  align-items: end;
+}
+.room-ritual-hero h1 {
+  max-width: 780px;
+  margin: 10px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(54px,7.5vw,108px);
+  font-weight: 500;
+  line-height: .88;
+  letter-spacing: -.035em;
+}
+.room-ritual-hero__grid>p {
+  margin: 0;
+  color: rgba(255,255,255,.56);
+  font-size: 15px;
+  line-height: 1.85;
+}
+.room-ritual-shell {
+  display: grid;
+  grid-template-columns: minmax(360px,.8fr) minmax(0,1.2fr);
+  gap: 0;
+  margin-top: 64px;
+  border: 1px solid rgba(195,145,70,.22);
+  background: #0b0907;
+}
+.room-ritual-form {
+  padding: clamp(28px,4vw,54px);
+  border-right: 1px solid rgba(195,145,70,.18);
+}
+.room-ritual-form__head {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+.room-ritual-form__head>span {
+  font-family: var(--font-display);
+  font-size: 58px;
+  line-height: .8;
+  color: rgba(255,255,255,.13);
+}
+.room-ritual-form h2 {
+  margin: 3px 0 0;
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 500;
+}
+.room-ritual-form label,.room-ritual-form legend {
+  display: grid;
+  gap: 9px;
+  margin-bottom: 20px;
+  color: rgba(255,255,255,.66);
+  font-size: 12px;
+  letter-spacing: .03em;
+}
+.room-ritual-form select,.room-ritual-form input[type=number] {
+  width: 100%;
+  min-height: 56px;
+  padding: 0 16px;
+  border: 1px solid rgba(195,145,70,.24);
+  background: #13100d;
+  color: #f1eadf;
+  font: inherit;
+}
+.room-ritual-form select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 46px;
+  background-image: linear-gradient(45deg,transparent 50%,#c39146 50%),linear-gradient(135deg,#c39146 50%,transparent 50%);
+  background-position: calc(100% - 20px) 50%,calc(100% - 14px) 50%;
+  background-size: 6px 6px,6px 6px;
+  background-repeat: no-repeat;
+}
+.room-ritual-form select:focus-visible,.room-ritual-form input[type=number]:focus-visible {
+  outline: 1px solid rgba(195,145,70,.72);
+  outline-offset: 2px;
+}
+.room-ritual-form__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.room-ritual-form fieldset {
+  padding: 0;
+  border: 0;
+  margin: 4px 0 22px;
+}
+.room-ritual-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 8px;
+}
+.room-ritual-choice-grid label {
+  position: relative;
+  margin: 0;
+}
+.room-ritual-choice-grid input {
+  position: absolute;
+  opacity: 0;
+}
+.room-ritual-choice-grid span {
+  display: grid;
+  gap: 5px;
+  min-height: 86px;
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,.09);
+  background: rgba(255,255,255,.018);
+  cursor: pointer;
+}
+.room-ritual-choice-grid strong {
+  color: #ece5da;
+  font-size: 12px;
+}
+.room-ritual-choice-grid small {
+  color: rgba(255,255,255,.4);
+  font-size: 10px;
+  line-height: 1.45;
+}
+.room-ritual-choice-grid input:checked+span {
+  border-color: var(--color-gold);
+  background: rgba(195,145,70,.1);
+}
+.room-ritual-result {
+  min-height: 720px;
+  position: relative;
+  background: linear-gradient(145deg,#100d0a,#080706);
+}
+.room-ritual-result__empty {
+  display: grid;
+  place-content: center;
+  gap: 22px;
+  height: 100%;
+  min-height: 720px;
+  padding: 50px;
+  text-align: center;
+}
+.room-ritual-result__empty span {
+  font-family: var(--font-display);
+  font-size: 110px;
+  color: rgba(255,255,255,.07);
+}
+.room-ritual-result__empty p {
+  max-width: 440px;
+  margin: 0 auto;
+  color: rgba(255,255,255,.46);
+  line-height: 1.8;
+}
+.room-ritual-card {
+  min-height: 720px;
+  padding: clamp(34px,5vw,70px);
+  display: flex;
+  flex-direction: column;
+}
+.room-ritual-card__eyebrow {
+  color: var(--color-gold);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.room-ritual-card h2 {
+  max-width: 600px;
+  margin: 14px 0 12px;
+  font-family: var(--font-display);
+  font-size: clamp(46px,5.8vw,82px);
+  font-weight: 500;
+  line-height: .92;
+}
+.room-ritual-card__summary {
+  max-width: 610px;
+  color: rgba(255,255,255,.56);
+  line-height: 1.8;
+}
+.room-ritual-card__primary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: end;
+  margin: 42px 0 30px;
+  padding: 28px 0;
+  border-top: 1px solid rgba(195,145,70,.24);
+  border-bottom: 1px solid rgba(195,145,70,.24);
+}
+.room-ritual-card__primary span {
+  color: rgba(255,255,255,.45);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.room-ritual-card__primary strong {
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 500;
+  color: #f2e9dd;
+}
+.room-ritual-card__steps {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+.room-ritual-card__steps>div {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 22px;
+  padding: 19px 0;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.room-ritual-card__steps dt {
+  color: var(--color-gold);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.room-ritual-card__steps dd {
+  margin: 0;
+  color: rgba(255,255,255,.68);
+  line-height: 1.65;
+}
+.room-ritual-card__note {
+  margin: 26px 0 0;
+  padding: 18px 20px;
+  border-left: 1px solid var(--color-gold);
+  background: rgba(195,145,70,.055);
+  color: rgba(255,255,255,.55);
+  line-height: 1.7;
+}
+.room-ritual-card__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 34px;
+}
+.room-ritual-principles {
+  display: grid;
+  grid-template-columns: .85fr 1.15fr;
+  gap: 70px;
+  margin-top: 90px;
+}
+.room-ritual-principles h2 {
+  font-family: var(--font-display);
+  font-size: clamp(42px,5vw,70px);
+  font-weight: 500;
+  line-height: .95;
+}
+.room-ritual-principles__grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  border: 1px solid rgba(195,145,70,.16);
+}
+.room-ritual-principles article {
+  padding: 28px 22px;
+}
+.room-ritual-principles article+article {
+  border-left: 1px solid rgba(195,145,70,.16);
+}
+.room-ritual-principles span {
+  font-family: var(--font-display);
+  font-size: 30px;
+  color: var(--color-gold);
+}
+.room-ritual-principles p {
+  margin: 12px 0 0;
+  color: rgba(255,255,255,.48);
+  font-size: 12px;
+  line-height: 1.65;
+}
+@media (max-width:900px) {
+  .room-ritual-hero__grid,.room-ritual-shell,.room-ritual-principles {
+    grid-template-columns: 1fr;
+  }
+  .room-ritual-shell {
+    margin-top: 34px;
+  }
+  .room-ritual-form {
+    border-right: 0;
+    border-bottom: 1px solid rgba(195,145,70,.18);
+  }
+  .room-ritual-result,.room-ritual-card,.room-ritual-result__empty {
+    min-height: 0;
+  }
+  .room-ritual-principles {
+    gap: 28px;
+  }
+  .room-ritual-principles__grid {
+    grid-template-columns: 1fr;
+  }
+  .room-ritual-principles article+article {
+    border-left: 0;
+    border-top: 1px solid rgba(195,145,70,.16);
+  }
+}
+@media (max-width:620px) {
+  .room-ritual-page {
+    padding-bottom: 70px;
+  }
+  .room-ritual-hero {
+    padding: 54px 0 38px;
+  }
+  .room-ritual-hero h1 {
+    font-size: 58px;
+  }
+  .room-ritual-form {
+    padding: 26px 18px;
+  }
+  .room-ritual-form__grid,.room-ritual-choice-grid {
+    grid-template-columns: 1fr;
+  }
+  .room-ritual-choice-grid span {
+    min-height: 0;
+  }
+  .room-ritual-card {
+    padding: 34px 20px;
+  }
+  .room-ritual-card h2 {
+    font-size: 52px;
+  }
+  .room-ritual-card__primary {
+    grid-template-columns: 1fr;
+  }
+  .room-ritual-card__steps>div {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+  .room-ritual-card__actions {
+    display: grid;
+  }
+  .room-ritual-card__actions .btn {
+    width: 100%;
+  }
+}
 
 /* v15.1.1 RC6 — premium form controls and saved ritual handoff */
-.room-ritual-select{position:relative;width:100%;z-index:2}.room-ritual-select.is-open{z-index:30}.room-ritual-select__native{position:absolute!important;width:1px!important;height:1px!important;min-height:0!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}.room-ritual-select__trigger{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;min-height:60px;padding:0 18px;border:1px solid rgba(195,145,70,.28);background:linear-gradient(135deg,#15110e,#100d0b);color:#f1eadf;font:inherit;text-align:left;cursor:pointer;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease}.room-ritual-select__trigger:hover,.room-ritual-select__trigger:focus-visible,.room-ritual-select.is-open .room-ritual-select__trigger{border-color:rgba(195,145,70,.72);background:#17120e;box-shadow:0 0 0 1px rgba(195,145,70,.08)}.room-ritual-select__trigger i{width:9px;height:9px;border-right:1px solid var(--color-gold);border-bottom:1px solid var(--color-gold);transform:rotate(45deg) translateY(-2px);transition:transform .2s ease}.room-ritual-select.is-open .room-ritual-select__trigger i{transform:rotate(225deg) translate(-2px,-2px)}.room-ritual-select__menu{position:absolute;top:calc(100% + 7px);left:0;right:0;max-height:340px;padding:7px;border:1px solid rgba(195,145,70,.45);background:#110e0b;box-shadow:0 24px 60px rgba(0,0,0,.52);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(195,145,70,.65) rgba(255,255,255,.035)}.room-ritual-select__menu::-webkit-scrollbar{width:7px}.room-ritual-select__menu::-webkit-scrollbar-track{background:rgba(255,255,255,.035)}.room-ritual-select__menu::-webkit-scrollbar-thumb{background:rgba(195,145,70,.62);border-radius:10px;border:2px solid #110e0b}.room-ritual-select__option{display:flex;align-items:center;width:100%;min-height:42px;padding:9px 12px;border:0;border-left:1px solid transparent;background:transparent;color:rgba(241,234,223,.78);font:inherit;text-align:left;cursor:pointer}.room-ritual-select__option:hover,.room-ritual-select__option:focus-visible{outline:0;background:rgba(195,145,70,.08);color:#fff}.room-ritual-select__option.is-selected{border-left-color:var(--color-gold);background:rgba(195,145,70,.12);color:#f2d09d}.room-ritual-stepper{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;min-height:60px;border:1px solid rgba(195,145,70,.28);background:linear-gradient(135deg,#15110e,#100d0b)}.room-ritual-form .room-ritual-stepper input[type=number]{min-height:58px;padding:0 8px;border:0;border-left:1px solid rgba(195,145,70,.14);border-right:1px solid rgba(195,145,70,.14);background:transparent;text-align:center;-moz-appearance:textfield}.room-ritual-form .room-ritual-stepper input[type=number]::-webkit-inner-spin-button,.room-ritual-form .room-ritual-stepper input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.room-ritual-stepper__button{border:0;background:transparent;color:var(--color-gold);font-size:22px;cursor:pointer}.room-ritual-stepper__button:hover,.room-ritual-stepper__button:focus-visible{background:rgba(195,145,70,.1);color:#f2d09d}.room-ritual-card__actions .is-saved{border-color:rgba(195,145,70,.55);color:#f2d09d}.room-ritual-account-link[hidden]{display:none!important}@media(max-width:620px){.room-ritual-select__menu{position:fixed;left:14px;right:14px;top:auto;bottom:max(14px,env(safe-area-inset-bottom));max-height:min(62vh,460px);z-index:1000;border-color:rgba(195,145,70,.62);box-shadow:0 -24px 80px rgba(0,0,0,.72)}.room-ritual-select.is-open:after{content:"";position:fixed;inset:0;background:rgba(0,0,0,.58);backdrop-filter:blur(4px);z-index:999}.room-ritual-select__menu{z-index:1001}.room-ritual-select__option{min-height:48px}.room-ritual-stepper{grid-template-columns:52px minmax(0,1fr) 52px}}
+.room-ritual-select {
+  position: relative;
+  width: 100%;
+  z-index: 2;
+}
+.room-ritual-select.is-open {
+  z-index: 30;
+}
+.room-ritual-select__native {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  min-height: 0 !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+.room-ritual-select__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  min-height: 60px;
+  padding: 0 18px;
+  border: 1px solid rgba(195,145,70,.28);
+  background: linear-gradient(135deg,#15110e,#100d0b);
+  color: #f1eadf;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .2s ease,background .2s ease,box-shadow .2s ease;
+}
+.room-ritual-select__trigger:hover,.room-ritual-select__trigger:focus-visible,.room-ritual-select.is-open .room-ritual-select__trigger {
+  border-color: rgba(195,145,70,.72);
+  background: #17120e;
+  box-shadow: 0 0 0 1px rgba(195,145,70,.08);
+}
+.room-ritual-select__trigger i {
+  width: 9px;
+  height: 9px;
+  border-right: 1px solid var(--color-gold);
+  border-bottom: 1px solid var(--color-gold);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform .2s ease;
+}
+.room-ritual-select.is-open .room-ritual-select__trigger i {
+  transform: rotate(225deg) translate(-2px,-2px);
+}
+.room-ritual-select__menu {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 0;
+  right: 0;
+  max-height: 340px;
+  padding: 7px;
+  border: 1px solid rgba(195,145,70,.45);
+  background: #110e0b;
+  box-shadow: 0 24px 60px rgba(0,0,0,.52);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(195,145,70,.65) rgba(255,255,255,.035);
+}
+.room-ritual-select__menu::-webkit-scrollbar {
+  width: 7px;
+}
+.room-ritual-select__menu::-webkit-scrollbar-track {
+  background: rgba(255,255,255,.035);
+}
+.room-ritual-select__menu::-webkit-scrollbar-thumb {
+  background: rgba(195,145,70,.62);
+  border-radius: 10px;
+  border: 2px solid #110e0b;
+}
+.room-ritual-select__option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 0;
+  border-left: 1px solid transparent;
+  background: transparent;
+  color: rgba(241,234,223,.78);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.room-ritual-select__option:hover,.room-ritual-select__option:focus-visible {
+  outline: 0;
+  background: rgba(195,145,70,.08);
+  color: #fff;
+}
+.room-ritual-select__option.is-selected {
+  border-left-color: var(--color-gold);
+  background: rgba(195,145,70,.12);
+  color: #f2d09d;
+}
+.room-ritual-stepper {
+  display: grid;
+  grid-template-columns: 44px minmax(0,1fr) 44px;
+  min-height: 60px;
+  border: 1px solid rgba(195,145,70,.28);
+  background: linear-gradient(135deg,#15110e,#100d0b);
+}
+.room-ritual-form .room-ritual-stepper input[type=number] {
+  min-height: 58px;
+  padding: 0 8px;
+  border: 0;
+  border-left: 1px solid rgba(195,145,70,.14);
+  border-right: 1px solid rgba(195,145,70,.14);
+  background: transparent;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+.room-ritual-form .room-ritual-stepper input[type=number]::-webkit-inner-spin-button,.room-ritual-form .room-ritual-stepper input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.room-ritual-stepper__button {
+  border: 0;
+  background: transparent;
+  color: var(--color-gold);
+  font-size: 22px;
+  cursor: pointer;
+}
+.room-ritual-stepper__button:hover,.room-ritual-stepper__button:focus-visible {
+  background: rgba(195,145,70,.1);
+  color: #f2d09d;
+}
+.room-ritual-card__actions .is-saved {
+  border-color: rgba(195,145,70,.55);
+  color: #f2d09d;
+}
+.room-ritual-account-link[hidden] {
+  display: none !important;
+}
+@media (max-width:620px) {
+  .room-ritual-select__menu {
+    position: fixed;
+    left: 14px;
+    right: 14px;
+    top: auto;
+    bottom: max(14px,env(safe-area-inset-bottom));
+    max-height: min(62vh,460px);
+    z-index: 1000;
+    border-color: rgba(195,145,70,.62);
+    box-shadow: 0 -24px 80px rgba(0,0,0,.72);
+  }
+  .room-ritual-select.is-open:after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.58);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+  }
+  .room-ritual-select__menu {
+    z-index: 1001;
+  }
+  .room-ritual-select__option {
+    min-height: 48px;
+  }
+  .room-ritual-stepper {
+    grid-template-columns: 52px minmax(0,1fr) 52px;
+  }
+}
+
+/* ===== Room responsive component — consolidated from legacy mobile layers ===== */
+@media (max-width:620px) {
+  .room-ritual-page {
+    padding-bottom: 72px;
+  }
+  .room-ritual-hero {
+    padding-block: 44px 34px;
+  }
+  .room-ritual-shell {
+    margin-top: 28px;
+  }
+  .room-ritual-form, .room-ritual-card, .room-ritual-result__empty {
+    padding: 22px 17px;
+    min-height: 0;
+  }
+  .room-ritual-form__grid, .room-ritual-choice-grid, .room-ritual-principles__grid {
+    grid-template-columns: 1fr;
+  }
+  .room-ritual-card__primary {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-block: 28px 20px;
+  }
+  .room-ritual-card__steps>div {
+    grid-template-columns: 72px 1fr;
+    gap: 12px;
+  }
+}

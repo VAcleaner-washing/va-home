@@ -1,12 +1,13 @@
 {
-  "version": "15.5.0-RC1.22",
+  "version": "15.5.0-RC1.31",
   "channel": "Release Candidate",
-  "name": "FROZEN BASELINE — ORDER DETAILS LAYOUT FIX",
-  "date": "2026-08-01",
-  "base": "15.5.0-RC1.21",
+  "name": "UNIFIED HERO BREADCRUMBS & PRODUCT RHYTHM",
+  "date": "2026-08-02",
+  "base": "15.5.0-RC1.29",
   "changes": [
-    "Moves the order Details control out of the product-image area on desktop",
-    "Removes absolute positioning and artificial item bottom padding that caused overlap",
-    "Keeps the RC1.21 frozen functionality and visual baseline unchanged elsewhere"
+    "Uses one breadcrumb layer directly below the header on About, Catalog, Collections, Discovery Set, Scent Guide, Contacts and Delivery",
+    "Applies the same adaptive contrast pill and entrance animation to every primary inner-page hero",
+    "Keeps breadcrumb positioning independent from hero copy so it no longer drops into the middle of the image on mobile",
+    "Removes the remaining mobile gap between product breadcrumbs and the diffuser gallery"
   ]
 }

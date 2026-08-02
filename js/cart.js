@@ -23,10 +23,7 @@
   function readAppliedPromoCode(){ return normalizePromoCode(readAppliedPromo()?.code || ""); }
   function writeAppliedPromo(value) {
     try { if(value&&value.code) sessionStorage.setItem(PROMO_STORAGE_KEY,JSON.stringify(value)); else sessionStorage.removeItem(PROMO_STORAGE_KEY); } catch (_) {}
-  }
-  function writeAppliedPromoCode(value){ if(!value) writeAppliedPromo(null); }
-
-  function clearAppliedPromoState(options = {}) {
+  }  function clearAppliedPromoState(options = {}) {
     const { closeDetails = true, clearMessage = true } = options;
     writeAppliedPromo(null);
     resetCheckoutRequestId();

@@ -102,9 +102,7 @@ function effectiveOrderStatus(order){
   if(payment==="paid")return ["shipped","completed"].includes(order.status)?order.status:"paid";
   if(payment==="refunded")return "cancelled";
   return "awaiting_payment";
-}
-function isActiveCardPayment(order){return isCardOrder(order)&&["unpaid","pending","verification"].includes(String(order.payment_status||"pending"));}
-function cardPaymentUi(order){
+}function cardPaymentUi(order){
   const status=String(order?.payment_status||"pending");
   const states={
     unpaid:{key:"pending",label:"Очікує створення рахунку",detail:"Платіжне посилання ще не створене або клієнт не почав оплату."},

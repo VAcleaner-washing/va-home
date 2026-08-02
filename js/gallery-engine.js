@@ -10,16 +10,7 @@
     interior: "Фото в інтер’єрі",
     macro: "Макрофото",
     detail: "Деталь"
-  };
-
-  const AUTO_GROUPS = [
-    { type: "hero", files: ["hero.webp"] },
-    { type: "interior", prefix: "interior-", max: 12 },
-    { type: "macro", prefix: "macro-", max: 12 },
-    { type: "detail", prefix: "detail-", max: 12 }
-  ];
-
-  function escapeHtml(value) {
+  };  function escapeHtml(value) {
     return String(value ?? "").replace(/[&<>'"]/g, (char) => ({
       "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;"
     }[char]));
@@ -29,45 +20,7 @@
     if (!src) return "";
     if (/^(?:https?:)?\/\//i.test(src) || src.startsWith("data:") || src.startsWith("blob:")) return src;
     return `${root}${src}`;
-  }
-
-  function canLoad(src) {
-    return new Promise((resolve) => {
-      const image = new Image();
-      image.onload = () => resolve(true);
-      image.onerror = () => resolve(false);
-      image.src = src;
-    });
-  }
-
-  function makeAutomaticCandidates(product, root) {
-    const productId = product?.id;
-    if (!productId) return [];
-    const candidates = [];
-
-    // New unified nine-image product story. These four files also power the hero gallery.
-    const storyBase = `${root}images/product-story/${productId}/`;
-    [
-      ["hero", ["hero.webp"]],
-      ["interior", ["interior.webp"]],
-      ["macro", ["macro.webp"]],
-      ["detail", ["detail.webp"]]
-    ].forEach(([type, filenames], index) => {
-      filenames.forEach((filename) => {
-        candidates.push({
-          type,
-          label: TYPE_LABELS[type] || `Фото ${index + 1}`,
-          src: `${storyBase}${filename}`,
-          automatic: true,
-          source: "product-story"
-        });
-      });
-    });
-
-    return candidates;
-  }
-
-  function normalizeProvidedItems(items, root) {
+  }function normalizeProvidedItems(items, root) {
     return (Array.isArray(items) ? items : [])
       .filter((item) => item && item.src)
       .map((item, index) => ({

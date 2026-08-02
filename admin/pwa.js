@@ -1,49 +1,68 @@
 (() => {
-  'use strict';
-  if (!('serviceWorker' in navigator) || !window.isSecureContext) return;
+  "use strict";
 
-  const VERSION = '15.5.0-RC1.22';
+  if (!("serviceWorker" in navigator) || !window.isSecureContext) return;
+
+  const VERSION = "15.5.0-RC1.31";
+  const UPDATE_INTERVAL = 30 * 60 * 1000;
+  let lastUpdateCheck = 0;
   let refreshing = false;
 
-  const showUpdate = (registration) => {
-    if (document.querySelector('.admin-pwa-update')) return;
-    const bar = document.createElement('div');
-    bar.className = 'admin-pwa-update';
-    bar.setAttribute('role', 'status');
-    bar.innerHTML = `<span>Доступне оновлення VA HOME Admin.</span><button type="button">Оновити зараз</button>`;
-    bar.querySelector('button').addEventListener('click', () => {
-      const worker = registration.waiting;
-      if (worker) worker.postMessage({ type: 'SKIP_WAITING' });
+  function showUpdate(registration) {
+    if (document.querySelector(".admin-pwa-update")) return;
+
+    const bar = document.createElement("div");
+    bar.className = "admin-pwa-update";
+    bar.setAttribute("role", "status");
+    bar.innerHTML = "<span>Доступне оновлення VA HOME Admin.</span><button type=\"button\">Оновити зараз</button>";
+    bar.querySelector("button").addEventListener("click", () => {
+      registration.waiting?.postMessage({ type: "SKIP_WAITING" });
     });
     document.body.appendChild(bar);
-  };
+  }
 
-  window.addEventListener('load', async () => {
+  function checkForUpdate(registration, force = false) {
+    const now = Date.now();
+    if (!force && now - lastUpdateCheck < UPDATE_INTERVAL) return;
+
+    lastUpdateCheck = now;
+    registration.update().catch(() => {});
+  }
+
+  window.addEventListener("load", async () => {
     try {
-      const registration = await navigator.serviceWorker.register(`/admin/service-worker.js?v=${VERSION}`, {
-        scope: '/admin/',
-        updateViaCache: 'none'
-      });
+      const registration = await navigator.serviceWorker.register(
+        `/admin/service-worker.js?v=${VERSION}`,
+        { scope: "/admin/", updateViaCache: "none" }
+      );
 
       if (registration.waiting) showUpdate(registration);
 
-      registration.addEventListener('updatefound', () => {
+      registration.addEventListener("updatefound", () => {
         const worker = registration.installing;
         if (!worker) return;
-        worker.addEventListener('statechange', () => {
-          if (worker.state === 'installed' && navigator.serviceWorker.controller) showUpdate(registration);
+
+        worker.addEventListener("statechange", () => {
+          if (worker.state === "installed" && navigator.serviceWorker.controller) {
+            showUpdate(registration);
+          }
         });
       });
 
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') registration.update().catch(() => {});
+      checkForUpdate(registration, true);
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") checkForUpdate(registration);
       });
-    } catch (_) { /* admin stays usable in browser */ }
+      window.addEventListener("online", () => checkForUpdate(registration, true));
+      window.addEventListener("pageshow", () => checkForUpdate(registration));
+    } catch {
+      // Admin remains usable in the browser if PWA registration is unavailable.
+    }
   }, { once: true });
 
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshing) return;
     refreshing = true;
-    location.reload();
+    window.location.reload();
   });
 })();

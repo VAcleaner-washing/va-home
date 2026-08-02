@@ -2,10 +2,7 @@
 (() => {
   "use strict";
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const precisePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-  const wideScreen = window.matchMedia("(min-width: 901px)");
-  const observed = new WeakSet();
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)"); const observed = new WeakSet();
   let revealObserver = null;
 
   function setStaggerIndexes(root = document) {

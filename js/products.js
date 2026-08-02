@@ -5,7 +5,7 @@
    Run: node scripts/build-product-content.mjs
    ========================================================================== */
 
-const PRODUCT_CONTENT_VERSION = "15.5.0-RC1.22";
+const PRODUCT_CONTENT_VERSION = "15.5.0-RC1.31";
 const PRODUCT_LABELS = {
   "character": {
     "clean": "Чисті",
@@ -3783,13 +3783,7 @@ function getCollection(collectionId) {
 
 function getProduct(id) {
   return PRODUCTS.find((p) => p.id === id) || null;
-}
-
-function getProductsByCollection(collectionId) {
-  return PRODUCTS.filter((p) => p.collection === collectionId);
-}
-
-function getProductPrice(product) {
+}function getProductPrice(product) {
   const collection = getCollection(product.collection);
   return collection ? collection.price : null;
 }
@@ -3797,13 +3791,7 @@ function getProductPrice(product) {
 function getProductVolume(product) {
   const collection = getCollection(product.collection);
   return collection ? collection.volume : null;
-}
-
-function getProductUrl(product) {
-  return `products/${product.id}.html`;
-}
-
-function getSimilarProducts(product) {
+}function getSimilarProducts(product) {
   return (product.similar || []).map(getProduct).filter(Boolean);
 }
 

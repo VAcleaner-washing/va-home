@@ -77,3 +77,22 @@
 .article-faq details p{margin:0;padding:0 50px 26px 0;color:rgba(243,238,231,.67);font-size:15px;line-height:1.72}
 @media(hover:hover){.article-picks a:hover{transform:translateY(-3px);border-color:rgba(205,163,107,.5)!important}}
 @media(max-width:800px){.article-answer{padding:23px 21px}.article-compare,.article-gift-paths,.article-picks{grid-template-columns:1fr;width:auto;margin-left:0;margin-right:0;transform:none}.article-checklist li{grid-template-columns:1fr;gap:8px}.article-table-wrap{width:calc(100vw - 24px)}.article-picks a{min-height:190px}.article-faq details p{padding-right:8px}}
+
+
+/* ===== Article responsive component — consolidated from legacy mobile layers ===== */
+@media (max-width: 900px){
+.article-hero{padding-block: clamp(46px, 10vw, 78px);}
+.article-body{padding-block: var(--va-mobile-section-tight);}
+.article-body h2{margin-top: 2em; margin-bottom: .65em;}
+.article-body p{font-size: clamp(1rem, 3.8vw, 1.12rem);}
+}
+@media (max-width:900px){
+.article-hero{padding-block:var(--qa-section-tight);}
+.article-body{padding-block:var(--qa-section);}
+.article-body,
+  .journal-article{max-width:760px;margin-inline:auto;}
+.article-body p,
+  .journal-article p{font-size:clamp(16px,2.1vw,18px);line-height:1.72;}
+.article-body h2,
+  .journal-article h2{margin-top:1.55em!important;}
+}

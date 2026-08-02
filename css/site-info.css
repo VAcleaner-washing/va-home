@@ -886,3 +886,22 @@ button, input, select, textarea, a{ min-width: 0; }
   
   .product-card__actions .btn{ padding-inline: 10px; }
 }
+
+
+/* ===== Info responsive component — consolidated from legacy mobile layers ===== */
+@media (max-width: 900px){
+.info-hero,
+  .delivery-hero{padding-block: clamp(46px, 10vw, 78px);}
+.info-content{padding-block: var(--va-mobile-section-tight);}
+.info-content h2{margin-top: 2em; margin-bottom: .65em;}
+.info-content p{font-size: clamp(1rem, 3.8vw, 1.12rem);}
+}
+@media (max-width:900px){
+.info-hero,
+  .delivery-hero{padding-block:var(--qa-section-tight);}
+.info-content{padding-block:var(--qa-section);}
+.contact-layout{grid-template-columns:minmax(0,1fr);gap:24px;}
+.info-content{max-width:760px;margin-inline:auto;}
+.info-content p{font-size:clamp(16px,2.1vw,18px);line-height:1.72;}
+.info-content h2{margin-top:1.55em!important;}
+}

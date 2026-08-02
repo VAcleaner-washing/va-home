@@ -457,16 +457,12 @@ body[class*="has-product-story"] h1,body[class*="has-product-story"] h2{overflow
     font-size: .98rem;
   }
 }
-@media (min-width:901px) and (max-height:820px) {
-  .home-page .hero.hero--editorial .hero-slide__title {font-size:clamp(3.55rem,4.7vw,4.65rem)}
-  .home-page .hero.hero--editorial .hero-slide__subtitle {font-size:1.05rem;margin-bottom:1.25rem}
-  .home-page .hero.hero--editorial .hero-slide__actions .btn {min-height:52px}
-}
 
-.has-product-story-v10 .story-dna {overflow:hidden}
-.story-dna__radar {width:min(100%,360px);margin:1.15rem auto .35rem}
-.story-dna__radar svg {overflow:visible}
-.story-dna__grid polygon,.story-dna__grid line {stroke:rgba(244,240,233,.15)}
+
+
+
+
+
 .story-dna__shape {
   transform-box:fill-box;
   transform-origin:center;
@@ -486,7 +482,7 @@ body[class*="has-product-story"] h1,body[class*="has-product-story"] h2{overflow
   letter-spacing:.045em;
   text-transform:uppercase;
 }
-.story-dna__axis-value {fill:var(--color-gold);font-size:7px;font-weight:600}
+
 .story-dna__character {
   display:grid;
   gap:.28rem;
@@ -495,24 +491,19 @@ body[class*="has-product-story"] h1,body[class*="has-product-story"] h2{overflow
   border-top:1px solid rgba(244,240,233,.1);
   border-bottom:1px solid rgba(244,240,233,.1);
 }
-.story-dna__character span {color:var(--text-secondary);font-size:.66rem;letter-spacing:.13em;text-transform:uppercase}
-.story-dna__character strong {color:var(--text-primary);font-family:var(--font-display);font-size:clamp(1.25rem,2vw,1.65rem);font-weight:400;text-transform:capitalize}
-.story-dna__legend {display:grid;grid-template-columns:1fr;gap:.58rem;margin:0;padding:0;list-style:none}
-.story-dna__legend li {display:grid;grid-template-columns:minmax(74px,.75fr) minmax(80px,1fr) 62px;align-items:center;gap:.7rem;padding:0;border:0;font-size:.68rem}
-.story-dna__legend li>span {color:var(--text-secondary)}
-.story-dna__legend li>i {position:relative;height:2px;background:rgba(244,240,233,.13);overflow:hidden}
-.story-dna__legend li>i b {display:block;width:calc(var(--dna-level) * 10%);height:100%;background:linear-gradient(90deg,#805728,var(--color-gold));transform-origin:left;animation:dnaBarReveal .75s ease .2s both}
-.story-dna__legend li>strong {color:rgba(244,240,233,.78);font-size:.62rem;font-weight:500;letter-spacing:.04em;text-align:right}
+
+
+
+
+
+
+
+
 @keyframes dnaRadarReveal {from{opacity:0;transform:scale(.15)}to{opacity:1;transform:scale(1)}}
 @keyframes dnaPointReveal {to{opacity:1}}
 @keyframes dnaBarReveal {from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@media(max-width:700px){
-  .story-dna__radar{width:min(92%,330px)}
-  .story-dna__legend li{grid-template-columns:78px 1fr 58px}
-}
-@media(prefers-reduced-motion:reduce){
-  .story-dna__shape,.story-dna__point,.story-dna__legend li>i b{animation:none!important;opacity:1;transform:none}
-}
+
+
 
 /* ===== v11-3-final-polish.css ===== */
 /* VA HOME v11.3 — final cross-site polish */
@@ -553,7 +544,7 @@ img{background-color:transparent}
   .hero-slide__title br{display:none}
 }
 @media (max-width:390px){
-  .collection-world__aromas{grid-template-columns:1fr}
+  
   .btn{width:100%;justify-content:center}
 }
 @media (prefers-reduced-motion:reduce){
@@ -651,7 +642,7 @@ img{background-color:transparent}
 .reviews-summary{position:sticky;top:110px;align-self:start}
 .review-card__verified,.verified-purchase{display:inline-flex;align-items:center;gap:.35rem;color:var(--color-gold);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase}
 @media(max-width:900px){
-  .reviews-summary{position:static}
+  
   .story-similar h2{font-size:clamp(2.4rem,11vw,4rem);max-width:12ch}
 }
 @media(max-width:600px){
@@ -659,7 +650,7 @@ img{background-color:transparent}
   .story-similar .similar-grid{grid-template-columns:1fr 1fr;gap:14px}
   .story-similar .product-card__title{font-size:1rem}
 }
-@media(max-width:390px){.story-similar .similar-grid{grid-template-columns:1fr}}
+
 
 /* ===== v11-5-mobile-perfection.css ===== */
 /* VA HOME v11.5 — Mobile Perfection
@@ -1322,54 +1313,14 @@ html.va-hero-fonts-ready :is(
 }
 
 /* Comparison: editorial cards with predictable image ratio and safer mobile flow. */
-.va-compare-modal__inner{scrollbar-gutter:stable}
-.va-compare-modal__close,.va-compare-card__remove{
-  box-sizing:border-box;
-  display:grid;
-  place-items:center;
-  aspect-ratio:1;
-  padding:0;
-}
-.va-compare-grid{align-items:stretch}
-.va-compare-card{height:auto;min-width:0}
-.va-compare-card__hero{aspect-ratio:4/5}
-.va-compare-card__hero img{object-fit:cover;object-position:center}
-.va-compare-panel{flex:1}
-.va-compare-buy,.va-compare-dock__open{transition:background var(--ui-fast) ease,border-color var(--ui-fast) ease,transform var(--ui-fast) ease}
-@media(hover:hover) and (pointer:fine){
-  .va-compare-buy:hover,.va-compare-dock__open:hover{transform:translateY(-1px)}
-}
-@media(max-width:900px){
-  .va-compare-grid{
-    scroll-snap-type:x mandatory;
-    scroll-padding-inline:16px;
-    overscroll-behavior-inline:contain;
-    gap:12px;
-    padding:0 16px calc(12px + env(safe-area-inset-bottom));
-  }
-  .va-compare-card{
-    flex:0 0 min(82vw,410px);
-    scroll-snap-align:start;
-    scroll-snap-stop:always;
-  }
-}
-@media(max-width:600px){
-  .va-compare-dock{bottom:calc(12px + env(safe-area-inset-bottom))}
-  .va-compare-card{flex-basis:calc(100vw - 44px)}
-  .va-compare-modal__top{padding-top:calc(17px + env(safe-area-inset-top))}
-  .va-compare-tabs{scrollbar-width:none}
-  .va-compare-tabs::-webkit-scrollbar{display:none}
-}
 
 /* Keep touch controls comfortably tappable. */
 @media(pointer:coarse){
-  .va-compare-add,.wishlist-remove{min-height:44px}
-  .va-compare-card__remove{min-width:40px;min-height:40px}
+  .wishlist-remove{min-height:44px}
 }
 
 @media(prefers-reduced-motion:reduce){
-  .product-card,.wishlist-card,.product-card__media img,.wishlist-card__media img,
-  .va-compare-buy,.va-compare-dock__open{transition:none!important;transform:none!important}
+  .product-card, .wishlist-card, .product-card__media img, .wishlist-card__media img{transition:none!important;transform:none!important}
 }
 
 /* ===== v12-0-rc2.css ===== */
@@ -1407,17 +1358,10 @@ img,video,canvas,svg{max-width:100%}
 :where(button,[role="button"],input[type="button"],input[type="submit"],input[type="checkbox"],input[type="radio"]){
   touch-action:manipulation;
 }
-@media(pointer:coarse){
-  :where(.icon-btn,.header-action,.wishlist-remove,.va-compare-add,.va-compare-card__remove,.va-compare-modal__close){
-    min-width:var(--tap-target);
-    min-height:var(--tap-target);
-  }
-}
 
 /* Prevent iOS form zoom and clipping in checkout/account forms. */
 @media(max-width:760px){
   :where(input,select,textarea){font-size:16px}
-  :where(.modal,.drawer,.va-compare-modal__inner){overscroll-behavior:contain}
 }
 
 /* Stable account/wishlist geometry across long titles and small screens. */
@@ -1429,11 +1373,6 @@ img,video,canvas,svg{max-width:100%}
 }
 
 /* Comparison modal: no accidental page scroll and no clipped final card. */
-.va-compare-modal[aria-hidden="false"],.va-compare-modal.is-open{overscroll-behavior:contain}
-.va-compare-grid>*{min-width:0}
-@media(max-width:900px){
-  .va-compare-grid::after{content:"";flex:0 0 4px}
-}
 
 /* Better behaviour for users who request less motion. */
 @media(prefers-reduced-motion:reduce){
@@ -1460,10 +1399,8 @@ img, picture, video, canvas, svg { max-width: 100%; }
 
 /* Prevent long labels, prices and controls from forcing horizontal overflow. */
 button, input, select, textarea, a { min-width: 0; }
-.product-card, .collection-card, .journal-card, .cart-item,
-.checkout-fieldset, .cart-summary, .va-compare-card { min-width: 0; }
-.product-card__name, .product-card__desc, .va-compare-card__name,
-.va-compare-statement, .va-compare-value, .cart-item__title { overflow-wrap: anywhere; }
+.product-card, .collection-card, .journal-card, .cart-item, .checkout-fieldset, .cart-summary { min-width: 0; }
+.product-card__name, .product-card__desc, .cart-item__title { overflow-wrap: anywhere; }
 
 /* Cart: remove the oversized empty gap between breadcrumbs and the hero. */
 .cart-hero { margin-top: 0 !important; }
@@ -1504,4 +1441,10 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
   .container { width: min(100% - 28px, var(--container-max)); }
   .product-card__actions { gap: 8px; }
   .product-card__actions .btn { padding-inline: 10px; }
+}
+
+
+/* ===== Order responsive component — consolidated from legacy mobile layers ===== */
+@media (max-width:620px){
+.tracking-number{overflow-wrap:anywhere;}
 }

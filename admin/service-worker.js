@@ -1,88 +1,120 @@
-const VERSION = '1.0.0-15.5.0-RC1.22';
-const CACHE_PREFIX = 'vahome-admin-';
+const VERSION = "1.0.0-15.5.0-RC1.31";
+const CACHE_PREFIX = "vahome-admin-";
 const SHELL_CACHE = `${CACHE_PREFIX}shell-${VERSION}`;
 
 const SHELL_ASSETS = [
-  '/admin/',
-  '/admin/index.html',
-  '/admin/offline.html',
-  '/admin/manifest.webmanifest',
-  '/admin/pwa/icon-192.png',
-  '/admin/pwa/icon-512.png',
-  '/admin/pwa/icon-maskable-512.png',
-  '/admin/pwa/apple-touch-icon.png',
-  '/css/core-admin.css?v=15.5.0-RC1.22',
-  '/css/site-admin.css?v=15.5.0-RC1.22',
-  '/css/admin-mobile-system.css?v=15.5.0-RC1.22',
-  '/js/config.js?v=15.5.0-RC1.22',
-  '/js/products.js?v=15.5.0-RC1.22',
-  '/js/admin.js?v=15.5.0-RC1.22',
-  '/js/motion.js?v=15.5.0-RC1.22',
-  '/admin/pwa.js?v=15.5.0-RC1.22'
+  "/admin/",
+  "/admin/index.html",
+  "/admin/offline.html",
+  "/admin/manifest.webmanifest",
+  "/admin/pwa/icon-192.png",
+  "/admin/pwa/icon-512.png",
+  "/admin/pwa/icon-maskable-512.png",
+  "/admin/pwa/apple-touch-icon.png",
+  "/css/core.css?v=15.5.0-RC1.31",
+  "/css/site-admin.css?v=15.5.0-RC1.31",
+  "/js/config.js?v=15.5.0-RC1.31",
+  "/js/products.js?v=15.5.0-RC1.31",
+  "/js/admin.js?v=15.5.0-RC1.31",
+  "/js/motion.js?v=15.5.0-RC1.31",
+  "/admin/pwa.js?v=15.5.0-RC1.31"
 ];
 
-const isSafeStatic = (request, url) =>
-  url.origin === self.location.origin &&
-  ['style', 'script', 'font', 'image'].includes(request.destination);
+function shouldBypassRequest(request, url) {
+  if (url.origin !== self.location.origin) return true;
+  if (request.method !== "GET") return true;
+  if (request.headers.has("range")) return true;
+  if (request.cache === "no-store") return true;
+  if (request.cache === "only-if-cached" && request.mode !== "same-origin") return true;
+  return false;
+}
 
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(SHELL_CACHE).then(async (cache) => {
-      for (const asset of SHELL_ASSETS) {
-        try { await cache.add(asset); } catch (_) { /* keep install resilient */ }
-      }
-    })
-  );
+function isSafeStatic(request) {
+  return ["style", "script", "font", "image"].includes(request.destination);
+}
+
+function isCacheableResponse(response) {
+  if (!response || !response.ok || response.type !== "basic") return false;
+  const cacheControl = response.headers.get("cache-control") || "";
+  return !/\bno-store\b/i.test(cacheControl);
+}
+
+async function cacheShellAssets() {
+  const cache = await caches.open(SHELL_CACHE);
+  await Promise.allSettled(SHELL_ASSETS.map((asset) => cache.add(asset)));
+}
+
+async function fetchAndCache(request, cacheKey = request) {
+  try {
+    const response = await fetch(request);
+    if (isCacheableResponse(response)) {
+      const cache = await caches.open(SHELL_CACHE);
+      await cache.put(cacheKey, response.clone());
+    }
+    return response;
+  } catch {
+    return null;
+  }
+}
+
+async function adminNavigation(event) {
+  const preloaded = await event.preloadResponse;
+  const response = preloaded || await fetchAndCache(event.request, "/admin/index.html");
+  if (response) return response;
+
+  const cache = await caches.open(SHELL_CACHE);
+  return await cache.match("/admin/index.html")
+    || await cache.match("/admin/offline.html")
+    || Response.error();
+}
+
+function staleWhileRevalidate(event) {
+  const networkResponse = fetchAndCache(event.request);
+  event.waitUntil(networkResponse.then(() => undefined));
+
+  return (async () => {
+    const cache = await caches.open(SHELL_CACHE);
+    const cached = await cache.match(event.request);
+    return cached || await networkResponse || Response.error();
+  })();
+}
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(cacheShellAssets());
 });
 
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) => Promise.all(
-      keys.filter((key) => key.startsWith(CACHE_PREFIX) && key !== SHELL_CACHE)
+self.addEventListener("activate", (event) => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(
+      keys
+        .filter((key) => key.startsWith(CACHE_PREFIX) && key !== SHELL_CACHE)
         .map((key) => caches.delete(key))
-    )).then(() => self.clients.claim())
-  );
+    );
+
+    if (self.registration.navigationPreload) {
+      await self.registration.navigationPreload.enable();
+    }
+
+    await self.clients.claim();
+  })());
 });
 
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
 });
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener("fetch", (event) => {
   const { request } = event;
-  if (request.method !== 'GET') return;
   const url = new URL(request.url);
 
-  // Never cache Supabase/auth/API requests or cross-origin resources.
-  if (url.origin !== self.location.origin) return;
+  if (shouldBypassRequest(request, url)) return;
 
-  if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request).then((response) => {
-        if (response.ok && url.pathname.startsWith('/admin/')) {
-          const copy = response.clone();
-          caches.open(SHELL_CACHE).then((cache) => cache.put('/admin/index.html', copy));
-        }
-        return response;
-      }).catch(async () => {
-        const cache = await caches.open(SHELL_CACHE);
-        return (await cache.match('/admin/index.html')) || cache.match('/admin/offline.html');
-      })
-    );
+  if (request.mode === "navigate") {
+    event.respondWith(adminNavigation(event));
     return;
   }
 
-  if (!isSafeStatic(request, url)) return;
-
-  event.respondWith(
-    caches.match(request).then((cached) => {
-      const network = fetch(request).then((response) => {
-        if (response.ok && response.type === 'basic') {
-          caches.open(SHELL_CACHE).then((cache) => cache.put(request, response.clone()));
-        }
-        return response;
-      }).catch(() => null);
-      return cached || network || Response.error();
-    })
-  );
+  if (!isSafeStatic(request)) return;
+  event.respondWith(staleWhileRevalidate(event));
 });
