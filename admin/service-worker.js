@@ -1,4 +1,4 @@
-const VERSION = "1.0.0-16.0.5";
+const VERSION = "1.0.0-16.0.6";
 const CACHE_PREFIX = "vahome-admin-";
 const SHELL_CACHE = `${CACHE_PREFIX}shell-${VERSION}`;
 
@@ -11,13 +11,13 @@ const SHELL_ASSETS = [
   "/admin/pwa/icon-512.png",
   "/admin/pwa/icon-maskable-512.png",
   "/admin/pwa/apple-touch-icon.png",
-  "/css/core.css?v=16.0.5",
-  "/css/site-admin.css?v=16.0.5",
-  "/js/config.js?v=16.0.5",
-  "/js/products.js?v=16.0.5",
-  "/js/admin.js?v=16.0.5",
-  "/js/motion.js?v=16.0.5",
-  "/admin/pwa.js?v=16.0.5"
+  "/css/core.css?v=16.0.6",
+  "/css/site-admin.css?v=16.0.6",
+  "/js/config.js?v=16.0.6",
+  "/js/products.js?v=16.0.6",
+  "/js/admin.js?v=16.0.6",
+  "/js/motion.js?v=16.0.6",
+  "/admin/pwa.js?v=16.0.6"
 ];
 
 function shouldBypassRequest(request, url) {

@@ -1,20 +1,19 @@
 {
-  "version": "16.0.5",
+  "version": "16.0.6",
   "channel": "Stable",
-  "name": "ATMOSPHERE OS — MOBILE SCENT RESULTS",
+  "name": "ATMOSPHERE OS — ALIGNED SCENT CARDS",
   "date": "2026-08-02",
-  "base": "16.0.4",
+  "base": "16.0.5",
   "changes": [
-    "Rebuilds mobile Scent Consultation results as a one-card horizontal swipe rail",
-    "Keeps the next recommendation slightly visible so the interaction is discoverable",
-    "Removes the duplicated profile percentage badge from consultation cards",
-    "Normalizes image, body and action geometry for readable mobile result cards",
-    "Adds an accessible swipe hint and keyboard-focusable recommendation region",
-    "Preserves desktop result layouts and all v16.0.4 account payment details"
+    "Aligns all mobile Scent Consultation recommendation cards to the same top and bottom rhythm",
+    "Reserves consistent space for product names, descriptions and recommendation rationale",
+    "Normalizes the Why it fits, Reeds and Care rows without moving alternative cards downward",
+    "Keeps price and Add to cart actions aligned at the bottom of every swipe card",
+    "Preserves the one-card swipe rail, next-card preview and desktop layouts from v16.0.5"
   ],
   "notes": [
-    "The mobile override applies only at 680 px and below.",
-    "Catalog and product-page Scent Profile badges remain unchanged.",
-    "No checkout, payment, Supabase schema or order logic changed in this release."
+    "The alignment override applies only at 680 px and below.",
+    "Long recommendation copy is limited to a readable mobile preview to keep card geometry consistent.",
+    "No product data, scoring, checkout, payment, Supabase schema or Edge Function logic changed."
   ]
 }
