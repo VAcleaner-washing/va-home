@@ -166,7 +166,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 @media(max-width:600px){.ty-intro h1.is-long{font-size:clamp(2.75rem,13.2vw,4.35rem);letter-spacing:-.04em}}
 
 
-/* v15.5.0-RC1.31 — local glass blur under order details */
+/* v15.5.0-RC1.32 — local glass blur under order details */
 .ty-order-id{
   padding:18px 20px 16px;margin-left:-20px;margin-right:-20px;
   border:1px solid rgba(224,190,126,.28);
@@ -175,3 +175,8 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
   backdrop-filter:blur(12px) saturate(1.12);-webkit-backdrop-filter:blur(12px) saturate(1.12);
 }
 @media(max-width:600px){.ty-order-id{padding:15px 16px 14px;margin-left:-10px;margin-right:-10px}}
+
+/* RC1.32 — premium post-purchase brand moment */
+.ty-closing{margin:clamp(28px,4vw,46px) 0 0;padding-left:74px;max-width:760px;color:rgba(244,239,231,.82);font-family:var(--font-display);font-size:clamp(1.5rem,2.6vw,2.35rem);font-weight:500;line-height:1.15;letter-spacing:-.015em}
+.ty-closing::before{content:"";display:block;width:42px;height:1px;margin:0 0 18px;background:var(--color-gold)}
+@media(max-width:600px){.ty-closing{padding-left:52px;font-size:clamp(1.4rem,8vw,2rem)}}

@@ -2766,7 +2766,7 @@ body.np-sheet-open{overflow:hidden}
 }
 
 
-/* ===== VA HOME v15.5.0-RC1.31 — cart premium and friendly UX ===== */
+/* ===== VA HOME v15.5.0-RC1.32 — cart premium and friendly UX ===== */
 body.cart-page .cart-item{
   border-color:rgba(195,145,70,.20);
   background:linear-gradient(145deg,rgba(18,15,12,.97),rgba(10,9,7,.99));
@@ -2843,3 +2843,8 @@ body.cart-page .cart-item__media img{aspect-ratio:4/5;object-fit:cover}
   .cart-summary{overflow:hidden;}
 .checkout-payment-option__logos{gap:10px;}
 }
+
+/* RC1.32 — quiet-luxury empty cart */
+.cart-empty__discovery-link{color:var(--text-primary);text-decoration-color:rgba(184,138,75,.7);text-underline-offset:4px}
+.cart-empty__actions{display:flex;gap:var(--space-2);justify-content:center;flex-wrap:wrap}
+@media(max-width:600px){.cart-empty__actions{display:grid;max-width:360px;margin-inline:auto}.cart-empty__actions .btn{width:100%}}

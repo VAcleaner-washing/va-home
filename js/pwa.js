@@ -3,7 +3,7 @@
 
   if (!("serviceWorker" in navigator) || !window.isSecureContext) return;
 
-  const VERSION = "15.5.0-RC1.31";
+  const VERSION = "15.5.0-RC1.32";
   const UPDATE_INTERVAL = 60 * 60 * 1000;
   const RELOAD_KEY = `vahome_sw_reloaded_${VERSION}`;
   const privateRoutes = [
