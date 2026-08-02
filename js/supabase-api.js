@@ -273,6 +273,33 @@
     return data;
   }
 
+
+  async function getAccountPaymentDetails(orderNumber) {
+    if (!configured()) throw new Error("Supabase is not configured");
+    const token = storedAccessToken();
+    if (!token) {
+      const error = new Error("AUTH_REQUIRED");
+      error.status = 401;
+      throw error;
+    }
+    const response = await fetch(`${cfg.url}/functions/v1/account-payment-details`, {
+      method: "POST",
+      headers: {
+        apikey: cfg.publishableKey,
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ order_number: String(orderNumber || "").trim() })
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error(data.error || `ACCOUNT_PAYMENT_DETAILS_HTTP_${response.status}`);
+      error.status = response.status;
+      throw error;
+    }
+    return data;
+  }
+
   async function novaPoshtaLookup(payload, options = {}) {
     if (!configured()) throw new Error("Supabase is not configured");
     const controller = new AbortController();
@@ -307,5 +334,5 @@
     }
   }
 
-  window.VAHomeSupabase = { configured, getApprovedReviews, getRecentApprovedReviews, getApprovedRatings, getStoredAuthUser, getAuthenticatedUser, submitReview, getPublicOrderStatus, submitOrder, getPaymentConfig, cardPayment, issueWelcomeCredit, novaPoshtaLookup };
+  window.VAHomeSupabase = { configured, getApprovedReviews, getRecentApprovedReviews, getApprovedRatings, getStoredAuthUser, getAuthenticatedUser, submitReview, getPublicOrderStatus, submitOrder, getPaymentConfig, cardPayment, issueWelcomeCredit, getAccountPaymentDetails, novaPoshtaLookup };
 })();

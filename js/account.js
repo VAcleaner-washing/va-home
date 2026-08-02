@@ -330,6 +330,9 @@
       const cardPaymentAction = order.payment_method === "card_online" && !["paid", "refunded"].includes(order.payment_status)
         ? `<button class="account-order__pay-card" type="button" data-card-payment="${safeId}">Оплатити карткою</button>`
         : "";
+      const bankPaymentAction = order.payment_method === "bank_transfer" && !["paid", "refunded"].includes(order.payment_status) && order.status !== "cancelled"
+        ? `<button class="account-order__bank-details" type="button" data-bank-payment="${safeId}">${order.status === "new" ? "Де реквізити?" : "Реквізити для оплати"}</button>`
+        : "";
       return `<article class="account-order">
         <div class="account-order__header">
           <div>
@@ -347,6 +350,7 @@
           <button class="account-order__toggle" type="button" aria-expanded="false">Деталі</button>
           <div class="account-order__actions">
             ${cardPaymentAction}
+            ${bankPaymentAction}
             <button class="account-order__repeat" type="button" data-repeat='${repeatData}'>Повторити замовлення</button>
             ${tracking}
           </div>
@@ -354,6 +358,7 @@
         <div class="account-order__details" hidden>
           ${orderProgressHtml(order.status)}
           <p class="account-order__payment"><strong>Оплата:</strong> ${esc(paymentMethodLabels[order.payment_method] || "уточнюється")} · ${esc(paymentStatusLabels[order.payment_status] || "статус уточнюється")}</p>
+          ${order.payment_method === "bank_transfer" && !["paid", "refunded"].includes(order.payment_status) && order.status !== "cancelled" ? `<div class="account-payment-details" data-bank-details="${safeId}"><p>${order.status === "new" ? "Замовлення перевіряємо. Після підтвердження реквізити з’являться тут і прийдуть на email." : "Натисніть «Реквізити для оплати», щоб відкрити дані рахунку."}</p></div>` : ""}
           ${order.tracking_number ? `<p class="account-order__tracking">ТТН: <strong>${esc(order.tracking_number)}</strong></p>` : ""}
         </div>
       </article>`;
@@ -366,6 +371,67 @@
       button.textContent = open ? "Деталі" : "Згорнути";
       if (details) details.hidden = open;
     }));
+    document.querySelectorAll("[data-bank-payment]").forEach((button) => button.addEventListener("click", async () => {
+      const card = button.closest(".account-order");
+      const details = card?.querySelector(".account-order__details");
+      const toggle = card?.querySelector(".account-order__toggle");
+      const panel = card?.querySelector(`[data-bank-details="${CSS.escape(button.dataset.bankPayment || "")}"]`);
+      if (details?.hidden) {
+        details.hidden = false;
+        if (toggle) { toggle.setAttribute("aria-expanded", "true"); toggle.textContent = "Згорнути"; }
+      }
+      if (!panel || panel.dataset.loaded === "true" || panel.dataset.loading === "true") {
+        panel?.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+      if (!window.VAHomeSupabase?.getAccountPaymentDetails) {
+        panel.innerHTML = "<p>Реквізити тимчасово недоступні. Спробуйте оновити сторінку.</p>";
+        return;
+      }
+      panel.dataset.loading = "true";
+      panel.innerHTML = "<p>Завантажуємо реквізити…</p>";
+      try {
+        const data = await window.VAHomeSupabase.getAccountPaymentDetails(button.dataset.bankPayment);
+        if (data.state === "pending_confirmation") {
+          panel.innerHTML = "<p>Замовлення ще перевіряємо. Після підтвердження реквізити з’являться тут і прийдуть на email.</p>";
+        } else if (data.state === "available" && data.payment_details) {
+          const recipient = esc(data.payment_details.recipient);
+          const iban = esc(data.payment_details.iban);
+          const purpose = esc(data.payment_details.purpose);
+          const amount = money(data.payment_details.amount);
+          panel.innerHTML = `<div class="account-payment-details__head"><div><span>Оплата на рахунок</span><h4>Реквізити для оплати</h4></div><strong>${amount}</strong></div>
+            <dl class="account-payment-details__list">
+              <div><dt>Отримувач</dt><dd>${recipient}</dd></div>
+              <div><dt>IBAN</dt><dd class="account-payment-details__iban">${iban}</dd></div>
+              <div><dt>Призначення платежу</dt><dd>${purpose}</dd></div>
+            </dl>
+            <div class="account-payment-details__actions">
+              <button type="button" data-copy-payment="all">Скопіювати все</button>
+              <button type="button" data-copy-payment="iban">Скопіювати IBAN</button>
+            </div><p class="account-payment-details__status" aria-live="polite"></p>`;
+          panel.querySelectorAll("[data-copy-payment]").forEach((copyButton) => copyButton.addEventListener("click", async () => {
+            const value = copyButton.dataset.copyPayment === "iban"
+              ? data.payment_details.iban
+              : `Отримувач: ${data.payment_details.recipient}\nIBAN: ${data.payment_details.iban}\nСума: ${amount}\nПризначення платежу: ${data.payment_details.purpose}`;
+            try {
+              await navigator.clipboard.writeText(value);
+              panel.querySelector(".account-payment-details__status").textContent = copyButton.dataset.copyPayment === "iban" ? "IBAN скопійовано" : "Реквізити скопійовано";
+            } catch (_) {
+              panel.querySelector(".account-payment-details__status").textContent = "Не вдалося скопіювати. Виділіть текст вручну.";
+            }
+          }));
+        } else {
+          panel.innerHTML = "<p>Для цього замовлення реквізити вже не потрібні.</p>";
+        }
+        panel.dataset.loaded = "true";
+      } catch (_) {
+        panel.innerHTML = "<p>Не вдалося завантажити реквізити. Оновіть сторінку й спробуйте ще раз.</p>";
+      } finally {
+        delete panel.dataset.loading;
+        panel.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }));
+
     document.querySelectorAll("[data-card-payment]").forEach((button) => button.addEventListener("click", async () => {
       if (!window.VAHomeSupabase?.cardPayment) return window.VAHome?.showToast("Оплата тимчасово недоступна");
       const original = button.textContent;
