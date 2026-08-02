@@ -1448,14 +1448,168 @@
   }
 
   function initPromoCode(form) {
-    const input=document.getElementById("promoCode"),button=document.getElementById("applyPromoCode"),status=document.getElementById("promoStatus"),details=document.getElementById("promoDetails");
-    if(!input||!button||!status)return;
-    if(!getItems().length) clearAppliedPromoState();
-    const showCurrent=()=>{const promo=readAppliedPromo();if(promo?.code){input.value=String(promo.code).toUpperCase();status.textContent=promoStatusText(pricingFor(getItems()));status.className="promo-status is-success";if(details)details.open=true;}else{input.value="";status.textContent="";status.className="promo-status";if(details)details.open=false;}};
-    const apply=async()=>{const code=normalizePromoCode(input.value);if(!code){clearAppliedPromoState({closeDetails:false});renderCartPage();status.textContent="Промокод прибрано.";status.className="promo-status";return;}button.disabled=true;status.textContent="Перевіряємо промокод…";status.className="promo-status";try{const items=getItems().map(i=>({id:i.id,quantity:i.quantity,line_total:i.lineTotal}));const subtotal=items.reduce((sum,i)=>sum+Number(i.line_total||0),0);const response=await fetch(`${window.SITE_CONFIG.supabase.url}/functions/v1/validate-promo`,{method:"POST",headers:{"Content-Type":"application/json","apikey":window.SITE_CONFIG.supabase.publishableKey,"Authorization":`Bearer ${window.SITE_CONFIG.supabase.publishableKey}`},body:JSON.stringify({code,items,subtotal,customer_email:form?.elements?.customerEmail?.value?.trim()?.toLowerCase()||""})});const data=await response.json().catch(()=>({}));if(!response.ok||!data.valid){clearAppliedPromoState({closeDetails:false});renderCartPage();status.textContent=data.message||"Промокод не знайдено або він уже не діє.";status.className="promo-status is-error";return;}writeAppliedPromo(data.promo);resetCheckoutRequestId();renderCartPage();status.textContent=promoStatusText(pricingFor(getItems()));status.className="promo-status is-success";}catch(_){status.textContent="Не вдалося перевірити промокод. Спробуйте ще раз.";status.className="promo-status is-error";}finally{button.disabled=false;}};
-    const emailField=form?.elements?.customerEmail;
-    if(emailField)emailField.addEventListener("input",()=>{const promo=readAppliedPromo();if(!promo?.email_bound)return;const current=String(emailField.value||"").trim().toLowerCase();if(current&&current===String(promo.validated_email||"").toLowerCase())return;clearAppliedPromoState({closeDetails:false});renderCartPage();status.textContent="Персональний промокод прибрано після зміни email.";status.className="promo-status";});
-    button.addEventListener("click",apply);input.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();apply();}});showCurrent();
+    const input = document.getElementById("promoCode");
+    const button = document.getElementById("applyPromoCode");
+    const status = document.getElementById("promoStatus");
+    const details = document.getElementById("promoDetails");
+    const availableHost = document.getElementById("availablePromos");
+    const availableList = document.getElementById("availablePromosList");
+    const availableHint = document.getElementById("availablePromosHint");
+    if (!input || !button || !status) return;
+    if (!getItems().length) clearAppliedPromoState();
+
+    let availableRequest = 0;
+    let emailTimer = 0;
+
+    const checkoutPayload = () => {
+      const items = getItems().map((item) => ({ id: item.id, quantity: item.quantity, line_total: item.lineTotal }));
+      return {
+        items,
+        subtotal: items.reduce((sum, item) => sum + Number(item.line_total || 0), 0),
+        customer_email: form?.elements?.customerEmail?.value?.trim()?.toLowerCase() || ""
+      };
+    };
+
+    const renderAvailablePromos = (promos = [], emailRequired = false) => {
+      if (!availableHost || !availableList) return;
+      const applied = readAppliedPromoCode();
+      availableList.innerHTML = "";
+      availableHost.hidden = !promos.length;
+      if (availableHint) {
+        availableHint.textContent = emailRequired
+          ? "Персональні Discovery та Welcome Credit з’являться після введення email."
+          : "Натисніть на промокод, щоб застосувати його до замовлення.";
+      }
+      promos.forEach((promo) => {
+        const code = normalizePromoCode(promo.code);
+        if (!code) return;
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = `available-promo${applied === code ? " is-applied" : ""}`;
+        item.dataset.promoCode = code;
+        item.setAttribute("aria-label", `${applied === code ? "Застосовано" : "Застосувати"} промокод ${code}`);
+        item.innerHTML = `<span class="available-promo__copy"><strong class="available-promo__code"></strong><span class="available-promo__description"></span></span><span class="available-promo__action">${applied === code ? "Застосовано" : "Застосувати"}</span>`;
+        item.querySelector(".available-promo__code").textContent = code;
+        item.querySelector(".available-promo__description").textContent = String(promo.description || promo.name || "Доступна пропозиція");
+        item.addEventListener("click", () => applyCode(code));
+        availableList.appendChild(item);
+      });
+    };
+
+    const loadAvailablePromos = async () => {
+      const payload = checkoutPayload();
+      if (!payload.items.length) return renderAvailablePromos([]);
+      const requestId = ++availableRequest;
+      try {
+        const response = await fetch(`${window.SITE_CONFIG.supabase.url}/functions/v1/available-promos`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": window.SITE_CONFIG.supabase.publishableKey,
+            "Authorization": `Bearer ${window.SITE_CONFIG.supabase.publishableKey}`
+          },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json().catch(() => ({}));
+        if (requestId !== availableRequest) return;
+        if (!response.ok) return renderAvailablePromos([]);
+        renderAvailablePromos(Array.isArray(data.promos) ? data.promos : [], Boolean(data.email_required_for_personal));
+      } catch (_) {
+        if (requestId === availableRequest) renderAvailablePromos([]);
+      }
+    };
+
+    const showCurrent = () => {
+      const promo = readAppliedPromo();
+      if (promo?.code) {
+        input.value = String(promo.code).toUpperCase();
+        status.textContent = promoStatusText(pricingFor(getItems()));
+        status.className = "promo-status is-success";
+        if (details) details.open = true;
+      } else {
+        input.value = "";
+        status.textContent = "";
+        status.className = "promo-status";
+      }
+    };
+
+    const applyCode = async (forcedCode = "") => {
+      const code = normalizePromoCode(forcedCode || input.value);
+      if (!code) {
+        clearAppliedPromoState({ closeDetails: false });
+        renderCartPage();
+        status.textContent = "Промокод прибрано.";
+        status.className = "promo-status";
+        await loadAvailablePromos();
+        return;
+      }
+      input.value = code;
+      button.disabled = true;
+      status.textContent = "Перевіряємо промокод…";
+      status.className = "promo-status";
+      try {
+        const payload = checkoutPayload();
+        const response = await fetch(`${window.SITE_CONFIG.supabase.url}/functions/v1/validate-promo`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": window.SITE_CONFIG.supabase.publishableKey,
+            "Authorization": `Bearer ${window.SITE_CONFIG.supabase.publishableKey}`
+          },
+          body: JSON.stringify({ code, ...payload })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data.valid) {
+          clearAppliedPromoState({ closeDetails: false });
+          renderCartPage();
+          status.textContent = data.message || "Промокод не знайдено або він уже не діє.";
+          status.className = "promo-status is-error";
+          await loadAvailablePromos();
+          return;
+        }
+        writeAppliedPromo(data.promo);
+        resetCheckoutRequestId();
+        renderCartPage();
+        status.textContent = promoStatusText(pricingFor(getItems()));
+        status.className = "promo-status is-success";
+        if (details) details.open = true;
+        await loadAvailablePromos();
+      } catch (_) {
+        status.textContent = "Не вдалося перевірити промокод. Спробуйте ще раз.";
+        status.className = "promo-status is-error";
+      } finally {
+        button.disabled = false;
+      }
+    };
+
+    const emailField = form?.elements?.customerEmail;
+    if (emailField) emailField.addEventListener("input", () => {
+      const promo = readAppliedPromo();
+      if (promo?.email_bound) {
+        const current = String(emailField.value || "").trim().toLowerCase();
+        if (!current || current !== String(promo.validated_email || "").toLowerCase()) {
+          clearAppliedPromoState({ closeDetails: false });
+          renderCartPage();
+          status.textContent = "Персональний промокод прибрано після зміни email.";
+          status.className = "promo-status";
+        }
+      }
+      window.clearTimeout(emailTimer);
+      emailTimer = window.setTimeout(loadAvailablePromos, 450);
+    });
+
+    button.addEventListener("click", () => applyCode());
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        applyCode();
+      }
+    });
+    if (details) details.addEventListener("toggle", () => {
+      if (details.open) loadAvailablePromos();
+    });
+    showCurrent();
+    loadAvailablePromos();
   }
 
   function initMobileCheckoutAction() {

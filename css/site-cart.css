@@ -2644,6 +2644,20 @@ body.np-sheet-open{overflow:hidden}
 .promo-status{min-height:1.4em;margin:8px 0 0;color:var(--text-secondary);font-size:12px}
 .promo-status.is-success{color:var(--color-gold)}
 .promo-status.is-error{color:#d98066}
+.available-promos{margin-top:14px;padding-top:14px;border-top:1px solid var(--border-hairline)}
+.available-promos__title{margin:0 0 10px;color:var(--text-secondary);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.available-promos__list{display:grid;gap:8px}
+.available-promo{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px;width:100%;padding:12px 14px;border:1px solid rgba(184,138,75,.28);background:rgba(184,138,75,.045);color:var(--text-primary);text-align:left;cursor:pointer;transition:border-color .18s ease,background .18s ease,transform .18s ease}
+.available-promo:hover{border-color:rgba(218,178,108,.58);background:rgba(184,138,75,.085)}
+.available-promo:active{transform:scale(.99)}
+.available-promo:disabled{cursor:default;opacity:.72}
+.available-promo__copy{min-width:0;display:grid;gap:3px}
+.available-promo__code{color:var(--color-gold);font-size:13px;font-weight:700;letter-spacing:.08em}
+.available-promo__description{overflow:hidden;color:var(--text-secondary);font-size:12px;line-height:1.45;text-overflow:ellipsis;white-space:nowrap}
+.available-promo__action{color:var(--color-gold);font-size:12px;font-weight:700;white-space:nowrap}
+.available-promo.is-applied{border-color:rgba(218,178,108,.72);background:rgba(184,138,75,.12)}
+.available-promos__hint{margin:9px 0 0;color:var(--text-secondary);font-size:11px;line-height:1.5}
+@media(max-width:520px){.available-promo{gap:10px;padding:12px}.available-promo__description{white-space:normal}.available-promo__action{font-size:11px}}
 .cart-undo-toast{position:fixed;z-index:40000;left:50%;bottom:max(22px,calc(env(safe-area-inset-bottom) + 14px));display:flex;align-items:center;gap:22px;min-width:min(420px,calc(100vw - 28px));max-width:calc(100vw - 28px);padding:14px 16px;border:1px solid rgba(184,138,75,.45);background:#15130f;color:var(--text-primary);box-shadow:0 18px 55px rgba(0,0,0,.48);opacity:0;transform:translate(-50%,16px);transition:opacity .18s ease,transform .18s ease}
 .cart-undo-toast[hidden]{display:none!important}.cart-undo-toast.is-visible{opacity:1;transform:translate(-50%,0)}
 .cart-undo-toast span{flex:1;font-size:13px}.cart-undo-toast button{border:0;background:transparent;color:var(--color-gold);font:inherit;font-weight:600;cursor:pointer}
@@ -2766,7 +2780,7 @@ body.np-sheet-open{overflow:hidden}
 }
 
 
-/* ===== VA HOME v16.0.1 — cart premium and friendly UX ===== */
+/* ===== VA HOME v16.0.2 — cart premium and friendly UX ===== */
 body.cart-page .cart-item{
   border-color:rgba(195,145,70,.20);
   background:linear-gradient(145deg,rgba(18,15,12,.97),rgba(10,9,7,.99));

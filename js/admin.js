@@ -489,8 +489,89 @@ function renderPromos(){const q=$("#promoSearch").value.trim().toLowerCase(),fil
 function isoLocal(v){if(!v)return "";const d=new Date(v);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16);}
 let promoViewportSnapshot=null;function capturePromoViewport(){const shell=$("#promoDialog .admin-promo-shell");promoViewportSnapshot={shellTop:shell?shell.scrollTop:0,pageX:window.scrollX,pageY:window.scrollY};}function restorePromoViewport(snapshot=promoViewportSnapshot){const shell=$("#promoDialog .admin-promo-shell");if(!snapshot)return;const restore=()=>{if(shell)shell.scrollTop=snapshot.shellTop;window.scrollTo(snapshot.pageX,snapshot.pageY);};restore();requestAnimationFrame(()=>{restore();requestAnimationFrame(restore);});promoViewportSnapshot=null;}function syncPromoForm(){const f=$("#promoForm"),shell=$("#promoDialog .admin-promo-shell"),snapshot=promoViewportSnapshot||{shellTop:shell?shell.scrollTop:0,pageX:window.scrollX,pageY:window.scrollY},type=f.elements.discount_type.value,applies=f.elements.applies_to.value;$("#promoValueField").classList.toggle("is-hidden",type==="free_shipping");$("#promoValueSuffix").textContent=type==="percent"?"%":"грн";$("#promoProductsField").classList.toggle("is-hidden",applies!=="products");const unlimited=$("#promoUnlimited").checked,noEnd=$("#promoNoEnd").checked;f.elements.usage_limit.disabled=unlimited;if(unlimited)f.elements.usage_limit.value="";f.elements.ends_at.disabled=noEnd;if(noEnd)f.elements.ends_at.value="";restorePromoViewport(snapshot);}
 function generatePromoCode(){const prefixes=["VAHOME","WELCOME","SCENT","RITUAL","MOLECULE","PRIVATE"];const suffix=Math.random()<.55?String([10,15,20,50,100][Math.floor(Math.random()*5)]):Math.random().toString(36).slice(2,6).toUpperCase();const input=$("#promoForm").elements.code;input.value=`${prefixes[Math.floor(Math.random()*prefixes.length)]}${suffix}`;input.focus();input.select();}
-function openPromo(id=""){activePromo=promos.find(p=>String(p.id)===String(id))||null;const f=$("#promoForm");f.reset();f.elements.active.checked=true;f.elements.discount_value.value=100;f.elements.min_order_amount.value=0;$("#promoUnlimited").checked=true;$("#promoNoEnd").checked=true;$("#promoDialogTitle").textContent=activePromo?"Редагувати промокод":"Новий промокод";$("#promoSubmitLabel").textContent=activePromo?"Зберегти зміни":"Створити промокод";$("#deletePromoBtn").hidden=!activePromo;$("#promoFormMessage").textContent="";if(activePromo){for(const k of ["id","code","name","discount_type","discount_value","min_order_amount","usage_limit","applies_to"]){if(f.elements[k])f.elements[k].value=activePromo[k]??"";}f.elements.starts_at.value=isoLocal(activePromo.starts_at);f.elements.ends_at.value=isoLocal(activePromo.ends_at);f.elements.product_ids.value=Array.isArray(activePromo.product_ids)?activePromo.product_ids.join(", "):"";f.elements.active.checked=!!activePromo.active;$("#promoUnlimited").checked=!activePromo.usage_limit;$("#promoNoEnd").checked=!activePromo.ends_at;}syncPromoForm();const dialog=$("#promoDialog"),shell=$("#promoDialog .admin-promo-shell");dialog.showModal();if(shell)shell.scrollTop=0;setTimeout(()=>{if(shell)shell.scrollTop=0;try{f.elements.code.focus({preventScroll:true});}catch(_){f.elements.code.focus();if(shell)shell.scrollTop=0;}},100);}
-async function savePromo(e){e.preventDefault();const f=e.currentTarget,fd=new FormData(f),code=String(fd.get("code")||"").trim().toUpperCase();if(!/^[A-Z0-9_-]{3,40}$/.test(code)){ $("#promoFormMessage").textContent="Код: 3–40 символів, латиниця, цифри, _ або -.";return;}const payload={code,name:String(fd.get("name")||"").trim()||null,discount_type:fd.get("discount_type"),discount_value:Number(fd.get("discount_value")||0),min_order_amount:Number(fd.get("min_order_amount")||0),usage_limit:fd.get("usage_limit")?Number(fd.get("usage_limit")):null,starts_at:fd.get("starts_at")?new Date(String(fd.get("starts_at"))).toISOString():null,ends_at:fd.get("ends_at")?new Date(String(fd.get("ends_at"))).toISOString():null,applies_to:fd.get("applies_to"),product_ids:String(fd.get("product_ids")||"").split(",").map(x=>x.trim()).filter(Boolean),active:fd.get("active")==="on",updated_at:new Date().toISOString()};if(payload.discount_type==="percent"&&(payload.discount_value<=0||payload.discount_value>100)){$("#promoFormMessage").textContent="Відсоток має бути від 1 до 100.";return;}const q=activePromo?sb.from("promo_codes").update(payload).eq("id",activePromo.id).select().single():sb.from("promo_codes").insert(payload).select().single();const {data,error}=await q;if(error){$("#promoFormMessage").textContent="Помилка: "+error.message;return;}if(activePromo)Object.assign(activePromo,data);else promos.unshift(data);$("#promoDialog").close();renderPromos();toast("Промокод збережено");}
+function openPromo(id="") {
+  activePromo = promos.find((promo) => String(promo.id) === String(id)) || null;
+  const form = $("#promoForm");
+  form.reset();
+  form.elements.active.checked = true;
+  form.elements.discount_value.value = 100;
+  form.elements.min_order_amount.value = 0;
+  $("#promoUnlimited").checked = true;
+  $("#promoNoEnd").checked = true;
+  $("#promoDialogTitle").textContent = activePromo ? "Редагувати промокод" : "Новий промокод";
+  $("#promoSubmitLabel").textContent = activePromo ? "Зберегти зміни" : "Створити промокод";
+  $("#deletePromoBtn").hidden = !activePromo;
+  $("#promoFormMessage").textContent = "";
+  if (activePromo) {
+    for (const key of ["id", "code", "name", "discount_type", "discount_value", "min_order_amount", "usage_limit", "applies_to", "checkout_description"]) {
+      if (form.elements[key]) form.elements[key].value = activePromo[key] ?? "";
+    }
+    form.elements.starts_at.value = isoLocal(activePromo.starts_at);
+    form.elements.ends_at.value = isoLocal(activePromo.ends_at);
+    form.elements.product_ids.value = Array.isArray(activePromo.product_ids) ? activePromo.product_ids.join(", ") : "";
+    form.elements.active.checked = Boolean(activePromo.active);
+    if (form.elements.show_in_checkout) form.elements.show_in_checkout.checked = Boolean(activePromo.show_in_checkout);
+    $("#promoUnlimited").checked = !activePromo.usage_limit;
+    $("#promoNoEnd").checked = !activePromo.ends_at;
+  }
+  syncPromoForm();
+  const dialog = $("#promoDialog");
+  const shell = $("#promoDialog .admin-promo-shell");
+  dialog.showModal();
+  if (shell) shell.scrollTop = 0;
+  setTimeout(() => {
+    if (shell) shell.scrollTop = 0;
+    try {
+      form.elements.code.focus({ preventScroll: true });
+    } catch (_) {
+      form.elements.code.focus();
+      if (shell) shell.scrollTop = 0;
+    }
+  }, 100);
+}
+async function savePromo(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const formData = new FormData(form);
+  const code = String(formData.get("code") || "").trim().toUpperCase();
+  if (!/^[A-Z0-9_-]{3,40}$/.test(code)) {
+    $("#promoFormMessage").textContent = "Код: 3–40 символів, латиниця, цифри, _ або -.";
+    return;
+  }
+  const payload = {
+    code,
+    name: String(formData.get("name") || "").trim() || null,
+    discount_type: formData.get("discount_type"),
+    discount_value: Number(formData.get("discount_value") || 0),
+    min_order_amount: Number(formData.get("min_order_amount") || 0),
+    usage_limit: formData.get("usage_limit") ? Number(formData.get("usage_limit")) : null,
+    starts_at: formData.get("starts_at") ? new Date(String(formData.get("starts_at"))).toISOString() : null,
+    ends_at: formData.get("ends_at") ? new Date(String(formData.get("ends_at"))).toISOString() : null,
+    applies_to: formData.get("applies_to"),
+    product_ids: String(formData.get("product_ids") || "").split(",").map((value) => value.trim()).filter(Boolean),
+    show_in_checkout: formData.get("show_in_checkout") === "on",
+    checkout_description: String(formData.get("checkout_description") || "").trim().slice(0, 140) || null,
+    active: formData.get("active") === "on",
+    updated_at: new Date().toISOString()
+  };
+  if (payload.discount_type === "percent" && (payload.discount_value <= 0 || payload.discount_value > 100)) {
+    $("#promoFormMessage").textContent = "Відсоток має бути від 1 до 100.";
+    return;
+  }
+  const query = activePromo
+    ? sb.from("promo_codes").update(payload).eq("id", activePromo.id).select().single()
+    : sb.from("promo_codes").insert(payload).select().single();
+  const { data, error } = await query;
+  if (error) {
+    $("#promoFormMessage").textContent = "Помилка: " + error.message;
+    return;
+  }
+  if (activePromo) Object.assign(activePromo, data);
+  else promos.unshift(data);
+  $("#promoDialog").close();
+  renderPromos();
+  toast("Промокод збережено");
+}
 async function deletePromo(){if(!activePromo||!confirm(`Видалити промокод ${activePromo.code}?`))return;const {error}=await sb.from("promo_codes").delete().eq("id",activePromo.id);if(error)return toast("Помилка: "+error.message);promos=promos.filter(p=>p.id!==activePromo.id);$("#promoDialog").close();renderPromos();toast("Промокод видалено");}
 
 function releaseStatus(row){const now=Date.now(),preview=new Date(row.preview_starts_at).getTime(),publicAt=new Date(row.public_starts_at).getTime();if(!row.active)return{key:"inactive",label:"Вимкнений"};if(now<preview)return{key:"scheduled",label:"Запланований"};if(now<publicAt)return{key:"private",label:"Private Preview"};return{key:"public",label:"Публічний старт настав"};}

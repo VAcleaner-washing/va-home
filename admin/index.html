@@ -10,7 +10,7 @@
 <title>VA HOME Admin</title>
 <meta content="noindex, nofollow, noarchive" name="robots"/>
 <link href="../favicon/favicon.ico" rel="icon" sizes="any"/>
-<link href="../css/core.css?v=16.0.1" rel="stylesheet"/><link href="../css/site-admin.css?v=16.0.1" rel="stylesheet"/>
+<link href="../css/core.css?v=16.0.2" rel="stylesheet"/><link href="../css/site-admin.css?v=16.0.2" rel="stylesheet"/>
 <meta content="Службова панель керування VA HOME." name="description"/><meta content="15.5.0 RC1.24" name="va-home-release"/>
 <link href="/admin/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
@@ -193,6 +193,12 @@
         <label class="admin-promo-field" id="promoProductsField">ID товарів через кому<input name="product_ids" placeholder="silk-molecule, mineral-salt"><small>Поле використовується лише для варіанта «Обрані товари».</small></label>
       </section>
 
+      <section class="admin-promo-section">
+        <div class="admin-promo-section__head"><span>06</span><div><h3>Показ у кошику</h3><p>Публічний код можна показати клієнтам серед доступних пропозицій.</p></div></div>
+        <label class="admin-promo-switch admin-promo-switch--large"><input name="show_in_checkout" type="checkbox"><span class="admin-promo-switch__track"></span><span>Показувати цей код у кошику</span></label>
+        <label class="admin-promo-field">Короткий опис<input name="checkout_description" maxlength="140" placeholder="Наприклад: −100 грн на повнорозмірний аромат"><small>Відображається поруч із кодом. Персональні Discovery та Welcome Credit показуються автоматично лише власнику email.</small></label>
+      </section>
+
       <section class="admin-promo-section admin-promo-section--status">
         <div><h3>Статус</h3><p>Вимкнений код зберігається в адмінці, але не працює на сайті.</p></div>
         <label class="admin-promo-switch admin-promo-switch--large"><input name="active" type="checkbox" checked><span class="admin-promo-switch__track"></span><span>Промокод активний</span></label>
@@ -240,10 +246,10 @@
   </div>
 </dialog>
 <script defer="" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer="" src="../js/config.js?v=16.0.1"></script>
-<script defer="" src="../js/products.js?v=16.0.1"></script>
-<script defer="" src="../js/admin.js?v=16.0.1"></script>
-<script defer="" src="../js/motion.js?v=16.0.1"></script>
-<script defer="" src="/admin/pwa.js?v=16.0.1"></script>
+<script defer="" src="../js/config.js?v=16.0.2"></script>
+<script defer="" src="../js/products.js?v=16.0.2"></script>
+<script defer="" src="../js/admin.js?v=16.0.2"></script>
+<script defer="" src="../js/motion.js?v=16.0.2"></script>
+<script defer="" src="/admin/pwa.js?v=16.0.2"></script>
 </body>
 </html>

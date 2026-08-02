@@ -1,20 +1,20 @@
 {
-  "version": "16.0.1",
+  "version": "16.0.2",
   "channel": "Stable",
-  "name": "ATMOSPHERE OS — PAYMENT BADGE ALIGNMENT",
+  "name": "ATMOSPHERE OS — AVAILABLE PROMOS",
   "date": "2026-08-02",
   "base": "15.5.0-RC1.32",
   "changes": [
-    "Promotes the audited RC1.32 storefront, checkout, account, PWA and backend delivery package to the stable v16 line",
-    "Keeps catalogue purchase actions aligned by showing “Ще немає відгуків” in the existing review row when approved reviews are absent",
-    "Preserves the original RC1.32 catalogue geometry without fixed card-body heights or description clipping",
-    "Retains the refined post-purchase experience and direct Discovery Set route from an empty cart",
-    "Removes the unsupported frame-ancestors directive from meta CSP policies to eliminate misleading console warnings",
-    "Synchronizes public assets, generated product content, PWA caches, admin PWA and verification tooling to 16.0.1",
-    "Raises the plata by mono badge by 3 px in the online-card option for cleaner optical alignment with the payment title"
+    "Adds an optional “Доступні для вас” promo area inside checkout with one-tap code application",
+    "Shows only public promo codes explicitly enabled by an administrator and personal credits bound to the entered customer email",
+    "Adds checkout visibility and short-description controls to the promo-code editor in admin",
+    "Keeps final promo validation server-side; the visible offer list never bypasses eligibility, limits, dates or cart restrictions",
+    "Preserves the RC1.32 catalogue geometry, empty-review alignment, final footer image and v16.0.1 plata by mono optical alignment",
+    "Synchronizes storefront assets, PWA caches, admin PWA, backend package and release metadata to 16.0.2"
   ],
   "notes": [
-    "Card payment code is included and boundary-tested; one real owner-card transaction remains the required live production acceptance test.",
-    "frame-ancestors can only be enforced through an HTTP response header, not a meta tag."
+    "Deploy the 20260802_checkout_visible_promos_v16_0_2.sql migration and the available-promos Edge Function before publishing the storefront.",
+    "Existing personal Discovery and Welcome Credit codes are shown only after the matching email is entered.",
+    "Public codes appear only when “Показувати цей код у кошику” is enabled in admin."
   ]
 }
