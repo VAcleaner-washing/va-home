@@ -1,4 +1,4 @@
-/* VA HOME v16.0.4 — persistent Personal Scent Profile */
+/* VA HOME v16.0.5 — persistent Personal Scent Profile */
 (function () {
   "use strict";
 
@@ -133,9 +133,16 @@
   function apply(profile = readLocal()) {
     if (!profile?.match_scores) return;
     document.querySelectorAll(".product-card[data-product-id]").forEach((card) => {
+      const existing = card.querySelector(".scent-match-badge");
+      // The consultation result already renders its own match percentage.
+      // Do not inject the global profile badge there, otherwise mobile cards
+      // show two nearly identical percentage labels.
+      if (card.closest("#guideResultsGrid")) {
+        existing?.remove();
+        return;
+      }
       const id = card.dataset.productId;
       const percent = Number(profile.match_scores[id]);
-      const existing = card.querySelector(".scent-match-badge");
       if (!Number.isFinite(percent) || percent < 1) {
         existing?.remove();
         return;

@@ -1,20 +1,20 @@
 {
-  "version": "16.0.4",
+  "version": "16.0.5",
   "channel": "Stable",
-  "name": "ATMOSPHERE OS — ACCOUNT PAYMENT DETAILS",
+  "name": "ATMOSPHERE OS — MOBILE SCENT RESULTS",
   "date": "2026-08-02",
-  "base": "15.5.0-RC1.32",
+  "base": "16.0.4",
   "changes": [
-    "Adds persistent bank-transfer payment details inside the authenticated customer account",
-    "Shows a clear pending-confirmation explanation before manager approval",
-    "After approval, securely returns recipient, IBAN, amount and payment purpose only to the owner of the order",
-    "Adds one-tap copy actions for all requisites or IBAN only",
-    "Hides payment requisites after payment, refund or cancellation",
-    "Preserves v16.0.3 checkout promos, thank-you layout and all previous payment flows"
+    "Rebuilds mobile Scent Consultation results as a one-card horizontal swipe rail",
+    "Keeps the next recommendation slightly visible so the interaction is discoverable",
+    "Removes the duplicated profile percentage badge from consultation cards",
+    "Normalizes image, body and action geometry for readable mobile result cards",
+    "Adds an accessible swipe hint and keyboard-focusable recommendation region",
+    "Preserves desktop result layouts and all v16.0.4 account payment details"
   ],
   "notes": [
-    "The account-payment-details Edge Function is deployed with JWT verification enabled.",
-    "PAYMENT_IBAN and PAYMENT_RECIPIENT remain Supabase Secrets and are not embedded in public storefront files.",
-    "Bank requisites become available when a bank-transfer order moves beyond the initial new status."
+    "The mobile override applies only at 680 px and below.",
+    "Catalog and product-page Scent Profile badges remain unchanged.",
+    "No checkout, payment, Supabase schema or order logic changed in this release."
   ]
 }
