@@ -194,7 +194,7 @@
     const reserve = Number(product.package?.reserveCount || 0);
     const commerceNote = product.collection === "noir"
       ? (REED_ADDON_POLICY.noirIncludedText || "У NOIR підібраний комплект паличок уже включено у вартість.")
-      : `Комплект ${product.package?.reedDiameterMm || 4} мм для наступного циклу можна додати в кошику · ${Number(REED_ADDON_POLICY.price || 50)} грн. Він поїде разом із дифузором, без окремої доставки.`;
+      : `Запасний комплект ${product.package?.reedDiameterMm || 4} мм можна додати в кошику · ${Number(REED_ADDON_POLICY.price || 50)} грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність, і поїде разом із дифузором.`;
     host.innerHTML = `
       <h2 class="product-detail-section__title">${escapeHtml(REED_SETUP_POLICY.title)}</h2>
       <p class="product-reed-guide__lead">${escapeHtml(REED_SETUP_POLICY.publicRule)}</p>
@@ -208,7 +208,7 @@
       <p class="product-reed-guide__placement">${escapeHtml(REED_SETUP_POLICY.placementNote || "Ставте на відкритому місці з легким рухом повітря.")}</p>
       ${reserve ? `<p class="product-reed-guide__extra">У комплекті ${escapeHtml(String(reserve))} ${reserve === 1 ? "паличка залишається" : "палички залишаються"} в запасі для посилення або першої заміни.</p>` : ""}
       <p class="product-reed-guide__commerce">
-        <strong>${product.collection === "noir" ? "Вже у вартості" : "Комплект для наступного циклу"}</strong>
+        <strong>${product.collection === "noir" ? "Вже у вартості" : "Запасний набір для заміни"}</strong>
         <span>${escapeHtml(commerceNote)}</span>
       </p>
       <a class="product-reed-guide__ritual" href="../room-ritual.html?product=${encodeURIComponent(product.id)}">
@@ -559,7 +559,7 @@
           </article>
           <figure><img src="../${interiorStoryImage}" alt="${escapeHtml(product.name)} у просторі" loading="lazy" decoding="async" onerror="this.onerror=null;this.closest('figure')?.classList.add('story-media-missing');this.remove()"></figure>
         </div>
-        <div class="container"><details class="story-ritual__details"><summary>Комплектація та безпечне використання</summary><div>
+        <div class="container"><details class="story-ritual__details"><summary><span class="story-ritual__summary-copy"><strong>Комплектація та безпечне використання</strong><small>Натисніть, щоб переглянути деталі</small></span><span class="story-ritual__summary-icon" aria-hidden="true"></span></summary><div>
           <p><strong>Комплектація:</strong> флакон 100 мл і ${escapeHtml(reedPackageLabel)} ${reedDiameter} мм.</p>
           <p><strong>Старт:</strong> ${escapeHtml(product.quickFacts || `${startRange} палички`)}. ${escapeHtml(reserveCopy)}</p>
           <p><strong>Догляд:</strong> ${escapeHtml(ritualCare)} ${escapeHtml(ritualReplacement)}</p>

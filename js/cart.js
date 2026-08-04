@@ -426,7 +426,7 @@
       const info = SPECIAL_ITEMS[id];
       const active = items.some((item) => item.id === id);
       const names = eligible.filter((entry) => Number(entry.product.package?.reedDiameterMm || 4) === diameter).map((entry) => entry.product.name);
-      return `<label class="cart-reed-addon${active ? " is-selected" : ""}"><input type="checkbox" data-reed-addon="${id}" ${active ? "checked" : ""}><span class="cart-reed-addon__mark" aria-hidden="true"></span><span class="cart-reed-addon__copy"><small>${String(diameter).padStart(2, "0")} MM · наступний цикл</small><strong>${info.volume}</strong><em>Для: ${names.join(" · ")}</em></span><b>+50 грн</b></label>`;
+      return `<label class="cart-reed-addon${active ? " is-selected" : ""}"><input type="checkbox" data-reed-addon="${id}" ${active ? "checked" : ""}><span class="cart-reed-addon__mark" aria-hidden="true"></span><span class="cart-reed-addon__copy"><small>${String(diameter).padStart(2, "0")} MM · запасний набір</small><strong>${info.volume}</strong><em>Для заміни · ${names.join(" · ")}</em></span><b>+50 грн</b></label>`;
     }).join("");
 
     host.classList.toggle("has-options", Boolean(diameters.length));

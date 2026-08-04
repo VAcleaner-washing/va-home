@@ -1,19 +1,18 @@
 {
-  "version": "16.2.0",
+  "version": "16.2.1",
   "channel": "Stable",
-  "name": "ATMOSPHERE OS — PERSONAL REED RITUAL",
+  "name": "ATMOSPHERE OS — CLEAR CARE UX",
   "date": "2026-08-04",
-  "base": "16.1.0",
+  "base": "16.2.0",
   "changes": [
-    "Personalizes the ritual and included-set details for all 18 fragrance formulas",
-    "Replaces the native aroma select with a premium keyboard-accessible listbox with contained scrolling",
-    "Adds contained horizontal and vertical scrolling with sticky headers to the full reed table",
-    "Adds direct “Догляд за ароматом” access in the mobile menu and footer",
-    "Corrects reed package and care grammar in the central product source"
+    "Makes the product care accordion visibly interactive with a premium chevron, helper text and hover/focus feedback",
+    "Replaces ambiguous “next cycle” reed language with clear spare-replacement wording across cart, products, collections and guide",
+    "Clarifies that the included reed set is sufficient and the spare set is optional",
+    "Keeps the 50 UAH add-on, matching-diameter logic and server validation unchanged"
   ],
   "notes": [
-    "Each product ritual now uses its own start quantity, diameter, included count, reserve count, care interval and duration.",
-    "The guide menu and reference table scroll independently without pulling the page.",
-    "No pricing, cart, payment or Supabase behavior changed in this release."
+    "Customers can immediately recognize “Комплектація та безпечне використання” as expandable.",
+    "The spare reed offer now explains when the replacement set is actually needed and that it ships with the diffuser.",
+    "No pricing, checkout, payment, database or Edge Function behavior changed in this release."
   ]
 }

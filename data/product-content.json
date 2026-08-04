@@ -1,6 +1,6 @@
 {
   "schemaVersion": 5,
-  "release": "16.2.0",
+  "release": "16.2.1",
   "source": {
     "workbook": "VA HOME  Ultra Molecular +(3).xlsx",
     "worksheet": "VA HOME  Ultra Molecular 2.1",
@@ -270,7 +270,7 @@
         "mode": "standard-included",
         "spareAddOnEligible": true,
         "spareAddOnId": "reeds-4mm",
-        "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+        "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
       },
       "filterMood": [
         "calm"
@@ -439,7 +439,7 @@
         "mode": "standard-included",
         "spareAddOnEligible": true,
         "spareAddOnId": "reeds-5mm",
-        "commerceNote": "Комплект 5 мм для наступного циклу можна додати в кошику · 50 грн."
+        "commerceNote": "Запасний комплект 5 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
       },
       "filterMood": [
         "warm-evening",
@@ -610,7 +610,7 @@
         "mode": "standard-included",
         "spareAddOnEligible": true,
         "spareAddOnId": "reeds-4mm",
-        "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+        "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
       },
       "filterMood": [
         "warm-evening",
@@ -782,7 +782,7 @@
         "mode": "standard-included",
         "spareAddOnEligible": true,
         "spareAddOnId": "reeds-4mm",
-        "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+        "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
       },
       "sourceRef": {
         "workbookRow": "WILD BERRY WAY"
@@ -949,7 +949,7 @@
         "mode": "standard-included",
         "spareAddOnEligible": true,
         "spareAddOnId": "reeds-4mm",
-        "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+        "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
       },
       "sourceRef": {
         "workbookRow": "HOTEL SPRING v2"
@@ -1116,7 +1116,7 @@
         "mode": "standard-included",
         "spareAddOnEligible": true,
         "spareAddOnId": "reeds-4mm",
-        "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+        "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
       },
       "sourceRef": {
         "workbookRow": "EVENING RITUAL v2"
@@ -1284,7 +1284,7 @@
         "mode": "standard-included",
         "spareAddOnEligible": true,
         "spareAddOnId": "reeds-4mm",
-        "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+        "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
       },
       "sourceRef": {
         "workbookRow": "VELVET SPA v2"
@@ -1454,7 +1454,7 @@
         "mode": "standard-included",
         "spareAddOnEligible": true,
         "spareAddOnId": "reeds-4mm",
-        "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+        "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
       },
       "sourceRef": {
         "workbookRow": "PURE ZEN v2"
@@ -1625,7 +1625,7 @@
         "mode": "standard-included",
         "spareAddOnEligible": true,
         "spareAddOnId": "reeds-4mm",
-        "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+        "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
       },
       "sourceRef": {
         "workbookRow": "HOTEL LUXE Б+"
@@ -1791,7 +1791,7 @@
         "mode": "standard-included",
         "spareAddOnEligible": true,
         "spareAddOnId": "reeds-5mm",
-        "commerceNote": "Комплект 5 мм для наступного циклу можна додати в кошику · 50 грн."
+        "commerceNote": "Запасний комплект 5 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
       },
       "sourceRef": {
         "workbookRow": "OLD MONEY v2"
@@ -1959,7 +1959,7 @@
         "mode": "standard-included",
         "spareAddOnEligible": true,
         "spareAddOnId": "reeds-4mm",
-        "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+        "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
       },
       "sourceRef": {
         "workbookRow": "L'INSTINCT v2"
@@ -2127,7 +2127,7 @@
         "mode": "standard-included",
         "spareAddOnEligible": true,
         "spareAddOnId": "reeds-4mm",
-        "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+        "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
       },
       "sourceRef": {
         "workbookRow": "MINERAL SALT v2"
@@ -4068,7 +4068,7 @@
     "price": 50,
     "currency": "UAH",
     "title": "Запасні палички для вашого аромату",
-    "description": "Додайте комплект для наступного циклу — він поїде разом із дифузором, без окремої доставки.",
+    "description": "За потреби додайте запасний набір для заміни — він поїде разом із дифузором, без окремої доставки.",
     "standaloneAllowed": false,
     "eligibleCollections": [
       "entry",

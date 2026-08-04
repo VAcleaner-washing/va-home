@@ -1595,7 +1595,7 @@ body.menu-open {
 
 
 
-/* ===== VA HOME v16.2.0 — unified hero breadcrumbs ===== */
+/* ===== VA HOME v16.2.1 — unified hero breadcrumbs ===== */
 .about-editorial-hero,
 .editorial-page-hero,
 .collections-v2-hero,
@@ -3080,7 +3080,7 @@ body > footer {
 @media(max-width:680px){.footer-payment-trust{align-items:flex-start;flex-direction:column;gap:18px}.footer-payment-trust__provider{align-items:flex-start;flex-direction:column;gap:9px}.footer-payment-trust__brands{gap:15px;flex-wrap:wrap}}
 
 
-/* ===== VA HOME v16.2.0 — footer contact line integrity ===== */
+/* ===== VA HOME v16.2.1 — footer contact line integrity ===== */
 .site-footer--editorial .footer-col--contact li,
 .site-footer--editorial .footer-col--contact a{
   overflow-wrap:normal;

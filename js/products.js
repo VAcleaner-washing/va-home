@@ -5,7 +5,7 @@
    Run: node scripts/build-product-content.mjs
    ========================================================================== */
 
-const PRODUCT_CONTENT_VERSION = "16.2.0";
+const PRODUCT_CONTENT_VERSION = "16.2.1";
 const PRODUCT_LABELS = {
   "character": {
     "clean": "Чисті",
@@ -960,7 +960,7 @@ const PRODUCT_REED_ADDON_POLICY = {
   "price": 50,
   "currency": "UAH",
   "title": "Запасні палички для вашого аромату",
-  "description": "Додайте комплект для наступного циклу — він поїде разом із дифузором, без окремої доставки.",
+  "description": "За потреби додайте запасний набір для заміни — він поїде разом із дифузором, без окремої доставки.",
   "standaloneAllowed": false,
   "eligibleCollections": [
     "entry",
@@ -1175,7 +1175,7 @@ const PRODUCTS = [
       "mode": "standard-included",
       "spareAddOnEligible": true,
       "spareAddOnId": "reeds-4mm",
-      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+      "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
     },
     "filterMood": [
       "calm"
@@ -1344,7 +1344,7 @@ const PRODUCTS = [
       "mode": "standard-included",
       "spareAddOnEligible": true,
       "spareAddOnId": "reeds-5mm",
-      "commerceNote": "Комплект 5 мм для наступного циклу можна додати в кошику · 50 грн."
+      "commerceNote": "Запасний комплект 5 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
     },
     "filterMood": [
       "warm-evening",
@@ -1515,7 +1515,7 @@ const PRODUCTS = [
       "mode": "standard-included",
       "spareAddOnEligible": true,
       "spareAddOnId": "reeds-4mm",
-      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+      "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
     },
     "filterMood": [
       "warm-evening",
@@ -1687,7 +1687,7 @@ const PRODUCTS = [
       "mode": "standard-included",
       "spareAddOnEligible": true,
       "spareAddOnId": "reeds-4mm",
-      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+      "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
     },
     "sourceRef": {
       "workbookRow": "WILD BERRY WAY"
@@ -1854,7 +1854,7 @@ const PRODUCTS = [
       "mode": "standard-included",
       "spareAddOnEligible": true,
       "spareAddOnId": "reeds-4mm",
-      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+      "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
     },
     "sourceRef": {
       "workbookRow": "HOTEL SPRING v2"
@@ -2021,7 +2021,7 @@ const PRODUCTS = [
       "mode": "standard-included",
       "spareAddOnEligible": true,
       "spareAddOnId": "reeds-4mm",
-      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+      "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
     },
     "sourceRef": {
       "workbookRow": "EVENING RITUAL v2"
@@ -2189,7 +2189,7 @@ const PRODUCTS = [
       "mode": "standard-included",
       "spareAddOnEligible": true,
       "spareAddOnId": "reeds-4mm",
-      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+      "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
     },
     "sourceRef": {
       "workbookRow": "VELVET SPA v2"
@@ -2359,7 +2359,7 @@ const PRODUCTS = [
       "mode": "standard-included",
       "spareAddOnEligible": true,
       "spareAddOnId": "reeds-4mm",
-      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+      "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
     },
     "sourceRef": {
       "workbookRow": "PURE ZEN v2"
@@ -2530,7 +2530,7 @@ const PRODUCTS = [
       "mode": "standard-included",
       "spareAddOnEligible": true,
       "spareAddOnId": "reeds-4mm",
-      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+      "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
     },
     "sourceRef": {
       "workbookRow": "HOTEL LUXE Б+"
@@ -2696,7 +2696,7 @@ const PRODUCTS = [
       "mode": "standard-included",
       "spareAddOnEligible": true,
       "spareAddOnId": "reeds-5mm",
-      "commerceNote": "Комплект 5 мм для наступного циклу можна додати в кошику · 50 грн."
+      "commerceNote": "Запасний комплект 5 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
     },
     "sourceRef": {
       "workbookRow": "OLD MONEY v2"
@@ -2864,7 +2864,7 @@ const PRODUCTS = [
       "mode": "standard-included",
       "spareAddOnEligible": true,
       "spareAddOnId": "reeds-4mm",
-      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+      "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
     },
     "sourceRef": {
       "workbookRow": "L'INSTINCT v2"
@@ -3032,7 +3032,7 @@ const PRODUCTS = [
       "mode": "standard-included",
       "spareAddOnEligible": true,
       "spareAddOnId": "reeds-4mm",
-      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
+      "commerceNote": "Запасний комплект 4 мм можна додати в кошику · 50 грн. Він знадобиться лише тоді, коли перевертання вже не повертає інтенсивність."
     },
     "sourceRef": {
       "workbookRow": "MINERAL SALT v2"
