@@ -1,19 +1,19 @@
 {
-  "version": "16.0.7",
+  "version": "16.2.0",
   "channel": "Stable",
-  "name": "ATMOSPHERE OS — SEO INDEXABILITY & PWA NAVIGATION",
-  "date": "2026-08-02",
-  "base": "16.0.6",
+  "name": "ATMOSPHERE OS — PERSONAL REED RITUAL",
+  "date": "2026-08-04",
+  "base": "16.1.0",
   "changes": [
-    "Keeps the homepage explicitly indexable with one robots directive, one meta description and the root canonical URL",
-    "Prevents a first-time Service Worker installation from reloading the page during Lighthouse and PageSpeed audits",
-    "Retries the real navigation request when Navigation Preload fails before showing the offline document",
-    "Adds SEO/indexability regression checks across all 71 HTML pages",
-    "Refreshes homepage sitemap metadata and synchronizes active storefront release markers to v16.0.7"
+    "Personalizes the ritual and included-set details for all 18 fragrance formulas",
+    "Replaces the native aroma select with a premium keyboard-accessible listbox with contained scrolling",
+    "Adds contained horizontal and vertical scrolling with sticky headers to the full reed table",
+    "Adds direct “Догляд за ароматом” access in the mobile menu and footer",
+    "Corrects reed package and care grammar in the central product source"
   ],
   "notes": [
-    "The noindex result in the supplied PageSpeed screenshot matched the offline fallback document, not the actual homepage source.",
-    "Cart, account, thank-you, order status, admin, compare and offline utility pages intentionally remain noindex.",
-    "No catalog, product, cart, payment, promo, account data, Supabase schema or Edge Function logic changed."
+    "Each product ritual now uses its own start quantity, diameter, included count, reserve count, care interval and duration.",
+    "The guide menu and reference table scroll independently without pulling the page.",
+    "No pricing, cart, payment or Supabase behavior changed in this release."
   ]
 }

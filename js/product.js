@@ -11,6 +11,7 @@
 
 
   const REED_CARE_POLICY = window.VA_REED_CARE_POLICY || { consumptionNote: "Кожне перевертання тимчасово посилює аромат і пришвидшує випаровування." };
+  const REED_ADDON_POLICY = window.VA_REED_ADDON_POLICY || { price: 50, noirIncludedText: "У NOIR палички вже включено у вартість." };
   const REED_SETUP_POLICY = window.VA_REED_SETUP_POLICY || {
     title: "Налаштуйте аромат під кімнату",
     publicRule: "Почніть із рекомендованої кількості. Остаточне звучання оцініть наступного дня.",
@@ -138,7 +139,20 @@
       image: [`https://vahome.com.ua/${getPrimaryProductImage(product)}`], description: product.shortDescription,
       brand: { "@type": "Brand", name: "VA HOME" }, sku: product.id,
       offers: { "@type": "Offer", url: location.href, priceCurrency: "UAH", price, availability: "https://schema.org/InStock" },
-      additionalProperty: [{ "@type": "PropertyValue", name: "Об’єм", value: volume }, { "@type": "PropertyValue", name: "Рекомендований старт", value: product.quickFacts }, { "@type": "PropertyValue", name: "Палички у комплекті", value: `${product.package?.reedCount || 4} × ${product.package?.reedDiameterMm || 4} мм` }, { "@type": "PropertyValue", name: "Рекомендована площа", value: product.diffusion?.area || "до 25 м²" }, { "@type": "PropertyValue", name: "Інтенсивність", value: `${product.scales.intensity} з 10` }, { "@type": "PropertyValue", name: "Перевертання паличок", value: product.reedCare?.publicText || "За потреби" }, { "@type": "PropertyValue", name: "Палички до 15 м²", value: product.reedSetupByArea?.small?.label || "—" }, { "@type": "PropertyValue", name: "Палички для 15–25 м²", value: product.reedSetupByArea?.standard?.label || "—" }, { "@type": "PropertyValue", name: "Палички для 25 м²+", value: product.reedSetupByArea?.large?.label || "—" }]
+      additionalProperty: [
+        { "@type": "PropertyValue", name: "Об’єм", value: volume },
+        { "@type": "PropertyValue", name: "Рекомендований старт", value: product.quickFacts },
+        { "@type": "PropertyValue", name: "Палички у комплекті", value: `${product.package?.reedCount || 4} × ${product.package?.reedDiameterMm || 4} мм` },
+        { "@type": "PropertyValue", name: "Рекомендована площа", value: product.diffusion?.area || "до 25 м²" },
+        { "@type": "PropertyValue", name: "Інтенсивність", value: `${product.scales.intensity} з 10` },
+        { "@type": "PropertyValue", name: "Перевертання паличок", value: product.reedCare?.publicText || "За потреби" },
+        { "@type": "PropertyValue", name: "Орієнтовний термін", value: durationLabel(product) },
+        { "@type": "PropertyValue", name: "Коли замінювати палички", value: product.reedCare?.replacementText || REED_CARE_POLICY.replacementRule || "Коли перевертання вже не допомагає" },
+        { "@type": "PropertyValue", name: "Запасні палички", value: product.collection === "noir" ? "Підібраний комплект уже включено у вартість" : `Можна додати у кошику за ${Number(REED_ADDON_POLICY.price || 50)} грн` },
+        { "@type": "PropertyValue", name: "Палички до 15 м²", value: product.reedSetupByArea?.small?.label || "—" },
+        { "@type": "PropertyValue", name: "Палички для 15–25 м²", value: product.reedSetupByArea?.standard?.label || "—" },
+        { "@type": "PropertyValue", name: "Палички для 25 м²+", value: product.reedSetupByArea?.large?.label || "—" }
+      ]
     };
     const script = document.createElement("script");
     script.type = "application/ld+json";
@@ -159,6 +173,14 @@
     return `Кожні ${min}–${max} ${max <= 4 ? "дні" : "днів"}`;
   }
 
+  function durationLabel(product) {
+    return product.duration?.label || "до 10 тижнів";
+  }
+
+  function startLabel(product) {
+    return `${product.quickFacts || "3–4 палички"} · ${product.package?.reedDiameterMm || 4} мм`;
+  }
+
   function renderReedSetup(product) {
     const host = document.getElementById("reedSetupSection");
     const setup = product.reedSetupByArea;
@@ -169,21 +191,32 @@
       const recommended = band.recommended ? " is-recommended" : "";
       return `<article class="product-reed-guide__item${recommended}"><span>${escapeHtml(band.label)}</span><strong>${escapeHtml(reedCountLabel(value.label))}</strong></article>`;
     }).join("");
-    const hasExtra = Object.values(setup).some((value) => value && typeof value === "object" && value.extraReeds);
-    host.innerHTML = `<h2 class="product-detail-section__title">${escapeHtml(REED_SETUP_POLICY.title)}</h2><p class="product-reed-guide__lead">${escapeHtml(REED_SETUP_POLICY.publicRule)}</p><div class="product-reed-guide__grid">${cards}</div><div class="product-reed-guide__care"><span>Догляд за паличками</span><strong>${escapeHtml(reedIntervalLabel(product))}</strong></div><p class="product-reed-guide__note">${escapeHtml(REED_SETUP_POLICY.adjustmentNote)}</p>${hasExtra ? `<p class="product-reed-guide__extra">${escapeHtml(REED_SETUP_POLICY.extraReedsNote)}</p>` : ""}<a class="product-reed-guide__ritual" href="../room-ritual.html?product=${encodeURIComponent(product.id)}"><span>ROOM RITUAL</span><strong>Налаштувати аромат під мою кімнату →</strong></a>`;
+    const reserve = Number(product.package?.reserveCount || 0);
+    const commerceNote = product.collection === "noir"
+      ? (REED_ADDON_POLICY.noirIncludedText || "У NOIR підібраний комплект паличок уже включено у вартість.")
+      : `Комплект ${product.package?.reedDiameterMm || 4} мм для наступного циклу можна додати в кошику · ${Number(REED_ADDON_POLICY.price || 50)} грн. Він поїде разом із дифузором, без окремої доставки.`;
+    host.innerHTML = `
+      <h2 class="product-detail-section__title">${escapeHtml(REED_SETUP_POLICY.title)}</h2>
+      <p class="product-reed-guide__lead">${escapeHtml(REED_SETUP_POLICY.publicRule)}</p>
+      <div class="product-reed-guide__grid">${cards}</div>
+      <div class="product-reed-guide__facts">
+        <div><span>Перевертання</span><strong>${escapeHtml(reedIntervalLabel(product))}</strong></div>
+        <div><span>Заміна</span><strong>Коли перевертання вже не допомагає</strong></div>
+        <div><span>Орієнтовний термін</span><strong>${escapeHtml(durationLabel(product))}</strong></div>
+      </div>
+      <p class="product-reed-guide__note">${escapeHtml(REED_SETUP_POLICY.adjustmentNote)} ${escapeHtml(REED_CARE_POLICY.consumptionNote)}</p>
+      <p class="product-reed-guide__placement">${escapeHtml(REED_SETUP_POLICY.placementNote || "Ставте на відкритому місці з легким рухом повітря.")}</p>
+      ${reserve ? `<p class="product-reed-guide__extra">У комплекті ${escapeHtml(String(reserve))} ${reserve === 1 ? "паличка залишається" : "палички залишаються"} в запасі для посилення або першої заміни.</p>` : ""}
+      <p class="product-reed-guide__commerce">
+        <strong>${product.collection === "noir" ? "Вже у вартості" : "Комплект для наступного циклу"}</strong>
+        <span>${escapeHtml(commerceNote)}</span>
+      </p>
+      <a class="product-reed-guide__ritual" href="../room-ritual.html?product=${encodeURIComponent(product.id)}">
+        <span>ROOM RITUAL</span><strong>Налаштувати аромат під мою кімнату →</strong>
+      </a>
+      <a class="product-reed-guide__guide-link" href="../guides/yak-korystuvatis-dyfuzorom.html?aroma=${encodeURIComponent(product.id)}#reedFinder">Повний гід по паличках →</a>`;
   }
 
-  function renderUsageSection(product) {
-    const host = document.getElementById("productUsageSection");
-    if (!host || !product.package || !product.diffusion?.primary) return;
-    const pack = product.package;
-    const primary = product.diffusion.primary;
-    const countText = primary.countMin === primary.countMax
-      ? `${primary.countMin} палички`
-      : `${primary.countMin}–${primary.countMax} палички`;
-    const packageText = `${pack.reedCount} чорні палички ${pack.reedDiameterMm} мм`;
-    host.innerHTML = `<h2 class="product-detail-section__title">Як користуватися</h2><div class="product-usage-guide__steps"><article><span>01</span><div><strong>Вставте ${escapeHtml(countText)}</strong><p>Використовуйте палички з комплекту та поставте флакон на стійку поверхню.</p></div></article><article><span>02</span><div><strong>Зачекайте 24–48 годин</strong><p>Аромат розкривається поступово — не оцінюйте інтенсивність одразу.</p></div></article><article><span>03</span><div><strong>Перевертайте палички</strong><p>${escapeHtml(product.reedCare?.publicText || "Перевертайте за потреби.")}</p></div></article></div><div class="product-usage-guide__meta"><p><strong>У комплекті:</strong> флакон 100 мл і ${escapeHtml(packageText)}.</p><p><strong>Тривалість:</strong> орієнтовно 8–12 тижнів.</p></div><p class="product-usage-guide__note">${escapeHtml(REED_CARE_POLICY.consumptionNote)}</p>`;
-  }
 
   function hydrateProductPage() {
     if (typeof PRODUCT_ID === "undefined" || typeof getProduct !== "function") return false;
@@ -209,17 +242,11 @@
     setText("productDesc", product.shortDescription);
     setText("productVolume", volume);
     setText("productPrice", `${Number(price).toLocaleString("uk-UA")} грн`);
-    setText("productHeroDuration", "8–12 тижнів");
-    setText("productHeroPackage", `${product.package?.reedCount || 4} чорні палички`);
-    setText("productHeroReedCare", reedIntervalLabel(product));
+    setText("productHeroStart", startLabel(product));
+    setText("productHeroDuration", durationLabel(product));
+    setText("productHeroPackage", `${product.package?.reedCount || 4} × ${product.package?.reedDiameterMm || 4} мм`);
     document.querySelector(".product-hero__suit-for")?.replaceChildren(document.createTextNode(product.suitFor || ""));
 
-
-    const formulaStart = Array.from(document.querySelectorAll(".product-formula-proof dt"))
-      .find((node) => node.textContent.trim() === "Рекомендований старт")?.parentElement?.querySelector("dd");
-    if (formulaStart) formulaStart.textContent = product.diffusion?.primary?.label || product.quickFacts || "3–4 палички";
-
-    renderUsageSection(product);
     renderReedSetup(product);
 
     const gallery = getProductGallery(product);
@@ -440,9 +467,23 @@
 
     const existingFormula = document.querySelector(".product-formula-proof");
     const formulaIntent = existingFormula?.querySelector(".product-formula-proof__intent")?.innerHTML || `<strong>Задум композиції.</strong> ${escapeHtml(product.formulaIntent || product.shortDescription)}`;
-    const recommendedSticks = (String(product.quickFacts || "").match(/\d\s*[–-]\s*\d/) || ["3–4"])[0]
+    const startRange = (String(product.quickFacts || "3–4 палички").match(/\d+(?:\s*[–-]\s*\d+)?/) || ["3–4"])[0]
       .replace(/\s/g, "")
       .replace("-", "–");
+    const reedDiameter = Number(product.package?.reedDiameterMm || 4);
+    const reedCount = Number(product.package?.reedCount || 4);
+    const reserveCount = Number(product.package?.reserveCount || 0);
+    const reedPackageLabel = reedCount === 1
+      ? "1 чорна паличка"
+      : reedCount >= 5
+        ? `${reedCount} чорних паличок`
+        : `${reedCount} чорні палички`;
+    const reserveCopy = reserveCount > 0
+      ? `Ще ${reserveCount} ${reserveCount === 1 ? "паличка залишається" : "палички залишаються"} в запасі для посилення або першої заміни.`
+      : "Змінюйте інтенсивність лише на одну паличку за раз.";
+    const ritualCare = product.reedCare?.publicText || "Перевертайте палички, коли звучання стало тихішим.";
+    const ritualReplacement = product.reedCare?.replacementText || "Замініть палички, коли перевертання вже не повертає звучання.";
+    const durationNote = product.duration?.note || "Термін залежить від температури, вентиляції та кількості паличок.";
 
     info.querySelectorAll(".product-detail-section, .product-formula-proof, .product-accordion").forEach((node) => node.remove());
     document.querySelector(".product-substance")?.remove();
@@ -510,15 +551,22 @@
           </article>
           <article>
             <div class="story-ritual__icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M17 38h14M19 24h10l2 14H17zM21 24 15 5M24 24V4M27 24 34 6"/></svg></div>
-            <div><span>02</span><h3>Додайте ${recommendedSticks} палички</h3><p>Регулюйте кількість під бажану інтенсивність.</p></div>
+            <div><span>02</span><h3>Почніть із ${startRange} паличок ${reedDiameter} мм</h3><p>${escapeHtml(reserveCopy)}</p></div>
           </article>
           <article>
             <div class="story-ritual__icon" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="17"/><path d="M24 13v12l8 5"/></svg></div>
-            <div><span>03</span><h3>Дайте аромату час</h3><p>Через 24–48 годин композиція розкриється.</p></div>
+            <div><span>03</span><h3>Підтримуйте звучання</h3><p>${escapeHtml(ritualCare)}</p></div>
           </article>
           <figure><img src="../${interiorStoryImage}" alt="${escapeHtml(product.name)} у просторі" loading="lazy" decoding="async" onerror="this.onerror=null;this.closest('figure')?.classList.add('story-media-missing');this.remove()"></figure>
         </div>
-        <div class="container"><details class="story-ritual__details"><summary>Комплектація та безпечне використання</summary><div><p><strong>У комплекті:</strong> флакон 100 мл і 4 чорні палички.</p><p><strong>Тривалість:</strong> орієнтовно 8–12 тижнів.</p><p>Не ковтати. Уникайте контакту рідини зі шкірою, очима, меблями та текстилем. Тримайте подалі від дітей, домашніх тварин, вогню й джерел тепла.</p></div></details></div>
+        <div class="container"><details class="story-ritual__details"><summary>Комплектація та безпечне використання</summary><div>
+          <p><strong>Комплектація:</strong> флакон 100 мл і ${escapeHtml(reedPackageLabel)} ${reedDiameter} мм.</p>
+          <p><strong>Старт:</strong> ${escapeHtml(product.quickFacts || `${startRange} палички`)}. ${escapeHtml(reserveCopy)}</p>
+          <p><strong>Догляд:</strong> ${escapeHtml(ritualCare)} ${escapeHtml(ritualReplacement)}</p>
+          <p><strong>Перший запуск:</strong> після встановлення паличок дайте композиції 24–48 годин.</p>
+          <p><strong>Тривалість:</strong> ${escapeHtml(durationLabel(product))}. ${escapeHtml(durationNote)}</p>
+          <p>Не ковтати. Уникайте контакту рідини зі шкірою, очима, меблями та текстилем. Тримайте подалі від дітей, домашніх тварин, вогню й джерел тепла.</p>
+        </div></details></div>
       </section>
 
       <section class="story-discovery">

@@ -74,6 +74,7 @@
           <a href="${root}account.html">Мій кабінет</a>
           <a href="tel:+380953919569">+38 (095) 391-9569</a>
           <a href="mailto:vahome.aroma@gmail.com">Email</a>
+          <a href="${root}guides/yak-korystuvatis-dyfuzorom.html">Догляд за ароматом</a>
           <a href="https://instagram.com/va_home.aroma" target="_blank" rel="noopener">Instagram</a>
         </div>
       </div>
@@ -141,6 +142,7 @@
             <ul>
               <li><a href="${root}order-status.html">Статус замовлення</a></li>
               <li><a href="${root}account.html">Мій кабінет</a></li>
+              <li><a href="${root}guides/yak-korystuvatis-dyfuzorom.html">Догляд за ароматом</a></li>
               <li><a href="${root}offer.html">Публічна оферта</a></li>
               <li><a href="${root}privacy.html">Конфіденційність</a></li>
             </ul>
@@ -580,7 +582,7 @@
     }
     if (window.SITE_CONFIG && typeof PRODUCTS !== "undefined" && !document.querySelector('script[data-vahome-wishlist]')) {
       const script = document.createElement("script");
-      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=16.0.7`;
+      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=16.2.0`;
       script.dataset.vahomeWishlist = "true";
       document.body.appendChild(script);
     }

@@ -117,7 +117,8 @@
 
   function addOrderItemsToCart(items) {
     let added = 0;
-    (Array.isArray(items) ? items : []).forEach((item) => {
+    const orderedItems = [...(Array.isArray(items) ? items : [])].sort((a, b) => Number(String(a?.id || "").startsWith("reeds-")) - Number(String(b?.id || "").startsWith("reeds-")));
+    orderedItems.forEach((item) => {
       if (!item?.id) return;
       const selections = Array.isArray(item.selection_ids)
         ? item.selection_ids
@@ -291,7 +292,11 @@
             ? `<span class="account-order__review-done">✓ Відгук залишено</span>`
             : `<a href="products/${esc(item.id)}.html#reviews" class="account-order__review-link">Залишити відгук</a>`)
         : "";
-      return `<div class="account-order__item">${thumbHtml}<span>${nameHtml} × ${esc(item.quantity)}${chosen.length ? `<small>Обрано: ${chosen.map(esc).join(" · ")}</small>` : ""}${reviewLink}</span><strong>${money(item.line_total)}</strong></div>`;
+      const careLink = hasProductPage
+        ? `<a href="products/${esc(item.id)}.html#reedSetupSection" class="account-order__care-link" data-care-product="${esc(item.id)}">Догляд за ароматом</a>`
+        : "";
+      const itemActions = hasProductPage ? `<span class="account-order__item-actions">${careLink}${reviewLink}</span>` : "";
+      return `<div class="account-order__item">${thumbHtml}<span>${nameHtml} × ${esc(item.quantity)}${chosen.length ? `<small>Обрано: ${chosen.map(esc).join(" · ")}</small>` : ""}${itemActions}</span><strong>${money(item.line_total)}</strong></div>`;
     }).join("");
   }
 
@@ -463,6 +468,9 @@
     }));
     document.querySelectorAll(".account-order__review-link").forEach((link) => link.addEventListener("click", () => {
       window.VAAnalytics?.event?.("select_content", { content_type: "leave_review_click", item_id: link.getAttribute("href")?.split("/")[1]?.replace(".html#reviews", "") || "" });
+    }));
+    document.querySelectorAll(".account-order__care-link").forEach((link) => link.addEventListener("click", () => {
+      window.VAAnalytics?.event?.("select_content", { content_type: "account_care_guide", item_id: link.dataset.careProduct || "" });
     }));
   }
 

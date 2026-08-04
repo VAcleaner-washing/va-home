@@ -55,7 +55,11 @@
     document.getElementById("orderItems").innerHTML = items.length
       ? items.map((item) => {
           const selections = Array.isArray(item.selections) && item.selections.length ? `<small>Обрано: ${item.selections.join(" · ")}</small>` : "";
-          return `<div class="ty-order-line"><span>${item.name || "Товар"} × ${item.quantity || 1}${selections}</span><span>${formatUAH(item.line_total)}</span></div>`;
+          const productId = String(item.id || "");
+          const care = productId && !productId.startsWith("discovery-") && !productId.startsWith("reeds-")
+            ? `<a class="ty-order-care" href="products/${encodeURIComponent(productId)}.html#reedSetupSection">Догляд за ароматом →</a>`
+            : "";
+          return `<div class="ty-order-line"><span>${item.name || "Товар"} × ${item.quantity || 1}${selections}${care}</span><span>${formatUAH(item.line_total)}</span></div>`;
         }).join("") + discountLine
       : '<p class="ty-empty">Склад замовлення буде доступний у листі-підтвердженні.</p>';
     setText("orderTotal", formatUAH(order.total));

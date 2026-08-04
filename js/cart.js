@@ -50,10 +50,14 @@
     try { sessionStorage.removeItem("vahome_checkout_request_id"); } catch (_) {}
   }
 
+  function isFragranceId(id) {
+    return Boolean(id && typeof getProduct === "function" && getProduct(String(id)));
+  }
+
   function fullSizeQuantity(items) {
     return (Array.isArray(items) ? items : []).reduce((sum, item) => {
       const id = String(item?.id || "");
-      if (!id || id.startsWith("discovery-")) return sum;
+      if (!isFragranceId(id)) return sum;
       return sum + Math.max(1, Number(item.quantity || 1));
     }, 0);
   }
@@ -97,23 +101,46 @@
   // Keep this list in sync with the buttons on discovery-set.html.
   const SPECIAL_ITEMS = {
     "discovery-6": { name: "Discovery Set — 6 ароматів", price: 150, volume: "6 тестерів", image: "images/discovery/discovery-set.webp" },
-    "discovery-18": { name: "Discovery Set — 18 ароматів", price: 450, volume: "18 тестерів", image: "images/discovery/discovery-set.webp" }
+    "discovery-18": { name: "Discovery Set — 18 ароматів", price: 450, volume: "18 тестерів", image: "images/discovery/discovery-set.webp" },
+    "reeds-4mm": { name: "Запасні палички 4 мм", price: 50, volume: "4 чорні фіброві палички", itemType: "reed-addon", diameterMm: 4, reedCount: 4 },
+    "reeds-5mm": { name: "Запасні палички 5 мм", price: 50, volume: "5 чорних фібрових паличок", itemType: "reed-addon", diameterMm: 5, reedCount: 5 }
   };
+  const REED_ADDON_IDS = new Set(["reeds-4mm", "reeds-5mm"]);
+
+  function eligibleReedAddonIds(entries) {
+    const allowed = new Set();
+    (Array.isArray(entries) ? entries : []).forEach((entry) => {
+      const product = typeof getProduct === "function" ? getProduct(String(entry?.productId || "")) : null;
+      if (!product || product.collection === "noir" || product.package?.spareAddOnEligible === false) return;
+      const diameter = Number(product.package?.reedDiameterMm || 4);
+      allowed.add(`reeds-${diameter}mm`);
+    });
+    return allowed;
+  }
+
+  function sanitizeCartEntries(entries) {
+    const list = Array.isArray(entries) ? entries.filter(Boolean) : [];
+    const allowed = eligibleReedAddonIds(list);
+    return list.filter((entry) => !REED_ADDON_IDS.has(String(entry?.productId || "")) || allowed.has(String(entry.productId)));
+  }
 
   function readRaw() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       const parsed = raw ? JSON.parse(raw) : [];
-      return Array.isArray(parsed)
+      const normalized = Array.isArray(parsed)
         ? parsed.map((item) => item && item.productId === "discovery-17" ? { ...item, productId: "discovery-18" } : item)
         : [];
+      const sanitized = sanitizeCartEntries(normalized);
+      if (sanitized.length !== normalized.length) localStorage.setItem(STORAGE_KEY, JSON.stringify(sanitized));
+      return sanitized;
     } catch (e) {
       return [];
     }
   }
 
   function writeRaw(items) {
-    const safeItems = Array.isArray(items) ? items : [];
+    const safeItems = sanitizeCartEntries(Array.isArray(items) ? items : []);
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(safeItems));
       resetCheckoutRequestId();
@@ -150,17 +177,22 @@
     return null;
   }
 
+  function clampItemQuantity(id, value) {
+    const quantity = clamp(value);
+    return REED_ADDON_IDS.has(String(id || "")) ? Math.min(3, quantity) : quantity;
+  }
+
   function add(id, qty, options) {
     const items = readRaw();
     const existing = items.find((i) => i.productId === id);
     if (existing) {
-      existing.quantity = id === "discovery-6" && options && Array.isArray(options.selections) ? 1 : clamp(existing.quantity + (qty || 1));
+      existing.quantity = id === "discovery-6" && options && Array.isArray(options.selections) ? 1 : clampItemQuantity(id, existing.quantity + (qty || 1));
       if (options && Array.isArray(options.selections)) existing.selections = options.selections.slice();
     } else {
-      items.push({ productId: id, quantity: clamp(qty || 1), selections: options && Array.isArray(options.selections) ? options.selections.slice() : undefined });
+      items.push({ productId: id, quantity: clampItemQuantity(id, qty || 1), selections: options && Array.isArray(options.selections) ? options.selections.slice() : undefined });
     }
     writeRaw(items);
-    window.VAAnalytics?.addToCart?.(id, clamp(qty || 1));
+    window.VAAnalytics?.addToCart?.(id, clampItemQuantity(id, qty || 1));
   }
 
   function remove(id) {
@@ -179,7 +211,7 @@
     const items = readRaw();
     const existing = items.find((i) => i.productId === id);
     if (existing) {
-      existing.quantity = clamp(q);
+      existing.quantity = clampItemQuantity(id, q);
       writeRaw(items);
     }
   }
@@ -200,6 +232,9 @@
           volume: info.volume,
           url: info.url,
           image: info.image || null,
+          itemType: info.itemType || "product",
+          diameterMm: info.diameterMm || null,
+          reedCount: info.reedCount || null,
           quantity: entry.quantity,
           selections: Array.isArray(entry.selections) ? entry.selections.slice() : [],
           lineTotal: (info.price || 0) * entry.quantity
@@ -363,6 +398,40 @@
     }
   }
 
+  function renderReedAddons(items) {
+    const host = document.getElementById("cartReedAddons");
+    const list = document.getElementById("cartReedAddonList");
+    const included = document.getElementById("cartReedIncluded");
+    if (!host || !list || !included) return;
+
+    const fragrances = (Array.isArray(items) ? items : []).map((item) => ({ item, product: typeof getProduct === "function" ? getProduct(item.id) : null })).filter((entry) => entry.product);
+    if (!fragrances.length) { host.hidden = true; list.innerHTML = ""; included.hidden = true; return; }
+
+    const noir = fragrances.filter((entry) => entry.product.collection === "noir");
+    const eligible = fragrances.filter((entry) => entry.product.collection !== "noir" && entry.product.package?.spareAddOnEligible !== false);
+    const diameters = [...new Set(eligible.map((entry) => Number(entry.product.package?.reedDiameterMm || 4)))].sort();
+    host.hidden = false;
+
+    if (noir.length) {
+      const details = [...new Set(noir.map((entry) => `${entry.product.package?.reedCount || 4} × ${entry.product.package?.reedDiameterMm || 4} мм`))].join(" · ");
+      included.hidden = false;
+      included.innerHTML = `<span>NOIR · вже включено</span><strong>Підібраний комплект паличок є у вартості</strong><p>${details}. Окремо додавати його не потрібно.</p>`;
+    } else {
+      included.hidden = true;
+      included.innerHTML = "";
+    }
+
+    list.innerHTML = diameters.map((diameter) => {
+      const id = `reeds-${diameter}mm`;
+      const info = SPECIAL_ITEMS[id];
+      const active = items.some((item) => item.id === id);
+      const names = eligible.filter((entry) => Number(entry.product.package?.reedDiameterMm || 4) === diameter).map((entry) => entry.product.name);
+      return `<label class="cart-reed-addon${active ? " is-selected" : ""}"><input type="checkbox" data-reed-addon="${id}" ${active ? "checked" : ""}><span class="cart-reed-addon__mark" aria-hidden="true"></span><span class="cart-reed-addon__copy"><small>${String(diameter).padStart(2, "0")} MM · наступний цикл</small><strong>${info.volume}</strong><em>Для: ${names.join(" · ")}</em></span><b>+50 грн</b></label>`;
+    }).join("");
+
+    host.classList.toggle("has-options", Boolean(diameters.length));
+  }
+
   function renderCartPage() {
     const itemsList = document.getElementById("cartItemsList");
     if (!itemsList) return; // not on cart.html
@@ -383,6 +452,8 @@
         mobileBar.hidden = true;
       }
       document.body.classList.remove('va-mobile-checkout-bar-visible', 'va-checkout-form-active');
+      const reedHost = document.getElementById("cartReedAddons");
+      if (reedHost) reedHost.hidden = true;
       return;
     }
 
@@ -400,9 +471,11 @@
     itemsList.innerHTML = items
       .map((item) => {
         const detailUrl = item.url || (String(item.id).startsWith("discovery-") ? "discovery-set.html" : "");
-        const image = item.image
-          ? `<img class="fill-img" src="${item.image}" alt="${item.name}" loading="lazy" onerror="this.parentElement.classList.add('placeholder-media');this.remove();">`
-          : `<span>${item.name}</span>`;
+        const image = item.itemType === "reed-addon"
+          ? `<span class="cart-item__reed-media" aria-hidden="true"><i></i><i></i><i></i><i></i></span>`
+          : item.image
+            ? `<img class="fill-img" src="${item.image}" alt="${item.name}" loading="lazy" onerror="this.parentElement.classList.add('placeholder-media');this.remove();">`
+            : `<span>${item.name}</span>`;
         const media = detailUrl ? `<a href="${detailUrl}" aria-label="Переглянути ${item.name}">${image}</a>` : image;
         const name = detailUrl ? `<a href="${detailUrl}">${item.name}</a>` : item.name;
         const editDiscovery = String(item.id).startsWith("discovery-")
@@ -413,7 +486,7 @@
           <div class="cart-item__media${item.image ? "" : " placeholder-media"}">${media}</div>
           <div>
             <p class="cart-item__name">${name}</p>
-            <p class="cart-item__meta">${item.volume || ""}</p>
+            <p class="cart-item__meta">${item.volume || ""}${item.itemType === "reed-addon" ? " · додаткова опція" : ""}</p>
             ${item.selections.length ? `<p class="cart-item__selection"><strong>Обрані аромати:</strong> ${item.selections.map(id=>{const p=typeof getProduct==="function"?getProduct(id):null;return p?p.name:id}).join(" · ")}</p>` : ""}
             ${editDiscovery}
             <div class="cart-item__controls">
@@ -430,6 +503,7 @@
       })
       .join("");
 
+    renderReedAddons(items);
     updatePremiumCheckoutUI(items);
 
     refreshCountBadge();
@@ -499,6 +573,19 @@
       if (!event.target.classList.contains("cart-qty-input")) return;
       const row = event.target.closest("[data-cart-item]");
       updateQty(row.getAttribute("data-cart-item"), clamp(parseInt(event.target.value, 10)));
+      renderCartPage();
+    });
+
+    document.getElementById("cartReedAddons")?.addEventListener("change", (event) => {
+      const input = event.target.closest("[data-reed-addon]");
+      if (!input) return;
+      const id = input.getAttribute("data-reed-addon");
+      if (input.checked) {
+        add(id, 1);
+        window.VAHome?.showToast("Запасні палички додано до замовлення");
+      } else {
+        remove(id);
+      }
       renderCartPage();
     });
 
@@ -1208,6 +1295,7 @@
       INVALID_DELIVERY: "Перевірте місто та дані доставки Нової пошти.",
       DELIVERY_VALIDATION_UNAVAILABLE: "Нова пошта тимчасово не підтвердила дані доставки. Кошик збережено — повторіть спробу трохи пізніше.",
       INVALID_PAYMENT: "Оберіть доступний спосіб оплати.",
+      ADDON_REQUIRES_FRAGRANCE: "Запасні палички можна замовити лише разом із відповідним дифузором.",
       CARD_PAYMENT_UNAVAILABLE: "Оплата карткою тимчасово недоступна. Оберіть оплату на рахунок або при отриманні.",
       INVALID_PROMO: "Промокод недійсний для цього замовлення. Перевірте код або приберіть його.",
       INVALID_ITEMS: "У кошику є некоректний товар. Оновіть кошик і повторіть спробу.",

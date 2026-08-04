@@ -5,7 +5,7 @@
    Run: node scripts/build-product-content.mjs
    ========================================================================== */
 
-const PRODUCT_CONTENT_VERSION = "16.0.7";
+const PRODUCT_CONTENT_VERSION = "16.2.0";
 const PRODUCT_LABELS = {
   "character": {
     "clean": "Чисті",
@@ -286,7 +286,7 @@ const PRODUCT_SCENT_GUIDE = {
     {
       "id": "atmosphere",
       "stepLabel": "Атмосфера",
-      "title": "Яку атмосферу ви хочете відчути вдома?",
+      "title": "Яке перше відчуття має створювати аромат?",
       "options": [
         {
           "id": "calm",
@@ -462,7 +462,7 @@ const PRODUCT_SCENT_GUIDE = {
     {
       "id": "room",
       "stepLabel": "Простір",
-      "title": "Для якої кімнати ви обираєте аромат?",
+      "title": "Де аромат має звучати найкраще?",
       "options": [
         {
           "id": "living-room",
@@ -562,7 +562,7 @@ const PRODUCT_SCENT_GUIDE = {
     {
       "id": "composition",
       "stepLabel": "Напрям",
-      "title": "Які аромати вам зазвичай подобаються?",
+      "title": "До якого характеру ви повертаєтесь найчастіше?",
       "options": [
         {
           "id": "fresh",
@@ -689,7 +689,7 @@ const PRODUCT_SCENT_GUIDE = {
     {
       "id": "space",
       "stepLabel": "Естетика",
-      "title": "Який стиль інтер’єру вам найближчий?",
+      "title": "Який інтер’єр найближчий вам за характером?",
       "options": [
         {
           "id": "entry",
@@ -877,30 +877,66 @@ const PRODUCT_SCENT_GUIDE = {
   }
 };
 const PRODUCT_REED_CARE_POLICY = {
-  "title": "Догляд за паличками",
-  "publicRule": "Частота залежить від композиції: щільні мускусні та смоляні бази потребують перевертання частіше, а легкі свіжі й чайні профілі — рідше.",
-  "consumptionNote": "Якщо інтенсивність достатня, перевертайте рідше: кожне перевертання тимчасово посилює аромат і пришвидшує випаровування.",
-  "faqText": "Частота залежить від композиції: щільні мускусні та смоляні бази — орієнтовно кожні 3–4 дні, середні — кожні 4–7 днів, легкі свіжі й чайні — раз на тиждень або за потреби. Точна рекомендація є на картці кожного аромату.",
+  "title": "Палички: просте налаштування",
+  "publicRule": "Починайте з рекомендованої кількості для конкретного аромату. Хочеться більше присутності — додайте одну паличку. Аромат насичує — заберіть одну.",
+  "quantityRule": "Починайте з рекомендованої кількості. Змінюйте інтенсивність лише на одну паличку за раз і оцінюйте результат наступного дня.",
+  "flippingRule": "Перевертайте палички регулярно: це відновлює дифузію. Точний інтервал залежить від композиції та вказаний на сторінці кожного аромату.",
+  "replacementRule": "Замінюйте палички лише тоді, коли аромат суттєво слабшає і перевертання вже не повертає звучання. Орієнтуйтесь не на календар, а на фактичну віддачу.",
+  "durationRule": "Термін залежить від температури, вентиляції та кількості паличок. Орієнтуйтесь на рівень рідини, а не лише на календар.",
+  "placementRule": "Ставте дифузор на висоті приблизно 80–100 см від підлоги, на відкритому місці з легким рухом повітря. Уникайте прямих протягів, сонця й джерел тепла.",
+  "consumptionNote": "Кожне перевертання тимчасово посилює аромат і пришвидшує випаровування. Якщо інтенсивність достатня, перевертайте рідше.",
+  "faqText": "Точна частота залежить від формули: легкі композиції — раз на тиждень, збалансовані — приблизно кожні 3–7 днів, щільні мускусні й смоляні — приблизно кожні 2–4 дні. Рекомендація для конкретного аромату є на його сторінці.",
   "tiers": {
-    "dense": {
-      "label": "Щільна база",
-      "range": "3–4 дні"
+    "light": {
+      "label": "Легка база",
+      "range": "7 днів",
+      "description": "Свіжі, чайні, мінеральні та спокійні композиції."
     },
     "balanced": {
       "label": "Збалансована база",
-      "range": "4–7 днів"
+      "range": "3–7 днів",
+      "description": "Композиції середньої щільності з помірною віддачею."
     },
-    "light": {
-      "label": "Легка база",
-      "range": "7 днів або за потреби"
+    "dense": {
+      "label": "Щільна база",
+      "range": "2–4 дні",
+      "description": "Мускусні, смоляні, фруктово-теплі та темні композиції."
     }
+  },
+  "groups": {
+    "light": [
+      "signature-relax",
+      "hotel-spring",
+      "wild-berry-way",
+      "mineral-salt",
+      "hotel-luxe",
+      "pure-zen",
+      "silent-temple",
+      "doux-moment"
+    ],
+    "balanced": [
+      "evening-ritual",
+      "velvet-spa",
+      "linstinct",
+      "pure-imagination",
+      "the-archive"
+    ],
+    "dense": [
+      "dark-bloom",
+      "old-money",
+      "silk-molecule",
+      "moss-and-shadow",
+      "forbidden-fruit"
+    ]
   }
 };
 const PRODUCT_REED_SETUP_POLICY = {
-  "title": "Скільки паличок використати",
-  "publicRule": "Почніть зі стандартного варіанта. За добу аромат набере повну силу.",
-  "adjustmentNote": "Хочете тихіше звучання — приберіть одну паличку. Виразніше — додайте одну.",
-  "extraReedsNote": "Для великого простору може знадобитися додатковий комплект паличок.",
+  "title": "Налаштування звучання",
+  "publicRule": "Почніть із рекомендованої кількості для цього аромату. Дайте композиції 24–48 годин, а потім коригуйте інтенсивність лише на одну паличку за раз.",
+  "adjustmentNote": "Тихіше — приберіть одну паличку. Виразніше — додайте одну й знову дайте аромату час.",
+  "extraReedsNote": "У щільних формулах 5 мм дві додаткові палички залишаються в запасі: для посилення або першої заміни.",
+  "replacementNote": "Не міняйте палички за розкладом. Замініть їх, коли перевертання вже не повертає відчутну дифузію.",
+  "placementNote": "Оптимальна висота — 80–100 см від підлоги, на відкритому місці без прямого протягу.",
   "bands": [
     {
       "id": "small",
@@ -920,6 +956,37 @@ const PRODUCT_REED_SETUP_POLICY = {
     }
   ]
 };
+const PRODUCT_REED_ADDON_POLICY = {
+  "price": 50,
+  "currency": "UAH",
+  "title": "Запасні палички для вашого аромату",
+  "description": "Додайте комплект для наступного циклу — він поїде разом із дифузором, без окремої доставки.",
+  "standaloneAllowed": false,
+  "eligibleCollections": [
+    "entry",
+    "signature",
+    "premium"
+  ],
+  "noirIncludedText": "У NOIR підібраний комплект паличок уже включено у вартість. Діаметр і кількість залежать від формули.",
+  "options": [
+    {
+      "id": "reeds-4mm",
+      "diameterMm": 4,
+      "count": 4,
+      "price": 50,
+      "name": "Запасні палички 4 мм",
+      "label": "4 чорні фіброві палички 4 мм"
+    },
+    {
+      "id": "reeds-5mm",
+      "diameterMm": 5,
+      "count": 5,
+      "price": 50,
+      "name": "Запасні палички 5 мм",
+      "label": "5 чорних фібрових паличок 5 мм"
+    }
+  ]
+};
 const COLLECTIONS = [
   {
     "id": "entry",
@@ -935,7 +1002,8 @@ const COLLECTIONS = [
       "doux-moment",
       "wild-berry-way",
       "hotel-spring"
-    ]
+    ],
+    "reedSummary": "Переважно 4 мм · Forbidden Fruit — 5 мм"
   },
   {
     "id": "signature",
@@ -950,7 +1018,8 @@ const COLLECTIONS = [
       "velvet-spa",
       "pure-zen",
       "hotel-luxe"
-    ]
+    ],
+    "reedSummary": "4 мм × 4 палички"
   },
   {
     "id": "premium",
@@ -964,7 +1033,8 @@ const COLLECTIONS = [
       "old-money",
       "linstinct",
       "mineral-salt"
-    ]
+    ],
+    "reedSummary": "4 мм · Old Money — 5 мм"
   },
   {
     "id": "noir",
@@ -981,7 +1051,8 @@ const COLLECTIONS = [
       "silent-temple",
       "moss-and-shadow",
       "dark-bloom"
-    ]
+    ],
+    "reedSummary": "4 або 5 мм — під щільність формули"
   }
 ];
 const PRODUCTS = [
@@ -1097,7 +1168,14 @@ const PRODUCTS = [
     },
     "package": {
       "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedDiameterMm": 4,
+      "label": "4 чорні палички 4 мм",
+      "reserveCount": 0,
+      "includedInPrice": true,
+      "mode": "standard-included",
+      "spareAddOnEligible": true,
+      "spareAddOnId": "reeds-4mm",
+      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
     },
     "filterMood": [
       "calm"
@@ -1114,7 +1192,8 @@ const PRODUCTS = [
         "min": 7,
         "max": 7
       },
-      "publicText": "Перевертайте палички орієнтовно раз на 7 днів або коли звучання стало тихішим."
+      "publicText": "Перевертайте палички раз на 7 днів або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
@@ -1132,11 +1211,17 @@ const PRODUCTS = [
         "max": 4,
         "label": "4"
       },
-      "note": "Універсальний аромат легко налаштовується кількістю паличок."
+      "note": "Коригуйте інтенсивність лише на одну паличку за раз.",
+      "diameterMm": 4
     },
     "journalArticle": {
       "path": "guides/svizhi-aromadyfuzory.html",
       "title": "Свіжі аромадифузори для дому"
+    },
+    "duration": {
+      "weeksMax": 12,
+      "label": "до 12 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -1236,10 +1321,10 @@ const PRODUCTS = [
     ],
     "diffusion": {
       "primary": {
-        "diameterMm": 4,
+        "diameterMm": 5,
         "countMin": 3,
         "countMax": 3,
-        "label": "3 палички 4 мм"
+        "label": "3 палички 5 мм"
       },
       "alternative": {
         "diameterMm": 5,
@@ -1251,8 +1336,15 @@ const PRODUCTS = [
       "tip": "Не рекомендується для кухні: тепла база може конфліктувати із запахами їжі."
     },
     "package": {
-      "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedCount": 5,
+      "reedDiameterMm": 5,
+      "label": "5 чорних паличок 5 мм",
+      "reserveCount": 2,
+      "includedInPrice": true,
+      "mode": "standard-included",
+      "spareAddOnEligible": true,
+      "spareAddOnId": "reeds-5mm",
+      "commerceNote": "Комплект 5 мм для наступного циклу можна додати в кошику · 50 грн."
     },
     "filterMood": [
       "warm-evening",
@@ -1267,12 +1359,13 @@ const PRODUCTS = [
       ]
     },
     "reedCare": {
-      "tier": "balanced",
+      "tier": "dense",
       "intervalDays": {
-        "min": 4,
-        "max": 5
+        "min": 3,
+        "max": 4
       },
-      "publicText": "Перевертайте палички орієнтовно кожні 4–5 днів для рівномірної віддачі."
+      "publicText": "Перевертайте палички кожні 3–4 дні або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
@@ -1290,11 +1383,17 @@ const PRODUCTS = [
         "max": 4,
         "label": "4"
       },
-      "note": "У невеликій кімнаті починайте з 2 паличок."
+      "note": "Почніть із 3 паличок; дві залиште в запасі для посилення або першої заміни.",
+      "diameterMm": 5
     },
     "journalArticle": {
       "path": "guides/noty-aromatu.html",
       "title": "Як читати ноти аромату"
+    },
+    "duration": {
+      "weeksMax": 8,
+      "label": "до 8 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -1409,7 +1508,14 @@ const PRODUCTS = [
     },
     "package": {
       "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedDiameterMm": 4,
+      "label": "4 чорні палички 4 мм",
+      "reserveCount": 1,
+      "includedInPrice": true,
+      "mode": "standard-included",
+      "spareAddOnEligible": true,
+      "spareAddOnId": "reeds-4mm",
+      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
     },
     "filterMood": [
       "warm-evening",
@@ -1424,12 +1530,13 @@ const PRODUCTS = [
       ]
     },
     "reedCare": {
-      "tier": "balanced",
+      "tier": "light",
       "intervalDays": {
-        "min": 5,
+        "min": 7,
         "max": 7
       },
-      "publicText": "Перевертайте палички орієнтовно кожні 5–7 днів або коли звучання стало тихішим."
+      "publicText": "Перевертайте палички раз на 7 днів або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
@@ -1447,11 +1554,17 @@ const PRODUCTS = [
         "max": 4,
         "label": "4"
       },
-      "note": "У теплому приміщенні карамельний профіль посилюється."
+      "note": "Коригуйте інтенсивність лише на одну паличку за раз.",
+      "diameterMm": 4
     },
     "journalArticle": {
       "path": "guides/noty-aromatu.html",
       "title": "Як читати ноти аромату"
+    },
+    "duration": {
+      "weeksMax": 12,
+      "label": "до 12 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -1567,7 +1680,14 @@ const PRODUCTS = [
     },
     "package": {
       "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedDiameterMm": 4,
+      "label": "4 чорні палички 4 мм",
+      "reserveCount": 0,
+      "includedInPrice": true,
+      "mode": "standard-included",
+      "spareAddOnEligible": true,
+      "spareAddOnId": "reeds-4mm",
+      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
     },
     "sourceRef": {
       "workbookRow": "WILD BERRY WAY"
@@ -1581,7 +1701,8 @@ const PRODUCTS = [
         "min": 7,
         "max": 7
       },
-      "publicText": "Перевертайте палички орієнтовно раз на 7 днів або коли звучання стало тихішим."
+      "publicText": "Перевертайте палички раз на 7 днів або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
@@ -1599,11 +1720,17 @@ const PRODUCTS = [
         "max": 4,
         "label": "4"
       },
-      "note": "Свіжий сезонний профіль найкраще розкривається на 4 паличках."
+      "note": "Коригуйте інтенсивність лише на одну паличку за раз.",
+      "diameterMm": 4
     },
     "journalArticle": {
       "path": "guides/svizhi-aromadyfuzory.html",
       "title": "Свіжі аромадифузори для дому"
+    },
+    "duration": {
+      "weeksMax": 12,
+      "label": "до 12 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -1720,7 +1847,14 @@ const PRODUCTS = [
     },
     "package": {
       "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedDiameterMm": 4,
+      "label": "4 чорні палички 4 мм",
+      "reserveCount": 0,
+      "includedInPrice": true,
+      "mode": "standard-included",
+      "spareAddOnEligible": true,
+      "spareAddOnId": "reeds-4mm",
+      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
     },
     "sourceRef": {
       "workbookRow": "HOTEL SPRING v2"
@@ -1734,7 +1868,8 @@ const PRODUCTS = [
         "min": 7,
         "max": 7
       },
-      "publicText": "Перевертайте палички орієнтовно раз на 7 днів або коли звучання стало тихішим."
+      "publicText": "Перевертайте палички раз на 7 днів або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
@@ -1752,11 +1887,17 @@ const PRODUCTS = [
         "max": 4,
         "label": "4"
       },
-      "note": "Для ефекту весняного boutique hotel у стандартній кімнаті використовуйте всі 4 палички."
+      "note": "Коригуйте інтенсивність лише на одну паличку за раз.",
+      "diameterMm": 4
     },
     "journalArticle": {
       "path": "guides/hotelni-aromaty-dlya-domu.html",
       "title": "Готельні аромати для дому"
+    },
+    "duration": {
+      "weeksMax": 10,
+      "label": "до 10 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -1873,7 +2014,14 @@ const PRODUCTS = [
     },
     "package": {
       "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedDiameterMm": 4,
+      "label": "4 чорні палички 4 мм",
+      "reserveCount": 0,
+      "includedInPrice": true,
+      "mode": "standard-included",
+      "spareAddOnEligible": true,
+      "spareAddOnId": "reeds-4mm",
+      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
     },
     "sourceRef": {
       "workbookRow": "EVENING RITUAL v2"
@@ -1884,10 +2032,11 @@ const PRODUCTS = [
     "reedCare": {
       "tier": "balanced",
       "intervalDays": {
-        "min": 4,
-        "max": 5
+        "min": 5,
+        "max": 7
       },
-      "publicText": "Перевертайте палички орієнтовно кожні 4–5 днів для рівномірної віддачі."
+      "publicText": "Перевертайте палички кожні 5–7 днів або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
@@ -1905,11 +2054,17 @@ const PRODUCTS = [
         "max": 4,
         "label": "4"
       },
-      "note": "У спальні починайте з 3 паличок."
+      "note": "Коригуйте інтенсивність лише на одну паличку за раз.",
+      "diameterMm": 4
     },
     "journalArticle": {
       "path": "guides/vechirnii-rytual.html",
       "title": "Аромат як вечірній ритуал"
+    },
+    "duration": {
+      "weeksMax": 10,
+      "label": "до 10 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -2027,7 +2182,14 @@ const PRODUCTS = [
     },
     "package": {
       "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedDiameterMm": 4,
+      "label": "4 чорні палички 4 мм",
+      "reserveCount": 0,
+      "includedInPrice": true,
+      "mode": "standard-included",
+      "spareAddOnEligible": true,
+      "spareAddOnId": "reeds-4mm",
+      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
     },
     "sourceRef": {
       "workbookRow": "VELVET SPA v2"
@@ -2038,10 +2200,11 @@ const PRODUCTS = [
     "reedCare": {
       "tier": "balanced",
       "intervalDays": {
-        "min": 4,
-        "max": 5
+        "min": 5,
+        "max": 7
       },
-      "publicText": "Перевертайте палички орієнтовно кожні 4–5 днів для рівномірної віддачі."
+      "publicText": "Перевертайте палички кожні 5–7 днів або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
@@ -2059,11 +2222,17 @@ const PRODUCTS = [
         "max": 4,
         "label": "4"
       },
-      "note": "У невеликій ванній 2–3 паличок зазвичай достатньо."
+      "note": "Коригуйте інтенсивність лише на одну паличку за раз.",
+      "diameterMm": 4
     },
     "journalArticle": {
       "path": "guides/aromadyfuzor-dlya-vannoi.html",
       "title": "Домашня SPA-атмосфера у ванній"
+    },
+    "duration": {
+      "weeksMax": 10,
+      "label": "до 10 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -2183,7 +2352,14 @@ const PRODUCTS = [
     },
     "package": {
       "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedDiameterMm": 4,
+      "label": "4 чорні палички 4 мм",
+      "reserveCount": 0,
+      "includedInPrice": true,
+      "mode": "standard-included",
+      "spareAddOnEligible": true,
+      "spareAddOnId": "reeds-4mm",
+      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
     },
     "sourceRef": {
       "workbookRow": "PURE ZEN v2"
@@ -2192,12 +2368,13 @@ const PRODUCTS = [
       "avoidRooms": []
     },
     "reedCare": {
-      "tier": "balanced",
+      "tier": "light",
       "intervalDays": {
-        "min": 5,
+        "min": 7,
         "max": 7
       },
-      "publicText": "Перевертайте палички орієнтовно кожні 5–7 днів або коли звучання стало тихішим."
+      "publicText": "Перевертайте палички раз на 7 днів або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
@@ -2213,14 +2390,19 @@ const PRODUCTS = [
       "large": {
         "min": 4,
         "max": 4,
-        "label": "4+",
-        "extraReeds": true
+        "label": "4"
       },
-      "note": "У стандартній кімнаті використовуйте всі 4 палички: тихе звучання є задумом композиції."
+      "note": "Коригуйте інтенсивність лише на одну паличку за раз.",
+      "diameterMm": 4
     },
     "journalArticle": {
       "path": "guides/aromadyfuzor-dlya-vannoi.html",
       "title": "Домашня SPA-атмосфера у ванній"
+    },
+    "duration": {
+      "weeksMax": 12,
+      "label": "до 12 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -2341,7 +2523,14 @@ const PRODUCTS = [
     },
     "package": {
       "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedDiameterMm": 4,
+      "label": "4 чорні палички 4 мм",
+      "reserveCount": 0,
+      "includedInPrice": true,
+      "mode": "standard-included",
+      "spareAddOnEligible": true,
+      "spareAddOnId": "reeds-4mm",
+      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
     },
     "sourceRef": {
       "workbookRow": "HOTEL LUXE Б+"
@@ -2355,7 +2544,8 @@ const PRODUCTS = [
         "min": 7,
         "max": 7
       },
-      "publicText": "Перевертайте палички орієнтовно раз на 7 днів або коли звучання стало тихішим."
+      "publicText": "Перевертайте палички раз на 7 днів або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
@@ -2373,11 +2563,17 @@ const PRODUCTS = [
         "max": 4,
         "label": "4"
       },
-      "note": "Для холу або стандартної кімнати оптимальні всі 4 палички."
+      "note": "Коригуйте інтенсивність лише на одну паличку за раз.",
+      "diameterMm": 4
     },
     "journalArticle": {
       "path": "guides/hotelni-aromaty-dlya-domu.html",
       "title": "Готельні аромати для дому"
+    },
+    "duration": {
+      "weeksMax": 10,
+      "label": "до 10 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -2458,7 +2654,7 @@ const PRODUCTS = [
         "top": "images/product-story/old-money/top.webp"
       }
     },
-    "quickFacts": "3 палички",
+    "quickFacts": "3–4 палички",
     "suitFor": "Підійде, якщо шукаєте темний шкіряно-деревний аромат для кабінету, темного інтер’єру або просторої вітальні.",
     "formulaIntent": "Шкіра, тютюн і лабданум пом’якшуються бергамотом, лавандою та амбровим теплом, створюючи камерну атмосферу дерева й приглушеного світла.",
     "insights": {
@@ -2477,10 +2673,10 @@ const PRODUCTS = [
     ],
     "diffusion": {
       "primary": {
-        "diameterMm": 4,
+        "diameterMm": 5,
         "countMin": 3,
-        "countMax": 3,
-        "label": "3 палички 4 мм"
+        "countMax": 4,
+        "label": "3–4 палички 5 мм"
       },
       "alternative": {
         "diameterMm": 5,
@@ -2492,8 +2688,15 @@ const PRODUCTS = [
       "tip": "У маленькій кімнаті починайте з 2 паличок. Не створюйте агресивну дифузію."
     },
     "package": {
-      "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedCount": 5,
+      "reedDiameterMm": 5,
+      "label": "5 чорних паличок 5 мм",
+      "reserveCount": 2,
+      "includedInPrice": true,
+      "mode": "standard-included",
+      "spareAddOnEligible": true,
+      "spareAddOnId": "reeds-5mm",
+      "commerceNote": "Комплект 5 мм для наступного циклу можна додати в кошику · 50 грн."
     },
     "sourceRef": {
       "workbookRow": "OLD MONEY v2"
@@ -2502,34 +2705,41 @@ const PRODUCTS = [
       "avoidRooms": []
     },
     "reedCare": {
-      "tier": "balanced",
+      "tier": "dense",
       "intervalDays": {
-        "min": 4,
-        "max": 5
+        "min": 3,
+        "max": 4
       },
-      "publicText": "Перевертайте палички орієнтовно кожні 4–5 днів для рівномірної віддачі."
+      "publicText": "Перевертайте палички кожні 3–4 дні або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
         "min": 2,
-        "max": 2,
-        "label": "2"
+        "max": 3,
+        "label": "2–3"
       },
       "standard": {
         "min": 3,
-        "max": 3,
-        "label": "3"
+        "max": 4,
+        "label": "3–4"
       },
       "large": {
         "min": 4,
-        "max": 4,
-        "label": "4"
+        "max": 5,
+        "label": "4–5"
       },
-      "note": "Темний шкіряний аромат краще залишати стриманим."
+      "note": "Почніть із 3 паличок; дві залиште в запасі для посилення або першої заміни.",
+      "diameterMm": 5
     },
     "journalArticle": {
       "path": "guides/chomu-dorohyi-aromat-ne-krychyt.html",
       "title": "Чому дорогий аромат не кричить"
+    },
+    "duration": {
+      "weeksMax": 8,
+      "label": "до 8 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -2647,7 +2857,14 @@ const PRODUCTS = [
     },
     "package": {
       "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedDiameterMm": 4,
+      "label": "4 чорні палички 4 мм",
+      "reserveCount": 0,
+      "includedInPrice": true,
+      "mode": "standard-included",
+      "spareAddOnEligible": true,
+      "spareAddOnId": "reeds-4mm",
+      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
     },
     "sourceRef": {
       "workbookRow": "L'INSTINCT v2"
@@ -2661,7 +2878,8 @@ const PRODUCTS = [
         "min": 5,
         "max": 7
       },
-      "publicText": "Перевертайте палички орієнтовно кожні 5–7 днів або коли звучання стало тихішим."
+      "publicText": "Перевертайте палички кожні 5–7 днів або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
@@ -2679,11 +2897,17 @@ const PRODUCTS = [
         "max": 4,
         "label": "4"
       },
-      "note": "Активний чоловічий профіль: у невеликій кімнаті починайте з 2 паличок."
+      "note": "Коригуйте інтенсивність лише на одну паличку за раз.",
+      "diameterMm": 4
     },
     "journalArticle": {
       "path": "guides/iso-e-super.html",
       "title": "Як Iso E Super створює об’єм"
+    },
+    "duration": {
+      "weeksMax": 10,
+      "label": "до 10 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -2801,7 +3025,14 @@ const PRODUCTS = [
     },
     "package": {
       "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedDiameterMm": 4,
+      "label": "4 чорні палички 4 мм",
+      "reserveCount": 0,
+      "includedInPrice": true,
+      "mode": "standard-included",
+      "spareAddOnEligible": true,
+      "spareAddOnId": "reeds-4mm",
+      "commerceNote": "Комплект 4 мм для наступного циклу можна додати в кошику · 50 грн."
     },
     "sourceRef": {
       "workbookRow": "MINERAL SALT v2"
@@ -2815,7 +3046,8 @@ const PRODUCTS = [
         "min": 7,
         "max": 7
       },
-      "publicText": "Перевертайте палички орієнтовно раз на 7 днів або коли звучання стало тихішим."
+      "publicText": "Перевертайте палички раз на 7 днів або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
@@ -2833,11 +3065,17 @@ const PRODUCTS = [
         "max": 4,
         "label": "4"
       },
-      "note": "Для повної SPA-аури у стандартній кімнаті використовуйте всі 4 палички."
+      "note": "Коригуйте інтенсивність лише на одну паличку за раз.",
+      "diameterMm": 4
     },
     "journalArticle": {
       "path": "guides/ambroxan.html",
       "title": "Як Ambroxan створює простір"
+    },
+    "duration": {
+      "weeksMax": 10,
+      "label": "до 10 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -2954,7 +3192,14 @@ const PRODUCTS = [
     },
     "package": {
       "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedDiameterMm": 4,
+      "label": "4 чорні палички 4 мм",
+      "reserveCount": 1,
+      "includedInPrice": true,
+      "mode": "noir-included",
+      "spareAddOnEligible": false,
+      "spareAddOnId": null,
+      "commerceNote": "Підібраний комплект паличок уже включено у вартість NOIR."
     },
     "sourceRef": {
       "workbookRow": "PURE IMAGINATION"
@@ -2965,10 +3210,11 @@ const PRODUCTS = [
     "reedCare": {
       "tier": "balanced",
       "intervalDays": {
-        "min": 5,
+        "min": 7,
         "max": 7
       },
-      "publicText": "Перевертайте палички орієнтовно кожні 5–7 днів або коли звучання стало тихішим."
+      "publicText": "Перевертайте палички раз на 7 днів або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
@@ -2986,11 +3232,17 @@ const PRODUCTS = [
         "max": 4,
         "label": "4"
       },
-      "note": "Активна дифузія: у невеликій кімнаті не перевантажуйте простір."
+      "note": "Коригуйте інтенсивність лише на одну паличку за раз.",
+      "diameterMm": 4
     },
     "journalArticle": {
       "path": "guides/iso-e-super.html",
       "title": "Як працює Iso E Super"
+    },
+    "duration": {
+      "weeksMax": 10,
+      "label": "до 10 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -3077,7 +3329,7 @@ const PRODUCTS = [
         "top": "images/product-story/silk-molecule/top.webp"
       }
     },
-    "quickFacts": "4 палички",
+    "quickFacts": "3–4 палички",
     "suitFor": "Підійде, якщо любите шовковисті мускусні композиції для спальні, гардероба або особистого простору.",
     "formulaIntent": "Шафран, фіалка й темний мускус з’єднуються у тиху шовкову текстуру, яка м’яко стає частиною самого простору.",
     "insights": {
@@ -3097,9 +3349,9 @@ const PRODUCTS = [
     "diffusion": {
       "primary": {
         "diameterMm": 5,
-        "countMin": 4,
+        "countMin": 3,
         "countMax": 4,
-        "label": "4 палички 5 мм"
+        "label": "3–4 палички 5 мм"
       },
       "alternative": {
         "diameterMm": 4,
@@ -3111,8 +3363,15 @@ const PRODUCTS = [
       "tip": "Оцінюйте остаточну інтенсивність через 24–48 годин."
     },
     "package": {
-      "reedCount": 4,
-      "reedDiameterMm": 5
+      "reedCount": 5,
+      "reedDiameterMm": 5,
+      "label": "5 чорних паличок 5 мм",
+      "reserveCount": 2,
+      "includedInPrice": true,
+      "mode": "noir-included",
+      "spareAddOnEligible": false,
+      "spareAddOnId": null,
+      "commerceNote": "Підібраний комплект паличок уже включено у вартість NOIR."
     },
     "sourceRef": {
       "workbookRow": "SILK MOLECULE v2"
@@ -3124,32 +3383,38 @@ const PRODUCTS = [
       "tier": "dense",
       "intervalDays": {
         "min": 3,
-        "max": 4
+        "max": 3
       },
-      "publicText": "Перевертайте палички орієнтовно кожні 3–4 дні для рівномірного розкриття."
+      "publicText": "Перевертайте палички кожні 3 дні або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
-        "min": 3,
+        "min": 2,
         "max": 3,
-        "label": "3"
+        "label": "2–3"
       },
       "standard": {
-        "min": 4,
+        "min": 3,
         "max": 4,
-        "label": "4"
+        "label": "3–4"
       },
       "large": {
         "min": 4,
-        "max": 4,
-        "label": "4+",
-        "extraReeds": true
+        "max": 5,
+        "label": "4–5"
       },
-      "note": "У стандартній кімнаті використовуйте всі 4 палички 5 мм і оцініть остаточну інтенсивність через 24–48 годин."
+      "note": "Почніть із 3 паличок; дві залиште в запасі для посилення або першої заміни.",
+      "diameterMm": 5
     },
     "journalArticle": {
       "path": "guides/molekulyarna-kompozytsiya.html",
       "title": "Чому це молекулярна композиція"
+    },
+    "duration": {
+      "weeksMax": 8,
+      "label": "до 8 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -3264,7 +3529,14 @@ const PRODUCTS = [
     },
     "package": {
       "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedDiameterMm": 4,
+      "label": "4 чорні палички 4 мм",
+      "reserveCount": 1,
+      "includedInPrice": true,
+      "mode": "noir-included",
+      "spareAddOnEligible": false,
+      "spareAddOnId": null,
+      "commerceNote": "Підібраний комплект паличок уже включено у вартість NOIR."
     },
     "sourceRef": {
       "workbookRow": "THE ARCHIVE v2"
@@ -3273,12 +3545,13 @@ const PRODUCTS = [
       "avoidRooms": []
     },
     "reedCare": {
-      "tier": "dense",
+      "tier": "balanced",
       "intervalDays": {
         "min": 3,
         "max": 4
       },
-      "publicText": "Перевертайте палички орієнтовно кожні 3–4 дні для рівномірного розкриття."
+      "publicText": "Перевертайте палички кожні 3–4 дні або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
@@ -3296,11 +3569,17 @@ const PRODUCTS = [
         "max": 4,
         "label": "4"
       },
-      "note": "Камерна композиція: у великому просторі аромат залишатиметься стриманим."
+      "note": "Коригуйте інтенсивність лише на одну паличку за раз.",
+      "diameterMm": 4
     },
     "journalArticle": {
       "path": "guides/chomu-testuyemo-tyzhnyamy.html",
       "title": "Чому формулу тестують тижнями"
+    },
+    "duration": {
+      "weeksMax": 10,
+      "label": "до 10 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -3386,7 +3665,7 @@ const PRODUCTS = [
         "top": "images/product-story/silent-temple/top.webp"
       }
     },
-    "quickFacts": "4 палички",
+    "quickFacts": "3–4 палички",
     "suitFor": "Підійде, якщо шукаєте медитативну хвойно-деревну свіжість для спальні, кабінету або SPA-простору.",
     "formulaIntent": "Білий чай та евкаліпт переходять у кипарис, сосну й кедр, залишаючи чисту деревну тишу з ледь відчутним теплом.",
     "insights": {
@@ -3406,9 +3685,9 @@ const PRODUCTS = [
     "diffusion": {
       "primary": {
         "diameterMm": 4,
-        "countMin": 4,
+        "countMin": 3,
         "countMax": 4,
-        "label": "4 палички 4 мм"
+        "label": "3–4 палички 4 мм"
       },
       "alternative": {
         "diameterMm": 5,
@@ -3421,7 +3700,14 @@ const PRODUCTS = [
     },
     "package": {
       "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedDiameterMm": 4,
+      "label": "4 чорні палички 4 мм",
+      "reserveCount": 0,
+      "includedInPrice": true,
+      "mode": "noir-included",
+      "spareAddOnEligible": false,
+      "spareAddOnId": null,
+      "commerceNote": "Підібраний комплект паличок уже включено у вартість NOIR."
     },
     "sourceRef": {
       "workbookRow": "SILENT TEMPLE"
@@ -3430,34 +3716,41 @@ const PRODUCTS = [
       "avoidRooms": []
     },
     "reedCare": {
-      "tier": "balanced",
+      "tier": "light",
       "intervalDays": {
-        "min": 5,
+        "min": 7,
         "max": 7
       },
-      "publicText": "Перевертайте палички орієнтовно кожні 5–7 днів або коли звучання стало тихішим."
+      "publicText": "Перевертайте палички раз на 7 днів або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
-        "min": 3,
+        "min": 2,
         "max": 3,
-        "label": "3"
+        "label": "2–3"
       },
       "standard": {
-        "min": 4,
+        "min": 3,
         "max": 4,
-        "label": "4"
+        "label": "3–4"
       },
       "large": {
         "min": 4,
         "max": 4,
         "label": "4"
       },
-      "note": "Медитативна композиція не розрахована на агресивну дифузію."
+      "note": "Коригуйте інтенсивність лише на одну паличку за раз.",
+      "diameterMm": 4
     },
     "journalArticle": {
       "path": "guides/chomu-noir-ne-pro-temryavu.html",
       "title": "Чому Noir — не про темряву"
+    },
+    "duration": {
+      "weeksMax": 10,
+      "label": "до 10 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -3540,7 +3833,7 @@ const PRODUCTS = [
         "top": "images/product-story/moss-and-shadow/top.webp"
       }
     },
-    "quickFacts": "3–4 палички",
+    "quickFacts": "3 палички",
     "suitFor": "Підійде, якщо любите темні мохово-деревні композиції для кабінету, бібліотеки або атмосферного вечірнього простору.",
     "formulaIntent": "Шавлія й стриманий цитрус поступово занурюються у дубовий мох, амбру та суху деревину, створюючи атмосферу вологого затіненого лісу.",
     "insights": {
@@ -3559,10 +3852,10 @@ const PRODUCTS = [
     ],
     "diffusion": {
       "primary": {
-        "diameterMm": 4,
+        "diameterMm": 5,
         "countMin": 3,
-        "countMax": 4,
-        "label": "3–4 палички 4 мм"
+        "countMax": 3,
+        "label": "3 палички 5 мм"
       },
       "alternative": {
         "diameterMm": 5,
@@ -3574,8 +3867,15 @@ const PRODUCTS = [
       "tip": "Не використовуйте як аромат для всього дому: найкраще працює у кабінеті або бібліотеці."
     },
     "package": {
-      "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedCount": 5,
+      "reedDiameterMm": 5,
+      "label": "5 чорних паличок 5 мм",
+      "reserveCount": 2,
+      "includedInPrice": true,
+      "mode": "noir-included",
+      "spareAddOnEligible": false,
+      "spareAddOnId": null,
+      "commerceNote": "Підібраний комплект паличок уже включено у вартість NOIR."
     },
     "sourceRef": {
       "workbookRow": "MOSS & SHADOW"
@@ -3584,34 +3884,41 @@ const PRODUCTS = [
       "avoidRooms": []
     },
     "reedCare": {
-      "tier": "balanced",
+      "tier": "dense",
       "intervalDays": {
-        "min": 4,
-        "max": 5
+        "min": 3,
+        "max": 3
       },
-      "publicText": "Перевертайте палички орієнтовно кожні 4–5 днів для рівномірної віддачі."
+      "publicText": "Перевертайте палички кожні 3 дні або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
         "min": 2,
-        "max": 3,
-        "label": "2–3"
+        "max": 2,
+        "label": "2"
       },
       "standard": {
         "min": 3,
-        "max": 4,
-        "label": "3–4"
+        "max": 3,
+        "label": "3"
       },
       "large": {
         "min": 4,
         "max": 4,
         "label": "4"
       },
-      "note": "Темний NOIR-профіль краще налаштовувати поступово."
+      "note": "Почніть із 3 паличок; дві залиште в запасі для посилення або першої заміни.",
+      "diameterMm": 5
     },
     "journalArticle": {
       "path": "guides/chomu-noir-ne-pro-temryavu.html",
       "title": "Чому Noir — не про темряву"
+    },
+    "duration": {
+      "weeksMax": 8,
+      "label": "до 8 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   },
   {
@@ -3694,7 +4001,7 @@ const PRODUCTS = [
         "top": "images/product-story/dark-bloom/top.webp"
       }
     },
-    "quickFacts": "3–4 палички",
+    "quickFacts": "3 палички",
     "suitFor": "Підійде, якщо любите чуттєві темні квіткові композиції для спальні або камерного вечірнього лаунжу.",
     "formulaIntent": "Слива, рожевий перець і чорна троянда розкриваються на глибокій основі пачулі та лабдануму, залишаючи темну оксамитову ауру.",
     "insights": {
@@ -3713,10 +4020,10 @@ const PRODUCTS = [
     ],
     "diffusion": {
       "primary": {
-        "diameterMm": 4,
+        "diameterMm": 5,
         "countMin": 3,
-        "countMax": 4,
-        "label": "3–4 палички 4 мм"
+        "countMax": 3,
+        "label": "3 палички 5 мм"
       },
       "alternative": {
         "diameterMm": 5,
@@ -3728,8 +4035,15 @@ const PRODUCTS = [
       "tip": "Не ставте на кухні. У теплому приміщенні починайте з 3 паличок."
     },
     "package": {
-      "reedCount": 4,
-      "reedDiameterMm": 4
+      "reedCount": 5,
+      "reedDiameterMm": 5,
+      "label": "5 чорних паличок 5 мм",
+      "reserveCount": 2,
+      "includedInPrice": true,
+      "mode": "noir-included",
+      "spareAddOnEligible": false,
+      "spareAddOnId": null,
+      "commerceNote": "Підібраний комплект паличок уже включено у вартість NOIR."
     },
     "sourceRef": {
       "workbookRow": "DARK BLOOM"
@@ -3740,32 +4054,39 @@ const PRODUCTS = [
     "reedCare": {
       "tier": "dense",
       "intervalDays": {
-        "min": 3,
-        "max": 4
+        "min": 2,
+        "max": 3
       },
-      "publicText": "Перевертайте палички орієнтовно кожні 3–4 дні для рівномірного розкриття."
+      "publicText": "Перевертайте палички кожні 2–3 дні або коли звучання стало тихішим.",
+      "replacementText": "Замініть палички, коли перевертання вже не повертає звучання."
     },
     "reedSetupByArea": {
       "small": {
         "min": 2,
-        "max": 3,
-        "label": "2–3"
+        "max": 2,
+        "label": "2"
       },
       "standard": {
         "min": 3,
-        "max": 4,
-        "label": "3–4"
+        "max": 3,
+        "label": "3"
       },
       "large": {
         "min": 4,
         "max": 4,
         "label": "4"
       },
-      "note": "Ванільно-смоляна база: у невеликій кімнаті починайте з нижчого значення."
+      "note": "Почніть із 3 паличок; дві залиште в запасі для посилення або першої заміни.",
+      "diameterMm": 5
     },
     "journalArticle": {
       "path": "guides/chomu-noir-ne-pro-temryavu.html",
       "title": "Чому Noir — не про темряву"
+    },
+    "duration": {
+      "weeksMax": 8,
+      "label": "до 8 тижнів",
+      "note": "Орієнтовно; залежить від температури, вентиляції та кількості паличок."
     }
   }
 ];
@@ -3775,6 +4096,7 @@ window.VA_CATALOG_FILTERS = PRODUCT_CATALOG_FILTERS;
 window.VA_SCENT_GUIDE = PRODUCT_SCENT_GUIDE;
 window.VA_REED_CARE_POLICY = PRODUCT_REED_CARE_POLICY;
 window.VA_REED_SETUP_POLICY = PRODUCT_REED_SETUP_POLICY;
+window.VA_REED_ADDON_POLICY = PRODUCT_REED_ADDON_POLICY;
 window.VA_PRODUCT_CONTENT_VERSION = PRODUCT_CONTENT_VERSION;
 
 function getCollection(collectionId) {
@@ -3783,7 +4105,9 @@ function getCollection(collectionId) {
 
 function getProduct(id) {
   return PRODUCTS.find((p) => p.id === id) || null;
-}function getProductPrice(product) {
+}
+
+function getProductPrice(product) {
   const collection = getCollection(product.collection);
   return collection ? collection.price : null;
 }
@@ -3791,7 +4115,9 @@ function getProduct(id) {
 function getProductVolume(product) {
   const collection = getCollection(product.collection);
   return collection ? collection.volume : null;
-}function getSimilarProducts(product) {
+}
+
+function getSimilarProducts(product) {
   return (product.similar || []).map(getProduct).filter(Boolean);
 }
 
@@ -3873,6 +4199,7 @@ function getProductVolume(product) {
           <a href="${root}${href}"><h3 class="product-card__name">${product.name}</h3></a>
           <p class="product-card__desc">${product.shortDescription}</p>
           <div class="product-card__rating" data-product-rating aria-label="Рейтинг товару" hidden></div>
+          ${context === "catalog" ? `<div class="product-card__reed-facts" aria-label="Рекомендований старт і орієнтовний термін"><span>${product.quickFacts} · ${product.duration?.label || "до 10 тижнів"}</span></div>` : ""}
           <div class="product-card__meta">
             <span>${volume || ""}</span>
             ${
