@@ -3534,7 +3534,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 .collections-page .section{padding-block:clamp(44px,11vw,62px)!important;}
 }
 
-/* VA HOME v16.3.0 — reed system across collections */
+/* VA HOME v16.3.1 — reed system across collections */
 .collection-reed-system{padding:clamp(80px,10vw,150px) 0;background:#100e0b;color:#eee6da;border-block:1px solid rgba(193,147,80,.16)}
 .collection-reed-system__heading{display:grid;grid-template-columns:.55fr 1.2fr 1fr;gap:clamp(24px,5vw,72px);align-items:start}
 .collection-reed-system__heading>p:first-child{color:#c19350;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase}
