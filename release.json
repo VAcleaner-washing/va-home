@@ -1,22 +1,18 @@
 {
-  "version": "16.3.1",
+  "version": "16.3.2",
   "channel": "Stable",
-  "name": "VA HOME ADMIN 2.0 POLISH",
+  "name": "VA HOME ADMIN PWA MOBILE STABILITY",
   "date": "2026-08-07",
-  "base": "16.3.0",
+  "base": "16.3.1",
   "changes": [
-    "Adds a mobile/PWA quick action for New Order without changing the storefront navigation",
-    "Turns the admin connectivity badge into a real synchronized / syncing / offline / error state with a silent 60-second refresh",
-    "Separates paid revenue from active-order value and money still awaiting payment",
-    "Sorts Needs Attention by operational priority and shows relative age",
-    "Adds keyboard-first global search, match highlighting and premium confirmation dialogs",
-    "Expands manual orders with customer lookup, Discovery Set, reed add-ons and promo codes while preserving server validation",
-    "Adds an isolated VA HOME audit trail for orders, reviews, promo codes and private releases"
+    "Prevents iOS focus zoom in the private Admin PWA by restoring 16 px mobile form controls and hardening the viewport",
+    "Rebuilds New Order on mobile as a safe-area-aware full-screen sheet with a dedicated scroll body and compact action footer",
+    "Fixes conditional Nova Poshta branch versus courier fields so mutually exclusive delivery inputs never render together",
+    "Moves initial manual-order focus to the dialog title to avoid keyboard/zoom side effects"
   ],
   "notes": [
-    "Storefront product, cart, checkout, Monobank and public search logic remain on the v16.3.0 functional baseline aside from release-version cache markers.",
-    "The VA HOME audit migration is already applied in production and is isolated from all vacleaner_* objects.",
-    "No Edge Function is redeployed for this polish release; the live queue-based admin-order-update flow remains untouched.",
-    "Manual orders still go through the existing validated create-order pipeline."
+    "Front-end admin hotfix only: no storefront commerce, checkout, catalog, Monobank or public search logic is changed.",
+    "No Supabase migration or Edge Function deployment is required for v16.3.2.",
+    "Existing create-order and admin-order-update server validation flows remain untouched."
   ]
 }

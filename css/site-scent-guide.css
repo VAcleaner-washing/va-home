@@ -3116,7 +3116,7 @@ button, input, select, textarea, a{ min-width: 0; }
 }
 
 
-/* ===== VA HOME v16.3.1 — Clear guide questions & result hierarchy ===== */
+/* ===== VA HOME v16.3.2 — Clear guide questions & result hierarchy ===== */
 .guide-welcome-credit{
   margin:clamp(30px,4vw,48px) 0 28px;
 }
@@ -3238,7 +3238,7 @@ button, input, select, textarea, a{ min-width: 0; }
 .scent-guide-page .section{padding-block:clamp(44px,11vw,62px)!important;}
 }
 
-/* ===== VA HOME v16.3.1 — mobile consultation cards ===== */
+/* ===== VA HOME v16.3.2 — mobile consultation cards ===== */
 .guide-results__swipe-hint{display:none}
 
 @media(max-width:680px){
@@ -3321,7 +3321,7 @@ button, input, select, textarea, a{ min-width: 0; }
 }
 
 
-/* ===== VA HOME v16.3.1 — aligned mobile recommendation rhythm ===== */
+/* ===== VA HOME v16.3.2 — aligned mobile recommendation rhythm ===== */
 @media(max-width:680px){
   .guide-results__grid{
     align-items:stretch;
