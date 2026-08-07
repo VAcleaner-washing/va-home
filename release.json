@@ -1,18 +1,19 @@
 {
-  "version": "16.2.7",
+  "version": "16.3.0",
   "channel": "Stable",
-  "name": "ATMOSPHERE OS — SEARCH & CART STATE",
+  "name": "VA HOME ADMIN 2.0",
   "date": "2026-08-07",
-  "base": "16.2.2",
+  "base": "16.2.7",
   "changes": [
-    "Adds a premium global search across all 18 fragrances, collections, category landings and Journal guides",
-    "Makes spare-reed checkmarks and selected state mirror the real cart contents clearly",
-    "Restores VA HOME admin allowlist read access after VAcleaner hardening without weakening RLS",
-    "Restores admin UPDATE/DELETE grants for review moderation while keeping RLS admin-only"
+    "Rebuilds the VA HOME back-office around a dedicated operations workspace inspired by the proven VAcleaner admin UX",
+    "Adds Overview, Needs Attention, Customers, Catalog, Marketing, Payments and Settings without removing existing order, review, promo, release or analytics workflows",
+    "Adds global admin search across orders, customers, fragrances, promo codes and reviews",
+    "Adds manual order creation for Instagram, phone and offline orders through the existing validated create-order pipeline",
+    "Adds mobile/PWA bottom navigation and a compact More menu"
   ],
   "notes": [
-    "On mobile the search action replaces the redundant Instagram header icon; Instagram remains available in the menu and footer.",
-    "Search is local to the VA HOME storefront index and does not expose cart, account, admin, checkout or other private pages.",
-    "Both Supabase permission fixes are included as reproducible migrations in 02-BACKEND and are already applied to production."
+    "VAcleaner v3.0.39 is used only as a UX/UI reference; VA HOME does not consume VAcleaner tables, Edge Functions or booking logic.",
+    "No new production database migration or Edge Function deployment is required for Admin 2.0.",
+    "The storefront, checkout, Monobank payment boundary, cart, search and personal-care flows remain on the v16.2.7 functional baseline."
   ]
 }
