@@ -1,18 +1,18 @@
 {
-  "version": "16.3.2",
+  "version": "16.3.3",
   "channel": "Stable",
-  "name": "VA HOME ADMIN PWA MOBILE STABILITY",
+  "name": "VA HOME ADMIN — NOVA POSHTA & DISCOVERY FLOW",
   "date": "2026-08-07",
-  "base": "16.3.1",
+  "base": "16.3.2",
   "changes": [
-    "Prevents iOS focus zoom in the private Admin PWA by restoring 16 px mobile form controls and hardening the viewport",
-    "Rebuilds New Order on mobile as a safe-area-aware full-screen sheet with a dedicated scroll body and compact action footer",
-    "Fixes conditional Nova Poshta branch versus courier fields so mutually exclusive delivery inputs never render together",
-    "Moves initial manual-order focus to the dialog title to avoid keyboard/zoom side effects"
+    "Connects manual Admin 2.0 orders to the existing live Nova Poshta location lookup for city and branch/parcel-locker search",
+    "Stores Nova Poshta city, settlement and warehouse refs in manual orders while preserving an explicit manual fallback",
+    "Fixes Discovery Set — 6 in manual orders: the sixth scent auto-confirms the set, collapses the long picker and shows a compact 6/6 summary with Edit selection",
+    "Adds dedicated regression checks for Nova Poshta manual-order lookup and Discovery completion"
   ],
   "notes": [
-    "Front-end admin hotfix only: no storefront commerce, checkout, catalog, Monobank or public search logic is changed.",
-    "No Supabase migration or Edge Function deployment is required for v16.3.2.",
-    "Existing create-order and admin-order-update server validation flows remain untouched."
+    "No new Supabase migration or Edge Function deployment is required: the existing nova-poshta-locations function is reused.",
+    "create-order, Monobank, checkout and public storefront payment flows are not modified by this release.",
+    "Nova Poshta manual fallback remains available only as an explicit choice when the lookup cannot match a location."
   ]
 }

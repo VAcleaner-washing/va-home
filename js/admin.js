@@ -723,7 +723,7 @@ const cards=[
   `<article class="admin2-setting-card"><span>Оплати</span><h3>plata by mono</h3><div class="admin2-setting-line"><span>Карткова оплата</span><strong>${card.enabled===false?"Вимкнена":"Активна"}</strong></div><div class="admin2-setting-line"><span>Провайдер</span><strong>${esc(card.provider||"monobank")}</strong></div><div class="admin2-setting-line"><span>Останній paid</span><strong>${shortDate(lastPaid?.paid_at)}</strong></div></article>`,
   `<article class="admin2-setting-card"><span>Доставка</span><h3>Нова пошта</h3><div class="admin2-setting-line"><span>Стандартна відправка</span><strong>1–2 робочі дні</strong></div><div class="admin2-setting-line"><span>Безкоштовна доставка</span><strong>від 1500 грн</strong></div><div class="admin2-setting-line"><span>Останнє замовлення</span><strong>${latest?shortDate(latest.created_at):"—"}</strong></div></article>`,
   `<article class="admin2-setting-card"><span>Комунікація</span><h3>VA HOME</h3><div class="admin2-setting-line"><span>Менеджер</span><strong>09:00–19:00</strong></div><div class="admin2-setting-line"><span>Email</span><strong>vahome.aroma@gmail.com</strong></div><div class="admin2-setting-line"><span>Автоматизація повторних</span><strong>${repeatCampaigns.length?"Працює":"Очікує даних"}</strong></div></article>`,
-  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.3.2 · Admin 2.0</strong></div></article>`
+  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.3.3 · Admin 2.0</strong></div></article>`
 ];
 host.innerHTML=cards.join("");
   renderAdminAudit();
@@ -754,13 +754,130 @@ function manualEntry(id){return manualCatalog().find(row=>row.id===id)||null;}
 function manualProductOptions(){return manualCatalog().map(p=>`<option value="${esc(p.id)}">${esc(p.name)} · ${money(p.price)}</option>`).join("");}
 function manualProductPrice(id){return Number(manualEntry(id)?.price||0);}
 function reedCompatible(id){const entry=manualEntry(id);if(entry?.type!=="reeds")return true;return manualItems.some(row=>{const p=productById(row.id);return p&&p.collection!=="noir"&&Number(p.package?.reedDiameterMm||0)===Number(entry.diameter);});}
-function renderDiscoveryPicker(row,index){if(row.id!=="discovery-6")return"";const selected=new Set(Array.isArray(row.selections)?row.selections:[]),products=fullSizeProducts();return `<div class="admin2-manual-discovery"><div class="admin2-manual-discovery-head"><span>Оберіть рівно 6 ароматів</span><strong>${selected.size}/6</strong></div>${products.map(p=>`<button type="button" data-manual-scent="${esc(p.id)}" class="${selected.has(p.id)?"is-selected":""}">${esc(p.name)}</button>`).join("")}</div>`;}
+function renderDiscoveryPicker(row,index){
+  if(row.id!=="discovery-6")return"";
+  const selected=new Set(Array.isArray(row.selections)?row.selections:[]),products=fullSizeProducts();
+  if(row.discoveryConfirmed===true&&selected.size===6){
+    const names=[...selected].map(id=>productById(id)?.name||id);
+    return `<div class="admin2-manual-discovery admin2-manual-discovery--confirmed"><div class="admin2-manual-discovery-head"><span>Discovery Set готовий</span><strong>6/6 ✓</strong></div><p class="admin2-manual-discovery-summary">${names.map(name=>`<span>${esc(name)}</span>`).join("")}</p><button class="admin2-manual-discovery-edit" type="button" data-manual-discovery-edit>Змінити вибір</button></div>`;
+  }
+  return `<div class="admin2-manual-discovery"><div class="admin2-manual-discovery-head"><span>Оберіть рівно 6 ароматів</span><strong>${selected.size}/6</strong></div><p class="admin2-manual-discovery-help">Після 6-го вибору набір підтвердиться автоматично.</p>${products.map(p=>`<button type="button" data-manual-scent="${esc(p.id)}" class="${selected.has(p.id)?"is-selected":""}">${esc(p.name)}</button>`).join("")}</div>`;
+}
 function manualCustomerMatches(query){const q=String(query||"").trim().toLowerCase();if(q.length<2)return[];return customerRows().filter(c=>[c.name,c.phone,c.email].join(" ").toLowerCase().includes(q)).slice(0,6);}
 function renderManualCustomerMatches(){const input=$("#manualCustomerLookup"),host=$("#manualCustomerMatches");if(!input||!host)return;const rows=manualCustomerMatches(input.value);if(!rows.length){host.hidden=true;host.innerHTML="";return;}host.hidden=false;host.innerHTML=rows.map((c,i)=>`<button type="button" class="admin2-manual-customer-result" data-manual-customer="${i}"><strong>${esc(c.name)}</strong><span>${esc(c.phone)}${c.email?` · ${esc(c.email)}`:""} · ${c.orders.length} зам.</span></button>`).join("");host.querySelectorAll("[data-manual-customer]").forEach(btn=>btn.onclick=()=>applyManualCustomer(rows[Number(btn.dataset.manualCustomer)]));}
-function applyManualCustomer(row){if(!row)return;const form=$("#manualOrderForm"),last=[...row.orders].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))[0];form.elements.customer_name.value=row.name||"";form.elements.customer_phone.value=row.phone||"";form.elements.customer_email.value=row.email||"";if(last?.customer_city)form.elements.customer_city.value=last.customer_city;$("#manualCustomerLookup").value=`${row.name} · ${row.phone}`;$("#manualCustomerMatches").hidden=true;toast("Дані клієнта підставлено","success");}
+function applyManualCustomer(row){if(!row)return;const form=$("#manualOrderForm"),last=[...row.orders].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))[0];form.elements.customer_name.value=row.name||"";form.elements.customer_phone.value=row.phone||"";form.elements.customer_email.value=row.email||"";if(last?.customer_city){form.elements.customer_city.value=last.customer_city;resolveManualNpCity(last.customer_city);}$("#manualCustomerLookup").value=`${row.name} · ${row.phone}`;$("#manualCustomerMatches").hidden=true;toast("Дані клієнта підставлено","success");}
 function normalizeManualPhone(value){const digits=String(value||"").replace(/\D/g,"");if(/^380\d{9}$/.test(digits))return `+${digits}`;if(/^0\d{9}$/.test(digits))return `+38${digits}`;return String(value||"").trim();}
-function toggleManualDeliveryFields(){const form=$("#manualOrderForm");if(!form)return;const courier=form.elements.delivery_method?.value==="nova_poshta_courier";form.querySelectorAll("[data-manual-branch]").forEach(el=>el.hidden=courier);form.querySelectorAll("[data-manual-courier]").forEach(el=>el.hidden=!courier);if(form.elements.delivery_details)form.elements.delivery_details.required=!courier;if(form.elements.courier_street)form.elements.courier_street.required=courier;if(form.elements.courier_house)form.elements.courier_house.required=courier;}
-function resetManualOrder(){manualItems=[{id:fullSizeProducts()[0]?.id||"signature-relax",quantity:1,selections:[]}];const form=$("#manualOrderForm");if(form){form.reset();form.elements.customer_city.value="Полтава";form.elements.source.value="instagram";toggleManualDeliveryFields();}const lookup=$("#manualCustomerLookup"),matches=$("#manualCustomerMatches");if(lookup)lookup.value="";if(matches){matches.hidden=true;matches.innerHTML="";}renderManualItems();const msg=$("#manualOrderMessage");if(msg)msg.textContent="";}
+const MANUAL_NP_CITY_CACHE_KEY="vahome_np_city_cache_v3",MANUAL_NP_WAREHOUSE_CACHE_KEY="vahome_np_warehouse_cache_v3",MANUAL_NP_CITY_TTL=86400000,MANUAL_NP_WAREHOUSE_TTL=21600000;
+let manualNpCityTimer=0,manualNpWarehouseTimer=0,manualNpCityController=null,manualNpWarehouseController=null,manualNpWarehouseItems=[],manualNpSerial=0;
+const manualNpNormalize=value=>String(value||"").toLocaleLowerCase("uk-UA").replace(/[’']/g,"'").replace(/\s+/g," ").trim();
+function manualNpReadCache(key){try{return JSON.parse(localStorage.getItem(key)||"{}");}catch(_){return{};}}
+function manualNpGetCached(key,id,ttl){const entry=manualNpReadCache(key)[id];return entry&&Date.now()-Number(entry.savedAt||0)<ttl&&Array.isArray(entry.items)?entry.items:null;}
+function manualNpPutCached(key,id,items,maxEntries=20){try{const cache=manualNpReadCache(key);cache[id]={savedAt:Date.now(),items};Object.keys(cache).sort((a,b)=>Number(cache[b]?.savedAt||0)-Number(cache[a]?.savedAt||0)).slice(maxEntries).forEach(oldKey=>delete cache[oldKey]);localStorage.setItem(key,JSON.stringify(cache));}catch(_){}}
+async function manualNovaPoshtaLookup(payload,{signal}={}){const controller=new AbortController(),abort=()=>controller.abort();if(signal){if(signal.aborted)controller.abort();else signal.addEventListener("abort",abort,{once:true});}const timeout=setTimeout(()=>controller.abort(),7000);try{const response=await fetch(`${cfg.url}/functions/v1/nova-poshta-locations`,{method:"POST",headers:{apikey:cfg.publishableKey,Authorization:`Bearer ${cfg.publishableKey}`,"Content-Type":"application/json"},body:JSON.stringify(payload),signal:controller.signal});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||`Nova Poshta lookup failed (${response.status})`);return Array.isArray(data.items)?data.items:[];}finally{clearTimeout(timeout);if(signal)signal.removeEventListener("abort",abort);}}
+function manualNpParts(){const form=$("#manualOrderForm");return{form,city:form?.elements.customer_city,cityRef:form?.elements.nova_poshta_city_ref,settlementRef:form?.elements.nova_poshta_settlement_ref,warehouse:form?.elements.delivery_details,warehouseRef:form?.elements.nova_poshta_warehouse_ref,cityList:$("#manualNpCitySuggestions"),warehouseList:$("#manualNpWarehouseSuggestions"),cityHint:$("#manualNpCityHint"),warehouseHint:$("#manualNpWarehouseHint")};}
+function manualNpClose(input,list){if(list)list.hidden=true;if(input)input.setAttribute("aria-expanded","false");}
+function manualNpCloseAll(){const p=manualNpParts();manualNpClose(p.city,p.cityList);manualNpClose(p.warehouse,p.warehouseList);}
+function manualNpRenderState(input,list,text,action){if(!list)return;list.innerHTML=`<div class="admin2-np-state"><p>${esc(text)}</p>${action?`<button type="button" data-manual-np-action>${esc(action.label)}</button>`:""}</div>`;list.hidden=false;input?.setAttribute("aria-expanded","true");if(action)list.querySelector("[data-manual-np-action]")?.addEventListener("click",action.run);}
+function manualNpRenderItems(input,list,items,title,onSelect){if(!list)return;list.innerHTML=`<div class="admin2-np-head"><strong>${esc(title)}</strong><button type="button" aria-label="Закрити" data-manual-np-close>×</button></div><div class="admin2-np-body">${items.map((item,index)=>`<button type="button" class="admin2-np-result" data-manual-np-index="${index}"><span>${esc(item.label||"")}</span>${item.shortAddress||item.area?`<small>${esc(item.shortAddress||item.area||"")}</small>`:""}</button>`).join("")}</div>`;list.hidden=false;input?.setAttribute("aria-expanded","true");list.querySelector("[data-manual-np-close]")?.addEventListener("click",()=>manualNpClose(input,list));list.querySelectorAll("[data-manual-np-index]").forEach(btn=>btn.addEventListener("click",()=>onSelect(items[Number(btn.dataset.manualNpIndex)])));}
+function useManualNpCity(){const p=manualNpParts(),value=String(p.city?.value||"").trim();if(value.length<2)return;p.cityRef.value="";p.settlementRef.value="";p.form.dataset.manualNpCityManual="true";p.warehouse.value="";p.warehouseRef.value="";p.form.dataset.manualNpWarehouseManual="true";p.warehouse.disabled=false;p.warehouse.placeholder="Введіть відділення або поштомат вручну";if(p.cityHint)p.cityHint.textContent="Місто введено вручну.";if(p.warehouseHint)p.warehouseHint.textContent="Відділення можна ввести вручну.";manualNpClose(p.city,p.cityList);}
+function useManualNpWarehouse(){const p=manualNpParts(),value=String(p.warehouse?.value||"").trim();if(value.length<2)return;p.warehouseRef.value="";p.form.dataset.manualNpWarehouseManual="true";if(p.warehouseHint)p.warehouseHint.textContent="Відділення введено вручну.";manualNpClose(p.warehouse,p.warehouseList);}
+function selectManualNpCity(item,{quiet=false}={}){if(!item)return;const p=manualNpParts();p.city.value=item.label||item.city||"";p.cityRef.value=item.ref||"";p.settlementRef.value=item.settlementRef||"";p.form.dataset.manualNpCityManual="false";p.warehouse.value="";p.warehouseRef.value="";p.form.dataset.manualNpWarehouseManual="false";manualNpWarehouseItems=[];p.warehouse.disabled=false;p.warehouse.placeholder="Номер або частина адреси";if(p.cityHint)p.cityHint.textContent="Місто обрано з бази Нової пошти.";if(p.warehouseHint)p.warehouseHint.textContent="Завантажуємо актуальні відділення…";manualNpClose(p.city,p.cityList);if(!quiet)toast("Місто обрано","success");loadManualNpWarehouses("");}
+function selectManualNpWarehouse(item){if(!item)return;const p=manualNpParts();p.warehouse.value=item.label||item.shortAddress||"";p.warehouseRef.value=item.ref||"";p.form.dataset.manualNpWarehouseManual="false";if(p.warehouseHint)p.warehouseHint.textContent=manualNpNormalize(item.label).includes("поштомат")?"Поштомат обрано з бази Нової пошти.":"Відділення обрано з бази Нової пошти.";manualNpClose(p.warehouse,p.warehouseList);}
+function manualNpCityExact(items,value){const needle=manualNpNormalize(value).replace(/^м\.?\s*/,"");return items.find(item=>manualNpNormalize(item.city||"")===needle)||items.find(item=>manualNpNormalize(item.label||"").includes(`м. ${needle}`))||null;}
+async function searchManualNpCities(query,{autoExact=false,quiet=false}={}){
+  const p=manualNpParts();
+  const value=String(query||"").trim();
+  if(value.length<3){
+    manualNpClose(p.city,p.cityList);
+    if(p.cityHint)p.cityHint.textContent=`Введіть ще ${Math.max(0,3-value.length)} симв. для пошуку.`;
+    return null;
+  }
+  const cacheId=manualNpNormalize(value);
+  const cached=manualNpGetCached(MANUAL_NP_CITY_CACHE_KEY,cacheId,MANUAL_NP_CITY_TTL);
+  if(cached){
+    const exact=autoExact?manualNpCityExact(cached,value):null;
+    if(exact){selectManualNpCity(exact,{quiet:true});return exact;}
+    if(!quiet)manualNpRenderItems(p.city,p.cityList,cached,"Знайдені населені пункти",selectManualNpCity);
+    return null;
+  }
+  manualNpCityController?.abort();
+  manualNpCityController=new AbortController();
+  const serial=++manualNpSerial;
+  if(!quiet)manualNpRenderState(p.city,p.cityList,"Шукаємо населені пункти…");
+  try{
+    const items=await manualNovaPoshtaLookup({action:"cities",query:value},{signal:manualNpCityController.signal});
+    if(serial!==manualNpSerial)return null;
+    manualNpPutCached(MANUAL_NP_CITY_CACHE_KEY,cacheId,items,30);
+    const exact=autoExact?manualNpCityExact(items,value):null;
+    if(exact){selectManualNpCity(exact,{quiet:true});return exact;}
+    if(!quiet){
+      if(items.length)manualNpRenderItems(p.city,p.cityList,items,"Знайдені населені пункти",selectManualNpCity);
+      else manualNpRenderState(p.city,p.cityList,"Населений пункт не знайдено.",{label:"Використати введене вручну",run:useManualNpCity});
+    }
+    return null;
+  }catch(error){
+    if(error?.name==="AbortError")return null;
+    if(p.cityHint)p.cityHint.textContent="Пошук Нової пошти тимчасово недоступний.";
+    if(!quiet)manualNpRenderState(p.city,p.cityList,"Не вдалося завантажити міста.",{label:"Використати введене вручну",run:useManualNpCity});
+    return null;
+  }
+}
+function manualNpWarehouseScore(item,query){const needle=manualNpNormalize(query);if(!needle)return 0;const number=manualNpNormalize(item.number||"").replace(/^№/,""),label=manualNpNormalize(item.label||""),address=manualNpNormalize(item.shortAddress||"");if(/^\d+$/.test(needle)){if(number===needle)return 0;if(number.startsWith(needle))return 1;if(number.includes(needle))return 2;if(label.includes(needle))return 3;if(address.includes(needle))return 4;return 99;}if(label.startsWith(needle)||address.startsWith(needle))return 0;if(label.includes(needle))return 1;if(address.includes(needle))return 2;return 99;}
+function manualNpWarehouseMatches(query){return manualNpWarehouseItems.map((item,index)=>({item,index,score:manualNpWarehouseScore(item,query)})).filter(row=>!query||row.score<99).sort((a,b)=>a.score-b.score||a.index-b.index).slice(0,60).map(row=>row.item);}
+function showManualNpWarehouses(query,items){const p=manualNpParts(),matches=query?items.filter(item=>manualNpWarehouseScore(item,query)<99).sort((a,b)=>manualNpWarehouseScore(a,query)-manualNpWarehouseScore(b,query)).slice(0,60):items.slice(0,60);if(matches.length)manualNpRenderItems(p.warehouse,p.warehouseList,matches,query?"Знайдені відділення":"Оберіть відділення / поштомат",selectManualNpWarehouse);else manualNpRenderState(p.warehouse,p.warehouseList,"Відділень не знайдено.",{label:"Ввести вручну",run:useManualNpWarehouse});}
+async function loadManualNpWarehouses(query=""){
+  const p=manualNpParts();
+  if(p.form?.elements.delivery_method?.value==="nova_poshta_courier")return;
+  if(!p.cityRef?.value){
+    if(p.form?.dataset.manualNpCityManual==="true"){
+      return manualNpRenderState(
+        p.warehouse,p.warehouseList,
+        "Місто введене вручну — відділення теж можна ввести вручну.",
+        {label:"Використати введене",run:useManualNpWarehouse}
+      );
+    }
+    return manualNpRenderState(p.warehouse,p.warehouseList,"Спочатку оберіть місто зі списку Нової пошти.");
+  }
+  const cacheId=`${p.cityRef.value}:${manualNpNormalize(query)}`;
+  const cached=manualNpGetCached(MANUAL_NP_WAREHOUSE_CACHE_KEY,cacheId,MANUAL_NP_WAREHOUSE_TTL);
+  if(cached){
+    if(!query)manualNpWarehouseItems=cached;
+    showManualNpWarehouses(query,cached);
+    if(p.warehouseHint)p.warehouseHint.textContent="Оберіть відділення або поштомат зі списку.";
+    return;
+  }
+  manualNpWarehouseController?.abort();
+  manualNpWarehouseController=new AbortController();
+  manualNpRenderState(p.warehouse,p.warehouseList,"Завантажуємо відділення…");
+  try{
+    const items=await manualNovaPoshtaLookup(
+      {action:"warehouses",city_ref:p.cityRef.value,query},
+      {signal:manualNpWarehouseController.signal}
+    );
+    manualNpPutCached(MANUAL_NP_WAREHOUSE_CACHE_KEY,cacheId,items,20);
+    if(!query)manualNpWarehouseItems=items;
+    else{
+      const merged=new Map(manualNpWarehouseItems.map(item=>[item.ref,item]));
+      items.forEach(item=>merged.set(item.ref,item));
+      manualNpWarehouseItems=[...merged.values()];
+    }
+    showManualNpWarehouses(query,query?manualNpWarehouseMatches(query):items);
+    if(p.warehouseHint)p.warehouseHint.textContent="Оберіть відділення або поштомат зі списку.";
+  }catch(error){
+    if(error?.name==="AbortError")return;
+    if(p.warehouseHint)p.warehouseHint.textContent="Не вдалося завантажити відділення.";
+    manualNpRenderState(
+      p.warehouse,p.warehouseList,
+      "Нова пошта тимчасово недоступна.",
+      {label:"Ввести вручну",run:useManualNpWarehouse}
+    );
+  }
+}
+async function resolveManualNpCity(value){const p=manualNpParts(),name=String(value||"").trim();p.cityRef.value="";p.settlementRef.value="";p.form.dataset.manualNpCityManual="false";p.warehouse.value="";p.warehouseRef.value="";manualNpWarehouseItems=[];if(name.length<3)return null;if(p.cityHint)p.cityHint.textContent="Перевіряємо місто через Нову пошту…";const exact=await searchManualNpCities(name,{autoExact:true,quiet:true});if(!exact){p.form.dataset.manualNpCityManual="true";if(p.cityHint)p.cityHint.textContent="Місто не зіставлено автоматично. Натисніть поле й оберіть зі списку.";if(p.warehouseHint)p.warehouseHint.textContent="Оберіть місто зі списку, щоб шукати відділення.";}return exact;}
+function resetManualNp(){const p=manualNpParts();manualNpCityController?.abort();manualNpWarehouseController?.abort();clearTimeout(manualNpCityTimer);clearTimeout(manualNpWarehouseTimer);manualNpWarehouseItems=[];if(!p.form)return;p.form.dataset.manualNpCityManual="false";p.form.dataset.manualNpWarehouseManual="false";p.cityRef.value="";p.settlementRef.value="";p.warehouseRef.value="";manualNpCloseAll();if(p.cityHint)p.cityHint.textContent="Перевіряємо місто через Нову пошту…";if(p.warehouseHint)p.warehouseHint.textContent="Після вибору міста завантажимо актуальні відділення.";resolveManualNpCity(p.city.value);}
+function bindManualNovaPoshta(){const p=manualNpParts();if(!p.form||!p.city||!p.warehouse)return;p.city.addEventListener("input",()=>{p.cityRef.value="";p.settlementRef.value="";p.form.dataset.manualNpCityManual="false";p.warehouse.value="";p.warehouseRef.value="";manualNpWarehouseItems=[];if(p.warehouseHint)p.warehouseHint.textContent="Спочатку оберіть місто зі списку.";clearTimeout(manualNpCityTimer);manualNpCityTimer=window.setTimeout(()=>searchManualNpCities(p.city.value),240);});p.city.addEventListener("focus",()=>{if(p.city.value.trim().length>=3&&!p.cityRef.value)searchManualNpCities(p.city.value);});p.warehouse.addEventListener("input",()=>{p.warehouseRef.value="";p.form.dataset.manualNpWarehouseManual="false";const q=p.warehouse.value.trim(),local=manualNpWarehouseMatches(q);if(local.length)showManualNpWarehouses(q,local);clearTimeout(manualNpWarehouseTimer);if(q.length>=2&&local.length<4)manualNpWarehouseTimer=window.setTimeout(()=>loadManualNpWarehouses(q),260);});p.warehouse.addEventListener("focus",()=>{if(p.form.elements.delivery_method?.value!=="nova_poshta_courier")loadManualNpWarehouses(p.warehouse.value.trim());});}
+function toggleManualDeliveryFields(){const form=$("#manualOrderForm");if(!form)return;const courier=form.elements.delivery_method?.value==="nova_poshta_courier";form.querySelectorAll("[data-manual-branch]").forEach(el=>el.hidden=courier);form.querySelectorAll("[data-manual-courier]").forEach(el=>el.hidden=!courier);if(form.elements.delivery_details)form.elements.delivery_details.required=!courier;if(form.elements.courier_street)form.elements.courier_street.required=courier;if(form.elements.courier_house)form.elements.courier_house.required=courier;const p=manualNpParts();if(courier)manualNpClose(p.warehouse,p.warehouseList);else if(form.elements.nova_poshta_city_ref?.value&&!form.elements.delivery_details?.value)loadManualNpWarehouses("");}
+function resetManualOrder(){manualItems=[{id:fullSizeProducts()[0]?.id||"signature-relax",quantity:1,selections:[],discoveryConfirmed:false}];const form=$("#manualOrderForm");if(form){form.reset();form.elements.customer_city.value="Полтава";form.elements.source.value="instagram";toggleManualDeliveryFields();resetManualNp();}const lookup=$("#manualCustomerLookup"),matches=$("#manualCustomerMatches");if(lookup)lookup.value="";if(matches){matches.hidden=true;matches.innerHTML="";}renderManualItems();const msg=$("#manualOrderMessage");if(msg)msg.textContent="";}
 function renderManualItems(){
   const host=$("#manualItems");if(!host)return;
   host.innerHTML=manualItems.map((row,i)=>{
@@ -771,13 +888,24 @@ function renderManualItems(){
   host.querySelectorAll("[data-manual-row]").forEach(el=>{
     const i=Number(el.dataset.manualRow),select=el.querySelector("[data-manual-product]"),qty=el.querySelector("[data-manual-qty]");
     select.value=manualItems[i].id;
-    select.onchange=()=>{manualItems[i]={id:select.value,quantity:1,selections:[]};renderManualItems();};
+    select.onchange=()=>{manualItems[i]={id:select.value,quantity:1,selections:[],discoveryConfirmed:false};renderManualItems();};
     qty.oninput=()=>{const type=manualEntry(manualItems[i].id)?.type,max=type==="discovery6"?1:type==="reeds"?3:10;manualItems[i].quantity=Math.max(1,Math.min(max,Number(qty.value||1)));renderManualTotal();};
     el.querySelector("[data-manual-remove]").onclick=()=>{if(manualItems.length<=1)return;manualItems.splice(i,1);renderManualItems();};
     el.querySelectorAll("[data-manual-scent]").forEach(btn=>btn.onclick=()=>{
       const row=manualItems[i],set=new Set(row.selections||[]),id=btn.dataset.manualScent;
       if(set.has(id))set.delete(id);else if(set.size<6)set.add(id);else return toast("Для Discovery Set оберіть рівно 6 ароматів","warning");
-      row.selections=[...set];renderManualItems();
+      row.selections=[...set];
+      row.discoveryConfirmed=set.size===6;
+      renderManualItems();
+      if(row.discoveryConfirmed){
+        toast("Discovery Set: 6 ароматів підтверджено","success");
+        requestAnimationFrame(()=>host.querySelector(`[data-manual-row="${i}"]`)?.scrollIntoView({block:"nearest",behavior:"smooth"}));
+      }
+    });
+    el.querySelector("[data-manual-discovery-edit]")?.addEventListener("click",()=>{
+      manualItems[i].discoveryConfirmed=false;
+      renderManualItems();
+      requestAnimationFrame(()=>host.querySelector(`[data-manual-row="${i}"] .admin2-manual-discovery`)?.scrollIntoView({block:"nearest"}));
     });
   });
   renderManualTotal();
@@ -788,12 +916,25 @@ const form=event.currentTarget,msg=$("#manualOrderMessage"),fd=new FormData(form
 msg.textContent="Створюємо замовлення…";
 const deliveryMethod=String(fd.get("delivery_method")||"nova_poshta_branch");
 const courier=deliveryMethod==="nova_poshta_courier";
+const cityRef=String(fd.get("nova_poshta_city_ref")||"").trim();
+const warehouseRef=String(fd.get("nova_poshta_warehouse_ref")||"").trim();
+if(!cityRef&&form.dataset.manualNpCityManual!=="true"){
+  msg.textContent="Оберіть місто зі списку Нової пошти або явно використайте ручний ввід.";
+  form.elements.customer_city?.focus();return;
+}
+if(!courier&&!warehouseRef&&form.dataset.manualNpWarehouseManual!=="true"){
+  msg.textContent="Оберіть відділення / поштомат зі списку Нової пошти або явно введіть його вручну.";
+  form.elements.delivery_details?.focus();return;
+}
 const body={
   checkout_request_id:crypto.randomUUID(),
   customer_name:String(fd.get("customer_name")||"").trim(),
   customer_phone:normalizeManualPhone(fd.get("customer_phone")),
   customer_email:String(fd.get("customer_email")||"").trim().toLowerCase(),
   customer_city:String(fd.get("customer_city")||"").trim(),
+  nova_poshta_city_ref:cityRef||null,
+  nova_poshta_settlement_ref:String(fd.get("nova_poshta_settlement_ref")||"").trim()||null,
+  nova_poshta_warehouse_ref:courier?null:warehouseRef||null,
   delivery_method:deliveryMethod,
   delivery_details:courier?null:String(fd.get("delivery_details")||"").trim(),
   courier_street:courier?String(fd.get("courier_street")||"").trim():null,
@@ -805,7 +946,7 @@ const body={
   promo_code:String(fd.get("promo_code")||"").trim()||null,
   items:manualItems.map(row=>({id:row.id,quantity:Number(row.quantity||1),selections:Array.isArray(row.selections)?row.selections:[]}))
 };
-const invalidDiscovery=manualItems.find(row=>row.id==="discovery-6"&&(row.selections||[]).length!==6);if(invalidDiscovery){msg.textContent="Для Discovery Set — 6 оберіть рівно 6 ароматів.";return;}const invalidReed=manualItems.find(row=>manualEntry(row.id)?.type==="reeds"&&!reedCompatible(row.id));if(invalidReed){msg.textContent="Запасні палички можна додати лише разом із сумісним дифузором.";return;}
+const invalidDiscovery=manualItems.find(row=>row.id==="discovery-6"&&((row.selections||[]).length!==6||row.discoveryConfirmed!==true));if(invalidDiscovery){msg.textContent="Для Discovery Set — 6 завершіть вибір шести ароматів.";invalidDiscovery.discoveryConfirmed=false;renderManualItems();return;}const invalidReed=manualItems.find(row=>manualEntry(row.id)?.type==="reeds"&&!reedCompatible(row.id));if(invalidReed){msg.textContent="Запасні палички можна додати лише разом із сумісним дифузором.";return;}
 try{const response=await fetch(`${cfg.url}/functions/v1/create-order`,{method:"POST",headers:{apikey:cfg.publishableKey,Authorization:`Bearer ${cfg.publishableKey}`,"Content-Type":"application/json","X-Request-ID":body.checkout_request_id},body:JSON.stringify(body)});
 const result=await response.json().catch(()=>({}));
 if(!response.ok)throw new Error(result.error||`HTTP_${response.status}`);
@@ -824,15 +965,15 @@ function bind(){
   document.querySelectorAll("[data-admin-jump]").forEach(button=>button.addEventListener("click",()=>activateAdmin2View(button.dataset.adminJump)));
   const globalSearch=$("#adminGlobalSearch");if(globalSearch){globalSearch.addEventListener("input",()=>{adminSearchActiveIndex=0;renderGlobalSearch();});globalSearch.addEventListener("keydown",event=>{const rows=globalSearchEntries(globalSearch.value);if(event.key==="Escape"){globalSearch.value="";renderGlobalSearch();globalSearch.blur();return;}if(!rows.length)return;if(event.key==="ArrowDown"){event.preventDefault();adminSearchActiveIndex=(adminSearchActiveIndex+1)%rows.length;renderGlobalSearch();$("#adminSearchResults .is-active")?.scrollIntoView({block:"nearest"});}else if(event.key==="ArrowUp"){event.preventDefault();adminSearchActiveIndex=(adminSearchActiveIndex-1+rows.length)%rows.length;renderGlobalSearch();$("#adminSearchResults .is-active")?.scrollIntoView({block:"nearest"});}else if(event.key==="Enter"){event.preventDefault();runGlobalSearchResult(rows,Math.max(0,adminSearchActiveIndex));}});}
   document.addEventListener("keydown",event=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();$("#adminGlobalSearch")?.focus();}});
-  document.addEventListener("click",event=>{const box=$("#adminSearchResults");if(box&&!event.target.closest(".admin2-global-search"))box.hidden=true;const matches=$("#manualCustomerMatches");if(matches&&!event.target.closest(".admin2-manual-customer"))matches.hidden=true;});
+  document.addEventListener("click",event=>{const box=$("#adminSearchResults");if(box&&!event.target.closest(".admin2-global-search"))box.hidden=true;const matches=$("#manualCustomerMatches");if(matches&&!event.target.closest(".admin2-manual-customer"))matches.hidden=true;if(!event.target.closest(".admin2-np-combobox"))manualNpCloseAll();});
   ["#customerSearch","#customerSegmentFilter"].forEach(sel=>$(sel)?.addEventListener("input",renderCustomers));
   ["#catalogSearch","#catalogCollectionFilter"].forEach(sel=>$(sel)?.addEventListener("input",renderCatalogAdmin));
   ["#paymentMethodFilter","#paymentStateFilter"].forEach(sel=>$(sel)?.addEventListener("input",renderPayments));
   $("#adminMoreBtn")?.addEventListener("click",()=>{const menu=$("#adminMoreMenu");if(menu)menu.hidden=!menu.hidden;});
   const openManualOrder=()=>{resetManualOrder();const dialog=$("#manualOrderDialog");dialog.showModal();requestAnimationFrame(()=>$("#manualOrderTitle")?.focus({preventScroll:true}));};$("#newOrderBtn")?.addEventListener("click",openManualOrder);$("#mobileNewOrderBtn")?.addEventListener("click",openManualOrder);
   $("#manualOrderClose")?.addEventListener("click",()=>$("#manualOrderDialog").close());$("#manualOrderCancel")?.addEventListener("click",()=>$("#manualOrderDialog").close());
-  $("#manualOrderForm")?.elements.delivery_method?.addEventListener("change",toggleManualDeliveryFields);$("#manualCustomerLookup")?.addEventListener("input",renderManualCustomerMatches);
-  $("#manualAddItem")?.addEventListener("click",()=>{manualItems.push({id:fullSizeProducts()[0]?.id||"signature-relax",quantity:1,selections:[]});renderManualItems();});$("#manualOrderForm")?.addEventListener("submit",createManualOrder);
+  $("#manualOrderForm")?.elements.delivery_method?.addEventListener("change",toggleManualDeliveryFields);bindManualNovaPoshta();$("#manualCustomerLookup")?.addEventListener("input",renderManualCustomerMatches);
+  $("#manualAddItem")?.addEventListener("click",()=>{manualItems.push({id:fullSizeProducts()[0]?.id||"signature-relax",quantity:1,selections:[],discoveryConfirmed:false});renderManualItems();});$("#manualOrderForm")?.addEventListener("submit",createManualOrder);
   $("#adminConfirmCancel")?.addEventListener("click",()=>{if($("#adminConfirmDialog")?.open)$("#adminConfirmDialog").close();if(confirmResolver){confirmResolver(false);confirmResolver=null;}});$("#adminConfirmAccept")?.addEventListener("click",()=>{if($("#adminConfirmDialog")?.open)$("#adminConfirmDialog").close();if(confirmResolver){confirmResolver(true);confirmResolver=null;}});$("#adminConfirmDialog")?.addEventListener("cancel",event=>{event.preventDefault();$("#adminConfirmDialog").close();if(confirmResolver){confirmResolver(false);confirmResolver=null;}});
   $("#loginForm").addEventListener("submit",async event=>{
     event.preventDefault();$("#loginMessage").textContent="Входимо…";

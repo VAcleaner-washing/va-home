@@ -3,7 +3,7 @@
 
   if (!("serviceWorker" in navigator) || !window.isSecureContext) return;
 
-  const VERSION = "16.3.2";
+  const VERSION = "16.3.3";
   const UPDATE_INTERVAL = 60 * 60 * 1000;
   const RELOAD_KEY = `vahome_sw_reloaded_${VERSION}`;
   const hadControllerAtStart = Boolean(navigator.serviceWorker.controller);
