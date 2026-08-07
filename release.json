@@ -1,18 +1,18 @@
 {
-  "version": "16.2.3",
+  "version": "16.2.4",
   "channel": "Stable",
-  "name": "ATMOSPHERE OS — SEARCH & CART STATE",
+  "name": "ATMOSPHERE OS — HEADER FIT",
   "date": "2026-08-07",
-  "base": "16.2.2",
+  "base": "16.2.3",
   "changes": [
-    "Adds a premium global search across all 18 fragrances, collections, category landings and Journal guides",
-    "Makes spare-reed checkmarks and selected state mirror the real cart contents clearly",
-    "Restores VA HOME admin allowlist read access after VAcleaner hardening without weakening RLS",
-    "Restores admin UPDATE/DELETE grants for review moderation while keeping RLS admin-only"
+    "Keeps every desktop navigation item on one line after the global search action was added",
+    "Expands the header working width while preserving the storefront container rhythm",
+    "Uses a compact desktop navigation between 1200–1439 px and the burger menu below 1200 px",
+    "Delays the phone shortcut until wide desktop and hides the redundant Instagram header shortcut on compact desktop widths"
   ],
   "notes": [
-    "On mobile the search action replaces the redundant Instagram header icon; Instagram remains available in the menu and footer.",
-    "Search is local to the VA HOME storefront index and does not expose cart, account, admin, checkout or other private pages.",
-    "Both Supabase permission fixes are included as reproducible migrations in 02-BACKEND and are already applied to production."
+    "Search, account and cart remain visible across all supported desktop widths.",
+    "Mobile navigation content and behavior are unchanged.",
+    "No checkout, Supabase, payment, product or search-index logic changed in this release."
   ]
 }

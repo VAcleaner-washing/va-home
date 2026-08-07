@@ -844,13 +844,16 @@ img {
 
 .site-header__inner {
   width: 100%;
+  max-width: 1540px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: clamp(0.75rem, 1.35vw, var(--space-3));
 }
 
 .site-logo {
+  flex: 0 0 auto;
+  white-space: nowrap;
   font-family: var(--font-display);
   font-size: 1.3rem;
   line-height: 1;
@@ -871,16 +874,21 @@ img {
   display: none;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
   .main-nav {
     display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
     align-items: center;
-    gap: var(--space-4);
+    justify-content: center;
+    gap: clamp(0.65rem, 1.05vw, 1.35rem);
   }
 
   .main-nav a {
-    font-size: 0.85rem;
-    letter-spacing: 0.03em;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-size: clamp(0.78rem, 0.82vw, 0.85rem);
+    letter-spacing: 0.02em;
     color: var(--text-primary);
     position: relative;
     padding-block: 0.4em;
@@ -909,9 +917,10 @@ img {
 }
 
 .header-actions {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: clamp(0.2rem, 0.45vw, var(--space-2));
 }
 
 .header-phone {
@@ -923,7 +932,7 @@ img {
   transition: color var(--duration-fast) var(--ease-standard);
 }
 .header-phone:hover,.header-phone:focus-visible { color: var(--color-gold); }
-@media (min-width: 1380px) { .header-phone { display: inline-flex; } }
+@media (min-width: 1600px) { .header-phone { display: inline-flex; } }
 
 .icon-btn {
   display: inline-flex;
@@ -979,7 +988,7 @@ img {
   height: 44px;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
   .burger-btn {
     display: none;
   }
@@ -1013,6 +1022,21 @@ img {
 }
 .burger-btn[aria-expanded="true"] .burger-btn__lines span:nth-child(3) {
   transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ---- Header fit guard: keep desktop navigation on one line. ---- */
+@media (min-width: 1200px) and (max-width: 1439px) {
+  .site-header__inner { gap: 0.65rem; }
+  .main-nav { gap: 0.65rem; }
+  .main-nav a { font-size: 0.76rem; letter-spacing: 0.01em; }
+  .header-actions .icon-btn { width: 40px; height: 40px; }
+  .header-actions > a[aria-label="Instagram VA HOME"] { display: none; }
+}
+
+@media (min-width: 1440px) and (max-width: 1599px) {
+  .site-header__inner { gap: 0.9rem; }
+  .main-nav { gap: clamp(0.75rem, 0.9vw, 1rem); }
+  .main-nav a { font-size: 0.82rem; }
 }
 
 /* ---- Mobile full-screen menu ---- */
@@ -1595,7 +1619,7 @@ body.menu-open {
 
 
 
-/* ===== VA HOME v16.2.3 — unified hero breadcrumbs ===== */
+/* ===== VA HOME v16.2.4 — unified hero breadcrumbs ===== */
 .about-editorial-hero,
 .editorial-page-hero,
 .collections-v2-hero,
@@ -3080,7 +3104,7 @@ body > footer {
 @media(max-width:680px){.footer-payment-trust{align-items:flex-start;flex-direction:column;gap:18px}.footer-payment-trust__provider{align-items:flex-start;flex-direction:column;gap:9px}.footer-payment-trust__brands{gap:15px;flex-wrap:wrap}}
 
 
-/* ===== VA HOME v16.2.3 — footer contact line integrity ===== */
+/* ===== VA HOME v16.2.4 — footer contact line integrity ===== */
 .site-footer--editorial .footer-col--contact li,
 .site-footer--editorial .footer-col--contact a{
   overflow-wrap:normal;
@@ -3150,7 +3174,7 @@ body > footer {
   margin-top: auto;
 }
 
-/* VA HOME v16.2.3 — Global Search Experience */
+/* VA HOME v16.2.4 — Global Search Experience */
 .site-search-open{overflow:hidden}
 .site-search{position:fixed;inset:0;z-index:2200;opacity:0;visibility:hidden;transition:opacity .18s ease,visibility .18s ease}
 .site-search[hidden]{display:none}
