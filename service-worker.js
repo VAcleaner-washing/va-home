@@ -1,4 +1,4 @@
-const VERSION = "16.2.1";
+const VERSION = "16.2.3";
 const CACHE_REVISION = "v16";
 const CACHE_PREFIX = "vahome-";
 const STATIC_CACHE = `${CACHE_PREFIX}static-${VERSION}-${CACHE_REVISION}`;
@@ -41,6 +41,7 @@ const LIVE_FILES = new Set([
   "/js/home-reviews.js",
   "/data/review-seo-snapshot.json",
   "/data/product-content.json",
+  "/data/search-index.json",
   "/js/wishlist.js",
   "/js/scent-profile.js",
   "/js/scent-guide.js",

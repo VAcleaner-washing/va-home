@@ -1,18 +1,18 @@
 {
-  "version": "16.2.1",
+  "version": "16.2.3",
   "channel": "Stable",
-  "name": "ATMOSPHERE OS — CLEAR CARE UX",
-  "date": "2026-08-04",
-  "base": "16.2.0",
+  "name": "ATMOSPHERE OS — SEARCH & CART STATE",
+  "date": "2026-08-07",
+  "base": "16.2.2",
   "changes": [
-    "Makes the product care accordion visibly interactive with a premium chevron, helper text and hover/focus feedback",
-    "Replaces ambiguous “next cycle” reed language with clear spare-replacement wording across cart, products, collections and guide",
-    "Clarifies that the included reed set is sufficient and the spare set is optional",
-    "Keeps the 50 UAH add-on, matching-diameter logic and server validation unchanged"
+    "Adds a premium global search across all 18 fragrances, collections, category landings and Journal guides",
+    "Makes spare-reed checkmarks and selected state mirror the real cart contents clearly",
+    "Restores VA HOME admin allowlist read access after VAcleaner hardening without weakening RLS",
+    "Restores admin UPDATE/DELETE grants for review moderation while keeping RLS admin-only"
   ],
   "notes": [
-    "Customers can immediately recognize “Комплектація та безпечне використання” as expandable.",
-    "The spare reed offer now explains when the replacement set is actually needed and that it ships with the diffuser.",
-    "No pricing, checkout, payment, database or Edge Function behavior changed in this release."
+    "On mobile the search action replaces the redundant Instagram header icon; Instagram remains available in the menu and footer.",
+    "Search is local to the VA HOME storefront index and does not expose cart, account, admin, checkout or other private pages.",
+    "Both Supabase permission fixes are included as reproducible migrations in 02-BACKEND and are already applied to production."
   ]
 }

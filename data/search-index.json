@@ -1,0 +1,1077 @@
+{
+  "version": "16.2.3",
+  "generatedAt": "2026-08-07T16:21:43.356Z",
+  "items": [
+    {
+      "type": "product",
+      "title": "Signature Relax",
+      "eyebrow": "Entry Collection",
+      "description": "М’який білий чай із цитрусовою свіжістю для спокійного простору.",
+      "url": "products/signature-relax.html",
+      "image": "images/product-story/signature-relax/hero.webp",
+      "keywords": [
+        "signature-relax",
+        "Signature Relax",
+        "М’який білий чай із цитрусовою свіжістю для спокійного простору.",
+        "Entry Collection",
+        "Мандарин",
+        "Лимон",
+        "Бергамот",
+        "Імбир",
+        "Жасмин",
+        "Білий чай",
+        "clean",
+        "fresh",
+        "living-room",
+        "bedroom",
+        "office",
+        "hallway",
+        "calm"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "Forbidden Fruit",
+      "eyebrow": "Entry Collection",
+      "description": "Темна вишня з лікерним акцентом і теплою пряною базою.",
+      "url": "products/forbidden-fruit.html",
+      "image": "images/product-story/forbidden-fruit/hero.webp",
+      "keywords": [
+        "forbidden-fruit",
+        "Forbidden Fruit",
+        "Темна вишня з лікерним акцентом і теплою пряною базою.",
+        "Entry Collection",
+        "Мигдаль",
+        "Лікер",
+        "Чорна вишня",
+        "Вишня",
+        "Слива",
+        "Троянда",
+        "Боби тонка",
+        "Ваніль",
+        "Кориця",
+        "Бензоїн",
+        "fruity",
+        "warm",
+        "living-room",
+        "bedroom",
+        "warm-evening",
+        "warm-sweet"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "DOUX Moment",
+      "eyebrow": "Entry Collection",
+      "description": "Стигла груша, вершки й праліне для теплого домашнього затишку.",
+      "url": "products/doux-moment.html",
+      "image": "images/product-story/doux-moment/hero.webp",
+      "keywords": [
+        "doux-moment",
+        "DOUX Moment",
+        "Стигла груша, вершки й праліне для теплого домашнього затишку.",
+        "Entry Collection",
+        "Груша",
+        "Яблуко",
+        "Фіалка",
+        "Жимолость",
+        "Цукор",
+        "Вершки",
+        "Карамель",
+        "Праліне",
+        "fruity",
+        "warm",
+        "living-room",
+        "bedroom",
+        "dining-room",
+        "warm-evening",
+        "warm-sweet"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "Wild Berry Way",
+      "eyebrow": "Entry Collection",
+      "description": "Свіжа ожина, лавр і грейпфрут без зайвої солодкості.",
+      "url": "products/wild-berry-way.html",
+      "image": "images/product-story/wild-berry-way/hero.webp",
+      "keywords": [
+        "wild-berry-way",
+        "Wild Berry Way",
+        "Свіжа ожина, лавр і грейпфрут без зайвої солодкості.",
+        "Entry Collection",
+        "Ожина",
+        "Лист лавра",
+        "Грейпфрут",
+        "Кедр",
+        "Ветивер",
+        "Квіткові ноти",
+        "fruity",
+        "fresh",
+        "woody",
+        "bathroom",
+        "balcony",
+        "terrace",
+        "berry-air"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "Hotel Spring",
+      "eyebrow": "Entry Collection",
+      "description": "Юзу й тюльпан з атмосферою світлого весняного бутик-готелю.",
+      "url": "products/hotel-spring.html",
+      "image": "images/product-story/hotel-spring/hero.webp",
+      "keywords": [
+        "hotel-spring",
+        "Hotel Spring",
+        "Юзу й тюльпан з атмосферою світлого весняного бутик-готелю.",
+        "Entry Collection",
+        "Екзотичні квіти",
+        "Юзу",
+        "Тюльпан",
+        "Чорний перець",
+        "Сандал",
+        "clean",
+        "fresh",
+        "floral",
+        "hotel",
+        "living-room",
+        "hallway",
+        "dining-room",
+        "spring-fresh"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "Evening Ritual",
+      "eyebrow": "Signature Collection",
+      "description": "Темні квіти й кашемірова глибина для вечірньої атмосфери.",
+      "url": "products/evening-ritual.html",
+      "image": "images/product-story/evening-ritual/hero.webp",
+      "keywords": [
+        "evening-ritual",
+        "Evening Ritual",
+        "Темні квіти й кашемірова глибина для вечірньої атмосфери.",
+        "Signature Collection",
+        "Апельсиновий цвіт",
+        "Озон",
+        "Тубероза",
+        "Далія",
+        "Конвалія",
+        "Пачулі",
+        "Мускус",
+        "Амбра",
+        "warm",
+        "floral",
+        "evening",
+        "living-room",
+        "bedroom",
+        "warm-evening"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "Velvet Spa",
+      "eyebrow": "Signature Collection",
+      "description": "Кокосове молоко й сандал в атмосфері приватного SPA.",
+      "url": "products/velvet-spa.html",
+      "image": "images/product-story/velvet-spa/hero.webp",
+      "keywords": [
+        "velvet-spa",
+        "Velvet Spa",
+        "Кокосове молоко й сандал в атмосфері приватного SPA.",
+        "Signature Collection",
+        "Бензоїн",
+        "Кокосове молоко",
+        "Кокос",
+        "Сандал",
+        "Кедр",
+        "Боби тонка",
+        "Аміріс",
+        "spa",
+        "warm",
+        "woody",
+        "bathroom",
+        "bedroom",
+        "spa-zone",
+        "calm"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "Pure Zen",
+      "eyebrow": "Signature Collection",
+      "description": "Білий чай, лотос і сандал для тихої wellness-атмосфери.",
+      "url": "products/pure-zen.html",
+      "image": "images/product-story/pure-zen/hero.webp",
+      "keywords": [
+        "pure-zen",
+        "Pure Zen",
+        "Білий чай, лотос і сандал для тихої wellness-атмосфери.",
+        "Signature Collection",
+        "Бергамот",
+        "Лимон",
+        "Кардамон",
+        "Лотос",
+        "Коріандр",
+        "Білий чай",
+        "Сандал",
+        "Ветивер",
+        "Мигдальне молоко",
+        "clean",
+        "spa",
+        "fresh",
+        "bedroom",
+        "bathroom",
+        "office",
+        "spa-zone",
+        "calm"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "Hotel Luxe",
+      "eyebrow": "Signature Collection",
+      "description": "Чистий льон і морські мінерали з атмосферою дорогого готелю.",
+      "url": "products/hotel-luxe.html",
+      "image": "images/product-story/hotel-luxe/hero.webp",
+      "keywords": [
+        "hotel-luxe",
+        "Hotel Luxe",
+        "Чистий льон і морські мінерали з атмосферою дорогого готелю.",
+        "Signature Collection",
+        "Лимон",
+        "Бавовна",
+        "Озон",
+        "Льон",
+        "Евкаліпт",
+        "Морська сіль",
+        "Фрезія",
+        "Сандал",
+        "Мох",
+        "М’які пудрові ноти",
+        "hotel",
+        "clean",
+        "fresh",
+        "living-room",
+        "hallway",
+        "hotel-clean"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "Old Money",
+      "eyebrow": "Premium Collection",
+      "description": "Суха шкіра, тютюн і амбра з характером дорогого кабінету.",
+      "url": "products/old-money.html",
+      "image": "images/product-story/old-money/hero.webp",
+      "keywords": [
+        "old-money",
+        "Old Money",
+        "Суха шкіра, тютюн і амбра з характером дорогого кабінету.",
+        "Premium Collection",
+        "Гвоздика",
+        "Бергамот",
+        "Троянда",
+        "Лаванда",
+        "Лабданум",
+        "Шкіра",
+        "Тютюн",
+        "Амбра",
+        "woody",
+        "warm",
+        "office",
+        "living-room",
+        "dark-luxury"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "L’INSTINCT",
+      "eyebrow": "Premium Collection",
+      "description": "Бергамот, перець і суха деревина для впевненого простору.",
+      "url": "products/linstinct.html",
+      "image": "images/product-story/linstinct/hero.webp",
+      "keywords": [
+        "linstinct",
+        "L’INSTINCT",
+        "Бергамот, перець і суха деревина для впевненого простору.",
+        "Premium Collection",
+        "Бергамот",
+        "Перець",
+        "Сичуанський перець",
+        "Лаванда",
+        "Ветивер",
+        "Амброксан",
+        "Кедр",
+        "Лабданум",
+        "woody",
+        "fresh",
+        "spicy",
+        "office",
+        "showroom",
+        "hallway",
+        "confident-space"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "Mineral Salt",
+      "eyebrow": "Premium Collection",
+      "description": "Морська сіль і шавлія з чистою атмосферою преміального SPA.",
+      "url": "products/mineral-salt.html",
+      "image": "images/product-story/mineral-salt/hero.webp",
+      "keywords": [
+        "mineral-salt",
+        "Mineral Salt",
+        "Морська сіль і шавлія з чистою атмосферою преміального SPA.",
+        "Premium Collection",
+        "Морська сіль",
+        "Шавлія",
+        "Грейпфрут",
+        "Амбретта",
+        "Морські водорості",
+        "clean",
+        "fresh",
+        "spa",
+        "bathroom",
+        "bedroom",
+        "spa-zone",
+        "calm"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "Pure Imagination",
+      "eyebrow": "Noir Collection",
+      "description": "Повітряні цитруси й молекулярна глибина для великого простору.",
+      "url": "products/pure-imagination.html",
+      "image": "images/product-story/pure-imagination/hero.webp",
+      "keywords": [
+        "pure-imagination",
+        "Pure Imagination",
+        "Повітряні цитруси й молекулярна глибина для великого простору.",
+        "Noir Collection",
+        "Цитруси",
+        "Бергамот",
+        "Троянда",
+        "Жасмин",
+        "Сандал",
+        "Пачулі",
+        "molecular",
+        "fresh",
+        "clean",
+        "living-room",
+        "office",
+        "airy-luxury"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "Silk Molecule",
+      "eyebrow": "Noir Collection",
+      "description": "Шовковистий мускус і шафран з ефектом кашемірового повітря.",
+      "url": "products/silk-molecule.html",
+      "image": "images/product-story/silk-molecule/hero.webp",
+      "keywords": [
+        "silk-molecule",
+        "Silk Molecule",
+        "Шовковистий мускус і шафран з ефектом кашемірового повітря.",
+        "Noir Collection",
+        "Бергамот",
+        "Шафран",
+        "Клен",
+        "Кориця",
+        "Фіалка",
+        "Конвалія",
+        "Молоко",
+        "Сандал",
+        "Темний мускус",
+        "Пудра",
+        "Ветивер",
+        "Ваніль",
+        "Геліотроп",
+        "molecular",
+        "clean",
+        "warm",
+        "bedroom",
+        "wardrobe",
+        "silk-aura"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "The Archive",
+      "eyebrow": "Noir Collection",
+      "description": "Сухий копал і кедр з атмосферою приватної бібліотеки.",
+      "url": "products/the-archive.html",
+      "image": "images/product-story/the-archive/hero.webp",
+      "keywords": [
+        "the-archive",
+        "The Archive",
+        "Сухий копал і кедр з атмосферою приватної бібліотеки.",
+        "Noir Collection",
+        "Бергамот",
+        "Лимон",
+        "Копал",
+        "Геліотроп",
+        "Дубовий мох",
+        "Камфора",
+        "Пачулі",
+        "Боби тонка",
+        "Амбра",
+        "Бензоїн",
+        "Кедр",
+        "woody",
+        "molecular",
+        "library",
+        "office",
+        "lounge",
+        "private-library"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "Silent Temple",
+      "eyebrow": "Noir Collection",
+      "description": "Хінокі, білий чай і евкаліпт у медитативній тиші.",
+      "url": "products/silent-temple.html",
+      "image": "images/product-story/silent-temple/hero.webp",
+      "keywords": [
+        "silent-temple",
+        "Silent Temple",
+        "Хінокі, білий чай і евкаліпт у медитативній тиші.",
+        "Noir Collection",
+        "Евкаліпт",
+        "Озон",
+        "Білий чай",
+        "Кипарис",
+        "Сосна",
+        "Кедр",
+        "Амбра",
+        "Ялівець",
+        "molecular",
+        "clean",
+        "woody",
+        "fresh",
+        "office",
+        "bedroom",
+        "bathroom",
+        "meditative-wood"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "Moss & Shadow",
+      "eyebrow": "Noir Collection",
+      "description": "Темний дубовий мох, шавлія й амбра для стриманої атмосфери старого лісу після дощу.",
+      "url": "products/moss-and-shadow.html",
+      "image": "images/product-story/moss-and-shadow/hero.webp",
+      "keywords": [
+        "moss-and-shadow",
+        "Moss & Shadow",
+        "Темний дубовий мох, шавлія й амбра для стриманої атмосфери старого лісу після дощу.",
+        "Noir Collection",
+        "Шавлія",
+        "Апельсин",
+        "Грейпфрут",
+        "Лаванда",
+        "Амбра",
+        "Боби тонка",
+        "Дубовий мох",
+        "woody",
+        "molecular",
+        "fresh",
+        "living-room",
+        "office",
+        "mossy-dark"
+      ]
+    },
+    {
+      "type": "product",
+      "title": "Dark Bloom",
+      "eyebrow": "Noir Collection",
+      "description": "Темна троянда, слива й лабданум для чуттєвого вечора.",
+      "url": "products/dark-bloom.html",
+      "image": "images/product-story/dark-bloom/hero.webp",
+      "keywords": [
+        "dark-bloom",
+        "Dark Bloom",
+        "Темна троянда, слива й лабданум для чуттєвого вечора.",
+        "Noir Collection",
+        "Рожевий перець",
+        "Грейпфрут",
+        "Слива",
+        "Чорна троянда",
+        "Кмин",
+        "Ваніль",
+        "Пачулі",
+        "Лабданум",
+        "molecular",
+        "warm",
+        "bedroom",
+        "lounge",
+        "sensual-evening"
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Філософія VA HOME — аромат як архітектура простору",
+      "eyebrow": "VA HOME",
+      "description": "Філософія VA HOME: як ми створюємо атмосферні композиції, тестуємо їх у реальному просторі та перетворюємо аромат на частину домашнього ритуалу.",
+      "url": "about.html",
+      "image": "",
+      "keywords": [
+        "Філософія VA HOME — аромат як архітектура простору",
+        "Філософія VA HOME: як ми створюємо атмосферні композиції, тестуємо їх у реальному просторі та перетворюємо аромат на частину домашнього ритуалу.",
+        "Аромат як архітектура простору",
+        "about.html"
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Каталог ароматів",
+      "eyebrow": "Каталог",
+      "description": "Каталог аромадифузорів VA HOME: Entry, Signature, Premium, Noir. Фільтруйте за характером, колекцією та настроєм.",
+      "url": "catalog.html",
+      "image": "",
+      "keywords": [
+        "Каталог ароматів",
+        "Каталог аромадифузорів VA HOME: Entry, Signature, Premium, Noir. Фільтруйте за характером, колекцією та настроєм.",
+        "catalog.html"
+      ]
+    },
+    {
+      "type": "category",
+      "title": "Аромадифузори для спальні — купити у VA HOME",
+      "eyebrow": "За простором",
+      "description": "Добірка м’яких, чистих і теплих композицій, які підтримують атмосферу спальні без різкого ароматичного тиску.",
+      "url": "categories/aromadyfuzory-dlya-spalni.html",
+      "image": "",
+      "keywords": [
+        "Аромадифузори для спальні — купити у VA HOME",
+        "Добірка м’яких, чистих і теплих композицій, які підтримують атмосферу спальні без різкого ароматичного тиску.",
+        "Аромадифузори для спальні",
+        "categories aromadyfuzory dlya spalni.html"
+      ]
+    },
+    {
+      "type": "category",
+      "title": "Аромадифузори для ванної — купити у VA HOME",
+      "eyebrow": "За простором",
+      "description": "Чисті, мінеральні та wellness-композиції для ванної кімнати — свіжі, але не побутово різкі.",
+      "url": "categories/aromadyfuzory-dlya-vannoi.html",
+      "image": "",
+      "keywords": [
+        "Аромадифузори для ванної — купити у VA HOME",
+        "Чисті, мінеральні та wellness-композиції для ванної кімнати — свіжі, але не побутово різкі.",
+        "Аромадифузори для ванної",
+        "categories aromadyfuzory dlya vannoi.html"
+      ]
+    },
+    {
+      "type": "category",
+      "title": "Аромадифузори для вітальні — купити у VA HOME",
+      "eyebrow": "За простором",
+      "description": "Композиції для простору, де збирається дім: від чистої готельної свіжості до теплого вечірнього характеру.",
+      "url": "categories/aromadyfuzory-dlya-vitalni.html",
+      "image": "",
+      "keywords": [
+        "Аромадифузори для вітальні — купити у VA HOME",
+        "Композиції для простору, де збирається дім: від чистої готельної свіжості до теплого вечірнього характеру.",
+        "Аромадифузори для вітальні",
+        "categories aromadyfuzory dlya vitalni.html"
+      ]
+    },
+    {
+      "type": "category",
+      "title": "Готельні аромати для дому — купити у VA HOME",
+      "eyebrow": "За простором",
+      "description": "Композиції з відчуттям лобі, чистого текстилю, мінерального повітря та спокійної дороговизни.",
+      "url": "categories/hotelni-aromaty-dlya-domu.html",
+      "image": "",
+      "keywords": [
+        "Готельні аромати для дому — купити у VA HOME",
+        "Композиції з відчуттям лобі, чистого текстилю, мінерального повітря та спокійної дороговизни.",
+        "Готельні аромати для дому",
+        "categories hotelni aromaty dlya domu.html"
+      ]
+    },
+    {
+      "type": "category",
+      "title": "Подарункові аромадифузори — купити у VA HOME",
+      "eyebrow": "За простором",
+      "description": "Аромати, які легко дарувати: зрозумілий характер, преміальне оформлення та атмосфера, що залишається після розпакування.",
+      "url": "categories/podarunkovi-aromadyfuzory.html",
+      "image": "",
+      "keywords": [
+        "Подарункові аромадифузори — купити у VA HOME",
+        "Аромати, які легко дарувати: зрозумілий характер, преміальне оформлення та атмосфера, що залишається після розпакування.",
+        "Подарункові аромадифузори",
+        "categories podarunkovi aromadyfuzory.html"
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Колекції ароматів",
+      "eyebrow": "Колекції",
+      "description": "Чотири колекції VA HOME — Entry, Signature, Premium і Noir. Оберіть атмосферу, яка відповідає вашому простору.",
+      "url": "collections.html",
+      "image": "",
+      "keywords": [
+        "Колекції ароматів",
+        "Чотири колекції VA HOME — Entry, Signature, Premium і Noir. Оберіть атмосферу, яка відповідає вашому простору.",
+        "Чотири колекції. Чотири характери простору.",
+        "collections.html"
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Контакти",
+      "eyebrow": "VA HOME",
+      "description": "Контакти VA HOME: телефон, email, Instagram і реквізити продавця. Підтримка покупців та питання щодо замовлень.",
+      "url": "contacts.html",
+      "image": "",
+      "keywords": [
+        "Контакти",
+        "Контакти VA HOME: телефон, email, Instagram і реквізити продавця. Підтримка покупців та питання щодо замовлень.",
+        "Будемо на зв’язку",
+        "contacts.html"
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Доставка і оплата",
+      "eyebrow": "VA HOME",
+      "description": "Доставка аромадифузорів VA HOME Новою поштою за 1–2 робочі дні, безкоштовно від 1500 грн. Оплата карткою онлайн, на рахунок або при отриманні.",
+      "url": "delivery.html",
+      "image": "",
+      "keywords": [
+        "Доставка і оплата",
+        "Доставка аромадифузорів VA HOME Новою поштою за 1–2 робочі дні, безкоштовно від 1500 грн. Оплата карткою онлайн, на рахунок або при отриманні.",
+        "Спокійний шлях замовлення",
+        "delivery.html"
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Discovery Set",
+      "eyebrow": "Discovery Set",
+      "description": "Discovery Set VA HOME — 6 або 18 тестерів, щоб протестувати аромати вдома перед вибором флакона.",
+      "url": "discovery-set.html",
+      "image": "",
+      "keywords": [
+        "Discovery Set",
+        "Discovery Set VA HOME — 6 або 18 тестерів, щоб протестувати аромати вдома перед вибором флакона.",
+        "Спочатку відчути. Потім обрати.",
+        "discovery set.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Ambroxan — молекула, що створює простір",
+      "eyebrow": "Journal",
+      "description": "Що Ambroxan дає сучасній композиції, чому його не можна звести до однієї ноти та як він працює у формулах VA HOME.",
+      "url": "guides/ambroxan.html",
+      "image": "",
+      "keywords": [
+        "Ambroxan — молекула, що створює простір",
+        "Що Ambroxan дає сучасній композиції, чому його не можна звести до однієї ноти та як він працює у формулах VA HOME.",
+        "guides ambroxan.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Аромадифузор без різкого запаху: як обрати",
+      "eyebrow": "Journal",
+      "description": "Як обрати м’який, але відчутний аромадифузор без різкого звучання: композиція, палички, площа, розташування та перші 48 годин.",
+      "url": "guides/aromadyfuzor-bez-rizkoho-zapakhu.html",
+      "image": "",
+      "keywords": [
+        "Аромадифузор без різкого запаху: як обрати",
+        "Як обрати м’який, але відчутний аромадифузор без різкого звучання: композиція, палички, площа, розташування та перші 48 годин.",
+        "Аромадифузор без різкого запаху: як обрати м’яке звучання",
+        "guides aromadyfuzor bez rizkoho zapakhu.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Аромадифузор чи ароматична свічка: що краще",
+      "eyebrow": "Journal",
+      "description": "Чесне порівняння аромадифузора й ароматичної свічки: інтенсивність, тривалість, контроль, безпека та сценарії використання вдома.",
+      "url": "guides/aromadyfuzor-chy-aromatychna-svichka.html",
+      "image": "",
+      "keywords": [
+        "Аромадифузор чи ароматична свічка: що краще",
+        "Чесне порівняння аромадифузора й ароматичної свічки: інтенсивність, тривалість, контроль, безпека та сценарії використання вдома.",
+        "Аромадифузор чи ароматична свічка: що краще для дому",
+        "guides aromadyfuzor chy aromatychna svichka.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Аромадифузор для ванної кімнати",
+      "eyebrow": "Journal",
+      "description": "Як обрати аромадифузор для ванної кімнати: SPA, мінеральні й чисті композиції, розташування, палички та аромати VA HOME.",
+      "url": "guides/aromadyfuzor-dlya-vannoi.html",
+      "image": "",
+      "keywords": [
+        "Аромадифузор для ванної кімнати",
+        "Як обрати аромадифузор для ванної кімнати: SPA, мінеральні й чисті композиції, розташування, палички та аромати VA HOME.",
+        "Аромадифузор для ванної: як створити домашню SPA-атмосферу",
+        "guides aromadyfuzor dlya vannoi.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Аромадифузор для вітальні",
+      "eyebrow": "Journal",
+      "description": "Як обрати аромадифузор для вітальні: площа, відкритий простір, інтенсивність, розташування, кількість паличок і добірка ароматів VA HOME.",
+      "url": "guides/aromadyfuzor-dlya-vitalni.html",
+      "image": "",
+      "keywords": [
+        "Аромадифузор для вітальні",
+        "Як обрати аромадифузор для вітальні: площа, відкритий простір, інтенсивність, розташування, кількість паличок і добірка ароматів VA HOME.",
+        "Аромадифузор для вітальні: як підібрати аромат під простір",
+        "guides aromadyfuzor dlya vitalni.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Як обрати аромат для спальні",
+      "eyebrow": "Journal",
+      "description": "Як обрати аромат для спальні з урахуванням інтенсивності, площі, текстилю, провітрювання та особистого ритму.",
+      "url": "guides/aromat-dlya-spalni.html",
+      "image": "",
+      "keywords": [
+        "Як обрати аромат для спальні",
+        "Як обрати аромат для спальні з урахуванням інтенсивності, площі, текстилю, провітрювання та особистого ритму.",
+        "guides aromat dlya spalni.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Чому аромат звучить по-різному у різних кімнатах",
+      "eyebrow": "Journal",
+      "description": "Як площа, температура, рух повітря, текстиль і розташування дифузора змінюють сприйняття однієї композиції.",
+      "url": "guides/chomu-aromat-zvuchyt-po-riznomu.html",
+      "image": "",
+      "keywords": [
+        "Чому аромат звучить по-різному у різних кімнатах",
+        "Як площа, температура, рух повітря, текстиль і розташування дифузора змінюють сприйняття однієї композиції.",
+        "guides chomu aromat zvuchyt po riznomu.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Чому дорогий аромат не кричить",
+      "eyebrow": "Journal",
+      "description": "Чому преміальний домашній аромат не обов’язково має бути гучним і як формула, матеріали та тестування формують ціну VA HOME.",
+      "url": "guides/chomu-dorohyi-aromat-ne-krychyt.html",
+      "image": "",
+      "keywords": [
+        "Чому дорогий аромат не кричить",
+        "Чому преміальний домашній аромат не обов’язково має бути гучним і як формула, матеріали та тестування формують ціну VA HOME.",
+        "guides chomu dorohyi aromat ne krychyt.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Чому Noir — це не про темряву",
+      "eyebrow": "Journal",
+      "description": "Чому колекція Noir від VA HOME — не про темряву, а про глибину, сучасні матеріали й внутрішню інтенсивність.",
+      "url": "guides/chomu-noir-ne-pro-temryavu.html",
+      "image": "",
+      "keywords": [
+        "Чому Noir — це не про темряву",
+        "Чому колекція Noir від VA HOME — не про темряву, а про глибину, сучасні матеріали й внутрішню інтенсивність.",
+        "guides chomu noir ne pro temryavu.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Чому аромат іноді зникає — і повертається",
+      "eyebrow": "Journal",
+      "description": "Чому нюх адаптується до знайомого запаху та як молекулярна архітектура допомагає аромату VA HOME залишатися об’ємним і повертатися у сприйняття хвилями.",
+      "url": "guides/chomu-perestayete-vidchuvaty-aromat.html",
+      "image": "",
+      "keywords": [
+        "Чому аромат іноді зникає — і повертається",
+        "Чому нюх адаптується до знайомого запаху та як молекулярна архітектура допомагає аромату VA HOME залишатися об’ємним і повертатися у сприйняття хвилями.",
+        "guides chomu perestayete vidchuvaty aromat.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Чому ми тестуємо аромати тижнями",
+      "eyebrow": "Journal",
+      "description": "Навіщо формулам VA HOME потрібні витримка, повторні тести, різні режими паличок і перевірка у реальному просторі.",
+      "url": "guides/chomu-testuyemo-tyzhnyamy.html",
+      "image": "",
+      "keywords": [
+        "Чому ми тестуємо аромати тижнями",
+        "Навіщо формулам VA HOME потрібні витримка, повторні тести, різні режими паличок і перевірка у реальному просторі.",
+        "guides chomu testuyemo tyzhnyamy.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Деревні аромадифузори для дому",
+      "eyebrow": "Journal",
+      "description": "Як обрати деревний аромадифузор для дому: кедр, сандал, ветивер, дубовий мох, інтенсивність, кімната та добірка VA HOME.",
+      "url": "guides/derevni-aromadyfuzory.html",
+      "image": "",
+      "keywords": [
+        "Деревні аромадифузори для дому",
+        "Як обрати деревний аромадифузор для дому: кедр, сандал, ветивер, дубовий мох, інтенсивність, кімната та добірка VA HOME.",
+        "Деревні аромадифузори: як дерево формує простір",
+        "guides derevni aromadyfuzory.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Готельні аромати для дому",
+      "eyebrow": "Journal",
+      "description": "Як створити готельний аромат удома: чистий текстиль, мінеральне повітря, квіти, інтенсивність і композиції VA HOME для boutique hotel атмосфери.",
+      "url": "guides/hotelni-aromaty-dlya-domu.html",
+      "image": "",
+      "keywords": [
+        "Готельні аромати для дому",
+        "Як створити готельний аромат удома: чистий текстиль, мінеральне повітря, квіти, інтенсивність і композиції VA HOME для boutique hotel атмосфери.",
+        "Готельні аромати для дому: атмосфера boutique hotel",
+        "guides hotelni aromaty dlya domu.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "VA HOME Journal — невидима архітектура дому",
+      "eyebrow": "Journal",
+      "description": "VA HOME Journal: преміальні матеріали про аромадифузори, ноти, молекули, вибір ароматів для кімнат і атмосферу дому.",
+      "url": "guides/index.html",
+      "image": "",
+      "keywords": [
+        "VA HOME Journal — невидима архітектура дому",
+        "VA HOME Journal: преміальні матеріали про аромадифузори, ноти, молекули, вибір ароматів для кімнат і атмосферу дому.",
+        "Дім, який відчуваєш.",
+        "guides index.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Iso E Super: аромат, який ви майже не помічаєте",
+      "eyebrow": "Journal",
+      "description": "Як Iso E Super створює оксамитову деревність і повноту композиції та чому різні люди сприймають його по-різному.",
+      "url": "guides/iso-e-super.html",
+      "image": "",
+      "keywords": [
+        "Iso E Super: аромат, який ви майже не помічаєте",
+        "Як Iso E Super створює оксамитову деревність і повноту композиції та чому різні люди сприймають його по-різному.",
+        "guides iso e super.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Квіткові аромадифузори для дому",
+      "eyebrow": "Journal",
+      "description": "Як обрати квітковий аромадифузор для дому: прозорі й вечірні композиції, інтенсивність, кімнати та сучасні квіткові аромати VA HOME.",
+      "url": "guides/kvitkovi-aromadyfuzory.html",
+      "image": "",
+      "keywords": [
+        "Квіткові аромадифузори для дому",
+        "Як обрати квітковий аромадифузор для дому: прозорі й вечірні композиції, інтенсивність, кімнати та сучасні квіткові аромати VA HOME.",
+        "Квіткові аромадифузори: сучасне звучання без зайвої солодкості",
+        "guides kvitkovi aromadyfuzory.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Що таке молекулярна композиція",
+      "eyebrow": "Journal",
+      "description": "Як Iso E Super, Ambroxan, Hedione, Cashmeran і мускусні матеріали формують об’єм, текстуру та характер композицій VA HOME.",
+      "url": "guides/molekulyarna-kompozytsiya.html",
+      "image": "",
+      "keywords": [
+        "Що таке молекулярна композиція",
+        "Як Iso E Super, Ambroxan, Hedione, Cashmeran і мускусні матеріали формують об’єм, текстуру та характер композицій VA HOME.",
+        "guides molekulyarna kompozytsiya.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Що таке ноти аромату",
+      "eyebrow": "Journal",
+      "description": "Що означають верхні, серцеві й базові ноти та чому ароматична піраміда є орієнтиром, а не повною формулою аромату.",
+      "url": "guides/noty-aromatu.html",
+      "image": "",
+      "keywords": [
+        "Що таке ноти аромату",
+        "Що означають верхні, серцеві й базові ноти та чому ароматична піраміда є орієнтиром, а не повною формулою аромату.",
+        "guides noty aromatu.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Що відбувається після того, як ви відкрили флакон",
+      "eyebrow": "Journal",
+      "description": "Як запускається дифузія у перші 24–48 годин, коли перевертати палички та чому аромат не варто оцінювати одразу.",
+      "url": "guides/pislya-vidkryttya-flakona.html",
+      "image": "",
+      "keywords": [
+        "Що відбувається після того, як ви відкрили флакон",
+        "Як запускається дифузія у перші 24–48 годин, коли перевертати палички та чому аромат не варто оцінювати одразу.",
+        "guides pislya vidkryttya flakona.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Чим преміальний аромадифузор відрізняється від дешевого",
+      "eyebrow": "Journal",
+      "description": "Що реально формує якість аромадифузора: архітектура формули, база, палички, тестування, стабільність дифузії та сервіс — без міфів про ціну.",
+      "url": "guides/premialnyi-aromadyfuzor-proty-masmarketu.html",
+      "image": "",
+      "keywords": [
+        "Чим преміальний аромадифузор відрізняється від дешевого",
+        "Що реально формує якість аромадифузора: архітектура формули, база, палички, тестування, стабільність дифузії та сервіс — без міфів про ціну.",
+        "Чим преміальний аромадифузор відрізняється від масмаркету",
+        "guides premialnyi aromadyfuzor proty masmarketu.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Преміальний аромадифузор у подарунок: як обрати",
+      "eyebrow": "Journal",
+      "description": "Як обрати преміальний аромадифузор у подарунок: характер людини, кімната, універсальні напрями, Discovery Set, пакування й доставка.",
+      "url": "guides/premialnyi-aromadyfuzor-u-podarunok.html",
+      "image": "",
+      "keywords": [
+        "Преміальний аромадифузор у подарунок: як обрати",
+        "Як обрати преміальний аромадифузор у подарунок: характер людини, кімната, універсальні напрями, Discovery Set, пакування й доставка.",
+        "Преміальний аромадифузор у подарунок: як не помилитися з ароматом",
+        "guides premialnyi aromadyfuzor u podarunok.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Свіжі аромадифузори для дому",
+      "eyebrow": "Journal",
+      "description": "Як обрати свіжий аромадифузор для дому: цитрусові, зелені, мінеральні та clean-композиції без різкого побутового звучання.",
+      "url": "guides/svizhi-aromadyfuzory.html",
+      "image": "",
+      "keywords": [
+        "Свіжі аромадифузори для дому",
+        "Як обрати свіжий аромадифузор для дому: цитрусові, зелені, мінеральні та clean-композиції без різкого побутового звучання.",
+        "Свіжі аромадифузори: чистота без відчуття освіжувача",
+        "guides svizhi aromadyfuzory.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Свіжі чи теплі аромати: як обрати",
+      "eyebrow": "Journal",
+      "description": "Чим відрізняються свіжі й теплі композиції для дому та як обрати напрям, що відповідає вашому простору.",
+      "url": "guides/svizhi-chy-tepli-aromaty.html",
+      "image": "",
+      "keywords": [
+        "Свіжі чи теплі аромати: як обрати",
+        "Чим відрізняються свіжі й теплі композиції для дому та як обрати напрям, що відповідає вашому простору.",
+        "guides svizhi chy tepli aromaty.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Український чи імпортний аромадифузор: що обрати",
+      "eyebrow": "Journal",
+      "description": "Чесне порівняння українських та імпортних аромадифузорів: формула, база, палички, тестування, сервіс і критерії справжньої якості.",
+      "url": "guides/ukrainskyi-chy-importnyi-aromadyfuzor.html",
+      "image": "",
+      "keywords": [
+        "Український чи імпортний аромадифузор: що обрати",
+        "Чесне порівняння українських та імпортних аромадифузорів: формула, база, палички, тестування, сервіс і критерії справжньої якості.",
+        "Український чи імпортний аромадифузор: що насправді визначає якість",
+        "guides ukrainskyi chy importnyi aromadyfuzor.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Вечірній ритуал",
+      "eyebrow": "Journal",
+      "description": "Як світло, тиша, повторення й домашній аромат допомагають змінити ритм простору наприкінці дня.",
+      "url": "guides/vechirnii-rytual.html",
+      "image": "",
+      "keywords": [
+        "Вечірній ритуал",
+        "Як світло, тиша, повторення й домашній аромат допомагають змінити ритм простору наприкінці дня.",
+        "guides vechirnii rytual.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Палички для аромадифузора: повний гід",
+      "eyebrow": "Journal",
+      "description": "Скільки паличок ставити у дифузор VA HOME, як часто перевертати, коли замінювати, де розміщувати та скільки орієнтовно звучить кожен аромат.",
+      "url": "guides/yak-korystuvatis-dyfuzorom.html",
+      "image": "",
+      "keywords": [
+        "Палички для аромадифузора: повний гід",
+        "Скільки паличок ставити у дифузор VA HOME, як часто перевертати, коли замінювати, де розміщувати та скільки орієнтовно звучить кожен аромат.",
+        "guides yak korystuvatis dyfuzorom.html"
+      ]
+    },
+    {
+      "type": "guide",
+      "title": "Як народжується формула VA HOME",
+      "eyebrow": "Journal",
+      "description": "Як у VA HOME образ майбутньої атмосфери проходить через молекулярну архітектуру, роботу з базою, серію версій і живі тести у просторі.",
+      "url": "guides/yak-narodzhuyetsya-formula.html",
+      "image": "",
+      "keywords": [
+        "Як народжується формула VA HOME",
+        "Як у VA HOME образ майбутньої атмосфери проходить через молекулярну архітектуру, роботу з базою, серію версій і живі тести у просторі.",
+        "guides yak narodzhuyetsya formula.html"
+      ]
+    },
+    {
+      "type": "page",
+      "title": "VA HOME — Invisible Luxury Atmosphere | Аромати для дому",
+      "eyebrow": "VA HOME",
+      "description": "Преміальні аромадифузори VA HOME для дому: 18 композицій, Discovery Set і гід ароматів. Формули проходять внутрішній аудит та технологічну витримку.",
+      "url": "index.html",
+      "image": "",
+      "keywords": [
+        "VA HOME — Invisible Luxury Atmosphere | Аромати для дому",
+        "Преміальні аромадифузори VA HOME для дому: 18 композицій, Discovery Set і гід ароматів. Формули проходять внутрішній аудит та технологічну витримку.",
+        "Аромати, що змінюють відчуття простору",
+        "index.html"
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Room Ritual — налаштування аромадифузора",
+      "eyebrow": "Room Ritual",
+      "description": "Персональне налаштування аромадифузора VA HOME за кімнатою, площею, бажаною інтенсивністю та розташуванням флакону.",
+      "url": "room-ritual.html",
+      "image": "",
+      "keywords": [
+        "Room Ritual — налаштування аромадифузора",
+        "Персональне налаштування аромадифузора VA HOME за кімнатою, площею, бажаною інтенсивністю та розташуванням флакону.",
+        "Налаштуйте аромат під свій простір.",
+        "room ritual.html"
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Персональний підбір аромату",
+      "eyebrow": "Підбір аромату",
+      "description": "Персональний підбір VA HOME: 5 запитань про простір, атмосферу та інтенсивність — і 3 ароматичні рекомендації з поясненням.",
+      "url": "scent-guide.html",
+      "image": "",
+      "keywords": [
+        "Персональний підбір аромату",
+        "Персональний підбір VA HOME: 5 запитань про простір, атмосферу та інтенсивність — і 3 ароматичні рекомендації з поясненням.",
+        "Аромат, що відповідає вашому простору.",
+        "scent guide.html"
+      ]
+    }
+  ]
+}

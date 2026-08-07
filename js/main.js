@@ -49,6 +49,7 @@
           <nav class="main-nav" aria-label="Основна навігація">${navLinks}</nav>
           <div class="header-actions">
             <a class="header-phone" href="tel:+380953919569" aria-label="Зателефонувати VA HOME">+38 (095) 391-9569</a>
+            <button class="icon-btn header-search-btn" type="button" aria-label="Пошук по VA HOME" aria-haspopup="dialog" aria-controls="siteSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.5 15.5 4.2 4.2"/></svg></button>
             <a class="icon-btn" href="${root}account.html" aria-label="Особистий кабінет"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg></a>
             <a class="icon-btn cart-btn" href="${root}cart.html" aria-label="Кошик">
               ${iconBag()}
@@ -69,6 +70,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
           </button>
         </div>
+        <button class="mobile-menu__search-trigger" type="button" aria-haspopup="dialog" aria-controls="siteSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.5 15.5 4.2 4.2"/></svg><span>Пошук по VA HOME</span></button>
         <nav class="mobile-menu__nav" aria-label="Мобільна навігація">${mobileLinks}</nav>
         <div class="mobile-menu__footer">
           <a href="${root}account.html">Мій кабінет</a>
@@ -245,6 +247,214 @@
       if (e.key === "Escape") closeMenu();
     });
     menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeMenu));
+  }
+
+  function initSiteSearch() {
+    const root = window.VA_HOME_ROOT || "";
+    const headerSearch = document.querySelector(".header-search-btn");
+    const mobileSearch = document.querySelector(".mobile-menu__search-trigger");
+    if (!headerSearch && !mobileSearch) return;
+
+    const normalizeSearch = (value) => String(value || "")
+      .toLocaleLowerCase("uk-UA")
+      .replace(/[’`]/g, "'")
+      .replace(/[^a-zа-яіїєґ0-9'&+]+/gi, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[char]));
+
+    const surface = document.createElement("section");
+    surface.id = "siteSearch";
+    surface.className = "site-search";
+    surface.hidden = true;
+    surface.setAttribute("role", "dialog");
+    surface.setAttribute("aria-modal", "true");
+    surface.setAttribute("aria-labelledby", "siteSearchTitle");
+    surface.innerHTML = `
+      <div class="site-search__backdrop" data-site-search-close></div>
+      <div class="site-search__panel">
+        <header class="site-search__header">
+          <div><span class="eyebrow">VA HOME SEARCH</span><h2 id="siteSearchTitle">Знайдіть свій аромат</h2></div>
+          <button type="button" class="site-search__close" data-site-search-close aria-label="Закрити пошук">×</button>
+        </header>
+        <div class="site-search__input-wrap">
+          <span class="site-search__input-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.5 15.5 4.2 4.2"/></svg></span>
+          <input id="siteSearchInput" class="site-search__input" type="search" autocomplete="off" enterkeyhint="search" placeholder="Аромат, нота, кімната або тема…" aria-describedby="siteSearchHint">
+          <button type="button" class="site-search__clear" aria-label="Очистити пошук" hidden>Очистити</button>
+        </div>
+        <p class="site-search__hint" id="siteSearchHint">Наприклад: Old Money, ожина, спальня, готельний аромат.</p>
+        <div class="site-search__quick" aria-label="Швидкий пошук">
+          <button type="button" data-search-query="Old Money">Old Money</button>
+          <button type="button" data-search-query="готельний">Готельний</button>
+          <button type="button" data-search-query="ожина">Ожина</button>
+          <button type="button" data-search-query="спальня">Для спальні</button>
+        </div>
+        <div class="site-search__status" id="siteSearchStatus" aria-live="polite"></div>
+        <div class="site-search__results" id="siteSearchResults"></div>
+      </div>`;
+    document.body.appendChild(surface);
+
+    const input = surface.querySelector("#siteSearchInput");
+    const results = surface.querySelector("#siteSearchResults");
+    const status = surface.querySelector("#siteSearchStatus");
+    const clearButton = surface.querySelector(".site-search__clear");
+    const quick = surface.querySelector(".site-search__quick");
+    let indexPromise = null;
+    let searchIndex = [];
+    let previousFocus = null;
+
+    const loadIndex = () => {
+      if (indexPromise) return indexPromise;
+      indexPromise = fetch(`${root}data/search-index.json?v=16.2.3`, { credentials: "same-origin" })
+        .then((response) => {
+          if (!response.ok) throw new Error(`SEARCH_INDEX_${response.status}`);
+          return response.json();
+        })
+        .then((payload) => {
+          searchIndex = Array.isArray(payload?.items) ? payload.items : [];
+          return searchIndex;
+        })
+        .catch(() => {
+          searchIndex = [];
+          return searchIndex;
+        });
+      return indexPromise;
+    };
+
+    const collectionLabel = (item) => item.eyebrow || (item.type === "product" ? "Аромат VA HOME" : "VA HOME");
+    const scoreItem = (item, query) => {
+      const q = normalizeSearch(query);
+      if (!q) return 0;
+      const terms = q.split(" ").filter(Boolean);
+      const title = normalizeSearch(item.title);
+      const description = normalizeSearch(item.description);
+      const keywordText = normalizeSearch(Array.isArray(item.keywords) ? item.keywords.join(" ") : item.keywords);
+      const haystack = `${title} ${description} ${keywordText}`;
+      if (!terms.every((term) => haystack.includes(term))) return 0;
+      let score = item.type === "product" ? 18 : 10;
+      if (title === q) score += 120;
+      else if (title.startsWith(q)) score += 90;
+      else if (title.includes(q)) score += 65;
+      terms.forEach((term) => {
+        if (title.includes(term)) score += 18;
+        if (description.includes(term)) score += 7;
+        if (keywordText.includes(term)) score += 4;
+      });
+      return score;
+    };
+
+    const resultMarkup = (item) => {
+      const href = `${root}${String(item.url || "").replace(/^\//, "")}`;
+      const image = item.type === "product" && item.image
+        ? `<span class="site-search-result__media"><img src="${root}${escapeHtml(item.image)}" alt="" loading="lazy"></span>`
+        : `<span class="site-search-result__index" aria-hidden="true">${item.type === "guide" ? "J" : item.type === "category" ? "C" : "VA"}</span>`;
+      return `<a class="site-search-result" href="${escapeHtml(href)}" data-search-result-type="${escapeHtml(item.type)}" data-search-result-title="${escapeHtml(item.title)}">
+        ${image}
+        <span class="site-search-result__copy"><small>${escapeHtml(collectionLabel(item))}</small><strong>${escapeHtml(item.title)}</strong><em>${escapeHtml(item.description || "Відкрити сторінку VA HOME")}</em></span>
+        <span class="site-search-result__arrow" aria-hidden="true">→</span>
+      </a>`;
+    };
+
+    const render = async () => {
+      const query = input.value.trim();
+      clearButton.hidden = !query;
+      quick.hidden = Boolean(query);
+      if (!query) {
+        status.textContent = "";
+        results.innerHTML = `<div class="site-search__empty"><span>Пошук без зайвого шуму</span><p>Введіть назву аромату, ноту, кімнату або питання про VA HOME.</p></div>`;
+        return;
+      }
+      status.textContent = "Шукаємо…";
+      const items = await loadIndex();
+      const ranked = items
+        .map((item) => ({ item, score: scoreItem(item, query) }))
+        .filter((entry) => entry.score > 0)
+        .sort((a, b) => b.score - a.score || String(a.item.title).localeCompare(String(b.item.title), "uk"))
+        .slice(0, 12)
+        .map((entry) => entry.item);
+      if (!ranked.length) {
+        status.textContent = "Нічого не знайдено";
+        results.innerHTML = `<div class="site-search__empty"><span>Спробуйте інакше</span><p>Напишіть назву аромату, одну ноту або кімнату — наприклад «сандал», «ванна» чи «Pure Zen».</p><a href="${root}catalog.html">Перейти до каталогу →</a></div>`;
+        return;
+      }
+      const productCount = ranked.filter((item) => item.type === "product").length;
+      status.textContent = `${ranked.length} ${ranked.length === 1 ? "результат" : "результатів"}${productCount ? ` · ${productCount} ароматів` : ""}`;
+      results.innerHTML = ranked.map(resultMarkup).join("");
+    };
+
+    let renderTimer = 0;
+    input.addEventListener("input", () => {
+      clearTimeout(renderTimer);
+      renderTimer = window.setTimeout(render, 80);
+    });
+    clearButton.addEventListener("click", () => {
+      input.value = "";
+      render();
+      input.focus();
+    });
+    quick.querySelectorAll("[data-search-query]").forEach((button) => button.addEventListener("click", () => {
+      input.value = button.dataset.searchQuery || "";
+      render();
+      input.focus();
+    }));
+    results.addEventListener("click", (event) => {
+      const link = event.target.closest("[data-search-result-title]");
+      if (!link) return;
+      window.VAAnalytics?.event?.("search_result_click", {
+        search_term: input.value.trim(),
+        content_type: link.dataset.searchResultType || "page",
+        item_name: link.dataset.searchResultTitle || ""
+      });
+    });
+
+    const releaseBackground = () => {
+      [document.getElementById("main-content"), document.querySelector(".site-footer")].forEach((element) => element?.removeAttribute("inert"));
+    };
+    const closeSearch = () => {
+      if (surface.hidden) return;
+      surface.classList.remove("is-open");
+      document.body.classList.remove("site-search-open");
+      releaseBackground();
+      window.setTimeout(() => { surface.hidden = true; }, 180);
+      previousFocus?.focus?.();
+    };
+    const closeMobileMenuIfNeeded = () => {
+      const menu = document.getElementById("mobileMenu");
+      const burger = document.getElementById("burgerToggle");
+      if (menu?.classList.contains("is-open")) {
+        menu.classList.remove("is-open");
+        burger?.setAttribute("aria-expanded", "false");
+        document.body.classList.remove("menu-open");
+        releaseBackground();
+      }
+    };
+    const openSearch = (opener) => {
+      previousFocus = opener || document.activeElement;
+      closeMobileMenuIfNeeded();
+      surface.hidden = false;
+      requestAnimationFrame(() => surface.classList.add("is-open"));
+      document.body.classList.add("site-search-open");
+      [document.getElementById("main-content"), document.querySelector(".site-footer")].forEach((element) => element?.setAttribute("inert", ""));
+      loadIndex();
+      render();
+      window.setTimeout(() => input.focus(), 40);
+      window.VAAnalytics?.event?.("search_open", { location: opener?.classList?.contains("mobile-menu__search-trigger") ? "mobile_menu" : "header" });
+    };
+
+    [headerSearch, mobileSearch].filter(Boolean).forEach((button) => button.addEventListener("click", () => openSearch(button)));
+    surface.querySelectorAll("[data-site-search-close]").forEach((button) => button.addEventListener("click", closeSearch));
+    surface.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeSearch();
+      if (event.key !== "Tab") return;
+      const focusable = [...surface.querySelectorAll('button:not([hidden]),input,a[href]')].filter((element) => !element.hasAttribute("disabled") && element.offsetParent !== null);
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    });
   }
 
   function initRevealOnScroll() {
@@ -571,6 +781,7 @@
     }
     initHeaderScroll();
     initMobileMenu();
+    initSiteSearch();
     initProductGrids();
     initAllAccordions();
     initHeroSlider();
@@ -582,7 +793,7 @@
     }
     if (window.SITE_CONFIG && typeof PRODUCTS !== "undefined" && !document.querySelector('script[data-vahome-wishlist]')) {
       const script = document.createElement("script");
-      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=16.2.1`;
+      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=16.2.3`;
       script.dataset.vahomeWishlist = "true";
       document.body.appendChild(script);
     }
