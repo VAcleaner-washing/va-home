@@ -5,7 +5,7 @@
    Run: node scripts/build-product-content.mjs
    ========================================================================== */
 
-const PRODUCT_CONTENT_VERSION = "16.3.3";
+const PRODUCT_CONTENT_VERSION = "16.3.5";
 const PRODUCT_LABELS = {
   "character": {
     "clean": "Чисті",

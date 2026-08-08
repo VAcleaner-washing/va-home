@@ -3,7 +3,7 @@
 
   if (!("serviceWorker" in navigator) || !window.isSecureContext) return;
 
-  const VERSION = "16.3.3";
+  const VERSION = "16.3.5";
   const UPDATE_INTERVAL = 30 * 60 * 1000;
   let lastUpdateCheck = 0;
   let refreshing = false;

@@ -1,18 +1,18 @@
 {
-  "version": "16.3.3",
+  "version": "16.3.5",
   "channel": "Stable",
-  "name": "VA HOME ADMIN — NOVA POSHTA & DISCOVERY FLOW",
-  "date": "2026-08-07",
-  "base": "16.3.2",
+  "name": "VA HOME ADMIN — PAYMENT VISUAL ALIGNMENT",
+  "date": "2026-08-08",
+  "base": "16.3.4",
   "changes": [
-    "Connects manual Admin 2.0 orders to the existing live Nova Poshta location lookup for city and branch/parcel-locker search",
-    "Stores Nova Poshta city, settlement and warehouse refs in manual orders while preserving an explicit manual fallback",
-    "Fixes Discovery Set — 6 in manual orders: the sixth scent auto-confirms the set, collapses the long picker and shows a compact 6/6 summary with Edit selection",
-    "Adds dedicated regression checks for Nova Poshta manual-order lookup and Discovery completion"
+    "Keeps the v16.3.4 section-search reset so transient admin searches clear when switching sections",
+    "Restores the stable v16.3.3 payment wording and raw payment_status presentation",
+    "Fixes the Payments list grid so status badges sit in one centered column and amounts align to a consistent right edge",
+    "Removes the inherited top offset that made payment status pills look vertically crooked"
   ],
   "notes": [
-    "No new Supabase migration or Edge Function deployment is required: the existing nova-poshta-locations function is reused.",
-    "create-order, Monobank, checkout and public storefront payment flows are not modified by this release.",
-    "Nova Poshta manual fallback remains available only as an explicit choice when the lookup cannot match a location."
+    "Visual/admin-only hotfix: no database, Supabase migration or Edge Function deployment is required.",
+    "Monobank, create-order, checkout, cart, Nova Poshta and storefront payment logic are unchanged.",
+    "No production payment_status values are rewritten."
   ]
 }
