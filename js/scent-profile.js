@@ -1,4 +1,4 @@
-/* VA HOME v16.3.6 — persistent Personal Scent Profile */
+/* VA HOME v16.3.7 — persistent Personal Scent Profile */
 (function () {
   "use strict";
 

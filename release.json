@@ -1,17 +1,17 @@
 {
-  "version": "16.3.6",
+  "version": "16.3.7",
   "channel": "Stable",
-  "name": "VA HOME ADMIN — MOBILE MORE ACTIVE STATE",
+  "name": "MOBILE STOREFRONT — TABLE & DRAWER POLISH",
   "date": "2026-08-08",
-  "base": "16.3.5",
+  "base": "16.3.6",
   "changes": [
-    "Makes the mobile More tab own the active gold state whenever the More panel is open",
-    "Restores the direct Overview / Orders / Attention active state when More closes",
-    "Keeps More highlighted for sections that live inside More, such as Catalog, Payments and Settings",
-    "Adds Escape and outside-tap closing while preserving the correct navigation active state"
+    "Removes the nested vertical scroll from the reed comparison table on mobile while preserving horizontal comparison",
+    "Resets the mobile navigation drawer to the top on every open and focuses the close control without Safari auto-scroll",
+    "Tightens mobile drawer typography and spacing while preserving the VA HOME editorial style",
+    "Updates the reed-table mobile hint to describe horizontal swiping clearly"
   ],
   "notes": [
-    "Admin/PWA-only navigation hotfix. No storefront commerce logic, Supabase migration or Edge Function deployment is required.",
-    "Monobank, create-order, checkout, cart, Nova Poshta, product data and payment data are unchanged."
+    "Storefront mobile-only polish. Admin, checkout, cart, Nova Poshta, Monobank, Supabase migrations and Edge Functions are unchanged.",
+    "Desktop reed-table behavior is unchanged; the one-axis scroll rule applies only at 720px and below."
   ]
 }
