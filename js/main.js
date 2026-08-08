@@ -310,7 +310,7 @@
 
     const loadIndex = () => {
       if (indexPromise) return indexPromise;
-      indexPromise = fetch(`${root}data/search-index.json?v=16.3.7`, { credentials: "same-origin" })
+      indexPromise = fetch(`${root}data/search-index.json?v=16.3.8`, { credentials: "same-origin" })
         .then((response) => {
           if (!response.ok) throw new Error(`SEARCH_INDEX_${response.status}`);
           return response.json();
@@ -796,7 +796,7 @@
     }
     if (window.SITE_CONFIG && typeof PRODUCTS !== "undefined" && !document.querySelector('script[data-vahome-wishlist]')) {
       const script = document.createElement("script");
-      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=16.3.7`;
+      script.src = `${window.VA_HOME_ROOT || ""}js/wishlist.js?v=16.3.8`;
       script.dataset.vahomeWishlist = "true";
       document.body.appendChild(script);
     }

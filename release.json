@@ -1,17 +1,15 @@
 {
-  "version": "16.3.7",
+  "version": "16.3.8",
   "channel": "Stable",
-  "name": "MOBILE STOREFRONT — TABLE & DRAWER POLISH",
+  "name": "PRODUCT RITUAL — STEP ALIGNMENT",
   "date": "2026-08-08",
-  "base": "16.3.6",
+  "base": "16.3.7",
   "changes": [
-    "Removes the nested vertical scroll from the reed comparison table on mobile while preserving horizontal comparison",
-    "Resets the mobile navigation drawer to the top on every open and focuses the close control without Safari auto-scroll",
-    "Tightens mobile drawer typography and spacing while preserving the VA HOME editorial style",
-    "Updates the reed-table mobile hint to describe horizontal swiping clearly"
+    "Aligns desktop ritual steps 01–03 to one shared vertical starting line on product pages",
+    "Keeps the existing mobile ritual layout unchanged"
   ],
   "notes": [
-    "Storefront mobile-only polish. Admin, checkout, cart, Nova Poshta, Monobank, Supabase migrations and Edge Functions are unchanged.",
-    "Desktop reed-table behavior is unchanged; the one-axis scroll rule applies only at 720px and below."
+    "Storefront product-page CSS only; product data, cart, checkout, admin, Supabase, Nova Poshta and Monobank are unchanged.",
+    "The frozen product-page CSS baseline hash was intentionally refreshed to approve this scoped visual change."
   ]
 }
