@@ -1,15 +1,18 @@
 {
-  "version": "16.3.8",
+  "version": "16.3.9",
   "channel": "Stable",
-  "name": "PRODUCT RITUAL — STEP ALIGNMENT",
+  "name": "GOOGLE TAG MANAGER — SAFE INSTALL",
   "date": "2026-08-08",
-  "base": "16.3.7",
+  "base": "16.3.8",
   "changes": [
-    "Aligns desktop ritual steps 01–03 to one shared vertical starting line on product pages",
-    "Keeps the existing mobile ritual layout unchanged"
+    "Installs Google Tag Manager container GTM-WQ52DFH6 across the public storefront",
+    "Keeps the existing direct GA4 measurement G-39SPX4HGJC and its analytics-consent gate unchanged",
+    "Adds Consent Mode defaults and CSP frame-src support required by the GTM noscript fallback",
+    "Excludes Admin 2.0, offline.html and private-preview.html from GTM tracking"
   ],
   "notes": [
-    "Storefront product-page CSS only; product data, cart, checkout, admin, Supabase, Nova Poshta and Monobank are unchanged.",
-    "The frozen product-page CSS baseline hash was intentionally refreshed to approve this scoped visual change."
+    "No Supabase tables, RLS, Edge Functions, Monobank or Nova Poshta code changed.",
+    "Do not add a second GA4 Google tag inside GTM while direct GA4 remains active, otherwise page_view/ecommerce events can be duplicated.",
+    "The generated category-page template was updated so future category rebuilds retain the GTM integration."
   ]
 }
