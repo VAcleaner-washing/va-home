@@ -1,18 +1,17 @@
 {
-  "version": "16.3.5",
+  "version": "16.3.6",
   "channel": "Stable",
-  "name": "VA HOME ADMIN — PAYMENT VISUAL ALIGNMENT",
+  "name": "VA HOME ADMIN — MOBILE MORE ACTIVE STATE",
   "date": "2026-08-08",
-  "base": "16.3.4",
+  "base": "16.3.5",
   "changes": [
-    "Keeps the v16.3.4 section-search reset so transient admin searches clear when switching sections",
-    "Restores the stable v16.3.3 payment wording and raw payment_status presentation",
-    "Fixes the Payments list grid so status badges sit in one centered column and amounts align to a consistent right edge",
-    "Removes the inherited top offset that made payment status pills look vertically crooked"
+    "Makes the mobile More tab own the active gold state whenever the More panel is open",
+    "Restores the direct Overview / Orders / Attention active state when More closes",
+    "Keeps More highlighted for sections that live inside More, such as Catalog, Payments and Settings",
+    "Adds Escape and outside-tap closing while preserving the correct navigation active state"
   ],
   "notes": [
-    "Visual/admin-only hotfix: no database, Supabase migration or Edge Function deployment is required.",
-    "Monobank, create-order, checkout, cart, Nova Poshta and storefront payment logic are unchanged.",
-    "No production payment_status values are rewritten."
+    "Admin/PWA-only navigation hotfix. No storefront commerce logic, Supabase migration or Edge Function deployment is required.",
+    "Monobank, create-order, checkout, cart, Nova Poshta, product data and payment data are unchanged."
   ]
 }
