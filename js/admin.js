@@ -705,7 +705,7 @@ function clearAdminSearchState(){
   adminSearchActiveIndex=-1;
   if(changed){renderOrders();renderCustomers();renderCatalogAdmin();renderReviews();renderPromos();}
 }
-function activateAdmin2View(name,{updateHash=true}={}){const view=admin2Views.includes(name)?name:"overview";clearAdminSearchState();activeAdmin2View=view;document.querySelectorAll(".admin2-view").forEach(panel=>panel.hidden=panel.id!==`${view}Tab`);if(view==="marketing"){const releasesPanel=$("#releasesTab");if(releasesPanel)releasesPanel.hidden=false;}document.querySelectorAll("[data-admin-view]").forEach(button=>button.classList.toggle("is-active",button.dataset.adminView===view));const main=$("#admin2Main");if(main){main.scrollTop=0;main.scrollLeft=0;}if(updateHash&&location.hash!==`#${view}`)history.replaceState(null,"",`#${view}`);closeAdmin2MoreMenu();}
+function activateAdmin2View(name,{updateHash=true}={}){const view=admin2Views.includes(name)?name:"overview";clearAdminSearchState();activeAdmin2View=view;document.querySelectorAll(".admin2-view").forEach(panel=>panel.hidden=panel.id!==`${view}Tab`);if(view==="marketing"){const releasesPanel=$("#releasesTab");if(releasesPanel)releasesPanel.hidden=false;}document.querySelectorAll("[data-admin-view]").forEach(button=>button.classList.toggle("is-active",button.dataset.adminView===view));const main=$("#admin2Main");if(main){main.scrollTop=0;main.scrollLeft=0;requestAnimationFrame(()=>{main.scrollTop=0;main.scrollLeft=0;});}if(updateHash&&location.hash!==`#${view}`)history.replaceState(null,"",`#${view}`);closeAdmin2MoreMenu();}
 function renderOverview(){const host=$("#overviewKpis");if(!host)return;const now=new Date(),todayPaid=cashReceivedOrders().filter(order=>sameDay(order.paid_at||order.updated_at||order.created_at,now));const last30=cashReceivedOrders().filter(order=>new Date(order.paid_at||order.updated_at||order.created_at)>=daysAgo(29));const paid=cashReceivedOrders(),aov=paid.length?sumAmount(paid)/paid.length:0;const customers=customerRows(),active=activeValueOrders(),waiting=awaitingMoneyOrders();host.innerHTML=[
   ["Отримано сьогодні",money(sumAmount(todayPaid)),`${todayPaid.length} фактичних оплат`],
   ["Отримано 30 днів",money(sumAmount(last30)),`${last30.length} оплачених замовлень`],
@@ -789,7 +789,7 @@ function openCustomer360(key){
   const scroller=$("#customer360Dialog .admin2-customer-scroll");
   if(scroller)scroller.scrollTop=0;
   if(!dialog.open)dialog.showModal();
-  requestAnimationFrame(()=>$("#customer360Title")?.focus({preventScroll:true}));
+  requestAnimationFrame(()=>{if(scroller)scroller.scrollTop=0;$("#customer360Title")?.focus({preventScroll:true});});
 }
 
 function renderCatalogAdmin(){const host=$("#catalogGrid"),stats=$("#catalogStats");
@@ -1002,7 +1002,7 @@ const cards=[
   `<article class="admin2-setting-card"><span>Доставка</span><h3>Нова пошта</h3><div class="admin2-setting-line"><span>Стандартна відправка</span><strong>1–2 робочі дні</strong></div><div class="admin2-setting-line"><span>Безкоштовна доставка</span><strong>від 1500 грн</strong></div><div class="admin2-setting-line"><span>Останнє замовлення</span><strong>${latest?shortDate(latest.created_at):"—"}</strong></div></article>`,
   `<article class="admin2-setting-card"><span>Комунікація</span><h3>VA HOME</h3><div class="admin2-setting-line"><span>Менеджер</span><strong>09:00–19:00</strong></div><div class="admin2-setting-line"><span>Email</span><strong>vahome.aroma@gmail.com</strong></div><div class="admin2-setting-line"><span>Автоматизація повторних</span><strong>${repeatCampaigns.length?"Працює":"Очікує даних"}</strong></div></article>`,
   `<article class="admin2-setting-card" id="pushSettingsCard"><span>Push / PWA</span><h3>Сповіщення адміністратора</h3><div class="admin2-setting-line"><span>Стан</span><strong>Перевіряємо…</strong></div></article>`,
-  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.4.1 · Operations</strong></div></article>`
+  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.4.2 · Operations</strong></div></article>`
 ];
 host.innerHTML=cards.join("");
 renderAdminAudit();

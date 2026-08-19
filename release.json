@@ -1,18 +1,18 @@
 {
-  "version": "16.4.1",
+  "version": "16.4.2",
   "channel": "Stable",
-  "name": "ADMIN VISUAL POLISH — FINANCE & CLIENT 360",
+  "name": "ADMIN VISUAL GEOMETRY — SPACING & SCROLL",
   "date": "2026-08-19",
-  "base": "16.4.0",
+  "base": "16.4.1",
   "changes": [
-    "Removes short-viewport desktop sidebar scrolling and replaces heavy Windows scrollbars with quiet VA HOME scrollbars",
-    "Replaces native Finance period/category selects with compact accessible VA HOME dropdowns and aligns finance KPI baselines",
-    "Improves empty-cost margin state so missing cost data is not presented as a 100% margin",
-    "Fixes the Client 360 761–900px dialog breakpoint collision, centers the panel, improves contrast and removes duplicate background scrolling"
+    "Adds consistent inner padding to Finance P&L, Client 360 profile/lifecycle and customer order history so content no longer touches panel borders",
+    "Adds post-reflow scroll resets and disables scroll anchoring so Admin views open from the top instead of restoring a stale scroll position",
+    "Removes the visible gold scroll rails from the main Admin workspace and Client 360 while preserving wheel/touch scrolling",
+    "Rebalances desktop and mobile section spacing without changing Admin functionality or backend contracts"
   ],
   "notes": [
-    "Frontend-only Admin 2.0 polish based on v16.4.0.",
+    "Frontend-only Admin 2.0 geometry correction based on v16.4.1.",
     "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner object changed.",
-    "Existing Client 360, Finance, Analytics 2.0 and VA HOME push functionality is preserved."
+    "Finance, Client 360, Analytics 2.0 and VA HOME push behavior is preserved."
   ]
 }

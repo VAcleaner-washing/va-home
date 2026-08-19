@@ -2216,13 +2216,13 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* VA HOME v16.4.1 — honest empty-review state; preserves RC1.32 card geometry */
+/* VA HOME v16.4.2 — honest empty-review state; preserves RC1.32 card geometry */
 #catalogGrid .product-card__rating.is-empty{
   color:var(--color-text-muted,#8f877b);
   opacity:.78;
 }
 
-/* VA HOME v16.4.1 — concise reed facts in catalog cards */
+/* VA HOME v16.4.2 — concise reed facts in catalog cards */
 #catalogGrid .product-card__reed-facts{display:flex;align-items:center;min-height:28px;margin-top:8px;padding:8px 0 0;border-top:1px solid rgba(184,145,86,.14);color:var(--text-muted,#9f968b);font-size:10px;line-height:1.4;letter-spacing:.025em}
 #catalogGrid .product-card__reed-facts span{display:block;white-space:nowrap}
 @media(max-width:620px){#catalogGrid .product-card__reed-facts{min-height:26px;margin-top:6px;padding-top:7px;font-size:9.5px;letter-spacing:0}#catalogGrid .product-card__reed-facts span{white-space:normal}}
