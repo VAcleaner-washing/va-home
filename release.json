@@ -1,18 +1,18 @@
 {
-  "version": "16.4.0",
+  "version": "16.4.1",
   "channel": "Stable",
-  "name": "ADMIN OPERATIONS — CLIENT 360, FINANCE, ANALYTICS & PUSH",
+  "name": "ADMIN VISUAL POLISH — FINANCE & CLIENT 360",
   "date": "2026-08-19",
-  "base": "16.3.9",
+  "base": "16.4.0",
   "changes": [
-    "Adds Client 360 with LTV, AOV, lifecycle, Discovery conversion, promo and order history",
-    "Adds a management Finance workspace with expenses, operating result and margin",
-    "Upgrades Analytics with retention, Discovery conversion, new-vs-repeat revenue, source, delivery and promo performance",
-    "Adds an isolated VA HOME Admin push/PWA channel for orders, payments, deliveries and reviews"
+    "Removes short-viewport desktop sidebar scrolling and replaces heavy Windows scrollbars with quiet VA HOME scrollbars",
+    "Replaces native Finance period/category selects with compact accessible VA HOME dropdowns and aligns finance KPI baselines",
+    "Improves empty-cost margin state so missing cost data is not presented as a 100% margin",
+    "Fixes the Client 360 761–900px dialog breakpoint collision, centers the panel, improves contrast and removes duplicate background scrolling"
   ],
   "notes": [
-    "Shared Supabase safety: no VAcleaner table, RLS policy, grant or Edge Function changed.",
-    "Existing create-order, Monobank and Nova Poshta production functions were not redeployed.",
-    "New Supabase objects are VA HOME-only: vahome_expenses and vahome_push_* plus the isolated vahome-push dispatcher."
+    "Frontend-only Admin 2.0 polish based on v16.4.0.",
+    "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner object changed.",
+    "Existing Client 360, Finance, Analytics 2.0 and VA HOME push functionality is preserved."
   ]
 }

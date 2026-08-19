@@ -1,4 +1,4 @@
-const VERSION = "1.0.0-16.4.0";
+const VERSION = "1.0.0-16.4.1";
 const CACHE_PREFIX = "vahome-admin-";
 const SHELL_CACHE = `${CACHE_PREFIX}shell-${VERSION}`;
 
@@ -11,13 +11,13 @@ const SHELL_ASSETS = [
   "/admin/pwa/icon-512.png",
   "/admin/pwa/icon-maskable-512.png",
   "/admin/pwa/apple-touch-icon.png",
-  "/css/core.css?v=16.4.0",
-  "/css/site-admin.css?v=16.4.0",
-  "/js/config.js?v=16.4.0",
-  "/js/products.js?v=16.4.0",
-  "/js/admin.js?v=16.4.0",
-  "/js/motion.js?v=16.4.0",
-  "/admin/pwa.js?v=16.4.0"
+  "/css/core.css?v=16.4.1",
+  "/css/site-admin.css?v=16.4.1",
+  "/js/config.js?v=16.4.1",
+  "/js/products.js?v=16.4.1",
+  "/js/admin.js?v=16.4.1",
+  "/js/motion.js?v=16.4.1",
+  "/admin/pwa.js?v=16.4.1"
 ];
 
 function shouldBypassRequest(request, url) {
@@ -119,7 +119,7 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(staleWhileRevalidate(event));
 });
 
-// VA HOME v16.4.0 — isolated Admin push notifications.
+// VA HOME v16.4.1 — isolated Admin push notifications.
 self.addEventListener("push", (event) => {
   let payload = {};
   try { payload = event.data ? event.data.json() : {}; } catch { payload = { body: event.data?.text?.() || "" }; }

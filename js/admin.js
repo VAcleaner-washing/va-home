@@ -775,9 +775,9 @@ function openCustomer360(key){
   </div>`;
   const creditActive=life.credits.filter(c=>c.status==="active").length;
   $("#customer360Lifecycle").innerHTML=`<div class="admin2-profile-lines">
-    <div><span>Discovery</span><strong>${life.discoveryOrders.length?`${life.discoveryOrders.length} покуп.`:"Не купував"}</strong></div>
+    <div><span>Discovery</span><strong>${life.discoveryOrders.length?`${life.discoveryOrders.length} ${life.discoveryOrders.length===1?"покупка":"покупки"}`:"Не купував"}</strong></div>
     <div><span>Discovery → full-size</span><strong>${life.converted?"Конвертувався ✓":"Ще ні"}</strong></div>
-    <div><span>Discovery Credit</span><strong>${creditActive?`${creditActive} активн.`:life.credits.length?"Використано / завершено":"Не видавався"}</strong></div>
+    <div><span>Discovery Credit</span><strong>${creditActive?`${creditActive} ${creditActive===1?"активний":"активні"}`:life.credits.length?"Використано / завершено":"Не видавався"}</strong></div>
     <div><span>Перша покупка</span><strong>${row.firstPaidAt?shortDate(row.firstPaidAt):"—"}</strong></div>
   </div>`;
   $("#customer360Orders").innerHTML=row.orders.map(order=>`<button class="admin2-customer-order-row" data-customer-order="${esc(order.id)}" type="button">
@@ -786,6 +786,8 @@ function openCustomer360(key){
   </button>`).join("")||'<div class="admin2-search-empty">Замовлень немає.</div>';
   $("#customer360Orders").querySelectorAll("[data-customer-order]").forEach(el=>el.onclick=()=>openOrder(el.dataset.customerOrder));
   $("#customer360OrdersBtn").onclick=()=>openCustomerOrders(row);
+  const scroller=$("#customer360Dialog .admin2-customer-scroll");
+  if(scroller)scroller.scrollTop=0;
   if(!dialog.open)dialog.showModal();
   requestAnimationFrame(()=>$("#customer360Title")?.focus({preventScroll:true}));
 }
@@ -831,15 +833,15 @@ function renderFinance(){
   const received=sumAmount(revenue);
   const direct=expenseTotal(expenses,["cogs","packaging"]);
   const operating=expenseTotal(expenses,["delivery","ads","fees","services","other"]);
-  const total=direct+operating,result=received-total,margin=received?result/received*100:0,ads=expenseTotal(expenses,["ads"]);
+  const total=direct+operating,result=received-total,hasDirectCosts=direct>0,margin=received&&hasDirectCosts?result/received*100:null,ads=expenseTotal(expenses,["ads"]);
   kpis.innerHTML=[
     ["Отримано",money(received),`${revenue.length} фактичних оплат`],
-    ["Собівартість + пакування",money(direct),"внесені витрати"],
+    ["Собівартість",money(direct),hasDirectCosts?"з пакуванням · внесено":"з пакуванням · не внесена"],
     ["Операційні витрати",money(operating),"без собівартості"],
-    ["Операційний результат",money(result),result>=0?"після внесених витрат":"витрати вищі за отримання"],
-    ["Маржа",`${margin.toFixed(1)}%`,"управлінська"],
+    ["Операційний результат",money(result),hasDirectCosts?(result>=0?"після внесених витрат":"витрати вищі за отримання"):"без урахування собівартості"],
+    ["Маржа",margin===null?"—":`${margin.toFixed(1)}%`,margin===null?"внесіть собівартість":"управлінська"],
     ["Реклама",money(ads),received?`${(ads/received*100).toFixed(1)}% від отримань`:"за період"]
-  ].map(([l,v,sub])=>`<article class="admin2-kpi"><span>${esc(l)}</span><strong class="${l==="Операційний результат"&&result<0?"bad":""}">${esc(v)}</strong><small>${esc(sub)}</small></article>`).join("");
+  ].map(([l,v,sub])=>`<article class="admin2-kpi"><span>${esc(l)}</span><strong class="${l==="Операційний результат"&&result<0?"bad":""}">${esc(v)}</strong><small class="${l==="Маржа"&&margin===null?"warn":""}">${esc(sub)}</small></article>`).join("");
   const periodLabel=$("#financePeriodLabel");
   if(periodLabel)periodLabel.textContent=bounds.label;
   const gross=received-direct;
@@ -1000,7 +1002,7 @@ const cards=[
   `<article class="admin2-setting-card"><span>Доставка</span><h3>Нова пошта</h3><div class="admin2-setting-line"><span>Стандартна відправка</span><strong>1–2 робочі дні</strong></div><div class="admin2-setting-line"><span>Безкоштовна доставка</span><strong>від 1500 грн</strong></div><div class="admin2-setting-line"><span>Останнє замовлення</span><strong>${latest?shortDate(latest.created_at):"—"}</strong></div></article>`,
   `<article class="admin2-setting-card"><span>Комунікація</span><h3>VA HOME</h3><div class="admin2-setting-line"><span>Менеджер</span><strong>09:00–19:00</strong></div><div class="admin2-setting-line"><span>Email</span><strong>vahome.aroma@gmail.com</strong></div><div class="admin2-setting-line"><span>Автоматизація повторних</span><strong>${repeatCampaigns.length?"Працює":"Очікує даних"}</strong></div></article>`,
   `<article class="admin2-setting-card" id="pushSettingsCard"><span>Push / PWA</span><h3>Сповіщення адміністратора</h3><div class="admin2-setting-line"><span>Стан</span><strong>Перевіряємо…</strong></div></article>`,
-  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.4.0 · Operations</strong></div></article>`
+  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.4.1 · Operations</strong></div></article>`
 ];
 host.innerHTML=cards.join("");
 renderAdminAudit();
@@ -1238,12 +1240,44 @@ activateAdmin2View("orders");
 }catch(error){msg.textContent=`Помилка: ${error.message}`;
 }}
 
+
+function closeAdmin2Selects(except=null){
+  document.querySelectorAll(".admin2-select").forEach(root=>{
+    if(root===except)return;
+    const trigger=root.querySelector(".admin2-select-trigger"),menu=root.querySelector(".admin2-select-menu");
+    if(menu)menu.hidden=true;
+    if(trigger)trigger.setAttribute("aria-expanded","false");
+    root.classList.remove("is-open");
+  });
+}
+function initAdmin2Selects(){
+  document.querySelectorAll(".admin2-select[data-admin-select]").forEach(root=>{
+    if(root.dataset.bound==="true")return;
+    const input=root.querySelector("input[type=hidden]"),trigger=root.querySelector(".admin2-select-trigger"),label=trigger?.querySelector("span"),menu=root.querySelector(".admin2-select-menu");
+    const options=[...(menu?.querySelectorAll("[data-value]")||[])];
+    if(!input||!trigger||!label||!menu||!options.length)return;
+    const sync=()=>{
+      const active=options.find(option=>String(option.dataset.value||"")===String(input.value||""))||options[0];
+      label.textContent=active.textContent.trim();
+      options.forEach(option=>{const selected=option===active;option.classList.toggle("is-selected",selected);option.setAttribute("aria-selected",selected?"true":"false");});
+    };
+    const close=()=>{menu.hidden=true;trigger.setAttribute("aria-expanded","false");root.classList.remove("is-open");};
+    const open=()=>{closeAdmin2Selects(root);menu.hidden=false;trigger.setAttribute("aria-expanded","true");root.classList.add("is-open");requestAnimationFrame(()=>menu.querySelector(".is-selected")?.focus({preventScroll:true}));};
+    trigger.addEventListener("click",event=>{event.stopPropagation();menu.hidden?open():close();});
+    trigger.addEventListener("keydown",event=>{if(["ArrowDown","Enter"," "].includes(event.key)){event.preventDefault();open();}else if(event.key==="Escape")close();});
+    options.forEach(option=>option.addEventListener("click",event=>{event.stopPropagation();input.value=String(option.dataset.value||"");sync();close();input.dispatchEvent(new Event("input",{bubbles:true}));trigger.focus({preventScroll:true});}));
+    menu.addEventListener("keydown",event=>{const current=options.indexOf(document.activeElement),direction=event.key==="ArrowDown"?1:event.key==="ArrowUp"?-1:0;if(direction){event.preventDefault();options[(Math.max(0,current)+direction+options.length)%options.length].focus({preventScroll:true});}else if(event.key==="Escape"){event.preventDefault();close();trigger.focus({preventScroll:true});}});
+    sync();root.dataset.bound="true";
+  });
+}
+
 function bind(){
+  initAdmin2Selects();
   document.querySelectorAll("[data-admin-view]").forEach(button=>button.addEventListener("click",()=>activateAdmin2View(button.dataset.adminView)));
   document.querySelectorAll("[data-admin-jump]").forEach(button=>button.addEventListener("click",()=>activateAdmin2View(button.dataset.adminJump)));
   const globalSearch=$("#adminGlobalSearch");if(globalSearch){globalSearch.addEventListener("input",()=>{adminSearchActiveIndex=0;renderGlobalSearch();});globalSearch.addEventListener("keydown",event=>{const rows=globalSearchEntries(globalSearch.value);if(event.key==="Escape"){globalSearch.value="";renderGlobalSearch();globalSearch.blur();return;}if(!rows.length)return;if(event.key==="ArrowDown"){event.preventDefault();adminSearchActiveIndex=(adminSearchActiveIndex+1)%rows.length;renderGlobalSearch();$("#adminSearchResults .is-active")?.scrollIntoView({block:"nearest"});}else if(event.key==="ArrowUp"){event.preventDefault();adminSearchActiveIndex=(adminSearchActiveIndex-1+rows.length)%rows.length;renderGlobalSearch();$("#adminSearchResults .is-active")?.scrollIntoView({block:"nearest"});}else if(event.key==="Enter"){event.preventDefault();runGlobalSearchResult(rows,Math.max(0,adminSearchActiveIndex));}});}
-  document.addEventListener("keydown",event=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();$("#adminGlobalSearch")?.focus();return;}if(event.key==="Escape"&&!$("#adminMoreMenu")?.hidden)closeAdmin2MoreMenu();});
-  document.addEventListener("click",event=>{const box=$("#adminSearchResults");if(box&&!event.target.closest(".admin2-global-search"))box.hidden=true;const matches=$("#manualCustomerMatches");if(matches&&!event.target.closest(".admin2-manual-customer"))matches.hidden=true;if(!event.target.closest(".admin2-np-combobox"))manualNpCloseAll();const more=$("#adminMoreMenu");if(more&&!more.hidden&&!event.target.closest("#adminMoreMenu")&&!event.target.closest("#adminMoreBtn"))closeAdmin2MoreMenu();});
+  document.addEventListener("keydown",event=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();$("#adminGlobalSearch")?.focus();return;}if(event.key==="Escape"&&!$("#adminMoreMenu")?.hidden)closeAdmin2MoreMenu();if(event.key==="Escape")closeAdmin2Selects();});
+  document.addEventListener("click",event=>{const box=$("#adminSearchResults");if(box&&!event.target.closest(".admin2-global-search"))box.hidden=true;const matches=$("#manualCustomerMatches");if(matches&&!event.target.closest(".admin2-manual-customer"))matches.hidden=true;if(!event.target.closest(".admin2-np-combobox"))manualNpCloseAll();const more=$("#adminMoreMenu");if(more&&!more.hidden&&!event.target.closest("#adminMoreMenu")&&!event.target.closest("#adminMoreBtn"))closeAdmin2MoreMenu();if(!event.target.closest(".admin2-select"))closeAdmin2Selects();});
   ["#customerSearch","#customerSegmentFilter"].forEach(sel=>$(sel)?.addEventListener("input",renderCustomers));
   ["#catalogSearch","#catalogCollectionFilter"].forEach(sel=>$(sel)?.addEventListener("input",renderCatalogAdmin));
   ["#paymentMethodFilter","#paymentStateFilter"].forEach(sel=>$(sel)?.addEventListener("input",renderPayments));
