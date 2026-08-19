@@ -6,7 +6,7 @@ const orderStatusOrder=["new","awaiting_payment","paid","shipped","completed","c
 const paymentMethodLabels={bank_transfer:"На рахунок",cash_on_delivery:"При отриманні",card_online:"Карткою онлайн"};
 const paymentStatusLabels={unpaid:"Не оплачено",pending:"Очікує банк",verification:"Перевіряємо",failed:"Не завершено",expired:"Прострочено",paid:"Оплачено",refunded:"Повернено"};
 const paymentEventLabels={created:"Рахунок створено",processing:"Банк перевіряє оплату",hold:"Кошти зарезервовано",success:"Оплату підтверджено",failure:"Оплату не завершено",failed:"Оплату не завершено",expired:"Рахунок прострочено",reversed:"Платіж скасовано",refunded:"Кошти повернено"};
-let orders=[],reviews=[],promos=[],releases=[],marketingPreferences=[],repeatCampaigns=[],discoveryCredits=[],paymentAttempts=[],paymentSettings=[],adminAudit=[],vahomeExpenses=[],activeOrder=null,activePromo=null,activeRelease=null,activeExpense=null,activeCustomerKey="";
+let orders=[],reviews=[],promos=[],releases=[],marketingPreferences=[],repeatCampaigns=[],discoveryCredits=[],paymentAttempts=[],paymentSettings=[],adminAudit=[],vahomeExpenses=[],activeOrder=null,activePromo=null,activeRelease=null,activeExpense=null,activeCustomerKey="",customer360ReturnState=null,customer360HistoryActive=false,customer360SkipRestore=false;
 let activeOrderAttempts=[],activeOrderEvents=[],currentOrderSmartFilter="all",adminSearchActiveIndex=-1,adminAutoSyncTimer=null,adminLoadPromise=null;
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
@@ -24,6 +24,7 @@ function setSyncState(state,label=""){
   const text=label||defaults[state]||defaults.synced;
   if(top){top.dataset.state=state;top.innerHTML=`<i></i>${esc(text)}`;top.title=state==="synced"?`Останнє успішне оновлення: ${new Date().toLocaleTimeString("uk-UA",{hour:"2-digit",minute:"2-digit"})}`:text;}
   if(side){side.dataset.state=state;}if(sideText)sideText.textContent=text;
+  const mobileDot=$("#adminMobileSyncDot");if(mobileDot)mobileDot.dataset.state=state;
 }
 function startAdminAutoSync(){if(adminAutoSyncTimer)clearInterval(adminAutoSyncTimer);adminAutoSyncTimer=setInterval(()=>{if(!document.hidden&&navigator.onLine&&!$("#dashboardView")?.hidden)loadAll({silent:true}).catch(()=>{});},60000);}
 function highlightMatch(value,query){const text=String(value??""),needle=String(query||"").trim();if(!needle)return esc(text);const i=text.toLowerCase().indexOf(needle.toLowerCase());if(i<0)return esc(text);return `${esc(text.slice(0,i))}<mark>${esc(text.slice(i,i+needle.length))}</mark>${esc(text.slice(i+needle.length))}`;}
@@ -742,13 +743,18 @@ function customerMarketingState(row){const email=String(row?.email||"").trim().t
 function customerLifecycle(row){const paid=(row?.paidOrders||[]).slice().sort((a,b)=>paidOrderDate(a)-paidOrderDate(b));const discoveryOrders=paid.filter(orderHasDiscovery);const firstDiscovery=discoveryOrders[0]||null;const discoveryAt=firstDiscovery?paidOrderDate(firstDiscovery):null;const laterFull=discoveryAt?paid.find(order=>paidOrderDate(order)>discoveryAt&&orderHasFullSize(order)):null;const email=String(row?.email||"").trim().toLowerCase();const credits=email?discoveryCredits.filter(c=>String(c.customer_email||"").trim().toLowerCase()===email):[];const usedPromos=[...new Set(paid.map(o=>String(o.promo_code||"").trim().toUpperCase()).filter(Boolean))];return{discoveryOrders,firstDiscovery,laterFull,converted:Boolean(laterFull),credits,usedPromos};}
 function customerSegmentLabels(row){const labels=[];if(row.completed>1)labels.push("Repeat");if(row.spent>=3000)labels.push("VIP");if(row.discovery)labels.push("Discovery");if(customerMarketingState(row))labels.push("Marketing ✓");return labels.length?labels:["Новий клієнт"];}
 function customerDaysSinceLast(row){if(!row.lastPaidAt)return null;return Math.max(0,Math.floor((Date.now()-new Date(row.lastPaidAt).getTime())/86400000));}
-function openCustomerOrders(row){const dialog=$("#customer360Dialog");if(dialog?.open)dialog.close();activateAdmin2View("orders");const input=$("#orderSearch");if(input){input.value=row.email||row.phone||row.name;renderOrders();}}
-function openCustomer360(key){
+function captureCustomer360ReturnState(){const main=$("#admin2Main");return{view:activeAdmin2View,scrollTop:main?.scrollTop||0,customerSearch:$("#customerSearch")?.value||"",customerSegment:$("#customerSegmentFilter")?.value||""};}
+function restoreCustomer360ReturnState(){const state=customer360ReturnState;customer360ReturnState=null;if(!state)return;const search=$("#customerSearch"),segment=$("#customerSegmentFilter");if(search)search.value=state.customerSearch||"";if(segment)segment.value=state.customerSegment||"";if(activeAdmin2View==="customers")renderCustomers();const main=$("#admin2Main");if(main)requestAnimationFrame(()=>{main.scrollTop=Number(state.scrollTop||0);main.scrollLeft=0;});}
+function closeCustomer360({viaHistory=true,restore=true}={}){const dialog=$("#customer360Dialog");if(viaHistory&&customer360HistoryActive&&history.state?.adminDetail==="customer"){history.back();return;}customer360SkipRestore=!restore;if(dialog?.open)dialog.close();else if(restore)restoreCustomer360ReturnState();}
+function openCustomerOrders(row){const dialog=$("#customer360Dialog");customer360SkipRestore=true;customer360HistoryActive=false;customer360ReturnState=null;if(history.state?.adminDetail==="customer")history.replaceState(null,"",`${location.pathname}${location.search}#orders`);if(dialog?.open)dialog.close();activateAdmin2View("orders",{updateHash:false});const input=$("#orderSearch");if(input){input.value=row.email||row.phone||row.name;renderOrders();}}
+function openCustomer360(key,{pushHistory=true}={}){
   const row=customerRows().find(item=>item.key===key);
   if(!row)return;
   activeCustomerKey=row.key;
   const life=customerLifecycle(row),days=customerDaysSinceLast(row),dialog=$("#customer360Dialog");
   if(!dialog)return;
+  if(!dialog.open)customer360ReturnState=captureCustomer360ReturnState();
+  closeAdmin2MoreMenu();
   $("#customer360Title").textContent=row.name;
   $("#customer360Subtitle").textContent=`${row.orders.length} ${row.orders.length===1?"замовлення":"замовлень"} · остання активність ${shortDate(row.lastAt)}`;
   $("#customer360Hero").innerHTML=`
@@ -789,7 +795,14 @@ function openCustomer360(key){
   const scroller=$("#customer360Dialog .admin2-customer-scroll");
   if(scroller)scroller.scrollTop=0;
   if(!dialog.open)dialog.showModal();
+  if(pushHistory&&history.state?.adminDetail!=="customer"){history.pushState({adminDetail:"customer",customerKey:row.key},"",location.href);customer360HistoryActive=true;}else if(history.state?.adminDetail==="customer")customer360HistoryActive=true;
   requestAnimationFrame(()=>{if(scroller)scroller.scrollTop=0;$("#customer360Title")?.focus({preventScroll:true});});
+}
+function handleAdminPopState(event){
+  const state=event.state,dialog=$("#customer360Dialog");
+  if(state?.adminDetail==="customer"&&state.customerKey){customer360HistoryActive=true;if(!dialog?.open||activeCustomerKey!==state.customerKey)openCustomer360(state.customerKey,{pushHistory:false});return;}
+  if(dialog?.open){customer360HistoryActive=false;customer360SkipRestore=false;dialog.close();return;}
+  activateAdmin2View(location.hash.slice(1)||"overview",{updateHash:false});
 }
 
 function renderCatalogAdmin(){const host=$("#catalogGrid"),stats=$("#catalogStats");
@@ -1002,7 +1015,7 @@ const cards=[
   `<article class="admin2-setting-card"><span>Доставка</span><h3>Нова пошта</h3><div class="admin2-setting-line"><span>Стандартна відправка</span><strong>1–2 робочі дні</strong></div><div class="admin2-setting-line"><span>Безкоштовна доставка</span><strong>від 1500 грн</strong></div><div class="admin2-setting-line"><span>Останнє замовлення</span><strong>${latest?shortDate(latest.created_at):"—"}</strong></div></article>`,
   `<article class="admin2-setting-card"><span>Комунікація</span><h3>VA HOME</h3><div class="admin2-setting-line"><span>Менеджер</span><strong>09:00–19:00</strong></div><div class="admin2-setting-line"><span>Email</span><strong>vahome.aroma@gmail.com</strong></div><div class="admin2-setting-line"><span>Автоматизація повторних</span><strong>${repeatCampaigns.length?"Працює":"Очікує даних"}</strong></div></article>`,
   `<article class="admin2-setting-card" id="pushSettingsCard"><span>Push / PWA</span><h3>Сповіщення адміністратора</h3><div class="admin2-setting-line"><span>Стан</span><strong>Перевіряємо…</strong></div></article>`,
-  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.4.2 · Operations</strong></div></article>`
+  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.4.3 · Operations</strong></div></article>`
 ];
 host.innerHTML=cards.join("");
 renderAdminAudit();
@@ -1284,7 +1297,7 @@ function bind(){
   ["#financePeriod","#expenseCategoryFilter"].forEach(sel=>$(sel)?.addEventListener("input",renderFinance));
   $("#newExpenseBtn")?.addEventListener("click",()=>openExpense());
   $("#expenseForm")?.addEventListener("submit",saveExpense);$("#expenseDelete")?.addEventListener("click",deleteExpense);$("#expenseDialogClose")?.addEventListener("click",()=>$("#expenseDialog")?.close());$("#expenseCancel")?.addEventListener("click",()=>$("#expenseDialog")?.close());
-  $("#customer360Close")?.addEventListener("click",()=>$("#customer360Dialog")?.close());$("#customer360Dialog")?.addEventListener("close",()=>{activeCustomerKey="";const scroller=$("#customer360Dialog .admin2-customer-scroll");if(scroller)scroller.scrollTop=0;});
+  $("#customer360Close")?.addEventListener("click",()=>closeCustomer360());$("#customer360Back")?.addEventListener("click",()=>closeCustomer360());$("#customer360Dialog")?.addEventListener("cancel",event=>{event.preventDefault();closeCustomer360();});$("#customer360Dialog")?.addEventListener("close",()=>{activeCustomerKey="";customer360HistoryActive=false;const scroller=$("#customer360Dialog .admin2-customer-scroll");if(scroller)scroller.scrollTop=0;if(customer360SkipRestore){customer360SkipRestore=false;return;}restoreCustomer360ReturnState();});
   document.addEventListener("click",event=>{const button=event.target.closest("[data-push-action]");if(button)handlePushAction(button.dataset.pushAction);});
   $("#adminMoreBtn")?.addEventListener("click",()=>{const menu=$("#adminMoreMenu");if(!menu)return;const opening=menu.hidden;menu.hidden=!opening;syncAdmin2MobileNav({moreOpen:opening});});
   const openManualOrder=()=>{resetManualOrder();const dialog=$("#manualOrderDialog");dialog.showModal();requestAnimationFrame(()=>$("#manualOrderTitle")?.focus({preventScroll:true}));};$("#newOrderBtn")?.addEventListener("click",openManualOrder);$("#mobileNewOrderBtn")?.addEventListener("click",openManualOrder);
@@ -1327,7 +1340,8 @@ function bind(){
   $("#promoDialog").addEventListener("close",()=>{const shell=$("#promoDialog .admin-promo-shell");if(shell)shell.scrollTop=0;promoViewportSnapshot=null;});
   $("#promoForm").elements.code.addEventListener("input",event=>{event.target.value=event.target.value.toUpperCase().replace(/[^A-Z0-9_-]/g,"");});
   const activateTab=(name,{updateHash=true}={})=>activateAdmin2View(name,{updateHash});
-  window.addEventListener("hashchange",()=>activateAdmin2View(location.hash.slice(1),{updateHash:false}));
+  window.addEventListener("hashchange",()=>{if(history.state?.adminDetail!=="customer")activateAdmin2View(location.hash.slice(1),{updateHash:false});});
+  window.addEventListener("popstate",handleAdminPopState);
   activateAdmin2View(location.hash.slice(1)||"overview",{updateHash:false});
 }
 document.addEventListener("DOMContentLoaded",async()=>{bind();const {data:{session}}=await sb.auth.getSession();if(!session)return showLogin();try{await requireAdmin();showDashboard();await loadAll();}catch(err){showLogin(err.message);}});

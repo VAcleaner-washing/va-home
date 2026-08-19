@@ -1,18 +1,19 @@
 {
-  "version": "16.4.2",
+  "version": "16.4.3",
   "channel": "Stable",
-  "name": "ADMIN VISUAL GEOMETRY — SPACING & SCROLL",
+  "name": "PWA NAVIGATION UX — MOBILE APP CHROME & CLIENT BACK",
   "date": "2026-08-19",
-  "base": "16.4.1",
+  "base": "16.4.2",
   "changes": [
-    "Adds consistent inner padding to Finance P&L, Client 360 profile/lifecycle and customer order history so content no longer touches panel borders",
-    "Adds post-reflow scroll resets and disables scroll anchoring so Admin views open from the top instead of restoring a stale scroll position",
-    "Removes the visible gold scroll rails from the main Admin workspace and Client 360 while preserving wheel/touch scrolling",
-    "Rebalances desktop and mobile section spacing without changing Admin functionality or backend contracts"
+    "Rebuilds the mobile/PWA Admin top chrome with a compact VA HOME identity row above global search while preserving iPhone safe-area spacing",
+    "Turns Client 360 into a true mobile detail screen with a dedicated Back control instead of the desktop close-X navigation pattern",
+    "Adds browser history integration so iOS/system Back returns from Client 360 to Customers and browser Forward can reopen the detail",
+    "Restores the customer-list scroll position, search query and segment filter after returning from Client 360",
+    "Hides the root bottom navigation and More sheet while Client 360 owns the mobile screen"
   ],
   "notes": [
-    "Frontend-only Admin 2.0 geometry correction based on v16.4.1.",
+    "Frontend-only Admin/PWA navigation UX release based on v16.4.2.",
     "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner object changed.",
-    "Finance, Client 360, Analytics 2.0 and VA HOME push behavior is preserved."
+    "Existing Finance, Analytics 2.0, push and storefront behavior is preserved."
   ]
 }
