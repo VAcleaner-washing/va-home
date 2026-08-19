@@ -6,7 +6,7 @@ const orderStatusOrder=["new","awaiting_payment","paid","shipped","completed","c
 const paymentMethodLabels={bank_transfer:"На рахунок",cash_on_delivery:"При отриманні",card_online:"Карткою онлайн"};
 const paymentStatusLabels={unpaid:"Не оплачено",pending:"Очікує банк",verification:"Перевіряємо",failed:"Не завершено",expired:"Прострочено",paid:"Оплачено",refunded:"Повернено"};
 const paymentEventLabels={created:"Рахунок створено",processing:"Банк перевіряє оплату",hold:"Кошти зарезервовано",success:"Оплату підтверджено",failure:"Оплату не завершено",failed:"Оплату не завершено",expired:"Рахунок прострочено",reversed:"Платіж скасовано",refunded:"Кошти повернено"};
-let orders=[],reviews=[],promos=[],releases=[],marketingPreferences=[],repeatCampaigns=[],discoveryCredits=[],paymentAttempts=[],paymentSettings=[],adminAudit=[],activeOrder=null,activePromo=null,activeRelease=null;
+let orders=[],reviews=[],promos=[],releases=[],marketingPreferences=[],repeatCampaigns=[],discoveryCredits=[],paymentAttempts=[],paymentSettings=[],adminAudit=[],vahomeExpenses=[],activeOrder=null,activePromo=null,activeRelease=null,activeExpense=null,activeCustomerKey="";
 let activeOrderAttempts=[],activeOrderEvents=[],currentOrderSmartFilter="all",adminSearchActiveIndex=-1,adminAutoSyncTimer=null,adminLoadPromise=null;
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
@@ -247,10 +247,11 @@ async function loadAll({silent=false}={}){
         sb.from("discovery_credits").select("*").order("created_at",{ascending:false}).limit(500),
         sb.from("payment_attempts").select("*").order("created_at",{ascending:false}).limit(500),
         sb.from("payment_settings").select("*"),
-        sb.from("vahome_admin_audit").select("id,entity_type,entity_id,action,changed_fields,actor_id,actor_email,created_at,meta").order("created_at",{ascending:false}).limit(60)
+        sb.from("vahome_admin_audit").select("id,entity_type,entity_id,action,changed_fields,actor_id,actor_email,created_at,meta").order("created_at",{ascending:false}).limit(60),
+        sb.from("vahome_expenses").select("*").order("expense_date",{ascending:false}).order("created_at",{ascending:false}).limit(1000)
       ]);
       const dataOrEmpty=result=>result.status==="fulfilled"&&!result.value.error?(result.value.data||[]):[];
-      marketingPreferences=dataOrEmpty(optional[0]);repeatCampaigns=dataOrEmpty(optional[1]);discoveryCredits=dataOrEmpty(optional[2]);paymentAttempts=dataOrEmpty(optional[3]);paymentSettings=dataOrEmpty(optional[4]);adminAudit=dataOrEmpty(optional[5]);
+      marketingPreferences=dataOrEmpty(optional[0]);repeatCampaigns=dataOrEmpty(optional[1]);discoveryCredits=dataOrEmpty(optional[2]);paymentAttempts=dataOrEmpty(optional[3]);paymentSettings=dataOrEmpty(optional[4]);adminAudit=dataOrEmpty(optional[5]);vahomeExpenses=dataOrEmpty(optional[6]);
       renderOrders();renderReviews();renderPromos();renderReleases();renderAdmin2();
       setSyncState("synced",`Синхронізовано ${new Date().toLocaleTimeString("uk-UA",{hour:"2-digit",minute:"2-digit"})}`);
       return true;
@@ -630,7 +631,7 @@ async function saveRelease(event){event.preventDefault();const f=event.currentTa
 async function deleteRelease(){if(!activeRelease||!(await premiumConfirm({title:"Видалити приватний реліз?",text:`${activeRelease.title} буде видалено без можливості відновлення.`,confirmLabel:"Видалити",tone:"danger"})))return;const {error}=await sb.from("private_releases").delete().eq("id",activeRelease.id);if(error)return toast("Помилка: "+error.message);releases=releases.filter(r=>r.id!==activeRelease.id);$("#releaseDialog").close();renderReleases();renderAdmin2();toast("Реліз видалено");}
 
 
-const admin2Views=["overview","orders","attention","customers","catalog","reviews","promos","marketing","payments","analytics","settings"];
+const admin2Views=["overview","orders","attention","customers","catalog","reviews","promos","marketing","payments","finance","analytics","settings"];
 const admin2PrimaryMobileViews=new Set(["overview","orders","attention"]);
 let activeAdmin2View="overview",manualItems=[];
 function admin2MobileActiveTarget(view=activeAdmin2View,moreOpen=false){return moreOpen||!admin2PrimaryMobileViews.has(view)?"more":view;}
@@ -653,10 +654,48 @@ function sumAmount(rows){return rows.reduce((sum,row)=>sum+Number(row.total_amou
 function sameDay(value,base=new Date()){const d=new Date(value);return d.getFullYear()===base.getFullYear()&&d.getMonth()===base.getMonth()&&d.getDate()===base.getDate();}
 function daysAgo(days){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-days);return d;}
 function customerKey(order){const email=String(order.customer_email||"").trim().toLowerCase();const phone=normalizePhone(order.customer_phone);return email||phone||String(order.customer_name||"").trim().toLowerCase();}
-function customerRows(){const map=new Map();orders.filter(order=>effectiveOrderStatus(order)!=="cancelled").forEach(order=>{const key=customerKey(order);if(!key)return;let row=map.get(key);if(!row){row={key,name:order.customer_name||"Клієнт",phone:order.customer_phone||"",email:order.customer_email||"",orders:[],completed:0,spent:0,lastAt:order.created_at,products:new Map(),discovery:false};map.set(key,row);}row.orders.push(order);if(new Date(order.created_at)>new Date(row.lastAt))row.lastAt=order.created_at;if(String(order.payment_status)==="paid"){row.completed++;row.spent+=Number(order.total_amount||0);}for(const item of Array.isArray(order.items)?order.items:[]){const id=String(item.id||"");if(id.startsWith("discovery-"))row.discovery=true;if(!id||id.startsWith("reeds-"))continue;row.products.set(id,(row.products.get(id)||0)+Number(item.quantity||1));}});return [...map.values()].map(row=>{const fav=[...row.products.entries()].sort((a,b)=>b[1]-a[1])[0]?.[0]||"";row.favorite=productById(fav)?.name||fav||"—";row.aov=row.completed?row.spent/row.completed:0;return row;}).sort((a,b)=>new Date(b.lastAt)-new Date(a.lastAt));}
+function paidOrderDate(order){return new Date(order.paid_at||order.payment_modified_at||order.updated_at||order.created_at);}
+function orderHasDiscovery(order){return (Array.isArray(order.items)?order.items:[]).some(item=>String(item.id||"").startsWith("discovery-"));}
+function orderHasFullSize(order){return (Array.isArray(order.items)?order.items:[]).some(item=>{const id=String(item.id||"");return Boolean(id&&!id.startsWith("discovery-")&&!id.startsWith("reeds-"));});}
+function customerRows(){
+  const map=new Map();
+  orders.filter(order=>effectiveOrderStatus(order)!=="cancelled").forEach(order=>{
+    const key=customerKey(order);
+    if(!key)return;
+    let row=map.get(key);
+    if(!row){
+      row={key,name:order.customer_name||"Клієнт",phone:order.customer_phone||"",email:order.customer_email||"",orders:[],paidOrders:[],completed:0,spent:0,lastAt:order.created_at,lastPaidAt:null,products:new Map(),discovery:false};
+      map.set(key,row);
+    }
+    row.orders.push(order);
+    if(new Date(order.created_at)>new Date(row.lastAt))row.lastAt=order.created_at;
+    if(String(order.payment_status)==="paid"){
+      row.completed++;
+      row.spent+=Number(order.total_amount||0);
+      row.paidOrders.push(order);
+      const pd=paidOrderDate(order);
+      if(!row.lastPaidAt||pd>new Date(row.lastPaidAt))row.lastPaidAt=pd.toISOString();
+    }
+    for(const item of Array.isArray(order.items)?order.items:[]){
+      const id=String(item.id||"");
+      if(id.startsWith("discovery-"))row.discovery=true;
+      if(!id||id.startsWith("reeds-"))continue;
+      row.products.set(id,(row.products.get(id)||0)+Number(item.quantity||1));
+    }
+  });
+  return [...map.values()].map(row=>{
+    row.paidOrders.sort((a,b)=>paidOrderDate(a)-paidOrderDate(b));
+    row.orders.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+    const fav=[...row.products.entries()].filter(([id])=>!id.startsWith("discovery-")).sort((a,b)=>b[1]-a[1])[0]?.[0]||"";
+    row.favorite=productById(fav)?.name||fav||"—";
+    row.aov=row.completed?row.spent/row.completed:0;
+    row.firstPaidAt=row.paidOrders[0]?paidOrderDate(row.paidOrders[0]).toISOString():null;
+    return row;
+  }).sort((a,b)=>new Date(b.lastAt)-new Date(a.lastAt));
+}
 function repeatRate(){const rows=customerRows().filter(row=>row.completed>0);if(!rows.length)return 0;return rows.filter(row=>row.completed>1).length/rows.length*100;}
 function productSales(){const map=new Map(fullSizeProducts().map(p=>[p.id,{product:p,qty:0,revenue:0,orders:0}]));orders.filter(order=>effectiveOrderStatus(order)!=="cancelled").forEach(order=>{for(const item of Array.isArray(order.items)?order.items:[]){const row=map.get(String(item.id||""));if(!row)continue;const q=Number(item.quantity||1);row.qty+=q;row.orders++;row.revenue+=Number(item.line_total||item.unit_price*q||productPrice(row.product)*q);}});return [...map.values()].sort((a,b)=>b.qty-a.qty||b.revenue-a.revenue);}
-function renderAdmin2(){renderOverview();renderAttention();renderCustomers();renderCatalogAdmin();renderMarketing();renderPayments();renderAnalytics2();renderSettings();syncAdmin2Badges();}
+function renderAdmin2(){renderOverview();renderAttention();renderCustomers();renderCatalogAdmin();renderMarketing();renderPayments();renderFinance();renderAnalytics2();renderSettings();syncAdmin2Badges();}
 function syncAdmin2Badges(){const count=buildAttentionItems().length;const a=$("#attentionBadge"),m=$("#mobileAttentionBadge");if(a)a.textContent=count||"";if(m)m.textContent=count||"";}
 function clearAdminSearchState(){
   const ids=["adminGlobalSearch","orderSearch","customerSearch","catalogSearch","reviewSearch","promoSearch"];
@@ -697,8 +736,60 @@ stats.innerHTML=[["Унікальні клієнти",rows.length,"за всю �
 const q=$("#customerSearch")?.value.trim().toLowerCase()||"",seg=$("#customerSegmentFilter")?.value||"";
 const filtered=rows.filter(r=>(!q||[r.name,r.phone,r.email,r.favorite].join(" ").toLowerCase().includes(q))&&(!seg||(seg==="repeat"&&r.completed>1)||(seg==="discovery"&&r.discovery)||(seg==="vip"&&r.spent>=3000)));
 host.innerHTML=filtered.map(r=>`<article class="admin2-customer-card" data-customer-key="${esc(r.key)}"><div class="admin2-customer-main"><strong>${esc(r.name)}</strong><span>${esc(r.phone)}${r.email?` · ${esc(r.email)}`:""}</span>${r.completed>1?'<span class="admin2-segment">Повторний клієнт</span>':""}</div><div class="admin2-customer-metric"><span>Замовлень</span><strong>${r.orders.length}</strong></div><div class="admin2-customer-metric"><span>LTV</span><strong>${money(r.spent)}</strong></div><div class="admin2-customer-metric"><span>Середній чек</span><strong>${money(r.aov)}</strong></div><div class="admin2-customer-metric"><span>Улюблений</span><strong>${esc(r.favorite)}</strong></div><span class="admin2-attention-action">Історія →</span></article>`).join("")||'<div class="admin2-search-empty">Клієнтів не знайдено.</div>';
-host.querySelectorAll("[data-customer-key]").forEach(el=>el.onclick=()=>{const row=rows.find(r=>r.key===el.dataset.customerKey);activateAdmin2View("orders");if(row&&$("#orderSearch")){$("#orderSearch").value=row.email||row.phone||row.name;renderOrders();}});
+host.querySelectorAll("[data-customer-key]").forEach(el=>el.onclick=()=>openCustomer360(el.dataset.customerKey));
 }
+function customerMarketingState(row){const email=String(row?.email||"").trim().toLowerCase();const pref=email?marketingPreferences.find(item=>String(item.email||"").trim().toLowerCase()===email):null;return pref?pref.subscribed===true:row?.orders?.some(order=>order.marketing_consent===true)||false;}
+function customerLifecycle(row){const paid=(row?.paidOrders||[]).slice().sort((a,b)=>paidOrderDate(a)-paidOrderDate(b));const discoveryOrders=paid.filter(orderHasDiscovery);const firstDiscovery=discoveryOrders[0]||null;const discoveryAt=firstDiscovery?paidOrderDate(firstDiscovery):null;const laterFull=discoveryAt?paid.find(order=>paidOrderDate(order)>discoveryAt&&orderHasFullSize(order)):null;const email=String(row?.email||"").trim().toLowerCase();const credits=email?discoveryCredits.filter(c=>String(c.customer_email||"").trim().toLowerCase()===email):[];const usedPromos=[...new Set(paid.map(o=>String(o.promo_code||"").trim().toUpperCase()).filter(Boolean))];return{discoveryOrders,firstDiscovery,laterFull,converted:Boolean(laterFull),credits,usedPromos};}
+function customerSegmentLabels(row){const labels=[];if(row.completed>1)labels.push("Repeat");if(row.spent>=3000)labels.push("VIP");if(row.discovery)labels.push("Discovery");if(customerMarketingState(row))labels.push("Marketing ✓");return labels.length?labels:["Новий клієнт"];}
+function customerDaysSinceLast(row){if(!row.lastPaidAt)return null;return Math.max(0,Math.floor((Date.now()-new Date(row.lastPaidAt).getTime())/86400000));}
+function openCustomerOrders(row){const dialog=$("#customer360Dialog");if(dialog?.open)dialog.close();activateAdmin2View("orders");const input=$("#orderSearch");if(input){input.value=row.email||row.phone||row.name;renderOrders();}}
+function openCustomer360(key){
+  const row=customerRows().find(item=>item.key===key);
+  if(!row)return;
+  activeCustomerKey=row.key;
+  const life=customerLifecycle(row),days=customerDaysSinceLast(row),dialog=$("#customer360Dialog");
+  if(!dialog)return;
+  $("#customer360Title").textContent=row.name;
+  $("#customer360Subtitle").textContent=`${row.orders.length} ${row.orders.length===1?"замовлення":"замовлень"} · остання активність ${shortDate(row.lastAt)}`;
+  $("#customer360Hero").innerHTML=`
+    <div>
+      <div class="admin2-customer-tags">${customerSegmentLabels(row).map(label=>`<span>${esc(label)}</span>`).join("")}</div>
+      <strong>${esc(row.favorite)}</strong><small>улюблений аромат</small>
+    </div>
+    <div class="admin2-customer-contact-actions">
+      ${row.phone?`<a href="tel:${esc(normalizePhone(row.phone))}">Подзвонити</a>`:""}
+      ${row.email?`<a href="mailto:${esc(row.email)}">Email</a>`:""}
+    </div>`;
+  $("#customer360Kpis").innerHTML=[
+    ["LTV",money(row.spent),`${row.completed} оплачених`],
+    ["AOV",money(row.aov),"середній оплачений чек"],
+    ["Остання покупка",days===null?"—":`${days} дн`,row.lastPaidAt?shortDate(row.lastPaidAt):"покупок ще немає"],
+    ["Repeat",row.completed>1?"Так":"Ні",row.completed>1?`${row.completed} покупки`:"1 або 0 покупок"]
+  ].map(([l,v,sub])=>`<article class="admin2-kpi"><span>${esc(l)}</span><strong>${esc(v)}</strong><small>${esc(sub)}</small></article>`).join("");
+  const consent=customerMarketingState(row);
+  $("#customer360Profile").innerHTML=`<div class="admin2-profile-lines">
+    <div><span>Телефон</span><strong>${esc(row.phone||"—")}</strong></div>
+    <div><span>Email</span><strong>${esc(row.email||"—")}</strong></div>
+    <div><span>Маркетинг</span><strong>${consent?"Є згода":"Без згоди"}</strong></div>
+    <div><span>Промокоди</span><strong>${life.usedPromos.length?esc(life.usedPromos.join(", ")):"Не використовував"}</strong></div>
+  </div>`;
+  const creditActive=life.credits.filter(c=>c.status==="active").length;
+  $("#customer360Lifecycle").innerHTML=`<div class="admin2-profile-lines">
+    <div><span>Discovery</span><strong>${life.discoveryOrders.length?`${life.discoveryOrders.length} покуп.`:"Не купував"}</strong></div>
+    <div><span>Discovery → full-size</span><strong>${life.converted?"Конвертувався ✓":"Ще ні"}</strong></div>
+    <div><span>Discovery Credit</span><strong>${creditActive?`${creditActive} активн.`:life.credits.length?"Використано / завершено":"Не видавався"}</strong></div>
+    <div><span>Перша покупка</span><strong>${row.firstPaidAt?shortDate(row.firstPaidAt):"—"}</strong></div>
+  </div>`;
+  $("#customer360Orders").innerHTML=row.orders.map(order=>`<button class="admin2-customer-order-row" data-customer-order="${esc(order.id)}" type="button">
+    <div><strong>${esc(order.client_order_id||`#${order.id}`)} · ${esc(orderItemSummary(order))}</strong><span>${shortDate(order.created_at)} · ${esc(paymentStatusLabels[order.payment_status]||order.payment_status||"—")}</span></div>
+    <em>${money(order.total_amount)}</em>
+  </button>`).join("")||'<div class="admin2-search-empty">Замовлень немає.</div>';
+  $("#customer360Orders").querySelectorAll("[data-customer-order]").forEach(el=>el.onclick=()=>openOrder(el.dataset.customerOrder));
+  $("#customer360OrdersBtn").onclick=()=>openCustomerOrders(row);
+  if(!dialog.open)dialog.showModal();
+  requestAnimationFrame(()=>$("#customer360Title")?.focus({preventScroll:true}));
+}
+
 function renderCatalogAdmin(){const host=$("#catalogGrid"),stats=$("#catalogStats");
 if(!host||!stats)return;
 const products=fullSizeProducts(),sales=productSales(),sold=sales.reduce((s,r)=>s+r.qty,0),revenue=sales.reduce((s,r)=>s+r.revenue,0);
@@ -728,8 +819,176 @@ const list=orders.filter(o=>(!method||o.payment_method===method)&&(!state||(stat
 host.innerHTML=list.map(o=>`<article class="admin2-payment-card" data-payment-order="${esc(o.id)}"><div><strong>${esc(o.client_order_id)} · ${esc(o.customer_name)}</strong><span>${esc(paymentMethodLabels[o.payment_method]||o.payment_method)} · ${shortDate(o.created_at)}</span></div><div><strong>${esc(orderItemSummary(o))}</strong><span>${esc(o.customer_phone||"")}</span></div><div><span class="admin2-state ${paymentTone(o.payment_status)}">${esc(paymentStatusLabels[o.payment_status]||o.payment_status||"Не оплачено")}</span></div><em>${money(o.total_amount)}</em></article>`).join("")||'<div class="admin2-search-empty">Платежів не знайдено.</div>';
 host.querySelectorAll("[data-payment-order]").forEach(el=>el.onclick=()=>openOrder(el.dataset.paymentOrder));
 }
-function renderAnalytics2(){const kpis=$("#analyticsKpis");if(!kpis)return;const customers=customerRows(),last30=cashReceivedOrders().filter(o=>new Date(o.paid_at||o.updated_at||o.created_at)>=daysAgo(29)),active=activeValueOrders(),waiting=awaitingMoneyOrders(),aov=last30.length?sumAmount(last30)/last30.length:0;kpis.innerHTML=[["Отримано 30 днів",money(sumAmount(last30)),`${last30.length} фактичних оплат`],["Замовлення в роботі",money(sumAmount(active)),`${active.length} активних`],["Очікуємо оплат",money(sumAmount(waiting)),`${waiting.length} замовлень`],["AOV оплачений",money(aov),"за останні 30 днів"],["Repeat-rate",`${Math.round(repeatRate())}%`,`${customers.filter(c=>c.completed>1).length} клієнтів`],["Унікальні клієнти",customers.length,"за історію"]].map(([l,v,s])=>`<article class="admin2-kpi"><span>${l}</span><strong>${v}</strong><small>${s}</small></article>`).join("");const products=$("#analyticsTopProducts"),rows=productSales().slice(0,8),max=Math.max(1,...rows.map(r=>r.qty));if(products)products.innerHTML=rows.map(row=>`<div class="admin2-product-bar"><header><strong>${esc(row.product.name)}</strong><span>${row.qty} шт · ${money(row.revenue)}</span></header><i style="--value:${Math.round(row.qty/max*100)}%"></i></div>`).join("");renderOverviewPaymentMixInto($("#analyticsPayments"));}
+const expenseCategoryLabels={cogs:"Собівартість",packaging:"Пакування",delivery:"Доставка",ads:"Реклама",fees:"Комісії",services:"Сервіси",other:"Інше"};
+function financePeriodBounds(){const value=$("#financePeriod")?.value||"30",end=new Date();end.setHours(23,59,59,999);let start=null,label="За весь час";if(value==="30"){start=daysAgo(29);label="Останні 30 днів";}else if(value==="90"){start=daysAgo(89);label="Останні 90 днів";}else if(value==="month"){start=new Date(end.getFullYear(),end.getMonth(),1);label=new Intl.DateTimeFormat("uk-UA",{month:"long",year:"numeric"}).format(end);}return{start,end,label};}
+function withinPeriod(value,bounds){const d=new Date(value);return Number.isFinite(d.getTime())&&(!bounds.start||d>=bounds.start)&&d<=bounds.end;}
+function financeRows(){const bounds=financePeriodBounds();const revenue=cashReceivedOrders().filter(order=>withinPeriod(order.paid_at||order.payment_modified_at||order.updated_at||order.created_at,bounds));const expenses=vahomeExpenses.filter(row=>withinPeriod(`${row.expense_date}T12:00:00`,bounds));return{bounds,revenue,expenses};}
+function expenseTotal(rows,categories=[]){return rows.filter(row=>!categories.length||categories.includes(row.category)).reduce((sum,row)=>sum+Number(row.amount||0),0);}
+function renderFinance(){
+  const kpis=$("#financeKpis"),pnl=$("#financePnl"),breakdown=$("#financeBreakdown"),list=$("#expenseList");
+  if(!kpis||!pnl||!breakdown||!list)return;
+  const {bounds,revenue,expenses}=financeRows();
+  const received=sumAmount(revenue);
+  const direct=expenseTotal(expenses,["cogs","packaging"]);
+  const operating=expenseTotal(expenses,["delivery","ads","fees","services","other"]);
+  const total=direct+operating,result=received-total,margin=received?result/received*100:0,ads=expenseTotal(expenses,["ads"]);
+  kpis.innerHTML=[
+    ["Отримано",money(received),`${revenue.length} фактичних оплат`],
+    ["Собівартість + пакування",money(direct),"внесені витрати"],
+    ["Операційні витрати",money(operating),"без собівартості"],
+    ["Операційний результат",money(result),result>=0?"після внесених витрат":"витрати вищі за отримання"],
+    ["Маржа",`${margin.toFixed(1)}%`,"управлінська"],
+    ["Реклама",money(ads),received?`${(ads/received*100).toFixed(1)}% від отримань`:"за період"]
+  ].map(([l,v,sub])=>`<article class="admin2-kpi"><span>${esc(l)}</span><strong class="${l==="Операційний результат"&&result<0?"bad":""}">${esc(v)}</strong><small>${esc(sub)}</small></article>`).join("");
+  const periodLabel=$("#financePeriodLabel");
+  if(periodLabel)periodLabel.textContent=bounds.label;
+  const gross=received-direct;
+  pnl.innerHTML=`<div class="admin2-pnl">
+    <div><span>Отримані оплати</span><strong>${money(received)}</strong></div>
+    <div><span>− Собівартість і пакування</span><strong>${money(direct)}</strong></div>
+    <div class="is-subtotal"><span>Валовий результат</span><strong>${money(gross)}</strong></div>
+    <div><span>− Інші операційні витрати</span><strong>${money(operating)}</strong></div>
+    <div class="is-result ${result<0?"is-negative":""}"><span>Операційний результат</span><strong>${money(result)}</strong></div>
+  </div>`;
+  const categories=Object.keys(expenseCategoryLabels)
+    .map(key=>({key,label:expenseCategoryLabels[key],value:expenseTotal(expenses,[key])}))
+    .filter(row=>row.value>0).sort((a,b)=>b.value-a.value);
+  const max=Math.max(1,...categories.map(row=>row.value));
+  breakdown.innerHTML=categories.length?categories.map(row=>`<div class="admin2-product-bar">
+    <header><strong>${esc(row.label)}</strong><span>${money(row.value)}</span></header><i style="--value:${Math.round(row.value/max*100)}%"></i>
+  </div>`).join(""):'<div class="admin2-search-empty">Додайте витрати — структура з’явиться тут.</div>';
+  const category=$("#expenseCategoryFilter")?.value||"";
+  const filtered=expenses.filter(row=>!category||row.category===category)
+    .sort((a,b)=>String(b.expense_date).localeCompare(String(a.expense_date))||new Date(b.created_at)-new Date(a.created_at));
+  list.innerHTML=filtered.map(row=>`<button class="admin2-expense-row" data-expense-id="${esc(row.id)}" type="button">
+    <div><strong>${esc(expenseCategoryLabels[row.category]||row.category)}</strong><span>${esc(row.vendor||row.note||"Без уточнення")} · ${new Intl.DateTimeFormat("uk-UA").format(new Date(`${row.expense_date}T12:00:00`))}</span></div>
+    <em>${money(row.amount)}</em>
+  </button>`).join("")||'<div class="admin2-search-empty">Витрат за цей період немає.</div>';
+  list.querySelectorAll("[data-expense-id]").forEach(el=>el.onclick=()=>openExpense(el.dataset.expenseId));
+}
+function openExpense(id=""){activeExpense=vahomeExpenses.find(row=>String(row.id)===String(id))||null;const form=$("#expenseForm"),dialog=$("#expenseDialog");if(!form||!dialog)return;form.reset();$("#expenseFormMessage").textContent="";$("#expenseDialogTitle").textContent=activeExpense?"Редагувати витрату":"Нова витрата";$("#expenseDelete").hidden=!activeExpense;if(activeExpense){form.elements.id.value=activeExpense.id;form.elements.expense_date.value=activeExpense.expense_date;form.elements.category.value=activeExpense.category;form.elements.amount.value=activeExpense.amount;form.elements.vendor.value=activeExpense.vendor||"";form.elements.note.value=activeExpense.note||"";}else{form.elements.expense_date.value=new Date().toISOString().slice(0,10);form.elements.category.value="cogs";}if(!dialog.open)dialog.showModal();requestAnimationFrame(()=>$("#expenseDialogTitle")?.focus({preventScroll:true}));}
+async function saveExpense(event){event.preventDefault();const form=event.currentTarget,fd=new FormData(form),payload={expense_date:String(fd.get("expense_date")||""),category:String(fd.get("category")||""),amount:Number(fd.get("amount")||0),vendor:String(fd.get("vendor")||"").trim()||null,note:String(fd.get("note")||"").trim()||null,updated_at:new Date().toISOString()};const message=$("#expenseFormMessage");if(!payload.expense_date||!expenseCategoryLabels[payload.category]||!Number.isFinite(payload.amount)||payload.amount<=0){message.textContent="Перевірте дату, категорію та суму.";return;}const query=activeExpense?sb.from("vahome_expenses").update(payload).eq("id",activeExpense.id).select().single():sb.from("vahome_expenses").insert(payload).select().single();const {data,error}=await query;if(error){message.textContent=`Помилка: ${error.message}`;return;}if(activeExpense){const index=vahomeExpenses.findIndex(row=>row.id===activeExpense.id);if(index>=0)vahomeExpenses[index]=data;}else vahomeExpenses.unshift(data);$("#expenseDialog").close();activeExpense=null;renderFinance();toast("Витрату збережено","success");}
+async function deleteExpense(){if(!activeExpense||!(await premiumConfirm({title:"Видалити витрату?",text:`${expenseCategoryLabels[activeExpense.category]||"Витрата"} · ${money(activeExpense.amount)} буде видалена з управлінського обліку.`,confirmLabel:"Видалити",tone:"danger"})))return;const id=activeExpense.id,{error}=await sb.from("vahome_expenses").delete().eq("id",id);if(error)return toast("Не вдалося видалити витрату: "+error.message,"danger");vahomeExpenses=vahomeExpenses.filter(row=>row.id!==id);activeExpense=null;$("#expenseDialog").close();renderFinance();toast("Витрату видалено","success");}
+function paidCustomerCohort(){return customerRows().map(row=>({...row,paidOrders:(row.paidOrders||[]).slice().sort((a,b)=>paidOrderDate(a)-paidOrderDate(b))})).filter(row=>row.paidOrders.length);}
+function retentionAt(days){const now=Date.now(),windowMs=days*86400000,cohort=paidCustomerCohort().filter(row=>now-paidOrderDate(row.paidOrders[0]).getTime()>=windowMs);if(!cohort.length)return{rate:0,returned:0,total:0};const returned=cohort.filter(row=>{const first=paidOrderDate(row.paidOrders[0]).getTime();return row.paidOrders.slice(1).some(order=>{const t=paidOrderDate(order).getTime();return t>first&&t<=first+windowMs;});}).length;return{rate:returned/cohort.length*100,returned,total:cohort.length};}
+function discoveryConversionStats(){const rows=paidCustomerCohort().filter(row=>row.paidOrders.some(orderHasDiscovery));let converted=0;for(const row of rows){const first=row.paidOrders.find(orderHasDiscovery);const firstAt=paidOrderDate(first);if(row.paidOrders.some(order=>paidOrderDate(order)>firstAt&&orderHasFullSize(order)))converted++;}return{customers:rows.length,converted,rate:rows.length?converted/rows.length*100:0};}
+function firstPaidOrderIds(){const ids=new Set();for(const row of paidCustomerCohort()){if(row.paidOrders[0])ids.add(String(row.paidOrders[0].id));}return ids;}
+function dimensionRows(rows,getKey,labels={}){const map=new Map();rows.forEach(order=>{const key=String(getKey(order)||"unknown");const row=map.get(key)||{key,label:labels[key]||key||"Не вказано",count:0,revenue:0};row.count++;row.revenue+=Number(order.total_amount||0);map.set(key,row);});return[...map.values()].sort((a,b)=>b.revenue-a.revenue||b.count-a.count);}
+function renderDimension(host,rows,empty="Даних ще немає."){if(!host)return;if(!rows.length){host.innerHTML=`<div class="admin2-search-empty">${esc(empty)}</div>`;return;}const total=rows.reduce((sum,row)=>sum+row.count,0),max=Math.max(1,...rows.map(row=>row.count));host.innerHTML=rows.map(row=>`<div class="admin2-product-bar"><header><strong>${esc(row.label)}</strong><span>${row.count} · ${total?Math.round(row.count/total*100):0}%${row.revenue?` · ${money(row.revenue)}`:""}</span></header><i style="--value:${Math.round(row.count/max*100)}%"></i></div>`).join("");}
+function renderAnalytics2(){
+  const kpis=$("#analyticsKpis");
+  if(!kpis)return;
+  const customers=customerRows();
+  const last30=cashReceivedOrders().filter(o=>new Date(o.paid_at||o.updated_at||o.created_at)>=daysAgo(29));
+  const aov=last30.length?sumAmount(last30)/last30.length:0;
+  const firstIds=firstPaidOrderIds();
+  const newRevenue=sumAmount(last30.filter(order=>firstIds.has(String(order.id))));
+  const repeatRevenue=sumAmount(last30.filter(order=>!firstIds.has(String(order.id))));
+  const discovery=discoveryConversionStats();
+  kpis.innerHTML=[
+    ["Отримано 30 днів",money(sumAmount(last30)),`${last30.length} фактичних оплат`],
+    ["Нові клієнти",money(newRevenue),"виручка з першої покупки"],
+    ["Repeat виручка",money(repeatRevenue),"повторні покупки"],
+    ["AOV оплачений",money(aov),"за останні 30 днів"],
+    ["Repeat-rate",`${Math.round(repeatRate())}%`,`${customers.filter(c=>c.completed>1).length} клієнтів`],
+    ["Discovery → full-size",`${Math.round(discovery.rate)}%`,`${discovery.converted} із ${discovery.customers}`]
+  ].map(([l,v,sub])=>`<article class="admin2-kpi"><span>${esc(l)}</span><strong>${esc(v)}</strong><small>${esc(sub)}</small></article>`).join("");
+  const products=$("#analyticsTopProducts"),rows=productSales().slice(0,8),max=Math.max(1,...rows.map(r=>r.qty));
+  if(products)products.innerHTML=rows.map(row=>`<div class="admin2-product-bar"><header><strong>${esc(row.product.name)}</strong><span>${row.qty} шт · ${money(row.revenue)}</span></header><i style="--value:${Math.round(row.qty/max*100)}%"></i></div>`).join("");
+  const retention=$("#analyticsRetention");
+  if(retention){
+    const points=[30,60,90].map(days=>({days,...retentionAt(days)}));
+    retention.innerHTML=`<div class="admin2-retention-grid">${points.map(row=>`<div><span>${row.days} днів</span><strong>${Math.round(row.rate)}%</strong><small>${row.returned} із ${row.total||0} повернулися</small></div>`).join("")}</div>
+      <p class="admin2-panel-note">Когорта: клієнти, у яких уже минуло відповідно 30/60/90 днів від першої оплаченої покупки.</p>`;
+  }
+  const discoveryHost=$("#analyticsDiscovery");
+  if(discoveryHost)discoveryHost.innerHTML=`<div class="admin2-discovery-conversion"><strong>${Math.round(discovery.rate)}%</strong><span>${discovery.converted} із ${discovery.customers} клієнтів після оплаченого Discovery зробили пізнішу full-size покупку.</span></div>`;
+  const sourceLabels={website:"Сайт",instagram:"Instagram",phone:"Телефон",offline:"Офлайн",admin:"Адмінка",unknown:"Не вказано"};
+  const deliveryLabels={nova_poshta_branch:"НП · відділення",nova_poshta_locker:"НП · поштомат",nova_poshta_courier:"НП · кур’єр",pickup:"Самовивіз",unknown:"Не вказано"};
+  const paid=cashReceivedOrders();
+  renderDimension($("#analyticsSources"),dimensionRows(paid,o=>o.source||"unknown",sourceLabels));
+  renderDimension($("#analyticsDelivery"),dimensionRows(paid,o=>o.delivery_method||"unknown",deliveryLabels));
+  const promoMap=new Map();
+  paid.filter(o=>o.promo_code).forEach(o=>{
+    const code=String(o.promo_code||"").toUpperCase();
+    const row=promoMap.get(code)||{code,count:0,revenue:0,discount:0};
+    row.count++;row.revenue+=Number(o.total_amount||0);row.discount+=Number(o.discount_amount||0);promoMap.set(code,row);
+  });
+  const promoHost=$("#analyticsPromos"),promoRows=[...promoMap.values()].sort((a,b)=>b.revenue-a.revenue).slice(0,8);
+  if(promoHost)promoHost.innerHTML=promoRows.length?promoRows.map(row=>`<div class="admin2-promo-performance">
+    <div><strong>${esc(row.code)}</strong><span>${row.count} зам. · знижка ${money(row.discount)}</span></div><em>${money(row.revenue)}</em>
+  </div>`).join(""):'<div class="admin2-search-empty">Оплачених замовлень із промокодами ще немає.</div>';
+  renderOverviewPaymentMixInto($("#analyticsPayments"));
+}
 function renderOverviewPaymentMixInto(host){if(!host)return;const valid=orders.filter(o=>effectiveOrderStatus(o)!=="cancelled"),labels={card_online:"Карткою онлайн",bank_transfer:"На рахунок",cash_on_delivery:"При отриманні"};host.innerHTML=`<div class="admin2-payment-mix">${Object.keys(labels).map(key=>{const n=valid.filter(o=>o.payment_method===key).length;return `<div class="admin2-payment-mix-row"><span>${labels[key]}</span><strong>${n} · ${valid.length?Math.round(n/valid.length*100):0}%</strong></div>`}).join("")}</div>`;}
+let vahomePushBusy=false;
+function pushFunctionUrl(){return `${cfg.url}/functions/v1/vahome-push`;}
+async function pushRequest(action,body={}){const token=await getAdminAccessToken(),response=await fetch(pushFunctionUrl(),{method:"POST",headers:{Authorization:`Bearer ${token}`,apikey:cfg.publishableKey,"Content-Type":"application/json"},body:JSON.stringify({action,...body})});const payload=await response.json().catch(()=>({}));if(response.status===401||response.status===403){if(response.status===401)showLogin("Адмінська сесія завершилася. Увійдіть повторно.");throw new Error(payload.error||"FORBIDDEN");}if(!response.ok)throw new Error(payload.error||`HTTP_${response.status}`);return payload;}
+function pushDeviceId(){const key="vahome-admin-device-id";let id=localStorage.getItem(key);if(!id){id=crypto.randomUUID?.()||`device-${Date.now()}-${Math.random().toString(16).slice(2)}`;localStorage.setItem(key,id);}return id;}
+function urlBase64ToUint8Array(base64String){const padding="=".repeat((4-base64String.length%4)%4),base64=(base64String+padding).replace(/-/g,"+").replace(/_/g,"/"),raw=atob(base64);return Uint8Array.from([...raw].map(ch=>ch.charCodeAt(0)));}
+function isIosDevice(){return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}
+function isStandalonePwa(){return window.matchMedia?.("(display-mode: standalone)").matches||window.navigator.standalone===true;}
+async function currentPushSubscription(){if(!("serviceWorker" in navigator))return null;const registration=await navigator.serviceWorker.ready;return registration.pushManager.getSubscription();}
+function renderPushCardState({supported=true,permission=Notification?.permission||"default",subscription=null,devices=[],error=""}={}){
+  const host=$("#pushSettingsCard");
+  if(!host)return;
+  const current=devices.find(device=>device.current),enabled=Boolean(subscription);
+  const status=!supported?"Не підтримується":enabled?"Увімкнено":permission==="denied"?"Заблоковано":"Вимкнено";
+  host.innerHTML=`<span>Push / PWA</span><h3>Сповіщення адміністратора</h3>
+    <div class="admin2-setting-line"><span>Цей пристрій</span><strong>${esc(status)}</strong></div>
+    <div class="admin2-setting-line"><span>Підключено</span><strong>${devices.length} / 3</strong></div>
+    ${current?`<div class="admin2-setting-line"><span>Остання доставка</span><strong>${current.lastSuccessAt?shortDate(current.lastSuccessAt):"Ще не було"}</strong></div>`:""}
+    ${error?`<p class="admin2-push-message is-error">${esc(error)}</p>`:""}
+    <div class="admin2-push-actions">${enabled?'<button class="btn btn-secondary btn-small" data-push-action="test" type="button">Тест</button><button class="btn btn-secondary btn-small" data-push-action="disable" type="button">Вимкнути</button>':'<button class="btn btn-primary btn-small" data-push-action="enable" type="button">Увімкнути push</button>'}</div>
+    ${devices.length?`<div class="admin2-push-devices">${devices.map(device=>`<div><span>${esc(device.label||device.platform||"Пристрій")}${device.current?" · цей":""}</span><small>${device.lastFailureAt&&!device.lastSuccessAt?"Потрібна перевірка":device.updatedAt?`активний ${relativeAge(device.updatedAt)}`:"активний"}</small></div>`).join("")}</div>`:""}`;
+}
+async function refreshPushSettings(){const host=$("#pushSettingsCard");if(!host)return;if(!("serviceWorker" in navigator)||!("PushManager" in window)||!("Notification" in window)){renderPushCardState({supported:false,permission:"denied",devices:[]});return;}try{const subscription=await currentPushSubscription(),payload=await pushRequest("config",{endpoint:subscription?.endpoint||""});renderPushCardState({supported:true,permission:Notification.permission,subscription,devices:payload.devices||[]});}catch(error){renderPushCardState({supported:true,permission:Notification.permission,subscription:await currentPushSubscription().catch(()=>null),devices:[],error:"Не вдалося отримати стан push."});}}
+async function handlePushAction(action){
+  if(vahomePushBusy)return;
+  vahomePushBusy=true;
+  try{
+    if(action==="enable"){
+      if(isIosDevice()&&!isStandalonePwa()){
+        toast("На iPhone спочатку додайте VA HOME Admin на Головний екран, відкрийте PWA і повторіть.","danger");
+        return;
+      }
+      const permission=await Notification.requestPermission();
+      if(permission!=="granted"){
+        toast("Дозвіл на сповіщення не надано.","danger");
+        return;
+      }
+      const config=await pushRequest("config"),registration=await navigator.serviceWorker.ready;
+      let subscription=await registration.pushManager.getSubscription();
+      if(!subscription){
+        subscription=await registration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array(config.publicKey)});
+      }
+      await pushRequest("subscribe",{
+        subscription:subscription.toJSON(),deviceId:pushDeviceId(),
+        deviceLabel:isIosDevice()?"iPhone · VA HOME":"VA HOME Admin",userAgent:navigator.userAgent
+      });
+      toast("Push-сповіщення увімкнено","success");
+    }else if(action==="disable"){
+      const subscription=await currentPushSubscription();
+      if(subscription){
+        await pushRequest("unsubscribe",{endpoint:subscription.endpoint});
+        await subscription.unsubscribe();
+      }
+      toast("Push на цьому пристрої вимкнено","success");
+    }else if(action==="test"){
+      const subscription=await currentPushSubscription();
+      if(!subscription)throw new Error("subscription_not_found");
+      const result=await pushRequest("test",{endpoint:subscription.endpoint});
+      toast(result.delivered?"Тестове сповіщення надіслано":"Push не доставлено",result.delivered?"success":"danger");
+    }
+  }catch(error){
+    console.error("vahome push",error);
+    toast("Не вдалося виконати дію push. Спробуйте ще раз.","danger");
+  }finally{
+    vahomePushBusy=false;
+    await refreshPushSettings().catch(()=>{});
+  }
+}
+
 function renderSettings(){
 const host=$("#settingsGrid");
 if(!host)return;
@@ -740,10 +999,12 @@ const cards=[
   `<article class="admin2-setting-card"><span>Оплати</span><h3>plata by mono</h3><div class="admin2-setting-line"><span>Карткова оплата</span><strong>${card.enabled===false?"Вимкнена":"Активна"}</strong></div><div class="admin2-setting-line"><span>Провайдер</span><strong>${esc(card.provider||"monobank")}</strong></div><div class="admin2-setting-line"><span>Останній paid</span><strong>${shortDate(lastPaid?.paid_at)}</strong></div></article>`,
   `<article class="admin2-setting-card"><span>Доставка</span><h3>Нова пошта</h3><div class="admin2-setting-line"><span>Стандартна відправка</span><strong>1–2 робочі дні</strong></div><div class="admin2-setting-line"><span>Безкоштовна доставка</span><strong>від 1500 грн</strong></div><div class="admin2-setting-line"><span>Останнє замовлення</span><strong>${latest?shortDate(latest.created_at):"—"}</strong></div></article>`,
   `<article class="admin2-setting-card"><span>Комунікація</span><h3>VA HOME</h3><div class="admin2-setting-line"><span>Менеджер</span><strong>09:00–19:00</strong></div><div class="admin2-setting-line"><span>Email</span><strong>vahome.aroma@gmail.com</strong></div><div class="admin2-setting-line"><span>Автоматизація повторних</span><strong>${repeatCampaigns.length?"Працює":"Очікує даних"}</strong></div></article>`,
-  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.3.9 · Admin 2.0</strong></div></article>`
+  `<article class="admin2-setting-card" id="pushSettingsCard"><span>Push / PWA</span><h3>Сповіщення адміністратора</h3><div class="admin2-setting-line"><span>Стан</span><strong>Перевіряємо…</strong></div></article>`,
+  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.4.0 · Operations</strong></div></article>`
 ];
 host.innerHTML=cards.join("");
-  renderAdminAudit();
+renderAdminAudit();
+refreshPushSettings().catch(()=>{});
 }
 function auditEntityLabel(row){const map={order:"Замовлення",review:"Відгук",promo:"Промокод",release:"Реліз"};return map[row.entity_type]||row.entity_type||"Дія";}
 function auditActionLabel(row){const map={update:"оновлено",moderate:"модеровано",delete:"видалено",insert:"створено",source_update:"оновлено джерело",system_update:"системне оновлення",system_insert:"створено системою",system_delete:"видалено системою"};return map[row.action]||row.action||"змінено";}
@@ -752,7 +1013,7 @@ function globalSearchEntries(query){const q=String(query||"").trim().toLowerCase
 if(q.length<2)return[];
 const result=[];
 orders.forEach(o=>{const hay=[o.client_order_id,o.customer_name,o.customer_phone,o.customer_email,orderItemSummary(o)].join(" ").toLowerCase();if(hay.includes(q))result.push({type:"Замовлення",title:`${o.client_order_id} · ${o.customer_name}`,sub:`${orderItemSummary(o)} · ${money(o.total_amount)}`,action:()=>openOrder(o.id)});});
-customerRows().forEach(c=>{const hay=[c.name,c.phone,c.email,c.favorite].join(" ").toLowerCase();if(hay.includes(q))result.push({type:"Клієнт",title:c.name,sub:`${c.phone}${c.email?` · ${c.email}`:""}`,action:()=>{activateAdmin2View("customers");$("#customerSearch").value=c.email||c.phone||c.name;renderCustomers();}});});
+customerRows().forEach(c=>{const hay=[c.name,c.phone,c.email,c.favorite].join(" ").toLowerCase();if(hay.includes(q))result.push({type:"Клієнт",title:c.name,sub:`${c.phone}${c.email?` · ${c.email}`:""}`,action:()=>{activateAdmin2View("customers");openCustomer360(c.key);}});});
 fullSizeProducts().forEach(p=>{const hay=[p.name,p.shortDescription,...(p.notes?.top||[]),...(p.notes?.heart||[]),...(p.notes?.base||[])].join(" ").toLowerCase();if(hay.includes(q))result.push({type:"Аромат",title:p.name,sub:`${collectionInfo(p)?.name||p.collection} · ${money(productPrice(p))}`,action:()=>{activateAdmin2View("catalog");$("#catalogSearch").value=p.name;renderCatalogAdmin();}});});
 promos.forEach(p=>{if([p.code,p.name].join(" ").toLowerCase().includes(q))result.push({type:"Промокод",title:String(p.code||"").toUpperCase(),sub:p.name||"Промокод",action:()=>{activateAdmin2View("promos");openPromo(p.id);}});});
 reviews.forEach(r=>{if([r.customer_name,r.product_slug,r.review_text].join(" ").toLowerCase().includes(q))result.push({type:"Відгук",title:`${r.product_slug} · ${r.customer_name}`,sub:(r.review_text||"").slice(0,90),action:()=>{activateAdmin2View("reviews");$("#reviewSearch").value=r.customer_name||r.product_slug;renderReviews();}});});
@@ -986,6 +1247,11 @@ function bind(){
   ["#customerSearch","#customerSegmentFilter"].forEach(sel=>$(sel)?.addEventListener("input",renderCustomers));
   ["#catalogSearch","#catalogCollectionFilter"].forEach(sel=>$(sel)?.addEventListener("input",renderCatalogAdmin));
   ["#paymentMethodFilter","#paymentStateFilter"].forEach(sel=>$(sel)?.addEventListener("input",renderPayments));
+  ["#financePeriod","#expenseCategoryFilter"].forEach(sel=>$(sel)?.addEventListener("input",renderFinance));
+  $("#newExpenseBtn")?.addEventListener("click",()=>openExpense());
+  $("#expenseForm")?.addEventListener("submit",saveExpense);$("#expenseDelete")?.addEventListener("click",deleteExpense);$("#expenseDialogClose")?.addEventListener("click",()=>$("#expenseDialog")?.close());$("#expenseCancel")?.addEventListener("click",()=>$("#expenseDialog")?.close());
+  $("#customer360Close")?.addEventListener("click",()=>$("#customer360Dialog")?.close());$("#customer360Dialog")?.addEventListener("close",()=>{activeCustomerKey="";const scroller=$("#customer360Dialog .admin2-customer-scroll");if(scroller)scroller.scrollTop=0;});
+  document.addEventListener("click",event=>{const button=event.target.closest("[data-push-action]");if(button)handlePushAction(button.dataset.pushAction);});
   $("#adminMoreBtn")?.addEventListener("click",()=>{const menu=$("#adminMoreMenu");if(!menu)return;const opening=menu.hidden;menu.hidden=!opening;syncAdmin2MobileNav({moreOpen:opening});});
   const openManualOrder=()=>{resetManualOrder();const dialog=$("#manualOrderDialog");dialog.showModal();requestAnimationFrame(()=>$("#manualOrderTitle")?.focus({preventScroll:true}));};$("#newOrderBtn")?.addEventListener("click",openManualOrder);$("#mobileNewOrderBtn")?.addEventListener("click",openManualOrder);
   $("#manualOrderClose")?.addEventListener("click",()=>$("#manualOrderDialog").close());$("#manualOrderCancel")?.addEventListener("click",()=>$("#manualOrderDialog").close());

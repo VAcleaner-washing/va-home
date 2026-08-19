@@ -1,18 +1,18 @@
 {
-  "version": "16.3.9",
+  "version": "16.4.0",
   "channel": "Stable",
-  "name": "GOOGLE TAG MANAGER — SAFE INSTALL",
-  "date": "2026-08-08",
-  "base": "16.3.8",
+  "name": "ADMIN OPERATIONS — CLIENT 360, FINANCE, ANALYTICS & PUSH",
+  "date": "2026-08-19",
+  "base": "16.3.9",
   "changes": [
-    "Installs Google Tag Manager container GTM-WQ52DFH6 across the public storefront",
-    "Keeps the existing direct GA4 measurement G-39SPX4HGJC and its analytics-consent gate unchanged",
-    "Adds Consent Mode defaults and CSP frame-src support required by the GTM noscript fallback",
-    "Excludes Admin 2.0, offline.html and private-preview.html from GTM tracking"
+    "Adds Client 360 with LTV, AOV, lifecycle, Discovery conversion, promo and order history",
+    "Adds a management Finance workspace with expenses, operating result and margin",
+    "Upgrades Analytics with retention, Discovery conversion, new-vs-repeat revenue, source, delivery and promo performance",
+    "Adds an isolated VA HOME Admin push/PWA channel for orders, payments, deliveries and reviews"
   ],
   "notes": [
-    "No Supabase tables, RLS, Edge Functions, Monobank or Nova Poshta code changed.",
-    "Do not add a second GA4 Google tag inside GTM while direct GA4 remains active, otherwise page_view/ecommerce events can be duplicated.",
-    "The generated category-page template was updated so future category rebuilds retain the GTM integration."
+    "Shared Supabase safety: no VAcleaner table, RLS policy, grant or Edge Function changed.",
+    "Existing create-order, Monobank and Nova Poshta production functions were not redeployed.",
+    "New Supabase objects are VA HOME-only: vahome_expenses and vahome_push_* plus the isolated vahome-push dispatcher."
   ]
 }

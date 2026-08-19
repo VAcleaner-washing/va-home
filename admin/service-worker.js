@@ -1,4 +1,4 @@
-const VERSION = "1.0.0-16.3.9";
+const VERSION = "1.0.0-16.4.0";
 const CACHE_PREFIX = "vahome-admin-";
 const SHELL_CACHE = `${CACHE_PREFIX}shell-${VERSION}`;
 
@@ -11,13 +11,13 @@ const SHELL_ASSETS = [
   "/admin/pwa/icon-512.png",
   "/admin/pwa/icon-maskable-512.png",
   "/admin/pwa/apple-touch-icon.png",
-  "/css/core.css?v=16.3.9",
-  "/css/site-admin.css?v=16.3.9",
-  "/js/config.js?v=16.3.9",
-  "/js/products.js?v=16.3.9",
-  "/js/admin.js?v=16.3.9",
-  "/js/motion.js?v=16.3.9",
-  "/admin/pwa.js?v=16.3.9"
+  "/css/core.css?v=16.4.0",
+  "/css/site-admin.css?v=16.4.0",
+  "/js/config.js?v=16.4.0",
+  "/js/products.js?v=16.4.0",
+  "/js/admin.js?v=16.4.0",
+  "/js/motion.js?v=16.4.0",
+  "/admin/pwa.js?v=16.4.0"
 ];
 
 function shouldBypassRequest(request, url) {
@@ -117,4 +117,35 @@ self.addEventListener("fetch", (event) => {
 
   if (!isSafeStatic(request)) return;
   event.respondWith(staleWhileRevalidate(event));
+});
+
+// VA HOME v16.4.0 — isolated Admin push notifications.
+self.addEventListener("push", (event) => {
+  let payload = {};
+  try { payload = event.data ? event.data.json() : {}; } catch { payload = { body: event.data?.text?.() || "" }; }
+  const title = payload.title || "VA HOME";
+  const options = {
+    body: payload.body || "Нова подія в адмінці.",
+    icon: payload.icon || "/admin/pwa/icon-192.png",
+    badge: payload.badge || "/admin/pwa/icon-192.png",
+    tag: payload.tag || `vahome-${Date.now()}`,
+    renotify: false,
+    data: payload.data || { url: "/admin/#overview" }
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const target = new URL(event.notification.data?.url || "/admin/#overview", self.location.origin).href;
+  event.waitUntil((async () => {
+    const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+    for (const client of windows) {
+      if (new URL(client.url).origin === self.location.origin) {
+        await client.navigate(target);
+        return client.focus();
+      }
+    }
+    return self.clients.openWindow(target);
+  })());
 });

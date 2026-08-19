@@ -1155,7 +1155,7 @@ img,video,canvas,svg{max-width:100%}
   #orderDialog .admin-actions__buttons .btn{flex:1 1 100%;}
 }
 
-/* VA HOME v16.3.9 — premium, task-led admin operations */
+/* VA HOME v16.4.0 — premium, task-led admin operations */
 .admin-toolbar--orders{
   grid-template-columns:minmax(300px,1.4fr) minmax(190px,.55fr) minmax(190px,.55fr);
 }
@@ -1460,7 +1460,7 @@ img,video,canvas,svg{max-width:100%}
 }
 
 
-/* VA HOME v16.3.9 — photographic order hero, premium scroll and unified markers */
+/* VA HOME v16.4.0 — photographic order hero, premium scroll and unified markers */
 :root{
   --admin-scroll-track:rgba(255,255,255,.035);
   --admin-scroll-gold-1:#e1c18b;
@@ -1693,7 +1693,7 @@ html::-webkit-scrollbar-thumb:hover,
 }
 
 
-/* v16.3.9 — premium operational feedback */
+/* v16.4.0 — premium operational feedback */
 .admin-toast{
   top:max(22px,calc(env(safe-area-inset-top,0px) + 16px));right:24px;bottom:auto;z-index:2147483000;
   min-width:min(380px,calc(100vw - 48px));max-width:min(520px,calc(100vw - 48px));
@@ -1715,7 +1715,7 @@ html::-webkit-scrollbar-thumb:hover,
 #editTracking:focus{outline:none;border-color:rgba(218,178,108,.78);box-shadow:0 0 0 3px rgba(184,138,75,.11),inset 0 1px rgba(255,255,255,.05)}
 @media(max-width:640px){.admin-toast{left:16px;right:16px;top:max(16px,calc(env(safe-area-inset-top,0px) + 10px));min-width:0;max-width:none}}
 
-/* v16.3.9 — automatic Nova Poshta delivery state */
+/* v16.4.0 — automatic Nova Poshta delivery state */
 .admin-delivery-live{border-color:rgba(102,142,175,.28)!important;background:linear-gradient(145deg,rgba(62,91,116,.10),#0f0e0c 58%)!important}
 .admin-delivery-live strong{color:#c6dced}
 .admin-delivery-sync{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 18px;border:1px solid rgba(102,142,175,.28);background:linear-gradient(135deg,rgba(48,75,97,.14),rgba(13,12,10,.98))}
@@ -1726,7 +1726,7 @@ html::-webkit-scrollbar-thumb:hover,
 @media(max-width:700px){.admin-delivery-sync{align-items:stretch;flex-direction:column}.admin-delivery-sync .btn{width:100%;min-width:0}}
 
 
-/* ===== VA HOME v16.3.9 — Admin autofill dark theme fix ===== */
+/* ===== VA HOME v16.4.0 — Admin autofill dark theme fix ===== */
 .admin-body input:-webkit-autofill,
 .admin-body input:-webkit-autofill:hover,
 .admin-body input:-webkit-autofill:focus,
@@ -1752,7 +1752,7 @@ html::-webkit-scrollbar-thumb:hover,
 }
 
 
-/* ===== VA HOME v16.3.9 — final admin UX consolidation ===== */
+/* ===== VA HOME v16.4.0 — final admin UX consolidation ===== */
 .admin-body input,.admin-body select,.admin-body textarea{
   color-scheme:dark;
   background:#0c0b0a;
@@ -1819,7 +1819,7 @@ html::-webkit-scrollbar-thumb:hover,
 .admin-dialog__head h2{font-size: 2rem;}
 }
 
-/* ===== VA HOME v16.3.9 — admin compatibility after core consolidation =====
+/* ===== VA HOME v16.4.0 — admin compatibility after core consolidation =====
    The admin now consumes the same shared core as the storefront. These rules
    preserve the previous admin-only baseline without duplicating core.css. */
 html:has(body.admin-body){height:100%;background:transparent}
@@ -1920,7 +1920,7 @@ body.admin-body{background:var(--admin2-bg);color:var(--admin2-text)}
 @media(max-width:480px){.admin2-kpi-grid,.admin2-kpi-grid--attention{grid-template-columns:1fr 1fr}.admin2-kpi{min-height:104px}.admin2-grid-2{gap:12px}.admin2-panel-head{padding:14px 15px}.admin2-mini-row,.admin2-product-bar{padding:13px 15px}.admin2-catalog-card{grid-template-columns:72px 1fr}.admin2-catalog-card img{width:72px;height:94px}.admin2-more-menu:not([hidden]){grid-template-columns:1fr 1fr}.admin2-page-head h1{font-size:28px}.admin2-new-order{display:none}}
 
 
-/* VA HOME v16.3.9 — Admin 2.0 polish pass */
+/* VA HOME v16.4.0 — Admin 2.0 polish pass */
 
 .admin2-online{transition:border-color .2s ease,color .2s ease,background .2s ease}
 .admin2-online[data-state="syncing"]{color:#d8c7ae;border-color:rgba(201,154,83,.24);background:rgba(201,154,83,.04)}
@@ -1953,7 +1953,7 @@ body.admin-body{background:var(--admin2-bg);color:var(--admin2-text)}
 
 
 /* ========================================================================== */
-/* VA HOME v16.3.9 — Admin PWA mobile viewport + manual-order stability       */
+/* VA HOME v16.4.0 — Admin PWA mobile viewport + manual-order stability       */
 /* ========================================================================== */
 .admin2-manual-shell [hidden]{display:none}
 
@@ -2101,7 +2101,7 @@ body.admin-body{background:var(--admin2-bg);color:var(--admin2-text)}
 
 
 /* ========================================================================== */
-/* VA HOME v16.3.9 — Manual order · live Nova Poshta location lookup          */
+/* VA HOME v16.4.0 — Manual order · live Nova Poshta location lookup          */
 /* ========================================================================== */
 .admin2-np-combobox{position:relative;min-width:0}
 .admin2-np-combobox>input[role="combobox"]{padding-right:38px}
@@ -2130,7 +2130,7 @@ body.admin-body{background:var(--admin2-bg);color:var(--admin2-text)}
 }
 
 
-/* VA HOME v16.3.9 — manual order: Discovery completion + Nova Poshta lookup */
+/* VA HOME v16.4.0 — manual order: Discovery completion + Nova Poshta lookup */
 .admin2-manual-discovery-help{grid-column:1/-1;margin:-1px 0 3px;color:#6f675e;font:500 9px/1.45 Manrope,sans-serif}
 .admin2-manual-discovery--confirmed{grid-template-columns:1fr auto;align-items:start;background:rgba(201,154,83,.035);border-color:rgba(201,154,83,.22)}
 .admin2-manual-discovery--confirmed .admin2-manual-discovery-head{grid-column:1/-1}
@@ -2145,7 +2145,7 @@ body.admin-body{background:var(--admin2-bg);color:var(--admin2-text)}
 
 
 /* ==========================================================================
-   VA HOME v16.3.9 — Payments visual alignment only
+   VA HOME v16.4.0 — Payments visual alignment only
    Keep payment semantics untouched; fix the status badge column geometry.
    ========================================================================== */
 @media(min-width:1021px){
@@ -2188,4 +2188,134 @@ body.admin-body{background:var(--admin2-bg);color:var(--admin2-text)}
     text-align:right;
     white-space:nowrap;
   }
+}
+
+/* ========================================================================== */
+/* VA HOME v16.4.0 — Admin Operations: Client 360 · Finance · Analytics · Push */
+/* ========================================================================== */
+.admin2-page-head--actions{align-items:flex-end;gap:24px}
+.admin2-page-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+.admin2-page-actions select,.admin2-finance-toolbar select{min-height:40px;padding:9px 34px 9px 12px;border:1px solid rgba(255,255,255,.09);border-radius:9px;background:#11100d;color:#cfc6ba;font:600 10px Manrope,sans-serif}
+.admin2-kpi-grid--finance{grid-template-columns:repeat(6,minmax(0,1fr))}
+.admin2-finance-grid{margin-top:18px}
+.admin2-pnl{display:grid;gap:0}
+.admin2-pnl>div{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.055);color:#8d8479;font:600 10px/1.4 Manrope,sans-serif}
+.admin2-pnl>div:last-child{border-bottom:0}
+.admin2-pnl strong{color:#d8d0c5;font:600 12px/1.2 Manrope,sans-serif;white-space:nowrap}
+.admin2-pnl .is-subtotal{margin-top:3px;color:#b7aa98}
+.admin2-pnl .is-subtotal strong{color:#c9a268}
+.admin2-pnl .is-result{margin-top:7px;padding-top:15px;border-top:1px solid rgba(201,154,83,.2);font-weight:700;color:#d5c9b8}
+.admin2-pnl .is-result strong{color:#d6b071;font-size:15px}
+.admin2-pnl .is-result.is-negative strong{color:#d58d86}
+.admin2-expense-panel{margin-top:18px}
+.admin2-finance-toolbar{margin:0 0 12px;padding:0;border:0;background:transparent}
+.admin2-expense-list{display:grid}
+.admin2-expense-row{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:18px;padding:13px 2px;border:0;border-bottom:1px solid rgba(255,255,255,.055);background:transparent;color:inherit;text-align:left;cursor:pointer}
+.admin2-expense-row:last-child{border-bottom:0}
+.admin2-expense-row:hover{background:linear-gradient(90deg,rgba(201,154,83,.045),transparent 72%)}
+.admin2-expense-row strong{display:block;color:#d8d0c5;font:600 11px/1.35 Manrope,sans-serif}
+.admin2-expense-row span{display:block;margin-top:4px;color:#766e64;font:500 9px/1.4 Manrope,sans-serif}
+.admin2-expense-row em{color:#d0a665;font:600 12px/1.2 Manrope,sans-serif;font-style:normal;white-space:nowrap}
+
+.admin2-customer-dialog,.admin2-expense-dialog{width:min(1060px,calc(100vw - 44px));max-width:none;max-height:min(880px,calc(100dvh - 44px));padding:0;border:1px solid rgba(201,154,83,.18);border-radius:17px;background:#0d0b08;color:#e8e0d5;box-shadow:0 30px 90px rgba(0,0,0,.62);overflow:hidden}
+.admin2-expense-dialog{width:min(720px,calc(100vw - 44px))}
+.admin2-customer-dialog::backdrop,.admin2-expense-dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(8px)}
+.admin2-customer-shell,.admin2-expense-shell{display:grid;grid-template-rows:auto minmax(0,1fr);max-height:inherit;min-height:0}
+.admin2-expense-shell{display:block}
+.admin2-customer-shell>header,.admin2-expense-shell>header{position:relative;padding:24px 70px 19px 25px;border-bottom:1px solid rgba(255,255,255,.065);background:#0f0d0a}
+.admin2-customer-shell>header h2,.admin2-expense-shell>header h2{margin:4px 0 2px;color:#e9dfd0;font:500 34px/1 Cormorant Garamond,serif}
+.admin2-customer-shell>header p:last-child,.admin2-expense-shell>header p:last-child{margin:7px 0 0;color:#756d63;font:500 10px/1.5 Manrope,sans-serif}
+#customer360Title:focus,#expenseDialogTitle:focus{outline:none}
+.admin2-customer-shell>header .admin-dialog__close,.admin2-expense-shell>header .admin-dialog__close{position:absolute;right:18px;top:18px;margin:0}
+.admin2-customer-scroll{min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:22px 24px 28px}
+.admin2-customer-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:18px;padding:18px 19px;border:1px solid rgba(201,154,83,.13);border-radius:13px;background:linear-gradient(135deg,rgba(201,154,83,.07),rgba(255,255,255,.015))}
+.admin2-customer-hero>div:first-child>strong{display:block;margin-top:12px;color:#e3d8ca;font:500 25px/1.05 Cormorant Garamond,serif}
+.admin2-customer-hero>div:first-child>small{display:block;margin-top:4px;color:#746b61;font:500 9px/1.4 Manrope,sans-serif}
+.admin2-customer-tags{display:flex;gap:6px;flex-wrap:wrap}
+.admin2-customer-tags span{padding:5px 8px;border:1px solid rgba(201,154,83,.22);border-radius:999px;background:rgba(201,154,83,.055);color:#c9a66f;font:700 8px/1 Manrope,sans-serif;letter-spacing:.035em;text-transform:uppercase}
+.admin2-customer-contact-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.admin2-customer-contact-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:0 13px;border:1px solid rgba(255,255,255,.1);border-radius:9px;color:#cfc4b5;font:700 9px Manrope,sans-serif;text-decoration:none}
+.admin2-customer-kpis{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:18px}
+.admin2-profile-lines{display:grid}
+.admin2-profile-lines>div{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.055)}
+.admin2-profile-lines>div:last-child{border-bottom:0}
+.admin2-profile-lines span{color:#746c62;font:500 9px/1.4 Manrope,sans-serif}
+.admin2-profile-lines strong{max-width:65%;color:#d2c8bb;font:600 10px/1.4 Manrope,sans-serif;text-align:right;overflow-wrap:anywhere}
+.admin2-customer-order-row{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;padding:12px 0;border:0;border-bottom:1px solid rgba(255,255,255,.055);background:transparent;color:inherit;text-align:left;cursor:pointer}
+.admin2-customer-order-row:last-child{border-bottom:0}
+.admin2-customer-order-row strong{display:block;color:#d7cfc4;font:600 10px/1.4 Manrope,sans-serif}
+.admin2-customer-order-row span{display:block;margin-top:4px;color:#71695f;font:500 9px/1.4 Manrope,sans-serif}
+.admin2-customer-order-row em{color:#cda668;font:600 11px Manrope,sans-serif;font-style:normal;white-space:nowrap}
+
+.admin2-expense-shell form{padding:21px 24px 23px}
+.admin2-expense-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.admin2-expense-form label{display:grid;gap:7px;color:#8b8175;font:600 9px/1.3 Manrope,sans-serif;text-transform:uppercase;letter-spacing:.045em}
+.admin2-expense-form input,.admin2-expense-form select,.admin2-expense-form textarea{width:100%;min-height:45px;padding:10px 12px;border:1px solid rgba(255,255,255,.09);border-radius:9px;background:#12100d;color:#ded5ca;font:500 12px/1.35 Manrope,sans-serif;box-sizing:border-box}
+.admin2-expense-form textarea{min-height:86px;resize:vertical}
+.admin2-expense-note{grid-column:1/-1}
+.admin2-expense-shell footer{display:flex;align-items:center;justify-content:flex-end;gap:9px;margin-top:17px;padding-top:16px;border-top:1px solid rgba(255,255,255,.06)}
+
+.admin2-retention-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.admin2-retention-grid>div{padding:13px 12px;border:1px solid rgba(255,255,255,.06);border-radius:10px;background:rgba(255,255,255,.018)}
+.admin2-retention-grid span,.admin2-retention-grid small{display:block;color:#756c62;font:600 8px/1.4 Manrope,sans-serif}
+.admin2-retention-grid strong{display:block;margin:6px 0 4px;color:#d4aa6b;font:500 25px/1 Cormorant Garamond,serif}
+.admin2-panel-note{margin:11px 0 0;color:#6d655c;font:500 8px/1.55 Manrope,sans-serif}
+.admin2-discovery-conversion{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:16px;min-height:100px}
+.admin2-discovery-conversion strong{color:#d5ab6c;font:500 42px/1 Cormorant Garamond,serif}
+.admin2-discovery-conversion span{color:#8c8276;font:500 10px/1.55 Manrope,sans-serif}
+.admin2-promo-performance{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.055)}
+.admin2-promo-performance:last-child{border-bottom:0}
+.admin2-promo-performance strong{display:block;color:#d3cabf;font:700 10px/1.3 Manrope,sans-serif}
+.admin2-promo-performance span{display:block;margin-top:4px;color:#72695f;font:500 8px/1.4 Manrope,sans-serif}
+.admin2-promo-performance em{color:#cda468;font:600 10px Manrope,sans-serif;font-style:normal;white-space:nowrap}
+
+.admin2-push-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}
+.admin2-push-message{margin:11px 0 0;color:#8d8377;font:500 9px/1.5 Manrope,sans-serif}
+.admin2-push-message.is-error{color:#c88f87}
+.admin2-push-devices{display:grid;gap:0;margin-top:13px;padding-top:7px;border-top:1px solid rgba(255,255,255,.055)}
+.admin2-push-devices>div{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;color:#9b9185;font:600 9px/1.3 Manrope,sans-serif}
+.admin2-push-devices small{color:#6e665e;font:500 8px/1.3 Manrope,sans-serif;text-align:right}
+
+@media(max-width:1180px){
+  .admin2-kpi-grid--finance{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:760px){
+  .admin2-page-head--actions{align-items:stretch}
+  .admin2-page-actions{justify-content:stretch;display:grid;grid-template-columns:minmax(0,1fr) auto;width:100%}
+  .admin2-page-actions select{width:100%;font-size:16px}
+  .admin2-kpi-grid--finance,.admin2-customer-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .admin2-retention-grid{grid-template-columns:1fr}
+  .admin2-retention-grid>div{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:12px}
+  .admin2-retention-grid strong{grid-column:2;grid-row:1/3;margin:0;font-size:30px}
+  .admin2-retention-grid small{grid-column:1}
+  .admin2-discovery-conversion{grid-template-columns:1fr;gap:8px}
+  .admin2-discovery-conversion strong{font-size:38px}
+  .admin2-finance-toolbar select{width:100%;font-size:16px}
+  .admin2-expense-row span,.admin2-customer-order-row span{font-size:11px}
+  .admin2-expense-row strong,.admin2-customer-order-row strong{font-size:12px}
+  .admin2-expense-row em,.admin2-customer-order-row em{font-size:12px}
+
+  .admin2-customer-dialog,.admin2-expense-dialog{position:fixed;inset:0;width:100%;height:100dvh;min-height:100dvh;max-height:100dvh;margin:0;border:0;border-radius:0}
+  .admin2-customer-shell{width:100%;height:100%;grid-template-rows:auto minmax(0,1fr);overflow:hidden}
+  .admin2-customer-shell>header,.admin2-expense-shell>header{padding:calc(env(safe-area-inset-top) + 14px) 68px 14px 18px;background:rgba(13,11,8,.99)}
+  .admin2-customer-shell>header h2,.admin2-expense-shell>header h2{font-size:31px}
+  .admin2-customer-shell>header .admin-dialog__close,.admin2-expense-shell>header .admin-dialog__close{top:calc(env(safe-area-inset-top) + 9px);right:13px;width:44px;height:44px}
+  .admin2-customer-scroll{padding:15px 16px calc(24px + env(safe-area-inset-bottom));overflow-x:hidden;overflow-y:auto}
+  .admin2-customer-hero{align-items:flex-start;flex-direction:column;padding:15px}
+  .admin2-customer-contact-actions{justify-content:flex-start;width:100%}
+  .admin2-customer-contact-actions a{min-height:44px;flex:1;font-size:11px}
+  .admin2-profile-lines span{font-size:11px}
+  .admin2-profile-lines strong{font-size:11px}
+  .admin2-customer-order-row{padding:13px 0}
+
+  .admin2-expense-shell{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden}
+  .admin2-expense-shell form{min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 17px calc(22px + env(safe-area-inset-bottom))}
+  .admin2-expense-form{grid-template-columns:1fr;gap:12px}
+  .admin2-expense-note{grid-column:auto}
+  .admin2-expense-form label{font-size:11px}
+  .admin2-expense-form input,.admin2-expense-form select,.admin2-expense-form textarea{font-size:16px;min-height:50px}
+  .admin2-expense-shell footer{display:grid;grid-template-columns:1fr 1fr;padding-bottom:0}
+  .admin2-expense-shell footer .btn{width:100%;min-height:46px}
+  .admin2-expense-shell footer #expenseDelete:not([hidden]){grid-column:1/-1;grid-row:1}
+  .admin2-expense-shell footer #expenseDelete:not([hidden])~.btn-primary{grid-column:2}
 }

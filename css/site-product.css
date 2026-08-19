@@ -3748,7 +3748,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* ===== VA HOME v16.3.9 — deterministic gallery crossfade =====
+/* ===== VA HOME v16.4.0 — deterministic gallery crossfade =====
    Preserves the original subtle zoom while preventing the previous hero
    image from flashing during the final layer commit. */
 .product-image-switcher{
@@ -3796,7 +3796,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* ===== VA HOME v16.3.9 — product gallery layer containment =====
+/* ===== VA HOME v16.4.0 — product gallery layer containment =====
    Keeps both crossfade images inside the main media frame and prevents any
    thumbnail — including Detail — from painting over the hero image. */
 .product-gallery .product-hero__media{
@@ -3949,7 +3949,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 .product-gallery-thumbs{gap:7px;}
 }
 
-/* VA HOME v16.3.9 — product-specific reed guidance */
+/* VA HOME v16.4.0 — product-specific reed guidance */
 .product-reed-guide__facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:14px;border:1px solid rgba(184,145,86,.24);background:rgba(184,145,86,.04)}
 .product-reed-guide__facts>div{display:flex;flex-direction:column;gap:7px;min-width:0;padding:15px 16px}
 .product-reed-guide__facts>div+div{border-left:1px solid rgba(184,145,86,.18)}
@@ -3963,5 +3963,5 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 
 .product-reed-guide__commerce{display:grid;grid-template-columns:minmax(180px,.46fr) 1fr;gap:22px;margin:22px 0 0;padding:20px 22px;border:1px solid rgba(190,140,70,.28);background:linear-gradient(135deg,rgba(190,140,70,.1),rgba(255,255,255,.015))}.product-reed-guide__commerce strong{color:var(--gold,#c49652);font-size:11px;letter-spacing:.14em;text-transform:uppercase}.product-reed-guide__commerce span{color:var(--text-muted,#9e978f);font-size:14px;line-height:1.65}@media(max-width:680px){.product-reed-guide__commerce{grid-template-columns:1fr;gap:8px;padding:16px}}
 
-/* VA HOME v16.3.9 — three essential hero facts */
+/* VA HOME v16.4.0 — three essential hero facts */
 @media(min-width:641px){.product-essential-facts{grid-template-columns:repeat(3,minmax(0,1fr))}.product-essential-facts>div:nth-child(3){border-left:1px solid var(--border-hairline);border-top:0}}
