@@ -1,18 +1,18 @@
 {
-  "version": "16.4.5",
+  "version": "16.4.6",
   "channel": "Stable",
-  "name": "ADMIN SIDEBAR — SHORT VIEWPORT ACCESSIBILITY",
+  "name": "PWA COMPACT TOP CHROME",
   "date": "2026-08-20",
-  "base": "16.4.4",
+  "base": "16.4.5",
   "changes": [
-    "Restores vertical scrolling inside the desktop Admin sidebar on short viewport heights so Settings and every navigation item remain reachable",
-    "Keeps the sidebar footer pinned outside the navigation scroll area while the navigation itself flexes within the available height",
-    "Hides the short-viewport sidebar scrollbar visually so the fix does not reintroduce the heavy rail removed in earlier visual polish",
-    "Preserves the v16.4.4 PWA safe-area, Client 360 navigation and all storefront/backend behavior unchanged"
+    "Compacts the mobile/PWA Admin top chrome from a 100px content block to 78px while preserving the iPhone safe area",
+    "Reduces the app identity row and global search geometry to 24px and 40px with a 4px gap so the header reads as one compact unit",
+    "Moves Admin content closer to the top chrome with a 14px start inset instead of the previous oversized visual gap",
+    "Adds a subtle divider inside the mobile VA HOME identity and keeps the sync indicator aligned without changing desktop layout"
   ],
   "notes": [
-    "Frontend-only Admin sidebar fix based on v16.4.4.",
+    "Frontend-only mobile/PWA Admin header polish based on v16.4.5.",
     "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner object changed.",
-    "Root cause was the short-desktop media rule forcing overflow-y:hidden on .admin2-nav."
+    "Regression contracts were updated to the new compact topbar dimensions and the full existing suite must pass from zero."
   ]
 }

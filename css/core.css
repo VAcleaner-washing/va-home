@@ -1595,7 +1595,7 @@ body.menu-open {
 
 
 
-/* ===== VA HOME v16.4.5 — unified hero breadcrumbs ===== */
+/* ===== VA HOME v16.4.6 — unified hero breadcrumbs ===== */
 .about-editorial-hero,
 .editorial-page-hero,
 .collections-v2-hero,
@@ -3080,7 +3080,7 @@ body > footer {
 @media(max-width:680px){.footer-payment-trust{align-items:flex-start;flex-direction:column;gap:18px}.footer-payment-trust__provider{align-items:flex-start;flex-direction:column;gap:9px}.footer-payment-trust__brands{gap:15px;flex-wrap:wrap}}
 
 
-/* ===== VA HOME v16.4.5 — footer contact line integrity ===== */
+/* ===== VA HOME v16.4.6 — footer contact line integrity ===== */
 .site-footer--editorial .footer-col--contact li,
 .site-footer--editorial .footer-col--contact a{
   overflow-wrap:normal;
@@ -3150,7 +3150,7 @@ body > footer {
   margin-top: auto;
 }
 
-/* VA HOME v16.4.5 — exact legacy desktop header geometry + non-intrusive search rail */
+/* VA HOME v16.4.6 — exact legacy desktop header geometry + non-intrusive search rail */
 @media (min-width:1024px){
   .site-header__inner{position:relative}
   .header-actions{position:relative;transform:translateX(44px)}
@@ -3164,7 +3164,7 @@ body > footer {
   .header-search-btn:focus-visible{transform:translateY(-50%)}
 }
 
-/* VA HOME v16.4.5 — Global Search Experience */
+/* VA HOME v16.4.6 — Global Search Experience */
 .site-search-open{overflow:hidden}
 .site-search{position:fixed;inset:0;z-index:2200;opacity:0;visibility:hidden;transition:opacity .18s ease,visibility .18s ease}
 .site-search[hidden]{display:none}
@@ -3244,7 +3244,7 @@ body > footer {
 }
 
 
-/* ===== VA HOME v16.4.5 — mobile drawer viewport polish ===== */
+/* ===== VA HOME v16.4.6 — mobile drawer viewport polish ===== */
 @media (max-width: 760px) {
   .mobile-menu__nav {
     justify-content: flex-start;
