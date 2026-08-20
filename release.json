@@ -1,19 +1,18 @@
 {
-  "version": "16.4.3",
+  "version": "16.4.4",
   "channel": "Stable",
-  "name": "PWA NAVIGATION UX — MOBILE APP CHROME & CLIENT BACK",
-  "date": "2026-08-19",
-  "base": "16.4.2",
+  "name": "PWA TOP SAFE-AREA — CRISP IOS APP CHROME",
+  "date": "2026-08-20",
+  "base": "16.4.3",
   "changes": [
-    "Rebuilds the mobile/PWA Admin top chrome with a compact VA HOME identity row above global search while preserving iPhone safe-area spacing",
-    "Turns Client 360 into a true mobile detail screen with a dedicated Back control instead of the desktop close-X navigation pattern",
-    "Adds browser history integration so iOS/system Back returns from Client 360 to Customers and browser Forward can reopen the detail",
-    "Restores the customer-list scroll position, search query and segment filter after returning from Client 360",
-    "Hides the root bottom navigation and More sheet while Client 360 owns the mobile screen"
+    "Moves the first mobile Admin identity/navigation row below the iOS status and scroll-edge treatment zone with a dedicated safe-area edge buffer",
+    "Makes the mobile Admin top chrome fully opaque and removes glow/translucency that visually softened the VA HOME identity row",
+    "Applies the same protected top spacing and crisp navigation treatment to Client 360 Back navigation",
+    "Preserves the existing PWA search hierarchy, browser-history Back behavior, customer context restore and bottom-navigation isolation"
   ],
   "notes": [
-    "Frontend-only Admin/PWA navigation UX release based on v16.4.2.",
+    "Frontend-only mobile/PWA visual fix based on v16.4.3.",
     "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner object changed.",
-    "Existing Finance, Analytics 2.0, push and storefront behavior is preserved."
+    "apple-mobile-web-app status-bar mode is intentionally unchanged; the fix is contained in Admin safe-area geometry and opaque app chrome."
   ]
 }
