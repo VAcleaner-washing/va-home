@@ -259,7 +259,7 @@ canvas{max-width:100%;}
 }
 
 
-/* ===== VA HOME v16.4.4 — product breadcrumb/gallery rhythm ===== */
+/* ===== VA HOME v16.4.5 — product breadcrumb/gallery rhythm ===== */
 body:has(.product-hero) main > .container:first-child .breadcrumbs {
   margin: 0;
   padding-top: 16px;

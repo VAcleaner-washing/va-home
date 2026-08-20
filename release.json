@@ -1,18 +1,18 @@
 {
-  "version": "16.4.4",
+  "version": "16.4.5",
   "channel": "Stable",
-  "name": "PWA TOP SAFE-AREA — CRISP IOS APP CHROME",
+  "name": "ADMIN SIDEBAR — SHORT VIEWPORT ACCESSIBILITY",
   "date": "2026-08-20",
-  "base": "16.4.3",
+  "base": "16.4.4",
   "changes": [
-    "Moves the first mobile Admin identity/navigation row below the iOS status and scroll-edge treatment zone with a dedicated safe-area edge buffer",
-    "Makes the mobile Admin top chrome fully opaque and removes glow/translucency that visually softened the VA HOME identity row",
-    "Applies the same protected top spacing and crisp navigation treatment to Client 360 Back navigation",
-    "Preserves the existing PWA search hierarchy, browser-history Back behavior, customer context restore and bottom-navigation isolation"
+    "Restores vertical scrolling inside the desktop Admin sidebar on short viewport heights so Settings and every navigation item remain reachable",
+    "Keeps the sidebar footer pinned outside the navigation scroll area while the navigation itself flexes within the available height",
+    "Hides the short-viewport sidebar scrollbar visually so the fix does not reintroduce the heavy rail removed in earlier visual polish",
+    "Preserves the v16.4.4 PWA safe-area, Client 360 navigation and all storefront/backend behavior unchanged"
   ],
   "notes": [
-    "Frontend-only mobile/PWA visual fix based on v16.4.3.",
+    "Frontend-only Admin sidebar fix based on v16.4.4.",
     "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner object changed.",
-    "apple-mobile-web-app status-bar mode is intentionally unchanged; the fix is contained in Admin safe-area geometry and opaque app chrome."
+    "Root cause was the short-desktop media rule forcing overflow-y:hidden on .admin2-nav."
   ]
 }
