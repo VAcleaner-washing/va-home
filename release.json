@@ -1,17 +1,18 @@
 {
-  "version": "16.4.11",
+  "version": "16.4.12",
   "channel": "Stable",
-  "name": "PWA CRISP BRAND HOTFIX",
-  "date": "2026-08-20",
-  "base": "16.4.10",
+  "name": "PWA OPAQUE STATUS BAR FIX",
+  "date": "2026-08-21",
+  "base": "16.4.11",
   "changes": [
-    "Makes VA HOME / OPERATIONS in the mobile PWA header visually crisp by removing residual soft rendering sources",
-    "Raises header brand text size and contrast to avoid the blurred look at iPhone scale",
-    "Keeps header background and controls fully flat with no blur, glow or translucent visual treatment",
-    "Bumps PWA asset versions and service-worker cache to force the new header rendering to load"
+    "Changes the iOS standalone status bar mode from black-translucent to opaque black for the admin PWA",
+    "Removes duplicate top safe-area compensation from the root mobile header and main viewport offset",
+    "Keeps viewport-fit=cover for bottom home-indicator handling while preventing the top header from rendering inside the iOS scroll-edge layer",
+    "Adds a permanent regression check that blocks black-translucent from returning to the admin PWA"
   ],
   "notes": [
-    "Frontend/admin header-only hotfix based on v16.4.10.",
-    "No Supabase, Edge Function, table, grant, RLS, Monobank, Nova Poshta or VAcleaner runtime changes."
+    "Single-purpose frontend/PWA rendering fix based on v16.4.11.",
+    "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner runtime change.",
+    "No further header typography or UX changes are included in this release."
   ]
 }

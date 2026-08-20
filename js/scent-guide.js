@@ -1,5 +1,5 @@
 /* ==========================================================================
-   VA HOME v16.4.11 — Personal Scent Experience
+   VA HOME v16.4.12 — Personal Scent Experience
    Questions, option copy and scoring rules come from data/product-content.json
    through the generated window.VA_SCENT_GUIDE object.
    ========================================================================== */
