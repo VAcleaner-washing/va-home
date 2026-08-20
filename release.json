@@ -1,18 +1,18 @@
 {
-  "version": "16.4.9",
+  "version": "16.4.10",
   "channel": "Stable",
-  "name": "PWA DETAIL NAVIGATION UX",
+  "name": "PWA MOBILE HEADER DEBLUR",
   "date": "2026-08-20",
-  "base": "16.4.8",
+  "base": "16.4.9",
   "changes": [
-    "Adds explicit Back and Close controls to mobile Client 360 detail navigation",
-    "Turns mobile order details into a history-aware PWA detail screen with Back, Close and iOS browser swipe-back support",
-    "Restores the originating admin view, filters and scroll position after leaving order details",
-    "Removes blur from mobile detail navigation and order close controls while keeping the Overview header unchanged"
+    "Removes header blur from the VA HOME mobile PWA top bar and brand area",
+    "Keeps the mobile header fully crisp: VA mark, VA HOME label, OPERATIONS caption, sync dot and search trigger",
+    "Forces a fresh PWA shell cache so the header fix is not hidden by stale service worker assets",
+    "Preserves v16.4.9 detail navigation UX without changing Supabase or business logic"
   ],
   "notes": [
-    "Frontend/admin navigation-only release based on v16.4.8.",
+    "Frontend/admin visual hotfix based on v16.4.9.",
     "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner runtime change.",
-    "Adds a permanent regression test for PWA detail Back/Close/history behavior."
+    "Focus of this release: deblur the mobile header only and force cache refresh."
   ]
 }

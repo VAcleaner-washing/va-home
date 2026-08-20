@@ -2624,6 +2624,63 @@ body.admin-body:has(.admin2-expense-dialog[open]) .admin2-main{overflow-y:hidden
   .admin2-customer-shell>header h2{font-size:35px}
 }
 
+
+
+/* VA HOME v16.4.10 — mobile header deblur: brand and header UI must stay perfectly crisp */
+@media(max-width:820px){
+  .admin2-topbar,
+  .admin2-mobile-topline,
+  .admin2-mobile-brand-mini,
+  .admin2-mobile-brand-mark,
+  .admin2-mobile-brand-copy,
+  .admin2-mobile-brand-copy strong,
+  .admin2-mobile-brand-copy small,
+  .admin2-mobile-top-actions,
+  .admin2-mobile-sync-dot,
+  .admin2-mobile-search-trigger,
+  .admin2-global-search{
+    filter:none !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+    text-shadow:none !important;
+    box-shadow:none;
+  }
+
+  .admin2-topbar,
+  .admin2-global-search{
+    background:#0a0806 !important;
+  }
+
+  .admin2-mobile-brand-mark,
+  .admin2-mobile-brand-copy strong,
+  .admin2-mobile-brand-copy small{
+    opacity:1 !important;
+    transform:none !important;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    text-rendering:geometricPrecision;
+  }
+
+  .admin2-mobile-brand-copy{
+    border-left:1px solid rgba(201,154,83,.34) !important;
+  }
+
+  .admin2-mobile-search-trigger{
+    border-color:rgba(255,255,255,.09) !important;
+    background:#0f0d0b !important;
+  }
+
+  .admin2-mobile-search-trigger:active,
+  .admin2-mobile-search-trigger[aria-expanded="true"]{
+    background:#15110d !important;
+    box-shadow:none !important;
+  }
+
+  .admin2-global-search{
+    border-bottom:1px solid rgba(201,154,83,.18);
+  }
+}
+
 /* VA HOME v16.4.9 — PWA detail navigation: explicit Back / Close, no blur */
 .admin2-order-mobile-bar,.admin2-detail-close,.admin2-detail-back{display:none}
 
