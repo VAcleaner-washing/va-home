@@ -1,18 +1,17 @@
 {
-  "version": "16.4.10",
+  "version": "16.4.11",
   "channel": "Stable",
-  "name": "PWA MOBILE HEADER DEBLUR",
+  "name": "PWA CRISP BRAND HOTFIX",
   "date": "2026-08-20",
-  "base": "16.4.9",
+  "base": "16.4.10",
   "changes": [
-    "Removes header blur from the VA HOME mobile PWA top bar and brand area",
-    "Keeps the mobile header fully crisp: VA mark, VA HOME label, OPERATIONS caption, sync dot and search trigger",
-    "Forces a fresh PWA shell cache so the header fix is not hidden by stale service worker assets",
-    "Preserves v16.4.9 detail navigation UX without changing Supabase or business logic"
+    "Makes VA HOME / OPERATIONS in the mobile PWA header visually crisp by removing residual soft rendering sources",
+    "Raises header brand text size and contrast to avoid the blurred look at iPhone scale",
+    "Keeps header background and controls fully flat with no blur, glow or translucent visual treatment",
+    "Bumps PWA asset versions and service-worker cache to force the new header rendering to load"
   ],
   "notes": [
-    "Frontend/admin visual hotfix based on v16.4.9.",
-    "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner runtime change.",
-    "Focus of this release: deblur the mobile header only and force cache refresh."
+    "Frontend/admin header-only hotfix based on v16.4.10.",
+    "No Supabase, Edge Function, table, grant, RLS, Monobank, Nova Poshta or VAcleaner runtime changes."
   ]
 }
