@@ -1,18 +1,18 @@
 {
-  "version": "16.4.8",
+  "version": "16.4.9",
   "channel": "Stable",
-  "name": "PWA MOBILE HEADER REDESIGN",
+  "name": "PWA DETAIL NAVIGATION UX",
   "date": "2026-08-20",
-  "base": "16.4.7",
+  "base": "16.4.8",
   "changes": [
-    "Replaces the always-visible mobile global-search input with a dedicated search action in the PWA app header",
-    "Keeps VA HOME / OPERATIONS identity and sync status in a clean compact header row without squeezing a search field into iPhone width",
-    "Opens global search on demand as a full-width panel below the safe-area header and closes it on Escape, outside tap, navigation or result selection",
-    "Removes the duplicate VA HOME · OPERATIONS eyebrow from the mobile Overview screen while preserving desktop hierarchy"
+    "Adds explicit Back and Close controls to mobile Client 360 detail navigation",
+    "Turns mobile order details into a history-aware PWA detail screen with Back, Close and iOS browser swipe-back support",
+    "Restores the originating admin view, filters and scroll position after leaving order details",
+    "Removes blur from mobile detail navigation and order close controls while keeping the Overview header unchanged"
   ],
   "notes": [
-    "Frontend-only mobile/PWA Admin header architecture fix based on v16.4.7.",
-    "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner object changed.",
-    "Legacy v16.4.3/v16.4.6/v16.4.7 PWA tests were updated to validate the current navigation contract instead of obsolete visible-search geometry."
+    "Frontend/admin navigation-only release based on v16.4.8.",
+    "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner runtime change.",
+    "Adds a permanent regression test for PWA detail Back/Close/history behavior."
   ]
 }

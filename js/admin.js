@@ -6,7 +6,7 @@ const orderStatusOrder=["new","awaiting_payment","paid","shipped","completed","c
 const paymentMethodLabels={bank_transfer:"На рахунок",cash_on_delivery:"При отриманні",card_online:"Карткою онлайн"};
 const paymentStatusLabels={unpaid:"Не оплачено",pending:"Очікує банк",verification:"Перевіряємо",failed:"Не завершено",expired:"Прострочено",paid:"Оплачено",refunded:"Повернено"};
 const paymentEventLabels={created:"Рахунок створено",processing:"Банк перевіряє оплату",hold:"Кошти зарезервовано",success:"Оплату підтверджено",failure:"Оплату не завершено",failed:"Оплату не завершено",expired:"Рахунок прострочено",reversed:"Платіж скасовано",refunded:"Кошти повернено"};
-let orders=[],reviews=[],promos=[],releases=[],marketingPreferences=[],repeatCampaigns=[],discoveryCredits=[],paymentAttempts=[],paymentSettings=[],adminAudit=[],vahomeExpenses=[],activeOrder=null,activePromo=null,activeRelease=null,activeExpense=null,activeCustomerKey="",customer360ReturnState=null,customer360HistoryActive=false,customer360SkipRestore=false;
+let orders=[],reviews=[],promos=[],releases=[],marketingPreferences=[],repeatCampaigns=[],discoveryCredits=[],paymentAttempts=[],paymentSettings=[],adminAudit=[],vahomeExpenses=[],activeOrder=null,activePromo=null,activeRelease=null,activeExpense=null,activeCustomerKey="",customer360ReturnState=null,customer360HistoryActive=false,customer360SkipRestore=false,orderDetailReturnState=null,orderDetailHistoryActive=false,orderDetailSkipRestore=false;
 let activeOrderAttempts=[],activeOrderEvents=[],currentOrderSmartFilter="all",adminSearchActiveIndex=-1,adminAutoSyncTimer=null,adminLoadPromise=null;
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
@@ -444,10 +444,14 @@ function renderOrderDialog({loading=false}={}){
   $("#orderDialogContent").querySelectorAll("[data-copy]").forEach(button=>button.addEventListener("click",()=>copyText(button.dataset.copy,button.dataset.copyLabel)));
   $("#orderDialogContent").querySelectorAll("[data-dialog-primary-status]").forEach(button=>button.addEventListener("click",async()=>{const select=$("#editStatus");select.value=button.dataset.dialogPrimaryStatus;await saveOrderStatusImmediately();}));
 }
-async function openOrder(id){
+function captureOrderDetailReturnState(){const main=$("#admin2Main");return{view:activeAdmin2View,scrollTop:main?.scrollTop||0,orderSearch:$("#orderSearch")?.value||"",orderStatus:$("#orderStatusFilter")?.value||"",orderSort:$("#orderSort")?.value||"",smartFilter:currentOrderSmartFilter};}
+function restoreOrderDetailReturnState(){const state=orderDetailReturnState;orderDetailReturnState=null;if(!state)return;if(activeAdmin2View!==state.view)activateAdmin2View(state.view,{updateHash:false});if(state.view==="orders"){const search=$("#orderSearch"),status=$("#orderStatusFilter"),sort=$("#orderSort");if(search)search.value=state.orderSearch||"";if(status)status.value=state.orderStatus||"";if(sort)sort.value=state.orderSort||"priority";currentOrderSmartFilter=state.smartFilter||"all";renderOrders();}const main=$("#admin2Main");if(main)requestAnimationFrame(()=>{main.scrollTop=Number(state.scrollTop||0);main.scrollLeft=0;});}
+function closeOrderDetail({viaHistory=true,restore=true}={}){const dialog=$("#orderDialog");if(viaHistory&&orderDetailHistoryActive&&history.state?.adminDetail==="order"){history.back();return;}orderDetailSkipRestore=!restore;if(dialog?.open)dialog.close();else if(restore)restoreOrderDetailReturnState();}
+async function openOrder(id,{pushHistory=true}={}){
   activeOrder=orders.find(o=>String(o.id)===String(id));if(!activeOrder)return;
-  const dialog=$("#orderDialog");renderOrderDialog({loading:true});if(!dialog.open)dialog.showModal();dialog._premiumScrollUpdate?.();
-  await loadOrderPaymentHistory(activeOrder.id);renderOrderDialog();
+  const dialog=$("#orderDialog");if(!dialog.open)orderDetailReturnState=captureOrderDetailReturnState();renderOrderDialog({loading:true});if(!dialog.open)dialog.showModal();dialog.scrollTop=0;dialog._premiumScrollUpdate?.();
+  if(pushHistory&&history.state?.adminDetail!=="order"){history.pushState({adminDetail:"order",orderId:String(activeOrder.id)},"",location.href);orderDetailHistoryActive=true;}else if(history.state?.adminDetail==="order")orderDetailHistoryActive=true;
+  await loadOrderPaymentHistory(activeOrder.id);renderOrderDialog();dialog.scrollTop=0;
 }
 async function reloadActiveOrder(){
   if(!activeOrder)return;
@@ -799,9 +803,11 @@ function openCustomer360(key,{pushHistory=true}={}){
   requestAnimationFrame(()=>{if(scroller)scroller.scrollTop=0;$("#customer360Title")?.focus({preventScroll:true});});
 }
 function handleAdminPopState(event){
-  const state=event.state,dialog=$("#customer360Dialog");
-  if(state?.adminDetail==="customer"&&state.customerKey){customer360HistoryActive=true;if(!dialog?.open||activeCustomerKey!==state.customerKey)openCustomer360(state.customerKey,{pushHistory:false});return;}
-  if(dialog?.open){customer360HistoryActive=false;customer360SkipRestore=false;dialog.close();return;}
+  const state=event.state,customerDialog=$("#customer360Dialog"),orderDialog=$("#orderDialog");
+  if(orderDialog?.open&&state?.adminDetail!=="order"){orderDetailHistoryActive=false;orderDetailSkipRestore=false;orderDialog.close();}
+  if(state?.adminDetail==="order"&&state.orderId){orderDetailHistoryActive=true;if(!orderDialog?.open||String(activeOrder?.id)!==String(state.orderId))openOrder(state.orderId,{pushHistory:false});return;}
+  if(state?.adminDetail==="customer"&&state.customerKey){customer360HistoryActive=true;if(!customerDialog?.open||activeCustomerKey!==state.customerKey)openCustomer360(state.customerKey,{pushHistory:false});return;}
+  if(customerDialog?.open){customer360HistoryActive=false;customer360SkipRestore=false;customerDialog.close();return;}
   activateAdmin2View(location.hash.slice(1)||"overview",{updateHash:false});
 }
 
@@ -1015,7 +1021,7 @@ const cards=[
   `<article class="admin2-setting-card"><span>Доставка</span><h3>Нова пошта</h3><div class="admin2-setting-line"><span>Стандартна відправка</span><strong>1–2 робочі дні</strong></div><div class="admin2-setting-line"><span>Безкоштовна доставка</span><strong>від 1500 грн</strong></div><div class="admin2-setting-line"><span>Останнє замовлення</span><strong>${latest?shortDate(latest.created_at):"—"}</strong></div></article>`,
   `<article class="admin2-setting-card"><span>Комунікація</span><h3>VA HOME</h3><div class="admin2-setting-line"><span>Менеджер</span><strong>09:00–19:00</strong></div><div class="admin2-setting-line"><span>Email</span><strong>vahome.aroma@gmail.com</strong></div><div class="admin2-setting-line"><span>Автоматизація повторних</span><strong>${repeatCampaigns.length?"Працює":"Очікує даних"}</strong></div></article>`,
   `<article class="admin2-setting-card" id="pushSettingsCard"><span>Push / PWA</span><h3>Сповіщення адміністратора</h3><div class="admin2-setting-line"><span>Стан</span><strong>Перевіряємо…</strong></div></article>`,
-  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.4.8 · Operations</strong></div></article>`
+  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.4.9 · Operations</strong></div></article>`
 ];
 host.innerHTML=cards.join("");
 renderAdminAudit();
@@ -1315,7 +1321,7 @@ function bind(){
   ["#financePeriod","#expenseCategoryFilter"].forEach(sel=>$(sel)?.addEventListener("input",renderFinance));
   $("#newExpenseBtn")?.addEventListener("click",()=>openExpense());
   $("#expenseForm")?.addEventListener("submit",saveExpense);$("#expenseDelete")?.addEventListener("click",deleteExpense);$("#expenseDialogClose")?.addEventListener("click",()=>$("#expenseDialog")?.close());$("#expenseCancel")?.addEventListener("click",()=>$("#expenseDialog")?.close());
-  $("#customer360Close")?.addEventListener("click",()=>closeCustomer360());$("#customer360Back")?.addEventListener("click",()=>closeCustomer360());$("#customer360Dialog")?.addEventListener("cancel",event=>{event.preventDefault();closeCustomer360();});$("#customer360Dialog")?.addEventListener("close",()=>{activeCustomerKey="";customer360HistoryActive=false;const scroller=$("#customer360Dialog .admin2-customer-scroll");if(scroller)scroller.scrollTop=0;if(customer360SkipRestore){customer360SkipRestore=false;return;}restoreCustomer360ReturnState();});
+  $("#customer360Close")?.addEventListener("click",()=>closeCustomer360());$("#customer360Back")?.addEventListener("click",()=>closeCustomer360());$("#customer360MobileClose")?.addEventListener("click",()=>closeCustomer360());$("#customer360Dialog")?.addEventListener("cancel",event=>{event.preventDefault();closeCustomer360();});$("#customer360Dialog")?.addEventListener("close",()=>{activeCustomerKey="";customer360HistoryActive=false;const scroller=$("#customer360Dialog .admin2-customer-scroll");if(scroller)scroller.scrollTop=0;if(customer360SkipRestore){customer360SkipRestore=false;return;}restoreCustomer360ReturnState();});
   document.addEventListener("click",event=>{const button=event.target.closest("[data-push-action]");if(button)handlePushAction(button.dataset.pushAction);});
   $("#adminMoreBtn")?.addEventListener("click",()=>{const menu=$("#adminMoreMenu");if(!menu)return;const opening=menu.hidden;menu.hidden=!opening;syncAdmin2MobileNav({moreOpen:opening});});
   const openManualOrder=()=>{resetManualOrder();const dialog=$("#manualOrderDialog");dialog.showModal();requestAnimationFrame(()=>$("#manualOrderTitle")?.focus({preventScroll:true}));};$("#newOrderBtn")?.addEventListener("click",openManualOrder);$("#mobileNewOrderBtn")?.addEventListener("click",openManualOrder);
@@ -1349,7 +1355,7 @@ function bind(){
   $("#releaseForm").elements.slug.addEventListener("input",event=>{event.target.dataset.edited="1";event.target.value=releaseSlug(event.target.value);});
   const orderDialog=$("#orderDialog"),orderDialogClose=$("#orderDialogClose");
   setupPremiumScrollbar(orderDialog);
-  orderDialogClose.addEventListener("click",()=>{if(orderDialog.open)orderDialog.close();});
+  orderDialogClose.addEventListener("click",()=>closeOrderDetail());$("#orderDialogBack")?.addEventListener("click",()=>closeOrderDetail());$("#orderDialogMobileClose")?.addEventListener("click",()=>closeOrderDetail());orderDialog.addEventListener("cancel",event=>{event.preventDefault();closeOrderDetail();});orderDialog.addEventListener("close",()=>{orderDetailHistoryActive=false;activeOrder=null;if(orderDetailSkipRestore){orderDetailSkipRestore=false;return;}restoreOrderDetailReturnState();});
   orderDialog.addEventListener("cancel",()=>{activeOrder=null;activeOrderAttempts=[];activeOrderEvents=[];});
   orderDialog.addEventListener("close",()=>{activeOrder=null;activeOrderAttempts=[];activeOrderEvents=[];});
   $("#cancelPromoBtn").addEventListener("click",()=>$("#promoDialog").close());$("#promoDialog .admin-promo-close").addEventListener("click",()=>$("#promoDialog").close());$("#generatePromoBtn").addEventListener("click",generatePromoCode);
