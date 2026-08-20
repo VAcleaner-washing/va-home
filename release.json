@@ -1,18 +1,18 @@
 {
-  "version": "16.4.6",
+  "version": "16.4.7",
   "channel": "Stable",
-  "name": "PWA COMPACT TOP CHROME",
+  "name": "PWA SINGLE-ROW TOP CHROME",
   "date": "2026-08-20",
-  "base": "16.4.5",
+  "base": "16.4.6",
   "changes": [
-    "Compacts the mobile/PWA Admin top chrome from a 100px content block to 78px while preserving the iPhone safe area",
-    "Reduces the app identity row and global search geometry to 24px and 40px with a 4px gap so the header reads as one compact unit",
-    "Moves Admin content closer to the top chrome with a 14px start inset instead of the previous oversized visual gap",
-    "Adds a subtle divider inside the mobile VA HOME identity and keeps the sync indicator aligned without changing desktop layout"
+    "Replaces the stacked mobile/PWA VA HOME identity plus search header with one compact horizontal app row",
+    "Reduces mobile app-chrome content height from 78px to 54px while preserving the iPhone safe area",
+    "Keeps VA HOME identity and sync state beside the global search instead of floating on a separate upper row",
+    "Keeps the search control at a touch-safe 42px and 16px input font size to prevent iOS auto-zoom"
   ],
   "notes": [
-    "Frontend-only mobile/PWA Admin header polish based on v16.4.5.",
+    "Frontend-only PWA/mobile Admin header architecture fix based on v16.4.6.",
     "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner object changed.",
-    "Regression contracts were updated to the new compact topbar dimensions and the full existing suite must pass from zero."
+    "The superseded two-row regression contracts were generalized and a new v16.4.7 single-row targeted contract was added."
   ]
 }
