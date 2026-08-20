@@ -1,18 +1,18 @@
 {
-  "version": "16.4.7",
+  "version": "16.4.8",
   "channel": "Stable",
-  "name": "PWA SINGLE-ROW TOP CHROME",
+  "name": "PWA MOBILE HEADER REDESIGN",
   "date": "2026-08-20",
-  "base": "16.4.6",
+  "base": "16.4.7",
   "changes": [
-    "Replaces the stacked mobile/PWA VA HOME identity plus search header with one compact horizontal app row",
-    "Reduces mobile app-chrome content height from 78px to 54px while preserving the iPhone safe area",
-    "Keeps VA HOME identity and sync state beside the global search instead of floating on a separate upper row",
-    "Keeps the search control at a touch-safe 42px and 16px input font size to prevent iOS auto-zoom"
+    "Replaces the always-visible mobile global-search input with a dedicated search action in the PWA app header",
+    "Keeps VA HOME / OPERATIONS identity and sync status in a clean compact header row without squeezing a search field into iPhone width",
+    "Opens global search on demand as a full-width panel below the safe-area header and closes it on Escape, outside tap, navigation or result selection",
+    "Removes the duplicate VA HOME · OPERATIONS eyebrow from the mobile Overview screen while preserving desktop hierarchy"
   ],
   "notes": [
-    "Frontend-only PWA/mobile Admin header architecture fix based on v16.4.6.",
+    "Frontend-only mobile/PWA Admin header architecture fix based on v16.4.7.",
     "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner object changed.",
-    "The superseded two-row regression contracts were generalized and a new v16.4.7 single-row targeted contract was added."
+    "Legacy v16.4.3/v16.4.6/v16.4.7 PWA tests were updated to validate the current navigation contract instead of obsolete visible-search geometry."
   ]
 }

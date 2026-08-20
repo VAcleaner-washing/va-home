@@ -706,7 +706,7 @@ function clearAdminSearchState(){
   adminSearchActiveIndex=-1;
   if(changed){renderOrders();renderCustomers();renderCatalogAdmin();renderReviews();renderPromos();}
 }
-function activateAdmin2View(name,{updateHash=true}={}){const view=admin2Views.includes(name)?name:"overview";clearAdminSearchState();activeAdmin2View=view;document.querySelectorAll(".admin2-view").forEach(panel=>panel.hidden=panel.id!==`${view}Tab`);if(view==="marketing"){const releasesPanel=$("#releasesTab");if(releasesPanel)releasesPanel.hidden=false;}document.querySelectorAll("[data-admin-view]").forEach(button=>button.classList.toggle("is-active",button.dataset.adminView===view));const main=$("#admin2Main");if(main){main.scrollTop=0;main.scrollLeft=0;requestAnimationFrame(()=>{main.scrollTop=0;main.scrollLeft=0;});}if(updateHash&&location.hash!==`#${view}`)history.replaceState(null,"",`#${view}`);closeAdmin2MoreMenu();}
+function activateAdmin2View(name,{updateHash=true}={}){const view=admin2Views.includes(name)?name:"overview";setAdminMobileSearch(false,{clear:true});clearAdminSearchState();activeAdmin2View=view;document.querySelectorAll(".admin2-view").forEach(panel=>panel.hidden=panel.id!==`${view}Tab`);if(view==="marketing"){const releasesPanel=$("#releasesTab");if(releasesPanel)releasesPanel.hidden=false;}document.querySelectorAll("[data-admin-view]").forEach(button=>button.classList.toggle("is-active",button.dataset.adminView===view));const main=$("#admin2Main");if(main){main.scrollTop=0;main.scrollLeft=0;requestAnimationFrame(()=>{main.scrollTop=0;main.scrollLeft=0;});}if(updateHash&&location.hash!==`#${view}`)history.replaceState(null,"",`#${view}`);closeAdmin2MoreMenu();}
 function renderOverview(){const host=$("#overviewKpis");if(!host)return;const now=new Date(),todayPaid=cashReceivedOrders().filter(order=>sameDay(order.paid_at||order.updated_at||order.created_at,now));const last30=cashReceivedOrders().filter(order=>new Date(order.paid_at||order.updated_at||order.created_at)>=daysAgo(29));const paid=cashReceivedOrders(),aov=paid.length?sumAmount(paid)/paid.length:0;const customers=customerRows(),active=activeValueOrders(),waiting=awaitingMoneyOrders();host.innerHTML=[
   ["Отримано сьогодні",money(sumAmount(todayPaid)),`${todayPaid.length} фактичних оплат`],
   ["Отримано 30 днів",money(sumAmount(last30)),`${last30.length} оплачених замовлень`],
@@ -1015,7 +1015,7 @@ const cards=[
   `<article class="admin2-setting-card"><span>Доставка</span><h3>Нова пошта</h3><div class="admin2-setting-line"><span>Стандартна відправка</span><strong>1–2 робочі дні</strong></div><div class="admin2-setting-line"><span>Безкоштовна доставка</span><strong>від 1500 грн</strong></div><div class="admin2-setting-line"><span>Останнє замовлення</span><strong>${latest?shortDate(latest.created_at):"—"}</strong></div></article>`,
   `<article class="admin2-setting-card"><span>Комунікація</span><h3>VA HOME</h3><div class="admin2-setting-line"><span>Менеджер</span><strong>09:00–19:00</strong></div><div class="admin2-setting-line"><span>Email</span><strong>vahome.aroma@gmail.com</strong></div><div class="admin2-setting-line"><span>Автоматизація повторних</span><strong>${repeatCampaigns.length?"Працює":"Очікує даних"}</strong></div></article>`,
   `<article class="admin2-setting-card" id="pushSettingsCard"><span>Push / PWA</span><h3>Сповіщення адміністратора</h3><div class="admin2-setting-line"><span>Стан</span><strong>Перевіряємо…</strong></div></article>`,
-  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.4.7 · Operations</strong></div></article>`
+  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.4.8 · Operations</strong></div></article>`
 ];
 host.innerHTML=cards.join("");
 renderAdminAudit();
@@ -1035,7 +1035,7 @@ reviews.forEach(r=>{if([r.customer_name,r.product_slug,r.review_text].join(" ").
 return result.slice(0,12);
 }
 function renderGlobalSearch(){const input=$("#adminGlobalSearch"),host=$("#adminSearchResults");if(!input||!host)return;const rows=globalSearchEntries(input.value),q=input.value.trim();if(q.length<2){host.hidden=true;host.innerHTML="";adminSearchActiveIndex=-1;return;}adminSearchActiveIndex=Math.min(Math.max(adminSearchActiveIndex,0),Math.max(0,rows.length-1));host.hidden=false;host.innerHTML=rows.map((r,i)=>`<button type="button" class="admin2-search-result ${i===adminSearchActiveIndex?"is-active":""}" data-global-index="${i}"><small>${esc(r.type)}</small><div><strong>${highlightMatch(r.title,q)}</strong><span>${highlightMatch(r.sub,q)}</span></div><span>→</span></button>`).join("")||'<div class="admin2-search-empty">Нічого не знайдено.</div>';host.querySelectorAll("[data-global-index]").forEach(btn=>{btn.onmouseenter=()=>{adminSearchActiveIndex=Number(btn.dataset.globalIndex);host.querySelectorAll("[data-global-index]").forEach((el,i)=>el.classList.toggle("is-active",i===adminSearchActiveIndex));};btn.onclick=()=>runGlobalSearchResult(rows,Number(btn.dataset.globalIndex));});}
-function runGlobalSearchResult(rows,index=adminSearchActiveIndex){const input=$("#adminGlobalSearch"),host=$("#adminSearchResults"),row=rows[index];if(!row)return;if(host)host.hidden=true;if(input)input.value="";adminSearchActiveIndex=-1;row.action();}
+function runGlobalSearchResult(rows,index=adminSearchActiveIndex){const input=$("#adminGlobalSearch"),host=$("#adminSearchResults"),row=rows[index];if(!row)return;if(host)host.hidden=true;if(input)input.value="";adminSearchActiveIndex=-1;setAdminMobileSearch(false,{clear:true});row.action();}
 const MANUAL_PRODUCTS=[
   {id:"discovery-6",name:"Discovery Set — 6 ароматів",price:150,type:"discovery6"},
   {id:"discovery-18",name:"Discovery Set — 18 ароматів",price:450,type:"discovery18"},
@@ -1284,13 +1284,31 @@ function initAdmin2Selects(){
   });
 }
 
+function isMobileAdmin(){return window.matchMedia?.("(max-width: 820px)")?.matches===true;}
+function setAdminMobileSearch(open,{focus=true,clear=false}={}){
+  const wrap=$("#adminGlobalSearchWrap"),trigger=$("#adminMobileSearchTrigger"),input=$("#adminGlobalSearch"),results=$("#adminSearchResults");
+  if(!wrap||!trigger)return;
+  const next=Boolean(open)&&isMobileAdmin();
+  wrap.classList.toggle("is-mobile-open",next);
+  trigger.setAttribute("aria-expanded",String(next));
+  trigger.setAttribute("aria-label",next?"Закрити пошук":"Відкрити пошук");
+  if(!next){
+    if(clear&&input)input.value="";
+    if(results){results.hidden=true;if(clear)results.innerHTML="";}
+    if(input&&document.activeElement===input)input.blur();
+    return;
+  }
+  if(focus&&input)requestAnimationFrame(()=>input.focus({preventScroll:true}));
+}
+
 function bind(){
   initAdmin2Selects();
+  $("#adminMobileSearchTrigger")?.addEventListener("click",()=>{const wrap=$("#adminGlobalSearchWrap");setAdminMobileSearch(!wrap?.classList.contains("is-mobile-open"));});
   document.querySelectorAll("[data-admin-view]").forEach(button=>button.addEventListener("click",()=>activateAdmin2View(button.dataset.adminView)));
   document.querySelectorAll("[data-admin-jump]").forEach(button=>button.addEventListener("click",()=>activateAdmin2View(button.dataset.adminJump)));
-  const globalSearch=$("#adminGlobalSearch");if(globalSearch){globalSearch.addEventListener("input",()=>{adminSearchActiveIndex=0;renderGlobalSearch();});globalSearch.addEventListener("keydown",event=>{const rows=globalSearchEntries(globalSearch.value);if(event.key==="Escape"){globalSearch.value="";renderGlobalSearch();globalSearch.blur();return;}if(!rows.length)return;if(event.key==="ArrowDown"){event.preventDefault();adminSearchActiveIndex=(adminSearchActiveIndex+1)%rows.length;renderGlobalSearch();$("#adminSearchResults .is-active")?.scrollIntoView({block:"nearest"});}else if(event.key==="ArrowUp"){event.preventDefault();adminSearchActiveIndex=(adminSearchActiveIndex-1+rows.length)%rows.length;renderGlobalSearch();$("#adminSearchResults .is-active")?.scrollIntoView({block:"nearest"});}else if(event.key==="Enter"){event.preventDefault();runGlobalSearchResult(rows,Math.max(0,adminSearchActiveIndex));}});}
-  document.addEventListener("keydown",event=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();$("#adminGlobalSearch")?.focus();return;}if(event.key==="Escape"&&!$("#adminMoreMenu")?.hidden)closeAdmin2MoreMenu();if(event.key==="Escape")closeAdmin2Selects();});
-  document.addEventListener("click",event=>{const box=$("#adminSearchResults");if(box&&!event.target.closest(".admin2-global-search"))box.hidden=true;const matches=$("#manualCustomerMatches");if(matches&&!event.target.closest(".admin2-manual-customer"))matches.hidden=true;if(!event.target.closest(".admin2-np-combobox"))manualNpCloseAll();const more=$("#adminMoreMenu");if(more&&!more.hidden&&!event.target.closest("#adminMoreMenu")&&!event.target.closest("#adminMoreBtn"))closeAdmin2MoreMenu();if(!event.target.closest(".admin2-select"))closeAdmin2Selects();});
+  const globalSearch=$("#adminGlobalSearch");if(globalSearch){globalSearch.addEventListener("input",()=>{adminSearchActiveIndex=0;renderGlobalSearch();});globalSearch.addEventListener("keydown",event=>{const rows=globalSearchEntries(globalSearch.value);if(event.key==="Escape"){globalSearch.value="";renderGlobalSearch();setAdminMobileSearch(false,{clear:true});globalSearch.blur();return;}if(!rows.length)return;if(event.key==="ArrowDown"){event.preventDefault();adminSearchActiveIndex=(adminSearchActiveIndex+1)%rows.length;renderGlobalSearch();$("#adminSearchResults .is-active")?.scrollIntoView({block:"nearest"});}else if(event.key==="ArrowUp"){event.preventDefault();adminSearchActiveIndex=(adminSearchActiveIndex-1+rows.length)%rows.length;renderGlobalSearch();$("#adminSearchResults .is-active")?.scrollIntoView({block:"nearest"});}else if(event.key==="Enter"){event.preventDefault();runGlobalSearchResult(rows,Math.max(0,adminSearchActiveIndex));}});}
+  document.addEventListener("keydown",event=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();if(isMobileAdmin())setAdminMobileSearch(true);else $("#adminGlobalSearch")?.focus();return;}if(event.key==="Escape"&&$("#adminGlobalSearchWrap")?.classList.contains("is-mobile-open")){setAdminMobileSearch(false,{clear:true});return;}if(event.key==="Escape"&&!$("#adminMoreMenu")?.hidden)closeAdmin2MoreMenu();if(event.key==="Escape")closeAdmin2Selects();});
+  document.addEventListener("click",event=>{const box=$("#adminSearchResults");if(box&&!event.target.closest(".admin2-global-search"))box.hidden=true;if($("#adminGlobalSearchWrap")?.classList.contains("is-mobile-open")&&!event.target.closest("#adminGlobalSearchWrap")&&!event.target.closest("#adminMobileSearchTrigger"))setAdminMobileSearch(false);const matches=$("#manualCustomerMatches");if(matches&&!event.target.closest(".admin2-manual-customer"))matches.hidden=true;if(!event.target.closest(".admin2-np-combobox"))manualNpCloseAll();const more=$("#adminMoreMenu");if(more&&!more.hidden&&!event.target.closest("#adminMoreMenu")&&!event.target.closest("#adminMoreBtn"))closeAdmin2MoreMenu();if(!event.target.closest(".admin2-select"))closeAdmin2Selects();});
   ["#customerSearch","#customerSegmentFilter"].forEach(sel=>$(sel)?.addEventListener("input",renderCustomers));
   ["#catalogSearch","#catalogCollectionFilter"].forEach(sel=>$(sel)?.addEventListener("input",renderCatalogAdmin));
   ["#paymentMethodFilter","#paymentStateFilter"].forEach(sel=>$(sel)?.addEventListener("input",renderPayments));
