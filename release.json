@@ -1,18 +1,18 @@
 {
-  "version": "16.4.13",
+  "version": "16.4.14",
   "channel": "Stable",
-  "name": "PWA HEADER ROLLBACK TO STABLE",
+  "name": "PWA CRISP HEADER RENDERING",
   "date": "2026-08-21",
-  "base": "16.4.9",
+  "base": "16.4.13",
   "changes": [
-    "Rolls back the unsuccessful mobile PWA header experiments introduced in v16.4.10-v16.4.12",
-    "Restores the complete v16.4.9 mobile header, status-bar and safe-area behavior",
-    "Preserves v16.4.9 Client 360 and order detail Back/Close/history navigation",
-    "Advances the release number so Git history can move forward without force-resetting commits"
+    "Fixes the soft/blurred-looking mobile PWA header without changing status-bar or safe-area behavior",
+    "Removes fractional micro-typography from VA / VA HOME / OPERATIONS and restores native font smoothing in the header only",
+    "Uses heavier integer-sized brand typography, an even 8px sync dot and a 24px search icon with integer geometry",
+    "Disables the inherited active scale transform on the mobile search button so iOS does not rasterize the control during taps"
   ],
   "notes": [
-    "Forward rollback built directly from the verified v16.4.9 stable tree.",
-    "v16.4.10, v16.4.11 and v16.4.12 are treated as rejected header experiments and are not used as code sources.",
-    "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner runtime change."
+    "Built directly on the verified v16.4.13 rollback/stable tree.",
+    "The diagnosis is visual-rendering softness, not a remaining CSS blur layer: the topbar already has filter:none/backdrop-filter:none and its border stays crisp.",
+    "No status-bar mode, safe-area geometry, navigation, Supabase, Edge Function, Monobank, Nova Poshta or VAcleaner runtime change."
   ]
 }
