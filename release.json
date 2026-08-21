@@ -1,18 +1,18 @@
 {
-  "version": "16.4.14",
+  "version": "16.4.15",
   "channel": "Stable",
-  "name": "PWA CRISP HEADER RENDERING",
+  "name": "PWA NON-FIXED CRISP HEADER",
   "date": "2026-08-21",
-  "base": "16.4.13",
+  "base": "16.4.14",
   "changes": [
-    "Fixes the soft/blurred-looking mobile PWA header without changing status-bar or safe-area behavior",
-    "Removes fractional micro-typography from VA / VA HOME / OPERATIONS and restores native font smoothing in the header only",
-    "Uses heavier integer-sized brand typography, an even 8px sync dot and a 24px search icon with integer geometry",
-    "Disables the inherited active scale transform on the mobile search button so iOS does not rasterize the control during taps"
+    "Moves the mobile root admin header out of position:fixed while preserving its visible geometry",
+    "Uses a two-row mobile app shell: normal-flow header plus independently scrolling main content",
+    "Avoids the iOS WebKit viewport-constrained top-edge compositor path that can soften fixed header content",
+    "Keeps status-bar mode, safe-area spacing, search behavior, detail navigation and bottom navigation unchanged"
   ],
   "notes": [
-    "Built directly on the verified v16.4.13 rollback/stable tree.",
-    "The diagnosis is visual-rendering softness, not a remaining CSS blur layer: the topbar already has filter:none/backdrop-filter:none and its border stays crisp.",
-    "No status-bar mode, safe-area geometry, navigation, Supabase, Edge Function, Monobank, Nova Poshta or VAcleaner runtime change."
+    "Targeted mobile rendering fix based on v16.4.14.",
+    "No Supabase, Edge Function, Monobank, Nova Poshta or VAcleaner runtime change.",
+    "The root header is no longer fixed on mobile; the main content remains the only scrolling root workspace region."
   ]
 }
