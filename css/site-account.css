@@ -1474,7 +1474,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* ===== VA HOME v16.4.12 — Premium compact order cards ===== */
+/* ===== VA HOME v16.4.13 — Premium compact order cards ===== */
 .account-list{
   gap:18px;
 }
@@ -1558,7 +1558,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* ===== VA HOME v16.4.12 — final account UX consolidation ===== */
+/* ===== VA HOME v16.4.13 — final account UX consolidation ===== */
 .account-order{
   display:grid!important;
   grid-template-rows:auto auto auto auto!important;
@@ -1623,7 +1623,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* ===== VA HOME v16.4.12 — Desktop order card composition ===== */
+/* ===== VA HOME v16.4.13 — Desktop order card composition ===== */
 @media(min-width:901px){
   .account-order{
     grid-template-columns:minmax(0,1fr) 330px!important;
@@ -1735,7 +1735,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 }
 
 
-/* v16.4.12 — persistent bank-transfer details inside customer orders */
+/* v16.4.13 — persistent bank-transfer details inside customer orders */
 .account-order__bank-details{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 18px;border:1px solid rgba(195,145,70,.55);background:transparent;color:var(--color-gold);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
 .account-order__bank-details:hover{border-color:var(--color-gold);background:rgba(195,145,70,.07)}
 .account-payment-details{margin-top:18px;padding:20px;border:1px solid rgba(195,145,70,.28);background:linear-gradient(135deg,rgba(195,145,70,.07),rgba(255,255,255,.015));color:var(--text-secondary);font-size:13px}
@@ -1755,7 +1755,7 @@ body:has(.cart-hero) .section.section--tight { padding-top: clamp(22px, 2.8vw, 4
 .account-payment-details__status{min-height:18px;margin:10px 0 0;color:var(--color-gold);font-size:11px}
 @media(max-width:620px){.account-order__bank-details{width:100%}.account-payment-details{padding:16px}.account-payment-details__head{align-items:flex-start;flex-direction:column;gap:8px}.account-payment-details__list>div{grid-template-columns:1fr;gap:5px}.account-payment-details__actions{display:grid;grid-template-columns:1fr}.account-payment-details__actions button{width:100%}}
 
-/* VA HOME v16.4.12 — persistent personal care access */
+/* VA HOME v16.4.13 — persistent personal care access */
 .account-order__item-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:8px}
 .account-order__care-link,.account-order__review-link,.account-order__review-done{display:inline-flex;align-items:center;min-height:28px;font-size:.69rem;line-height:1.3}
 .account-order__care-link{color:var(--color-gold);border-bottom:1px solid rgba(184,145,86,.42)}

@@ -97,7 +97,7 @@
   .journal-article h2{margin-top:1.55em!important;}
 }
 
-/* VA HOME v16.4.12 — reed guide */
+/* VA HOME v16.4.13 — reed guide */
 .reed-quick-answer{margin:2rem 0 3rem;padding:clamp(24px,4vw,42px);border:1px solid rgba(184,145,86,.3);background:linear-gradient(145deg,rgba(184,145,86,.09),rgba(255,255,255,.015))}
 .reed-quick-answer span,.reed-rules-grid article>span,.reed-diameter-grid article>span,.reed-group>span{display:block;color:var(--color-gold);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase}
 .reed-quick-answer strong{display:block;max-width:28ch;margin:16px 0;font-family:var(--font-heading);font-size:clamp(1.8rem,4vw,3.2rem);font-weight:500;line-height:1.08}
@@ -117,7 +117,7 @@
 .reed-group small{display:block;margin-top:20px;color:var(--text-muted);font-size:.72rem;line-height:1.7}
 @media(max-width:720px){.reed-rules-grid,.reed-diameter-grid,.reed-groups{grid-template-columns:1fr}.reed-rules-grid article:nth-child(n),.reed-diameter-grid article+article,.reed-group+article{border-right:0;border-left:0;border-bottom:1px solid var(--border-hairline)}.reed-rules-grid article:last-child,.reed-diameter-grid article:last-child,.reed-group:last-child{border-bottom:0}.reed-rules-grid article:last-child{grid-column:auto}}
 
-/* VA HOME v16.4.12 — personal reed finder and contained scrolling */
+/* VA HOME v16.4.13 — personal reed finder and contained scrolling */
 .reed-finder{position:relative;margin:1.6rem 0 2rem;border:1px solid rgba(184,145,86,.3);background:linear-gradient(145deg,rgba(184,145,86,.08),rgba(255,255,255,.012));overflow:visible}
 .reed-finder__control{display:grid;grid-template-columns:minmax(220px,.62fr) minmax(260px,.8fr);align-items:end;gap:36px;padding:clamp(24px,4vw,40px);border-bottom:1px solid rgba(184,145,86,.2)}
 .reed-finder__label span{display:block;margin-bottom:8px;color:var(--color-gold);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase}
@@ -184,7 +184,7 @@
 @media(max-width:720px){.reed-finder__control,.reed-finder__result{grid-template-columns:1fr;gap:22px;padding:22px}.reed-finder__menu{position:fixed;inset:auto 12px 12px;z-index:120;padding:8px;max-height:min(72vh,560px)}.reed-finder__menu-scroll{max-height:min(68vh,520px)}.reed-finder__option{grid-template-columns:1fr;gap:2px;min-height:54px}.reed-finder__option small{white-space:normal}.reed-finder__ritual{grid-template-columns:1fr;gap:14px}.reed-finder__facts>div{padding:15px 14px}.reed-finder__facts strong{font-size:.82rem}.reed-reference summary{min-height:76px;padding:18px}.reed-reference__body{padding:0 14px 16px}.reed-table-wrap{max-height:64vh}.reed-table th,.reed-table td{padding:12px 13px}.reed-table-scroll-hint{font-size:.62rem}}
 
 
-/* ===== VA HOME v16.4.12 — mobile reed table: one-axis scroll ===== */
+/* ===== VA HOME v16.4.13 — mobile reed table: one-axis scroll ===== */
 @media (max-width: 720px) {
   .reed-table-wrap {
     max-height: none;

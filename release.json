@@ -1,18 +1,18 @@
 {
-  "version": "16.4.12",
+  "version": "16.4.13",
   "channel": "Stable",
-  "name": "PWA OPAQUE STATUS BAR FIX",
+  "name": "PWA HEADER ROLLBACK TO STABLE",
   "date": "2026-08-21",
-  "base": "16.4.11",
+  "base": "16.4.9",
   "changes": [
-    "Changes the iOS standalone status bar mode from black-translucent to opaque black for the admin PWA",
-    "Removes duplicate top safe-area compensation from the root mobile header and main viewport offset",
-    "Keeps viewport-fit=cover for bottom home-indicator handling while preventing the top header from rendering inside the iOS scroll-edge layer",
-    "Adds a permanent regression check that blocks black-translucent from returning to the admin PWA"
+    "Rolls back the unsuccessful mobile PWA header experiments introduced in v16.4.10-v16.4.12",
+    "Restores the complete v16.4.9 mobile header, status-bar and safe-area behavior",
+    "Preserves v16.4.9 Client 360 and order detail Back/Close/history navigation",
+    "Advances the release number so Git history can move forward without force-resetting commits"
   ],
   "notes": [
-    "Single-purpose frontend/PWA rendering fix based on v16.4.11.",
-    "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner runtime change.",
-    "No further header typography or UX changes are included in this release."
+    "Forward rollback built directly from the verified v16.4.9 stable tree.",
+    "v16.4.10, v16.4.11 and v16.4.12 are treated as rejected header experiments and are not used as code sources.",
+    "No Supabase migration, Edge Function, table, grant, RLS policy, Monobank, Nova Poshta or VAcleaner runtime change."
   ]
 }
