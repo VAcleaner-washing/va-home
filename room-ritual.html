@@ -18,14 +18,14 @@
 <link href="favicon/favicon.ico" rel="icon"/>
 <link as="font" crossorigin="" href="fonts/cormorant-garamond-cyrillic-500-normal.woff2" rel="preload" type="font/woff2"/>
 <link as="font" crossorigin="" href="fonts/manrope-cyrillic-400-normal.woff2" rel="preload" type="font/woff2"/>
-<link href="css/core.css?v=16.4.15" rel="stylesheet"/>
-<link href="css/site-room-ritual.css?v=16.4.15" rel="stylesheet"/>
-<script defer="" src="js/hero-font-reveal.js?v=16.4.15"></script>
+<link href="css/core.css?v=16.4.16" rel="stylesheet"/>
+<link href="css/site-room-ritual.css?v=16.4.16" rel="stylesheet"/>
+<script defer="" src="js/hero-font-reveal.js?v=16.4.16"></script>
 <link href="/manifest.webmanifest" rel="manifest"/>
 <meta content="#0b0a08" name="theme-color"/>
-<meta content="16.4.15" name="va-home-release"/>
+<meta content="16.4.16" name="va-home-release"/>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"VA HOME Room Ritual","applicationCategory":"LifestyleApplication","operatingSystem":"Web","url":"https://vahome.com.ua/room-ritual.html","description":"Персональне налаштування кількості паличок і догляду за аромадифузором відповідно до кімнати, площі та розташування флакону.","offers":{"@type":"Offer","price":"0","priceCurrency":"UAH"},"publisher":{"@type":"Organization","name":"VA HOME","url":"https://vahome.com.ua"}}</script>
-<link href="css/responsive-core.css?v=16.4.15" rel="stylesheet"/>
+<link href="css/responsive-core.css?v=16.4.16" rel="stylesheet"/>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -51,9 +51,8 @@
 <label>Аромат
         <select id="ritualProduct" name="product" required=""></select>
 </label>
-<div class="room-ritual-form__grid">
 <label>Кімната
-          <select id="ritualRoom" name="room" required="">
+        <select id="ritualRoom" name="room" required="">
 <option value="living-room">Вітальня</option>
 <option value="bedroom">Спальня</option>
 <option value="bathroom">Ванна / SPA-зона</option>
@@ -61,10 +60,22 @@
 <option value="office">Кабінет</option>
 </select>
 </label>
-<label>Площа, м²
-          <input id="ritualArea" max="60" min="4" name="area" required="" step="1" type="number" value="18"/>
-</label>
+<fieldset class="room-ritual-size">
+<legend>Розмір кімнати</legend>
+<p class="room-ritual-size__hint">Не потрібно знати м² — оберіть приблизно за відчуттям.</p>
+<div class="room-ritual-size-grid">
+<label><input name="roomSize" type="radio" value="small"/><span><strong>Маленька</strong><small>Компактна кімната</small></span></label>
+<label><input checked="" name="roomSize" type="radio" value="medium"/><span><strong>Середня</strong><small>Типова кімната</small></span></label>
+<label><input name="roomSize" type="radio" value="large"/><span><strong>Велика</strong><small>Простора кімната</small></span></label>
+<label><input name="roomSize" type="radio" value="xl"/><span><strong>XL</strong><small>Студія / open space</small></span></label>
 </div>
+<details class="room-ritual-exact">
+<summary>Знаєте точну площу?</summary>
+<label>Точна площа, м²
+<input id="ritualArea" inputmode="numeric" max="60" min="4" name="area" placeholder="Наприклад, 18" step="1" type="number"/>
+</label>
+</details>
+</fieldset>
 <fieldset>
 <legend>Бажана присутність</legend>
 <div class="room-ritual-choice-grid">
@@ -100,12 +111,12 @@
 </section>
 </main>
 <div data-root="" id="site-footer"></div>
-<script src="js/config.js?v=16.4.15"></script>
-<script src="js/products.js?v=16.4.15"></script>
-<script src="js/cart.js?v=16.4.15"></script>
-<script defer="" src="js/main.js?v=16.4.15"></script>
-<script defer="" src="js/room-ritual.js?v=16.4.15"></script>
-<script defer="" src="js/motion.js?v=16.4.15"></script>
-<script defer="" src="js/pwa.js?v=16.4.15"></script>
+<script src="js/config.js?v=16.4.16"></script>
+<script src="js/products.js?v=16.4.16"></script>
+<script src="js/cart.js?v=16.4.16"></script>
+<script defer="" src="js/main.js?v=16.4.16"></script>
+<script defer="" src="js/room-ritual.js?v=16.4.16"></script>
+<script defer="" src="js/motion.js?v=16.4.16"></script>
+<script defer="" src="js/pwa.js?v=16.4.16"></script>
 </body>
 </html>

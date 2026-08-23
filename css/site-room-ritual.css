@@ -543,3 +543,81 @@
     gap: 12px;
   }
 }
+
+
+/* VA HOME v16.4.16 — Room Ritual: human room sizing, exact m² optional */
+.room-ritual-size__hint{
+  margin:-2px 0 12px;
+  color:rgba(255,255,255,.42);
+  font-size:11px;
+  line-height:1.45;
+}
+.room-ritual-size-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+}
+.room-ritual-size-grid label{
+  position:relative;
+  margin:0;
+}
+.room-ritual-size-grid input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+.room-ritual-size-grid span{
+  display:grid;
+  align-content:start;
+  gap:5px;
+  min-height:82px;
+  padding:14px 12px;
+  border:1px solid rgba(255,255,255,.09);
+  background:rgba(255,255,255,.018);
+  cursor:pointer;
+  transition:border-color .18s ease,background-color .18s ease;
+}
+.room-ritual-size-grid strong{
+  color:#ece5da;
+  font-size:12px;
+}
+.room-ritual-size-grid small{
+  color:rgba(255,255,255,.4);
+  font-size:9px;
+  line-height:1.4;
+}
+.room-ritual-size-grid input:checked+span{
+  border-color:var(--color-gold);
+  background:rgba(195,145,70,.1);
+}
+.room-ritual-size-grid input:focus-visible+span{
+  outline:1px solid rgba(195,145,70,.72);
+  outline-offset:2px;
+}
+.room-ritual-exact{
+  margin-top:12px;
+  border-top:1px solid rgba(255,255,255,.065);
+}
+.room-ritual-exact summary{
+  width:max-content;
+  max-width:100%;
+  padding:12px 0 2px;
+  color:rgba(224,196,151,.78);
+  font-size:11px;
+  cursor:pointer;
+  list-style:none;
+}
+.room-ritual-exact summary::-webkit-details-marker{display:none}
+.room-ritual-exact summary::after{content:" +";color:var(--color-gold)}
+.room-ritual-exact[open] summary::after{content:" −"}
+.room-ritual-exact label{
+  margin:12px 0 0;
+}
+.room-ritual-exact input[type=number]{
+  min-height:54px;
+  font-size:16px;
+}
+@media(max-width:620px){
+  .room-ritual-size-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .room-ritual-size-grid span{min-height:76px}
+}

@@ -493,7 +493,7 @@
     if (!saved || !result || !item || !Number(result.reeds)) {
       accountState.ritual = null;
       host.classList.remove("is-saved");
-      host.innerHTML = `<p class="eyebrow">ROOM RITUAL · НАЛАШТУВАННЯ ПАЛИЧОК</p><h3>Налаштування дифузії під кімнату</h3><p>Оберіть кімнату, площу та бажану присутність — система підкаже кількість паличок і догляд.</p><a class="btn btn-primary btn-small" href="room-ritual.html">Налаштувати палички</a>`;
+      host.innerHTML = `<p class="eyebrow">ROOM RITUAL · НАЛАШТУВАННЯ ПАЛИЧОК</p><h3>Налаштування дифузії під кімнату</h3><p>Оберіть кімнату, її приблизний розмір та бажану присутність — система підкаже кількість паличок і догляд.</p><a class="btn btn-primary btn-small" href="room-ritual.html">Налаштувати палички</a>`;
       renderNextStep();
       return;
     }
@@ -506,7 +506,9 @@
     const care = String(result.care || item?.reedCare?.publicText || "за потреби");
     const productNote = String(item?.reedSetupByArea?.note || item?.diffusion?.tip || "Починайте зі стриманої інтенсивності та змінюйте налаштування поступово.");
     const extraNote = result.extra ? " Для простору понад 25 м² краще додати другий дифузор, а не перевантажувати один флакон." : "";
-    host.innerHTML = `<p class="eyebrow">ROOM RITUAL · ЗБЕРЕЖЕНО</p><h3>${esc(item.name)}</h3><p class="account-room-ritual__meta">${esc(result.area)} м² · ${esc(room)} · ${esc(presence)} присутність</p><div class="account-room-ritual__result"><span>Рекомендований старт</span><strong>${esc(roomRitualTitle(result.reeds, result.diameter))}</strong><small>Збережено ${esc(savedAt)}</small></div><dl class="account-room-ritual__guide"><div><dt>Розміщення</dt><dd>${esc(placement)}</dd></div><div><dt>Догляд</dt><dd>Перевертайте палички ${esc(care)} або коли звучання стало тихішим.</dd></div><div><dt>Корекція</dt><dd>Додавайте або прибирайте лише одну паличку за раз.</dd></div><div><dt>Повторна оцінка</dt><dd>Оцініть результат через 24–48 годин після зміни.</dd></div></dl><p class="account-room-ritual__note">${esc(productNote + extraNote)}</p><div class="account-room-ritual__actions"><a class="btn btn-primary btn-small" href="room-ritual.html?restore=1">Відкрити мій ритуал</a><button class="account-room-ritual__remove" type="button" data-remove-room-ritual>Видалити</button></div>`;
+    const legacyExactArea = result.areaIsExact == null && result.sizeKey == null;
+    const roomSizeMeta = result.areaIsExact || legacyExactArea ? `${result.area} м²` : (result.sizeMeta || (result.sizeKey === "small" ? "Маленька" : result.sizeKey === "large" ? "Велика" : result.sizeKey === "xl" ? "XL" : "Середня"));
+    host.innerHTML = `<p class="eyebrow">ROOM RITUAL · ЗБЕРЕЖЕНО</p><h3>${esc(item.name)}</h3><p class="account-room-ritual__meta">${esc(roomSizeMeta)} · ${esc(room)} · ${esc(presence)} присутність</p><div class="account-room-ritual__result"><span>Рекомендований старт</span><strong>${esc(roomRitualTitle(result.reeds, result.diameter))}</strong><small>Збережено ${esc(savedAt)}</small></div><dl class="account-room-ritual__guide"><div><dt>Розміщення</dt><dd>${esc(placement)}</dd></div><div><dt>Догляд</dt><dd>Перевертайте палички ${esc(care)} або коли звучання стало тихішим.</dd></div><div><dt>Корекція</dt><dd>Додавайте або прибирайте лише одну паличку за раз.</dd></div><div><dt>Повторна оцінка</dt><dd>Оцініть результат через 24–48 годин після зміни.</dd></div></dl><p class="account-room-ritual__note">${esc(productNote + extraNote)}</p><div class="account-room-ritual__actions"><a class="btn btn-primary btn-small" href="room-ritual.html?restore=1">Відкрити мій ритуал</a><button class="account-room-ritual__remove" type="button" data-remove-room-ritual>Видалити</button></div>`;
     renderNextStep();
     host.querySelector("[data-remove-room-ritual]")?.addEventListener("click", () => {
       try { localStorage.removeItem("va_home_room_ritual_v14"); } catch (_) {}

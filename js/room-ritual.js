@@ -1,4 +1,4 @@
-/* VA HOME v16.4.15 RC6 — Room Ritual engine */
+/* VA HOME v16.4.16 RC6 — Room Ritual engine */
 (function () {
   "use strict";
   const STORAGE_KEY = "va_home_room_ritual_v14";
@@ -7,6 +7,9 @@
   const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const roomLabels = { "living-room":"вітальні", bedroom:"спальні", bathroom:"ванній / SPA-зоні", hallway:"передпокої", office:"кабінеті" };
   const presenceLabels = { quiet:"тиха", balanced:"збалансована", expressive:"виразна" };
+  const roomSizeDefaults = { small:8, medium:18, large:30, xl:42 };
+  const roomSizeLabels = { small:"маленького", medium:"середнього", large:"великого", xl:"дуже великого" };
+  const roomSizeMeta = { small:"Маленька", medium:"Середня", large:"Велика", xl:"XL" };
   const placementCopy = {
     open: "Поставте флакон на відкритій стійкій поверхні на висоті 70–120 см.",
     airflow: "Змістіть флакон убік від прямого потоку повітря: протяг посилює випаровування й скорочує ресурс.",
@@ -22,6 +25,7 @@
     return min === max ? `раз на ${min} днів` : `кожні ${min}–${max} днів`;
   }
   function areaBand(area) { return area <= 12 ? "small" : area <= 25 ? "standard" : "large"; }
+  function roomSizeKeyFromArea(area) { return area <= 10 ? "small" : area <= 20 ? "medium" : area <= 35 ? "large" : "xl"; }
   function baseReeds(product, band) {
     const item = product?.reedSetupByArea?.[band];
     return Number(item?.min || item?.max || product?.package?.reedCount || 4);
@@ -33,7 +37,11 @@
 
   function calculate(data) {
     const product = getProduct(data.product);
-    const area = clamp(Number(data.area) || 18, 4, 60);
+    const selectedSizeKey = roomSizeDefaults[data.roomSize] ? data.roomSize : "medium";
+    const exactArea = Number(data.area);
+    const areaIsExact = Number.isFinite(exactArea) && exactArea >= 4 && exactArea <= 60;
+    const sizeKey = areaIsExact ? roomSizeKeyFromArea(exactArea) : selectedSizeKey;
+    const area = areaIsExact ? clamp(exactArea, 4, 60) : roomSizeDefaults[sizeKey];
     const band = areaBand(area);
     let reeds = baseReeds(product, band);
     if (data.presence === "quiet") reeds -= 1;
@@ -47,7 +55,7 @@
     const extra = band === "large" && product?.reedSetupByArea?.large?.extraReeds;
     const diameter = product?.package?.reedDiameterMm || product?.diffusion?.primary?.diameterMm || 4;
     return {
-      product, area, band, reeds, diameter, extra,
+      product, area, areaIsExact, sizeKey, sizeLabel: roomSizeLabels[sizeKey], sizeMeta: roomSizeMeta[sizeKey], band, reeds, diameter, extra,
       room: roomLabels[data.room] || "кімнаті",
       presence: presenceLabels[data.presence] || "збалансована",
       placement: placementCopy[data.placement] || placementCopy.open,
@@ -66,23 +74,38 @@
     const productId = raw?.product?.id || saved?.inputs?.product;
     const product = getProduct(productId);
     if (!product || !Number(raw?.reeds)) return null;
-    return { ...raw, product };
+    const legacy = raw.areaIsExact == null && raw.sizeKey == null;
+    const sizeKey = raw.sizeKey || roomSizeKeyFromArea(Number(raw.area) || 18);
+    return {
+      ...raw,
+      product,
+      areaIsExact: legacy ? true : Boolean(raw.areaIsExact),
+      sizeKey,
+      sizeLabel: raw.sizeLabel || roomSizeLabels[sizeKey],
+      sizeMeta: raw.sizeMeta || roomSizeMeta[sizeKey]
+    };
   }
 
   function savePayload(result, inputs) {
     const product = result.product;
     return {
-      version: 2,
+      version: 3,
       inputs: {
         product: String(inputs.product || product.id),
         room: String(inputs.room || "living-room"),
-        area: Number(inputs.area || result.area),
+        roomSize: String(inputs.roomSize || result.sizeKey || "medium"),
+        area: result.areaIsExact ? Number(inputs.area) : result.area,
+        exactArea: result.areaIsExact ? Number(inputs.area) : null,
         presence: String(inputs.presence || "balanced"),
         placement: String(inputs.placement || "open")
       },
       result: {
         product: { id: product.id, name: product.name },
         area: result.area,
+        areaIsExact: result.areaIsExact,
+        sizeKey: result.sizeKey,
+        sizeLabel: result.sizeLabel,
+        sizeMeta: result.sizeMeta,
         band: result.band,
         reeds: result.reeds,
         diameter: result.diameter,
@@ -112,7 +135,7 @@
     $("roomRitualResult").innerHTML = `<article class="room-ritual-card">
       <p class="room-ritual-card__eyebrow">ROOM RITUAL · ${esc(p.name)}</p>
       <h2>${esc(p.name)} у вашому просторі</h2>
-      <p class="room-ritual-card__summary">Для ${esc(result.room)} площею ${result.area} м² і бажаної присутності «${esc(result.presence)}» почніть зі стриманого налаштування. Остаточне звучання оцінюйте не раніше ніж через 24–48 годин.</p>
+      <p class="room-ritual-card__summary">Для ${esc(result.room)} ${result.areaIsExact ? `площею ${result.area} м²` : `${esc(result.sizeLabel)} розміру`} і бажаної присутності «${esc(result.presence)}» почніть зі стриманого налаштування. Остаточне звучання оцінюйте не раніше ніж через 24–48 годин.</p>
       <div class="room-ritual-card__primary"><span>Рекомендований старт</span><strong>${esc(title)}</strong></div>
       <dl class="room-ritual-card__steps">
         <div><dt>Розміщення</dt><dd>${esc(result.placement)}</dd></div>
@@ -231,38 +254,10 @@
     select._roomRitualRefresh = build;
   }
 
-  function enhanceNumber(input) {
-    if (!input || input.dataset.enhanced === "true") return;
-    input.dataset.enhanced = "true";
-    const wrapper = document.createElement("div");
-    wrapper.className = "room-ritual-stepper";
-    input.parentNode.insertBefore(wrapper, input);
-    wrapper.appendChild(input);
-    const minus = document.createElement("button");
-    const plus = document.createElement("button");
-    minus.type = plus.type = "button";
-    minus.className = plus.className = "room-ritual-stepper__button";
-    minus.setAttribute("aria-label", "Зменшити площу");
-    plus.setAttribute("aria-label", "Збільшити площу");
-    minus.textContent = "−";
-    plus.textContent = "+";
-    function step(direction) {
-      const min = Number(input.min || 4);
-      const max = Number(input.max || 60);
-      const step = Number(input.step || 1);
-      input.value = String(clamp((Number(input.value) || min) + direction * step, min, max));
-      input.dispatchEvent(new Event("input", { bubbles: true }));
-    }
-    minus.addEventListener("click", () => step(-1));
-    plus.addEventListener("click", () => step(1));
-    wrapper.prepend(minus);
-    wrapper.append(plus);
-  }
-
   function currentInputs(form) {
     const data = new FormData(form);
     return {
-      product: data.get("product"), room: data.get("room"), area: data.get("area"),
+      product: data.get("product"), room: data.get("room"), roomSize: data.get("roomSize"), area: data.get("area"),
       presence: data.get("presence"), placement: data.get("placement")
     };
   }
@@ -276,7 +271,13 @@
     const placement = $("ritualPlacement");
     if (product && getProduct(inputs.product)?.id === inputs.product) product.value = inputs.product;
     if (room && room.querySelector(`option[value="${CSS.escape(String(inputs.room))}"]`)) room.value = inputs.room;
-    if (area) area.value = String(clamp(Number(inputs.area) || 18, 4, 60));
+    const legacyExact = inputs.roomSize == null && Number(inputs.area);
+    const sizeKey = inputs.roomSize || (legacyExact <= 10 ? "small" : legacyExact <= 20 ? "medium" : legacyExact <= 35 ? "large" : "xl");
+    const size = document.querySelector(`input[name="roomSize"][value="${CSS.escape(String(sizeKey || "medium"))}"]`);
+    if (size) size.checked = true;
+    const exactArea = Number(inputs.exactArea || (inputs.roomSize == null ? inputs.area : 0));
+    if (area) area.value = exactArea >= 4 && exactArea <= 60 ? String(exactArea) : "";
+    if (area?.value) area.closest("details")?.setAttribute("open", "");
     if (placement && placement.querySelector(`option[value="${CSS.escape(String(inputs.placement))}"]`)) placement.value = inputs.placement;
     const presence = document.querySelector(`input[name="presence"][value="${CSS.escape(String(inputs.presence || "balanced"))}"]`);
     if (presence) presence.checked = true;
@@ -292,7 +293,6 @@
     if (!select || !products.length) return;
     select.innerHTML = products.map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("");
     [select, $("ritualRoom"), $("ritualPlacement")].forEach(enhanceSelect);
-    enhanceNumber($("ritualArea"));
 
     const requested = new URLSearchParams(location.search).get("product");
     if (requested && getProduct(requested)?.id === requested) {
@@ -312,7 +312,7 @@
       const inputs = currentInputs(event.currentTarget);
       const result = calculate(inputs);
       render(result, inputs, false);
-      window.VAAnalytics?.event?.("select_content", { content_type:"room_ritual_completed", item_id:result.product.id, room:inputs.room, area:result.area, reeds:result.reeds });
+      window.VAAnalytics?.event?.("select_content", { content_type:"room_ritual_completed", item_id:result.product.id, room:inputs.room, room_size:result.sizeKey, area:result.areaIsExact ? result.area : undefined, reeds:result.reeds });
       $("roomRitualResult")?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"start" });
     });
   });

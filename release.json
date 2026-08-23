@@ -1,18 +1,18 @@
 {
-  "version": "16.4.15",
+  "version": "16.4.16",
   "channel": "Stable",
-  "name": "PWA NON-FIXED CRISP HEADER",
-  "date": "2026-08-21",
-  "base": "16.4.14",
+  "name": "ROOM RITUAL HUMAN SIZE UX",
+  "date": "2026-08-23",
+  "base": "16.4.15",
   "changes": [
-    "Moves the mobile root admin header out of position:fixed while preserving its visible geometry",
-    "Uses a two-row mobile app shell: normal-flow header plus independently scrolling main content",
-    "Avoids the iOS WebKit viewport-constrained top-edge compositor path that can soften fixed header content",
-    "Keeps status-bar mode, safe-area spacing, search behavior, detail navigation and bottom navigation unchanged"
+    "Replaces required square-meter input in Room Ritual with four human room-size choices: Small, Medium, Large and XL",
+    "Keeps exact square meters as an optional disclosure for customers who know the value",
+    "Maps approximate room sizes to the existing reed calculation bands without changing product diffusion data",
+    "Updates saved Room Ritual and account copy while preserving backward compatibility with previously saved exact-area rituals"
   ],
   "notes": [
-    "Targeted mobile rendering fix based on v16.4.14.",
-    "No Supabase, Edge Function, Monobank, Nova Poshta or VAcleaner runtime change.",
-    "The root header is no longer fixed on mobile; the main content remains the only scrolling root workspace region."
+    "Storefront Room Ritual UX release based on v16.4.15.",
+    "No Supabase, Edge Function, Monobank, Nova Poshta, admin PWA or VAcleaner runtime change.",
+    "Adds a permanent regression check for approximate room sizing and optional exact-area entry."
   ]
 }
