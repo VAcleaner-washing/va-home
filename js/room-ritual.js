@@ -1,4 +1,4 @@
-/* VA HOME v16.4.16 RC6 — Room Ritual engine */
+/* VA HOME v16.4.17 RC6 — Room Ritual engine */
 (function () {
   "use strict";
   const STORAGE_KEY = "va_home_room_ritual_v14";
@@ -254,6 +254,21 @@
     select._roomRitualRefresh = build;
   }
 
+  function exactAreaFallback() {
+    const selected = document.querySelector('input[name="roomSize"]:checked')?.value || "medium";
+    return roomSizeDefaults[selected] || roomSizeDefaults.medium;
+  }
+
+  function stepExactArea(delta) {
+    const input = $("ritualArea");
+    if (!input) return;
+    const current = Number(input.value);
+    const base = Number.isFinite(current) && current >= 4 && current <= 60 ? current : exactAreaFallback();
+    input.value = String(clamp(base + delta, 4, 60));
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
   function currentInputs(form) {
     const data = new FormData(form);
     return {
@@ -299,6 +314,10 @@
       select.value = requested;
       select.dispatchEvent(new Event("change", { bubbles: true }));
     }
+
+    document.querySelectorAll("[data-area-step]").forEach((button) => {
+      button.addEventListener("click", () => stepExactArea(Number(button.dataset.areaStep) || 0));
+    });
 
     const saved = readSaved();
     if (new URLSearchParams(location.search).get("restore") === "1" && saved) {

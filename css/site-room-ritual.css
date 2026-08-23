@@ -545,7 +545,7 @@
 }
 
 
-/* VA HOME v16.4.16 — Room Ritual: human room sizing, exact m² optional */
+/* VA HOME v16.4.17 — Room Ritual: human room sizing, exact m² optional */
 .room-ritual-size__hint{
   margin:-2px 0 12px;
   color:rgba(255,255,255,.42);
@@ -613,10 +613,47 @@
 .room-ritual-exact label{
   margin:12px 0 0;
 }
-.room-ritual-exact input[type=number]{
+.room-ritual-area-stepper{
+  display:grid;
+  grid-template-columns:54px minmax(0,1fr) 54px;
   min-height:54px;
-  font-size:16px;
+  border:1px solid rgba(195,145,70,.32);
+  background:rgba(255,255,255,.018);
 }
+.room-ritual-area-stepper__button{
+  min-width:54px;
+  min-height:54px;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:var(--color-gold);
+  font:500 24px/1 var(--font-body);
+  cursor:pointer;
+}
+.room-ritual-area-stepper__button:first-child{border-right:1px solid rgba(195,145,70,.22)}
+.room-ritual-area-stepper__button:last-child{border-left:1px solid rgba(195,145,70,.22)}
+.room-ritual-area-stepper__button:hover{background:rgba(195,145,70,.07)}
+.room-ritual-area-stepper__button:active{background:rgba(195,145,70,.12)}
+.room-ritual-area-stepper__button:focus-visible{outline:1px solid rgba(216,174,110,.82);outline-offset:-3px}
+.room-ritual-area-stepper input[type=number]{
+  width:100%;
+  min-height:54px;
+  padding:0 14px;
+  border:0;
+  background:transparent;
+  color:#ece5da;
+  font-size:16px;
+  text-align:center;
+  appearance:textfield;
+  -moz-appearance:textfield;
+}
+.room-ritual-area-stepper input[type=number]::-webkit-inner-spin-button,
+.room-ritual-area-stepper input[type=number]::-webkit-outer-spin-button{
+  margin:0;
+  -webkit-appearance:none;
+}
+.room-ritual-area-stepper input[type=number]:focus{outline:none}
+.room-ritual-area-stepper:focus-within{border-color:rgba(216,174,110,.72);box-shadow:0 0 0 1px rgba(216,174,110,.08)}
 @media(max-width:620px){
   .room-ritual-size-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .room-ritual-size-grid span{min-height:76px}
