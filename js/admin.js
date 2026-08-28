@@ -8,6 +8,8 @@ const paymentStatusLabels={unpaid:"Не оплачено",pending:"Очікує 
 const paymentEventLabels={created:"Рахунок створено",processing:"Банк перевіряє оплату",hold:"Кошти зарезервовано",success:"Оплату підтверджено",failure:"Оплату не завершено",failed:"Оплату не завершено",expired:"Рахунок прострочено",reversed:"Платіж скасовано",refunded:"Кошти повернено"};
 let orders=[],reviews=[],promos=[],releases=[],marketingPreferences=[],repeatCampaigns=[],discoveryCredits=[],paymentAttempts=[],paymentSettings=[],adminAudit=[],vahomeExpenses=[],activeOrder=null,activePromo=null,activeRelease=null,activeExpense=null,activeCustomerKey="",customer360ReturnState=null,customer360HistoryActive=false,customer360SkipRestore=false,orderDetailReturnState=null,orderDetailHistoryActive=false,orderDetailSkipRestore=false;
 let activeOrderAttempts=[],activeOrderEvents=[],currentOrderSmartFilter="all",adminSearchActiveIndex=-1,adminAutoSyncTimer=null,adminLoadPromise=null;
+const ADMIN_DATA_CACHE_KEY="vahome_admin_snapshot_v1",ADMIN_VERIFIED_KEY="vahome_admin_verified_v1",ADMIN_READ_TIMEOUT_MS=32000,ADMIN_AUTH_TIMEOUT_MS=38000,ADMIN_CACHE_MAX_AGE_MS=14*24*60*60*1000,ADMIN_VERIFIED_MAX_AGE_MS=7*24*60*60*1000,ADMIN_RECOVERY_DELAYS=[6000,20000,60000];
+let adminRefreshPromise=null,adminRecoveryTimer=0,adminRecoveryAttempt=0,adminResumeTimer=0,currentAdminUserId="",adminDataReady=false,lastSuccessfulSyncAt=0;
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 const money=v=>`${Number(v||0).toLocaleString("uk-UA",{maximumFractionDigits:2})} грн`;
@@ -24,9 +26,68 @@ function setSyncState(state,label=""){
   const text=label||defaults[state]||defaults.synced;
   if(top){top.dataset.state=state;top.innerHTML=`<i></i>${esc(text)}`;top.title=state==="synced"?`Останнє успішне оновлення: ${new Date().toLocaleTimeString("uk-UA",{hour:"2-digit",minute:"2-digit"})}`:text;}
   if(side){side.dataset.state=state;}if(sideText)sideText.textContent=text;
-  const mobileDot=$("#adminMobileSyncDot");if(mobileDot)mobileDot.dataset.state=state;
+  const mobileDot=$("#adminMobileSyncDot");if(mobileDot){mobileDot.dataset.state=state;mobileDot.title=text;}
 }
 function startAdminAutoSync(){if(adminAutoSyncTimer)clearInterval(adminAutoSyncTimer);adminAutoSyncTimer=setInterval(()=>{if(!document.hidden&&navigator.onLine&&!$("#dashboardView")?.hidden)loadAll({silent:true}).catch(()=>{});},60000);}
+function sleep(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
+function makeAdminError(code,message,cause){const error=new Error(message||code);error.code=code;if(cause)error.cause=cause;return error;}
+function errorText(value){return String(value?.message||value?.error_description||value?.error||value||"").toLowerCase();}
+function errorStatus(value,status=0){return Number(status||value?.status||value?.statusCode||value?.context?.status||0);}
+function isTransientNetworkIssue(value,status=0){const http=errorStatus(value,status),text=errorText(value);return [408,429,500,502,503,504,520,522,523,524].includes(http)||/load failed|failed to fetch|network|fetch error|timeout|timed out|abort|gateway|service unavailable|temporar|connection reset|connection closed|offline/.test(text);}
+function isDefinitiveAuthIssue(value){const code=String(value?.code||"").toLowerCase(),text=errorText(value);return ["invalid_credentials","invalid_grant","refresh_token_not_found","session_not_found","user_not_found","user_banned"].includes(code)||/invalid refresh token|refresh token.*not found|session.*not found|user.*banned/.test(text);}
+function withPromiseTimeout(promise,ms,code="REQUEST_TIMEOUT"){let timer;const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>reject(makeAdminError(code,code)),ms);});return Promise.race([promise,timeout]).finally(()=>clearTimeout(timer));}
+function syncClock(value){return value?new Intl.DateTimeFormat("uk-UA",{hour:"2-digit",minute:"2-digit"}).format(new Date(value)):"—";}
+function readVerifiedAdmin(){try{return JSON.parse(localStorage.getItem(ADMIN_VERIFIED_KEY)||"null");}catch(_){return null;}}
+function isKnownVerifiedAdmin(userId){const row=readVerifiedAdmin(),verifiedAt=Number(row?.verifiedAt||0);return Boolean(row&&String(row.userId||"")===String(userId||"")&&verifiedAt&&Date.now()-verifiedAt<=ADMIN_VERIFIED_MAX_AGE_MS);}
+function rememberVerifiedAdmin(user,email){if(!user?.id)return;try{localStorage.setItem(ADMIN_VERIFIED_KEY,JSON.stringify({userId:user.id,email:email||user.email||"",verifiedAt:Date.now()}));}catch(_){};}
+function clearVerifiedAdmin(){try{localStorage.removeItem(ADMIN_VERIFIED_KEY);}catch(_){};}
+function readAdminSnapshot(){try{return JSON.parse(localStorage.getItem(ADMIN_DATA_CACHE_KEY)||"null");}catch(_){return null;}}
+function clearAdminSnapshot(){try{localStorage.removeItem(ADMIN_DATA_CACHE_KEY);}catch(_){};}
+function snapshotArrays(){return{orders,reviews,promos,releases,marketingPreferences,repeatCampaigns,discoveryCredits,paymentAttempts,paymentSettings,adminAudit,vahomeExpenses};}
+function applySnapshotArrays(data){const take=(key,current)=>Array.isArray(data?.[key])?data[key]:current;orders=take("orders",orders);reviews=take("reviews",reviews);promos=take("promos",promos);releases=take("releases",releases);marketingPreferences=take("marketingPreferences",marketingPreferences);repeatCampaigns=take("repeatCampaigns",repeatCampaigns);discoveryCredits=take("discoveryCredits",discoveryCredits);paymentAttempts=take("paymentAttempts",paymentAttempts);paymentSettings=take("paymentSettings",paymentSettings);adminAudit=take("adminAudit",adminAudit);vahomeExpenses=take("vahomeExpenses",vahomeExpenses);}
+function renderAdminData(){renderOrders();renderReviews();renderPromos();renderReleases();renderAdmin2();}
+function restoreAdminSnapshot(userId){const snapshot=readAdminSnapshot();if(!snapshot||String(snapshot.userId||"")!==String(userId||""))return false;const savedAt=Number(snapshot.savedAt||0);if(!savedAt||Date.now()-savedAt>ADMIN_CACHE_MAX_AGE_MS)return false;applySnapshotArrays(snapshot.data||{});adminDataReady=true;lastSuccessfulSyncAt=savedAt;renderAdminData();setSyncState(navigator.onLine?"error":"offline",`${navigator.onLine?"Останні дані":"Офлайн · дані"} ${syncClock(savedAt)}`);return true;}
+function saveAdminSnapshot(){if(!currentAdminUserId||!adminDataReady)return;const verified=readVerifiedAdmin();try{localStorage.setItem(ADMIN_DATA_CACHE_KEY,JSON.stringify({version:1,userId:currentAdminUserId,email:verified?.email||"",savedAt:lastSuccessfulSyncAt||Date.now(),data:snapshotArrays()}));}catch(_){/* Read-only resilience cache is best effort. */}}
+function resetAdminRecovery(){if(adminRecoveryTimer){clearTimeout(adminRecoveryTimer);adminRecoveryTimer=0;}adminRecoveryAttempt=0;}
+function scheduleAdminRecovery(){if(adminRecoveryTimer||!navigator.onLine||$("#dashboardView")?.hidden)return;const delay=ADMIN_RECOVERY_DELAYS[Math.min(adminRecoveryAttempt,ADMIN_RECOVERY_DELAYS.length-1)];adminRecoveryAttempt=Math.min(adminRecoveryAttempt+1,ADMIN_RECOVERY_DELAYS.length-1);adminRecoveryTimer=setTimeout(()=>{adminRecoveryTimer=0;if(document.hidden||!navigator.onLine||$("#dashboardView")?.hidden)return;loadAll({silent:true}).catch(()=>{});},delay);}
+function requestAdminRecovery(delay=160){if(adminResumeTimer)clearTimeout(adminResumeTimer);adminResumeTimer=setTimeout(()=>{adminResumeTimer=0;if(!document.hidden&&navigator.onLine&&!$("#dashboardView")?.hidden)loadAll({silent:true}).catch(()=>{});},delay);}
+function installAdminRecoveryEvents(){window.addEventListener("offline",()=>{const stamp=lastSuccessfulSyncAt;setSyncState("offline",stamp?`Офлайн · дані ${syncClock(stamp)}`:"Офлайн");});window.addEventListener("online",()=>requestAdminRecovery(80));window.addEventListener("pageshow",()=>requestAdminRecovery(120));window.addEventListener("focus",()=>requestAdminRecovery(220));document.addEventListener("visibilitychange",()=>{if(!document.hidden)requestAdminRecovery(180);});}
+async function runAdminRead(buildQuery,{timeoutMs=ADMIN_READ_TIMEOUT_MS,retries=1,allowAuthRefresh=true}={}){
+  let attempt=0,authRetried=false;
+  while(true){
+    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);
+    try{
+      const result=await buildQuery(controller.signal);
+      clearTimeout(timer);
+      if(!result?.error)return result;
+      const status=Number(result.status||0),authFailure=status===401||String(result.error?.code||"")==="PGRST301";
+      if(allowAuthRefresh&&!authRetried&&authFailure){
+        authRetried=true;
+        await refreshAdminSession({force:true});
+        continue;
+      }
+      if(authRetried&&authFailure)throw makeAdminError("TEMPORARY_AUTH","Supabase тимчасово не підтверджує сесію",result.error);
+      const transient=isTransientNetworkIssue(result.error,status);
+      if(transient&&attempt<retries){attempt++;await sleep(700+attempt*500);continue;}
+      if(transient)throw makeAdminError("TEMPORARY_NETWORK",result.error?.message||"TEMPORARY_NETWORK",result.error);
+      throw result.error;
+    }catch(error){
+      clearTimeout(timer);
+      if(["SESSION_EXPIRED","ACCESS_DENIED"].includes(String(error?.code||"")))throw error;
+      const timedOut=error?.name==="AbortError"||String(error?.code||"")==="ABORT_ERR"||/abort/.test(errorText(error));
+      if(timedOut)throw makeAdminError("TEMPORARY_NETWORK","REQUEST_TIMEOUT",error);
+      if(isTransientNetworkIssue(error)){
+        if(attempt<retries){attempt++;await sleep(700+attempt*500);continue;}
+        throw makeAdminError("TEMPORARY_NETWORK",error?.message||"TEMPORARY_NETWORK",error);
+      }
+      throw error;
+    }
+  }
+}
+async function refreshAdminSession({force=false}={}){if(!adminRefreshPromise){const task=async()=>{const current=await sb.auth.getSession();const session=current?.data?.session;if(current?.error&&!isTransientNetworkIssue(current.error))throw current.error;if(!session)throw makeAdminError("SESSION_EXPIRED","SESSION_EXPIRED",current?.error);const expiresAt=Number(session.expires_at||0)*1000;if(!force&&(!expiresAt||expiresAt-Date.now()>90000))return session;const refreshed=await sb.auth.refreshSession();if(refreshed?.error||!refreshed?.data?.session){const authError=refreshed?.error||makeAdminError("SESSION_EXPIRED","SESSION_EXPIRED");if(isDefinitiveAuthIssue(authError))throw makeAdminError("SESSION_EXPIRED","SESSION_EXPIRED",authError);if(isTransientNetworkIssue(authError))throw makeAdminError("TEMPORARY_AUTH","TEMPORARY_AUTH",authError);throw authError;}return refreshed.data.session;};const run=()=>task();adminRefreshPromise=(navigator.locks?.request?navigator.locks.request("vahome-admin-auth-refresh-v1",{mode:"exclusive"},run):run()).finally(()=>{adminRefreshPromise=null;});}try{return await withPromiseTimeout(adminRefreshPromise,ADMIN_AUTH_TIMEOUT_MS,"AUTH_REFRESH_TIMEOUT");}catch(error){if(String(error?.code||"")==="AUTH_REFRESH_TIMEOUT")throw makeAdminError("TEMPORARY_AUTH","AUTH_REFRESH_TIMEOUT",error);throw error;}}
+async function signInWithResilience(email,password,onRetry){let lastError=null;for(let attempt=0;attempt<2;attempt++){let result;try{result=await withPromiseTimeout(sb.auth.signInWithPassword({email,password}),ADMIN_AUTH_TIMEOUT_MS,"AUTH_SIGNIN_TIMEOUT");}catch(error){result={data:null,error};}if(!result?.error&&result?.data?.session)return result;lastError=result?.error||lastError;let localSession=null;try{localSession=(await sb.auth.getSession())?.data?.session||null;}catch(_){}if(localSession)return{data:{session:localSession,user:localSession.user},error:null,recovered:true};if(isDefinitiveAuthIssue(lastError))return{data:null,error:lastError};if(String(lastError?.code||"")==="AUTH_SIGNIN_TIMEOUT")break;if(!isTransientNetworkIssue(lastError)||attempt===1)break;if(typeof onRetry==="function")onRetry(attempt+1);await sleep(1200);}return{data:null,error:lastError||makeAdminError("TEMPORARY_AUTH","TEMPORARY_AUTH")};}
+async function fetchWithTimeout(url,options={},timeoutMs=ADMIN_READ_TIMEOUT_MS){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);try{return await fetch(url,{...options,signal:controller.signal});}catch(error){if(error?.name==="AbortError"||isTransientNetworkIssue(error))throw makeAdminError("TEMPORARY_NETWORK",error?.name==="AbortError"?"REQUEST_TIMEOUT":error?.message||"TEMPORARY_NETWORK",error);throw error;}finally{clearTimeout(timer);}}
+async function adminFunctionRequest(path,body){let token=await getAdminAccessToken();const send=async()=>{const response=await fetchWithTimeout(`${cfg.url}/functions/v1/${path}`,{method:"POST",headers:{Authorization:`Bearer ${token}`,apikey:cfg.publishableKey,"Content-Type":"application/json"},body:JSON.stringify(body)});const payload=await response.json().catch(()=>({}));return{response,payload};};let packet=await send();if(packet.response.status===401){try{await refreshAdminSession({force:true});token=await getAdminAccessToken();packet=await send();}catch(error){if(String(error?.code||"")==="SESSION_EXPIRED"){showLogin("Адмінська сесія завершилася. Увійдіть повторно.");throw error;}throw makeAdminError("TEMPORARY_AUTH","Supabase тимчасово не підтверджує сесію",error);}}if(packet.response.status===401)throw makeAdminError("TEMPORARY_AUTH","Supabase тимчасово не підтверджує сесію");if(!packet.response.ok)throw new Error(String(packet.payload.error||`HTTP_${packet.response.status}`));return packet.payload;}
 function highlightMatch(value,query){const text=String(value??""),needle=String(query||"").trim();if(!needle)return esc(text);const i=text.toLowerCase().indexOf(needle.toLowerCase());if(i<0)return esc(text);return `${esc(text.slice(0,i))}<mark>${esc(text.slice(i,i+needle.length))}</mark>${esc(text.slice(i+needle.length))}`;}
 let confirmResolver=null;
 function premiumConfirm({title="Підтвердити дію?",text="",confirmLabel="Підтвердити",kicker="Підтвердження",tone="default"}={}){
@@ -38,29 +99,28 @@ function premiumConfirm({title="Підтвердити дію?",text="",confirmL
 }
 
 async function getAdminAccessToken(){
-  let {data:{session},error}=await sb.auth.getSession();
-  if(error||!session)throw new Error("SESSION_EXPIRED");
+  const current=await sb.auth.getSession();
+  let session=current?.data?.session;
+  if(current?.error&&!isTransientNetworkIssue(current.error))throw current.error;
+  if(!session)throw makeAdminError("SESSION_EXPIRED","SESSION_EXPIRED",current?.error);
   const expiresAt=Number(session.expires_at||0)*1000;
-  if(expiresAt&&expiresAt-Date.now()<90_000){
-    const refreshed=await sb.auth.refreshSession();
-    if(refreshed.error||!refreshed.data.session)throw new Error("SESSION_EXPIRED");
-    session=refreshed.data.session;
+  if(expiresAt&&expiresAt-Date.now()<90000){
+    try{session=await refreshAdminSession();}
+    catch(error){
+      if(String(error?.code||"")==="SESSION_EXPIRED")throw error;
+      if(expiresAt-Date.now()>10000)return session.access_token;
+      throw makeAdminError("TEMPORARY_AUTH","Supabase тимчасово не підтверджує сесію",error);
+    }
   }
   return session.access_token;
 }
 async function adminOrderRequest(body){
-  let token;
-  try{token=await getAdminAccessToken();}
-  catch(_){showLogin("Адмінська сесія завершилася. Увійдіть повторно.");throw new Error("SESSION_EXPIRED");}
-  const response=await fetch(`${cfg.url}/functions/v1/admin-order-update`,{
-    method:"POST",
-    headers:{Authorization:`Bearer ${token}`,apikey:cfg.publishableKey,"Content-Type":"application/json"},
-    body:JSON.stringify(body)
-  });
-  const payload=await response.json().catch(()=>({}));
-  if(response.status===401){await sb.auth.signOut({scope:"local"}).catch(()=>{});showLogin("Адмінська сесія завершилася. Увійдіть повторно.");throw new Error("SESSION_EXPIRED");}
-  if(!response.ok)throw new Error(String(payload.error||`HTTP_${response.status}`));
-  return payload;
+  try{return await adminFunctionRequest("admin-order-update",body);}
+  catch(error){
+    if(String(error?.code||"")==="SESSION_EXPIRED")throw error;
+    if(["TEMPORARY_AUTH","TEMPORARY_NETWORK"].includes(String(error?.code||"")))throw makeAdminError(error.code,"Сервер тимчасово недоступний. Зміни не відправлено.",error);
+    throw error;
+  }
 }
 function applyUpdatedOrder(data){
   if(!data)return;
@@ -225,39 +285,69 @@ async function copyText(value,label="Скопійовано"){
   try{await navigator.clipboard.writeText(text);}catch(_){const input=document.createElement("textarea");input.value=text;input.style.position="fixed";input.style.opacity="0";document.body.appendChild(input);input.select();document.execCommand("copy");input.remove();}
   toast(label,"success");
 }
-async function requireAdmin(){const {data:{user}}=await sb.auth.getUser();if(!user)return false;const {data,error}=await sb.from("admin_users").select("user_id,email").eq("user_id",user.id).maybeSingle();if(error||!data){await sb.auth.signOut({scope:"local"});throw new Error("Цей акаунт не має доступу до адмін-панелі.");}$("#adminIdentity").textContent=data.email;return true;}
+async function requireAdmin(){
+  const current=await sb.auth.getSession();
+  const session=current?.data?.session;
+  if(current?.error&&!isTransientNetworkIssue(current.error))throw current.error;
+  if(!session)throw makeAdminError("SESSION_EXPIRED","SESSION_EXPIRED",current?.error);
+  currentAdminUserId=session.user.id;
+  let result;
+  try{
+    result=await runAdminRead(signal=>sb.from("admin_users").select("user_id,email").eq("user_id",session.user.id).maybeSingle().abortSignal(signal),{retries:1});
+  }catch(error){
+    if(["TEMPORARY_NETWORK","TEMPORARY_AUTH"].includes(String(error?.code||""))&&isKnownVerifiedAdmin(session.user.id)){
+      const known=readVerifiedAdmin();
+      $("#adminIdentity").textContent=known?.email||session.user.email||"VA HOME";
+      return{verified:false,transient:true};
+    }
+    throw error;
+  }
+  if(!result.data){clearAdminSnapshot();clearVerifiedAdmin();await sb.auth.signOut({scope:"local"}).catch(()=>{});throw makeAdminError("ACCESS_DENIED","Цей акаунт не має доступу до адмін-панелі.");}
+  rememberVerifiedAdmin(session.user,result.data.email);
+  $("#adminIdentity").textContent=result.data.email;
+  return{verified:true,transient:false};
+}
 function showLogin(message=""){$("#loginView").hidden=false;$("#dashboardView").hidden=true;document.body.classList.remove("admin2-dashboard-open");const logout=$("#logoutBtn");if(logout)logout.hidden=true;$("#loginMessage").textContent=message;}
 function showDashboard(){$("#loginView").hidden=true;$("#loginMessage").textContent="";$("#dashboardView").hidden=false;document.body.classList.add("admin2-dashboard-open");const logout=$("#logoutBtn");if(logout)logout.hidden=false;activateAdmin2View(location.hash.replace(/^#/,"")||"overview",{updateHash:false});window.scrollTo({top:0,behavior:"auto"});}
 async function loadAll({silent=false}={}){
   if(adminLoadPromise)return adminLoadPromise;
   adminLoadPromise=(async()=>{
-    document.body.classList.add("admin-loading");setSyncState(navigator.onLine?"syncing":"offline");
+    const blocking=!adminDataReady&&!silent;
+    if(blocking)document.body.classList.add("admin-loading");
+    setSyncState(navigator.onLine?"syncing":"offline");
     try{
-      if(!navigator.onLine)throw new Error("OFFLINE");
+      if(!navigator.onLine)throw makeAdminError("TEMPORARY_NETWORK","OFFLINE");
       const core=await Promise.all([
-        sb.from("orders").select("*").order("created_at",{ascending:false}).limit(500),
-        sb.from("reviews").select("*").order("created_at",{ascending:false}).limit(500),
-        sb.from("promo_codes").select("*").order("created_at",{ascending:false}),
-        sb.from("private_releases").select("*").order("public_starts_at",{ascending:false})
+        runAdminRead(signal=>sb.from("orders").select("*").order("created_at",{ascending:false}).limit(500).abortSignal(signal)),
+        runAdminRead(signal=>sb.from("reviews").select("*").order("created_at",{ascending:false}).limit(500).abortSignal(signal)),
+        runAdminRead(signal=>sb.from("promo_codes").select("*").order("created_at",{ascending:false}).abortSignal(signal)),
+        runAdminRead(signal=>sb.from("private_releases").select("*").order("public_starts_at",{ascending:false}).abortSignal(signal))
       ]);
-      const [o,r,p,rel]=core;if(o.error)throw o.error;if(r.error)throw r.error;if(p.error)throw p.error;if(rel.error)throw rel.error;
-      orders=o.data||[];reviews=r.data||[];promos=p.data||[];releases=rel.data||[];
+      orders=core[0].data||[];reviews=core[1].data||[];promos=core[2].data||[];releases=core[3].data||[];
       const optional=await Promise.allSettled([
-        sb.from("marketing_preferences").select("*").order("created_at",{ascending:false}).limit(500),
-        sb.from("repeat_purchase_campaigns").select("*").order("created_at",{ascending:false}).limit(500),
-        sb.from("discovery_credits").select("*").order("created_at",{ascending:false}).limit(500),
-        sb.from("payment_attempts").select("*").order("created_at",{ascending:false}).limit(500),
-        sb.from("payment_settings").select("*"),
-        sb.from("vahome_admin_audit").select("id,entity_type,entity_id,action,changed_fields,actor_id,actor_email,created_at,meta").order("created_at",{ascending:false}).limit(60),
-        sb.from("vahome_expenses").select("*").order("expense_date",{ascending:false}).order("created_at",{ascending:false}).limit(1000)
+        runAdminRead(signal=>sb.from("marketing_preferences").select("*").order("created_at",{ascending:false}).limit(500).abortSignal(signal)),
+        runAdminRead(signal=>sb.from("repeat_purchase_campaigns").select("*").order("created_at",{ascending:false}).limit(500).abortSignal(signal)),
+        runAdminRead(signal=>sb.from("discovery_credits").select("*").order("created_at",{ascending:false}).limit(500).abortSignal(signal)),
+        runAdminRead(signal=>sb.from("payment_attempts").select("*").order("created_at",{ascending:false}).limit(500).abortSignal(signal)),
+        runAdminRead(signal=>sb.from("payment_settings").select("*").abortSignal(signal)),
+        runAdminRead(signal=>sb.from("vahome_admin_audit").select("id,entity_type,entity_id,action,changed_fields,actor_id,actor_email,created_at,meta").order("created_at",{ascending:false}).limit(60).abortSignal(signal)),
+        runAdminRead(signal=>sb.from("vahome_expenses").select("*").order("expense_date",{ascending:false}).order("created_at",{ascending:false}).limit(1000).abortSignal(signal))
       ]);
-      const dataOrEmpty=result=>result.status==="fulfilled"&&!result.value.error?(result.value.data||[]):[];
-      marketingPreferences=dataOrEmpty(optional[0]);repeatCampaigns=dataOrEmpty(optional[1]);discoveryCredits=dataOrEmpty(optional[2]);paymentAttempts=dataOrEmpty(optional[3]);paymentSettings=dataOrEmpty(optional[4]);adminAudit=dataOrEmpty(optional[5]);vahomeExpenses=dataOrEmpty(optional[6]);
-      renderOrders();renderReviews();renderPromos();renderReleases();renderAdmin2();
-      setSyncState("synced",`Синхронізовано ${new Date().toLocaleTimeString("uk-UA",{hour:"2-digit",minute:"2-digit"})}`);
+      const dataOrKeep=(result,current)=>result.status==="fulfilled"?(result.value.data||[]):current;
+      marketingPreferences=dataOrKeep(optional[0],marketingPreferences);repeatCampaigns=dataOrKeep(optional[1],repeatCampaigns);discoveryCredits=dataOrKeep(optional[2],discoveryCredits);paymentAttempts=dataOrKeep(optional[3],paymentAttempts);paymentSettings=dataOrKeep(optional[4],paymentSettings);adminAudit=dataOrKeep(optional[5],adminAudit);vahomeExpenses=dataOrKeep(optional[6],vahomeExpenses);
+      adminDataReady=true;lastSuccessfulSyncAt=Date.now();
+      renderAdminData();saveAdminSnapshot();resetAdminRecovery();
+      setSyncState("synced",`Синхронізовано ${syncClock(lastSuccessfulSyncAt)}`);
       return true;
-    }catch(error){setSyncState(navigator.onLine?"error":"offline");if(!silent&&String(error?.message||"")!=="OFFLINE")toast("Не вдалося оновити дані. Перевірте з’єднання.","danger");throw error;}
-    finally{document.body.classList.remove("admin-loading");}
+    }catch(error){
+      const offline=!navigator.onLine||errorText(error)==="offline";
+      if(!adminDataReady&&currentAdminUserId)restoreAdminSnapshot(currentAdminUserId);
+      const stamp=lastSuccessfulSyncAt;
+      setSyncState(offline?"offline":"error",stamp?`${offline?"Офлайн":"Сервер недоступний"} · дані ${syncClock(stamp)}`:(offline?"Офлайн":"Сервер тимчасово недоступний"));
+      if(!silent&&!offline)toast(adminDataReady?"Supabase тимчасово не відповідає. Показую останні дані.":"Supabase тимчасово не відповідає. Дані не втрачено.","warning");
+      scheduleAdminRecovery();
+      throw error;
+    }finally{if(blocking)document.body.classList.remove("admin-loading");}
   })();
   try{return await adminLoadPromise;}finally{adminLoadPromise=null;}
 }
@@ -365,12 +455,12 @@ function buildPaymentTimeline(){
 async function loadOrderPaymentHistory(orderId){
   activeOrderAttempts=[];activeOrderEvents=[];
   if(!isCardOrder(activeOrder))return;
-  const [attemptsResult,eventsResult]=await Promise.all([
-    sb.from("payment_attempts").select("id,invoice_id,page_url,reference,amount_minor,currency,status,provider_created_at,provider_modified_at,paid_at,failure_reason,error_code,created_at,updated_at").eq("order_id",orderId).order("created_at",{ascending:false}),
-    sb.from("payment_events").select("id,invoice_id,provider_status,provider_modified_at,amount_minor,currency,accepted,reason,created_at").eq("order_id",orderId).order("created_at",{ascending:false}).limit(40)
+  const [attemptsResult,eventsResult]=await Promise.allSettled([
+    runAdminRead(signal=>sb.from("payment_attempts").select("id,invoice_id,page_url,reference,amount_minor,currency,status,provider_created_at,provider_modified_at,paid_at,failure_reason,error_code,created_at,updated_at").eq("order_id",orderId).order("created_at",{ascending:false}).abortSignal(signal)),
+    runAdminRead(signal=>sb.from("payment_events").select("id,invoice_id,provider_status,provider_modified_at,amount_minor,currency,accepted,reason,created_at").eq("order_id",orderId).order("created_at",{ascending:false}).limit(40).abortSignal(signal))
   ]);
-  if(!attemptsResult.error)activeOrderAttempts=attemptsResult.data||[];
-  if(!eventsResult.error)activeOrderEvents=eventsResult.data||[];
+  if(attemptsResult.status==="fulfilled")activeOrderAttempts=attemptsResult.value.data||[];
+  if(eventsResult.status==="fulfilled")activeOrderEvents=eventsResult.value.data||[];
 }
 function orderPaymentPanel(){
   if(!isCardOrder(activeOrder)){
@@ -455,7 +545,7 @@ async function openOrder(id,{pushHistory=true}={}){
 }
 async function reloadActiveOrder(){
   if(!activeOrder)return;
-  const {data,error}=await sb.from("orders").select("*").eq("id",activeOrder.id).single();if(error)throw error;
+  const {data}=await runAdminRead(signal=>sb.from("orders").select("*").eq("id",activeOrder.id).single().abortSignal(signal));
   activeOrder=data;const index=orders.findIndex(order=>String(order.id)===String(data.id));if(index>=0)orders[index]=data;
   await loadOrderPaymentHistory(data.id);renderOrders();renderOrderDialog();
 }
@@ -494,22 +584,15 @@ async function syncDeliveryStatus(){
   const button=$("#syncDeliveryBtn");
   if(button){button.disabled=true;button.textContent="Перевіряємо…";}
   try{
-    const token=await getAdminAccessToken();
-    const response=await fetch(`${cfg.url}/functions/v1/sync-nova-poshta-deliveries`,{
-      method:"POST",
-      headers:{Authorization:`Bearer ${token}`,apikey:cfg.publishableKey,"Content-Type":"application/json"},
-      body:JSON.stringify({order_id:activeOrder.id})
-    });
-    const payload=await response.json().catch(()=>({}));
-    if(response.status===401){showLogin("Адмінська сесія завершилася. Увійдіть повторно.");return;}
-    if(!response.ok)throw new Error(String(payload.error||`HTTP_${response.status}`));
+    const payload=await adminFunctionRequest("sync-nova-poshta-deliveries",{order_id:activeOrder.id});
     const result=Array.isArray(payload.results)?payload.results[0]:null;
     await reloadActiveOrder();
     if(result?.delivered)return toast("Нова пошта підтвердила отримання · статус «Доставлено»","success");
     if(result?.found)return toast(result.status_text||"Посилка ще в дорозі","success");
     toast("Нова пошта ще не повернула статус для цієї ТТН","warning");
   }catch(error){
-    if(String(error.message)!=="SESSION_EXPIRED")toast("Не вдалося перевірити доставку. Спробуйте ще раз.","danger");
+    if(String(error?.code||"")==="SESSION_EXPIRED")return;
+    toast(["TEMPORARY_AUTH","TEMPORARY_NETWORK"].includes(String(error?.code||""))?"Supabase тимчасово недоступний. Спробуйте ще раз трохи пізніше.":"Не вдалося перевірити доставку. Спробуйте ще раз.","danger");
   }finally{
     if(button){button.disabled=false;button.textContent="Перевірити зараз";}
   }
@@ -943,8 +1026,7 @@ function renderAnalytics2(){
 }
 function renderOverviewPaymentMixInto(host){if(!host)return;const valid=orders.filter(o=>effectiveOrderStatus(o)!=="cancelled"),labels={card_online:"Карткою онлайн",bank_transfer:"На рахунок",cash_on_delivery:"При отриманні"};host.innerHTML=`<div class="admin2-payment-mix">${Object.keys(labels).map(key=>{const n=valid.filter(o=>o.payment_method===key).length;return `<div class="admin2-payment-mix-row"><span>${labels[key]}</span><strong>${n} · ${valid.length?Math.round(n/valid.length*100):0}%</strong></div>`}).join("")}</div>`;}
 let vahomePushBusy=false;
-function pushFunctionUrl(){return `${cfg.url}/functions/v1/vahome-push`;}
-async function pushRequest(action,body={}){const token=await getAdminAccessToken(),response=await fetch(pushFunctionUrl(),{method:"POST",headers:{Authorization:`Bearer ${token}`,apikey:cfg.publishableKey,"Content-Type":"application/json"},body:JSON.stringify({action,...body})});const payload=await response.json().catch(()=>({}));if(response.status===401||response.status===403){if(response.status===401)showLogin("Адмінська сесія завершилася. Увійдіть повторно.");throw new Error(payload.error||"FORBIDDEN");}if(!response.ok)throw new Error(payload.error||`HTTP_${response.status}`);return payload;}
+async function pushRequest(action,body={}){return adminFunctionRequest("vahome-push",{action,...body});}
 function pushDeviceId(){const key="vahome-admin-device-id";let id=localStorage.getItem(key);if(!id){id=crypto.randomUUID?.()||`device-${Date.now()}-${Math.random().toString(16).slice(2)}`;localStorage.setItem(key,id);}return id;}
 function urlBase64ToUint8Array(base64String){const padding="=".repeat((4-base64String.length%4)%4),base64=(base64String+padding).replace(/-/g,"+").replace(/_/g,"/"),raw=atob(base64);return Uint8Array.from([...raw].map(ch=>ch.charCodeAt(0)));}
 function isIosDevice(){return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}
@@ -1021,7 +1103,7 @@ const cards=[
   `<article class="admin2-setting-card"><span>Доставка</span><h3>Нова пошта</h3><div class="admin2-setting-line"><span>Стандартна відправка</span><strong>1–2 робочі дні</strong></div><div class="admin2-setting-line"><span>Безкоштовна доставка</span><strong>від 1500 грн</strong></div><div class="admin2-setting-line"><span>Останнє замовлення</span><strong>${latest?shortDate(latest.created_at):"—"}</strong></div></article>`,
   `<article class="admin2-setting-card"><span>Комунікація</span><h3>VA HOME</h3><div class="admin2-setting-line"><span>Менеджер</span><strong>09:00–19:00</strong></div><div class="admin2-setting-line"><span>Email</span><strong>vahome.aroma@gmail.com</strong></div><div class="admin2-setting-line"><span>Автоматизація повторних</span><strong>${repeatCampaigns.length?"Працює":"Очікує даних"}</strong></div></article>`,
   `<article class="admin2-setting-card" id="pushSettingsCard"><span>Push / PWA</span><h3>Сповіщення адміністратора</h3><div class="admin2-setting-line"><span>Стан</span><strong>Перевіряємо…</strong></div></article>`,
-  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.4.17 · Operations</strong></div></article>`
+  `<article class="admin2-setting-card"><span>Безпека</span><h3>Адмін-доступ</h3><div class="admin2-setting-line"><span>Allowlist</span><strong>Supabase RLS</strong></div><div class="admin2-setting-line"><span>Сесія</span><strong>Авторизована</strong></div><div class="admin2-setting-line"><span>Реліз</span><strong>v16.4.18 · Operations</strong></div></article>`
 ];
 host.innerHTML=cards.join("");
 renderAdminAudit();
@@ -1332,12 +1414,15 @@ function bind(){
   $("#loginForm").addEventListener("submit",async event=>{
     event.preventDefault();$("#loginMessage").textContent="Входимо…";
     const email=event.target.email.value.trim(),password=event.target.password.value;
-    const {error}=await sb.auth.signInWithPassword({email,password});
-    if(error)return showLogin("Помилка входу: "+error.message);
-    try{await requireAdmin();showDashboard();await loadAll();}catch(err){showLogin(err.message);}
+    const result=await signInWithResilience(email,password,()=>{$("#loginMessage").textContent="Supabase відповідає повільно… повторюємо вхід.";});
+    if(result.error){
+      if(isDefinitiveAuthIssue(result.error))return showLogin("Невірний email або пароль.");
+      return showLogin("Supabase тимчасово не відповідає. Пароль не відхилено — спробуйте ще раз за кілька секунд.");
+    }
+    await enterAuthenticatedAdmin(result.data.session);
   });
-  $("#logoutBtn").addEventListener("click",async()=>{await sb.auth.signOut({scope:"local"});showLogin();});
-  $("#refreshBtn").addEventListener("click",()=>loadAll().catch(()=>{}));window.addEventListener("offline",()=>setSyncState("offline"));window.addEventListener("online",()=>loadAll({silent:true}).catch(()=>{}));document.addEventListener("visibilitychange",()=>{if(!document.hidden&&navigator.onLine&&!$("#dashboardView")?.hidden)loadAll({silent:true}).catch(()=>{});});startAdminAutoSync();
+  $("#logoutBtn").addEventListener("click",async()=>{clearAdminSnapshot();clearVerifiedAdmin();currentAdminUserId="";adminDataReady=false;lastSuccessfulSyncAt=0;resetAdminRecovery();await sb.auth.signOut({scope:"local"}).catch(()=>{});showLogin();});
+  $("#refreshBtn").addEventListener("click",()=>loadAll().catch(()=>{}));installAdminRecoveryEvents();startAdminAutoSync();
   ["#orderSearch","#orderStatusFilter","#orderSort"].forEach(selector=>$(selector)?.addEventListener("input",renderOrders));
   $("#orderFocusFilters")?.addEventListener("click",event=>{
     const button=event.target.closest("[data-smart-filter]");if(!button)return;
@@ -1368,5 +1453,26 @@ function bind(){
   window.addEventListener("popstate",handleAdminPopState);
   activateAdmin2View(location.hash.slice(1)||"overview",{updateHash:false});
 }
-document.addEventListener("DOMContentLoaded",async()=>{bind();const {data:{session}}=await sb.auth.getSession();if(!session)return showLogin();try{await requireAdmin();showDashboard();await loadAll();}catch(err){showLogin(err.message);}});
+async function enterAuthenticatedAdmin(session){
+  if(!session?.user)return showLogin();
+  currentAdminUserId=session.user.id;
+  showDashboard();
+  const restored=restoreAdminSnapshot(currentAdminUserId);
+  if(!restored)setSyncState(navigator.onLine?"syncing":"offline",navigator.onLine?"Підключаємося…":"Офлайн");
+  try{
+    await requireAdmin();
+    await loadAll();
+    return true;
+  }catch(error){
+    const code=String(error?.code||"");
+    if(code==="ACCESS_DENIED")return showLogin(error.message);
+    if(code==="SESSION_EXPIRED")return showLogin("Адмінська сесія завершилася. Увійдіть повторно.");
+    const stamp=lastSuccessfulSyncAt;
+    setSyncState(navigator.onLine?"error":"offline",stamp?`${navigator.onLine?"Сервер недоступний":"Офлайн"} · дані ${syncClock(stamp)}`:"Supabase тимчасово недоступний");
+    if(!restored&&!isKnownVerifiedAdmin(currentAdminUserId))toast("Вхід збережено. Чекаємо відновлення Supabase — перелогінюватися не потрібно.","warning");
+    scheduleAdminRecovery();
+    return false;
+  }
+}
+document.addEventListener("DOMContentLoaded",async()=>{bind();let session=null;try{const result=await sb.auth.getSession();session=result?.data?.session||null;}catch(_){}if(!session)return showLogin();await enterAuthenticatedAdmin(session);});
 })();

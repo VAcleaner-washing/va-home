@@ -1,18 +1,21 @@
 {
-  "version": "16.4.17",
+  "version": "16.4.18",
   "channel": "Stable",
-  "name": "ROOM RITUAL CUSTOM AREA STEPPER",
-  "date": "2026-08-23",
-  "base": "16.4.16",
+  "name": "ADMIN SUPABASE RESILIENCE",
+  "date": "2026-08-28",
+  "base": "16.4.17",
   "changes": [
-    "Replaces the browser-native exact-area number spinner with a VA HOME custom minus/value/plus stepper",
-    "Keeps exact square meters optional and preserves the Small, Medium, Large and XL room-size flow",
-    "Suppresses native WebKit and Firefox number-input spinner controls",
-    "Preserves Room Ritual calculation, saved ritual compatibility and account display behavior"
+    "Keeps a valid VA HOME admin session alive through transient Supabase gateway and network failures instead of treating one failed fetch as logout",
+    "Adds bounded transient retries for admin reads, coordinated single-flight session refresh and cross-context refresh locking",
+    "Restores the last successful admin snapshot immediately and automatically refreshes it on online, pageshow, focus and app resume",
+    "Makes login distinguish invalid credentials from transient Auth transport failures and recover a locally persisted session when the server accepted sign-in but the response path failed",
+    "Preserves previously loaded optional admin data when one secondary API call fails instead of replacing it with false empty states",
+    "Keeps admin writes fail-safe: no automatic retry after ambiguous network failure; write retry is allowed only after an explicit 401 and successful session refresh"
   ],
   "notes": [
-    "Storefront Room Ritual control-polish release based on v16.4.16.",
-    "No Supabase, Edge Function, Monobank, Nova Poshta, admin PWA or VAcleaner runtime change.",
-    "Adds regression checks for the custom exact-area stepper and native spinner suppression."
+    "Frontend/admin resilience release based on v16.4.17.",
+    "No Supabase migration, Edge Function deployment, table, grant, RLS, Monobank, Nova Poshta or VAcleaner runtime change.",
+    "The local snapshot is read-only recovery data, is scoped to the authenticated admin user, expires after 14 days and is cleared on explicit logout or access denial.",
+    "Adds a permanent regression contract for Auth retry classification, session refresh coordination, cached data recovery and no ambiguous write retries."
   ]
 }
