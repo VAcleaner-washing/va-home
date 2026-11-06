@@ -2886,3 +2886,25 @@ body.admin-body:has(.admin2-expense-dialog[open]) .admin2-main{overflow-y:hidden
   body.admin-body:has(#manualOrderDialog[open]) .admin2-more-menu{display:none}
 }
 
+/* iOS standalone may add its own scroll-edge blur over a flow-based header.
+   Give WebKit a fixed, full-width background to sample, outside the app shell.
+   Empty-text clipping paints nothing and pointer-events:none preserves taps.
+   Compatibility workaround, not a native iOS API; physical-device confirmation
+   remains necessary. Reference: https://github.com/HKUDS/nanobot/pull/5942 */
+.admin-pwa-top-surface{display:none}
+@supports (-webkit-touch-callout:none) and (background-clip:text){
+  @media(display-mode:standalone){
+    .admin-pwa-top-surface{
+      display:block;
+      position:fixed;
+      inset:0 0 auto;
+      height:11px; /* Exceeds WebKit's thin-border sampling threshold. */
+      z-index:1000;
+      background-color:inherit;
+      -webkit-background-clip:text;
+      background-clip:text;
+      pointer-events:none;
+    }
+  }
+}
+
