@@ -1565,7 +1565,7 @@
       availableHost.hidden = !promos.length;
       if (availableHint) {
         availableHint.textContent = emailRequired
-          ? "Персональні Discovery та Welcome Credit з’являться після введення email."
+          ? "Для персональних Discovery та Welcome Credit увійдіть у кабінет і вкажіть email цього акаунта."
           : "Натисніть на промокод, щоб застосувати його до замовлення.";
       }
       promos.forEach((promo) => {
@@ -1594,7 +1594,7 @@
           headers: {
             "Content-Type": "application/json",
             "apikey": window.SITE_CONFIG.supabase.publishableKey,
-            "Authorization": `Bearer ${window.SITE_CONFIG.supabase.publishableKey}`
+            ...(window.VAHomeSupabase?.getAccessToken?.() ? { Authorization: `Bearer ${window.VAHomeSupabase.getAccessToken()}` } : {})
           },
           body: JSON.stringify(payload)
         });

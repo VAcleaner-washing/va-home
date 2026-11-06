@@ -74,7 +74,10 @@
     return { title: "Очікуємо підтвердження", message: "Платіж ще обробляється. Зазвичай це займає кілька секунд.", retry: false };
   }
 
+  let paymentPollCount = 0;
+  let invoiceRecoveryAttempted = false;
   async function syncCardPayment(order) {
+    let pollAgain = false;
     const panel = document.getElementById("cardPaymentPanel");
     const retry = document.getElementById("retryCardPaymentBtn");
     const identity = queryPaymentIdentity(order);
@@ -86,7 +89,9 @@
     }
     try {
       let result = await window.VAHomeSupabase.cardPayment({ action: "status", order_number: identity.orderNumber, token: identity.token });
-      if (result.payment_status === "pending" && !result.payment_url && (order.paymentRetryRequired || result.error_code === "INVOICE_RETRY_REQUIRED")) {
+      if (!invoiceRecoveryAttempted && result.payment_status === "pending" && !result.payment_url && (order.paymentRetryRequired || result.error_code === "INVOICE_RETRY_REQUIRED")) {
+        invoiceRecoveryAttempted = true;
+        order.paymentRetryRequired = false;
         try {
           const retried = await window.VAHomeSupabase.cardPayment({ action: "retry", order_number: identity.orderNumber, token: identity.token });
           if (retried.return_token) { identity.token = retried.return_token; order.paymentReturnToken = retried.return_token; saveOrder(order); }
@@ -109,10 +114,18 @@
         setText("paymentNote", "Після комплектації надішлемо номер ТТН.");
       }
       cleanPaymentQuery();
+      pollAgain = !["paid", "refunded", "failed", "expired"].includes(result.payment_status);
     } catch (_) {
       setText("cardPaymentTitle", "Замовлення збережено");
       setText("cardPaymentMessage", "Не вдалося миттєво перевірити платіж. Статус оновиться автоматично після відповіді банку.");
       if (retry) retry.hidden = false;
+      pollAgain = true;
+    }
+    if (pollAgain && paymentPollCount < 24) {
+      paymentPollCount += 1;
+      setTimeout(() => syncCardPayment(order), 5000);
+    } else if (pollAgain) {
+      setText("cardPaymentMessage", "Підтвердження затримується. Оновіть сторінку або перевірте статус у кабінеті.");
     }
     if (retry) retry.onclick = async function () {
       retry.disabled = true; setText("cardPaymentStatus", "Створюємо нове платіжне посилання…");

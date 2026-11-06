@@ -139,8 +139,13 @@ function announceOrderResult(result,{fallback="Замовлення оновле
 async function sendStatusEmail(clientOrderId,{announce=true}={}){
   try{
     const result=await adminOrderRequest({action:"resend_email",client_order_id:clientOrderId});
-    if(announce)toast(result.email?.sent?"Лист клієнту надіслано":"Лист уже надсилався раніше","success");
-    return true;
+    if(announce){
+      if(result.email?.sent)toast("Лист клієнту надіслано","success");
+      else if(result.email?.queued)toast("Лист у черзі. Доставку ще не підтверджено.","warning");
+      else if(result.email?.skipped)toast("Новий лист не надіслано: немає повідомлень для відправлення.","warning");
+      else toast("Лист не надіслано. Повторіть спробу.","danger");
+    }
+    return Boolean(result.email?.sent||result.email?.queued);
   }catch(error){
     if(String(error.message)!=="SESSION_EXPIRED"&&announce)toast("Не вдалося надіслати лист. Спробуйте ще раз.","danger");
     return false;
@@ -309,6 +314,13 @@ async function requireAdmin(){
 }
 function showLogin(message=""){$("#loginView").hidden=false;$("#dashboardView").hidden=true;document.body.classList.remove("admin2-dashboard-open");const logout=$("#logoutBtn");if(logout)logout.hidden=true;$("#loginMessage").textContent=message;}
 function showDashboard(){$("#loginView").hidden=true;$("#loginMessage").textContent="";$("#dashboardView").hidden=false;document.body.classList.add("admin2-dashboard-open");const logout=$("#logoutBtn");if(logout)logout.hidden=false;activateAdmin2View(location.hash.replace(/^#/,"")||"overview",{updateHash:false});window.scrollTo({top:0,behavior:"auto"});}
+async function loadAllOrders(){
+  const rows=[];const pageSize=500;
+  for(let offset=0;;offset+=pageSize){
+    const result=await runAdminRead(signal=>sb.from("orders").select("*").order("created_at",{ascending:false}).order("id",{ascending:false}).range(offset,offset+pageSize-1).abortSignal(signal));
+    const page=result.data||[];rows.push(...page);if(page.length<pageSize)return {data:Array.from(new Map(rows.map(row=>[row.id,row])).values())};
+  }
+}
 async function loadAll({silent=false}={}){
   if(adminLoadPromise)return adminLoadPromise;
   adminLoadPromise=(async()=>{
@@ -318,7 +330,7 @@ async function loadAll({silent=false}={}){
     try{
       if(!navigator.onLine)throw makeAdminError("TEMPORARY_NETWORK","OFFLINE");
       const core=await Promise.all([
-        runAdminRead(signal=>sb.from("orders").select("*").order("created_at",{ascending:false}).limit(500).abortSignal(signal)),
+        loadAllOrders(),
         runAdminRead(signal=>sb.from("reviews").select("*").order("created_at",{ascending:false}).limit(500).abortSignal(signal)),
         runAdminRead(signal=>sb.from("promo_codes").select("*").order("created_at",{ascending:false}).abortSignal(signal)),
         runAdminRead(signal=>sb.from("private_releases").select("*").order("public_starts_at",{ascending:false}).abortSignal(signal))
@@ -369,10 +381,10 @@ function renderStats(){
   $("#ordersBadge").textContent=orders.filter(needsAttention).length||"";
   const now=new Date(),startDay=new Date(now.getFullYear(),now.getMonth(),now.getDate()),startWeek=new Date(startDay);startWeek.setDate(startDay.getDate()-6);const startMonth=new Date(now.getFullYear(),now.getMonth(),1);
   const periods=[["Сьогодні",startDay],["7 днів",startWeek],["Цей місяць",startMonth]];
-  $("#periodStats").innerHTML=periods.map(([label,start])=>{const ordered=orders.filter(o=>new Date(o.created_at)>=start&&effectiveOrderStatus(o)!=="cancelled"),received=cashReceivedOrders().filter(o=>new Date(o.paid_at||o.updated_at||o.created_at)>=start);return `<article class="admin-period-card"><span>${label}</span><strong>${money(sumAmount(received))}</strong><small class="admin2-period-paid">Отримано · ${received.length} оплат</small><small class="admin2-period-ordered">Замовлено · ${money(sumAmount(ordered))} · ${ordered.length}</small></article>`;}).join("");
+  $("#periodStats").innerHTML=periods.map(([label,start])=>{const ordered=orders.filter(o=>new Date(o.created_at)>=start&&effectiveOrderStatus(o)!=="cancelled"),received=cashReceivedOrders().filter(o=>new Date(paymentReceivedAt(o))>=start);return `<article class="admin-period-card"><span>${label}</span><strong>${money(sumAmount(received))}</strong><small class="admin2-period-paid">Отримано · ${received.length} оплат</small><small class="admin2-period-ordered">Замовлено · ${money(sumAmount(ordered))} · ${ordered.length}</small></article>`;}).join("");
   renderChart();renderFocusFilters();
 }
-function renderChart(){const days=[];for(let i=29;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i);days.push({date:d,total:0});}cashReceivedOrders().forEach(o=>{const d=new Date(o.paid_at||o.updated_at||o.created_at);d.setHours(0,0,0,0);const day=days.find(x=>x.date.getTime()===d.getTime());if(day)day.total+=Number(o.total_amount||0);});const max=Math.max(1,...days.map(d=>d.total));$("#salesChart").innerHTML=days.map(d=>`<div class="admin-chart__bar" style="--bar-height:${Math.max(2,d.total/max*100)}%"><span>${d.date.toLocaleDateString("uk-UA",{day:"2-digit",month:"2-digit"})}: ${money(d.total)}</span></div>`).join("");$("#chartTotal").textContent=money(days.reduce((s,d)=>s+d.total,0));}
+function renderChart(){const days=[];for(let i=29;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i);days.push({date:d,total:0});}cashReceivedOrders().forEach(o=>{const d=new Date(paymentReceivedAt(o));d.setHours(0,0,0,0);const day=days.find(x=>x.date.getTime()===d.getTime());if(day)day.total+=Number(o.total_amount||0);});const max=Math.max(1,...days.map(d=>d.total));$("#salesChart").innerHTML=days.map(d=>`<div class="admin-chart__bar" style="--bar-height:${Math.max(2,d.total/max*100)}%"><span>${d.date.toLocaleDateString("uk-UA",{day:"2-digit",month:"2-digit"})}: ${money(d.total)}</span></div>`).join("");$("#chartTotal").textContent=money(days.reduce((s,d)=>s+d.total,0));}
 function orderSort(rows){
   const mode=$("#orderSort")?.value||"priority";
   return [...rows].sort((a,b)=>{
@@ -742,7 +754,8 @@ function sumAmount(rows){return rows.reduce((sum,row)=>sum+Number(row.total_amou
 function sameDay(value,base=new Date()){const d=new Date(value);return d.getFullYear()===base.getFullYear()&&d.getMonth()===base.getMonth()&&d.getDate()===base.getDate();}
 function daysAgo(days){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-days);return d;}
 function customerKey(order){const email=String(order.customer_email||"").trim().toLowerCase();const phone=normalizePhone(order.customer_phone);return email||phone||String(order.customer_name||"").trim().toLowerCase();}
-function paidOrderDate(order){return new Date(order.paid_at||order.payment_modified_at||order.updated_at||order.created_at);}
+function paymentReceivedAt(order){return order.paid_at||"";}
+function paidOrderDate(order){return new Date(paymentReceivedAt(order));}
 function orderHasDiscovery(order){return (Array.isArray(order.items)?order.items:[]).some(item=>String(item.id||"").startsWith("discovery-"));}
 function orderHasFullSize(order){return (Array.isArray(order.items)?order.items:[]).some(item=>{const id=String(item.id||"");return Boolean(id&&!id.startsWith("discovery-")&&!id.startsWith("reeds-"));});}
 function customerRows(){
@@ -762,7 +775,7 @@ function customerRows(){
       row.spent+=Number(order.total_amount||0);
       row.paidOrders.push(order);
       const pd=paidOrderDate(order);
-      if(!row.lastPaidAt||pd>new Date(row.lastPaidAt))row.lastPaidAt=pd.toISOString();
+      if(Number.isFinite(pd.getTime())&&(!row.lastPaidAt||pd>new Date(row.lastPaidAt)))row.lastPaidAt=pd.toISOString();
     }
     for(const item of Array.isArray(order.items)?order.items:[]){
       const id=String(item.id||"");
@@ -772,12 +785,12 @@ function customerRows(){
     }
   });
   return [...map.values()].map(row=>{
-    row.paidOrders.sort((a,b)=>paidOrderDate(a)-paidOrderDate(b));
+    row.paidOrders.sort((a,b)=>(paidOrderDate(a).getTime()||Infinity)-(paidOrderDate(b).getTime()||Infinity));
     row.orders.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
     const fav=[...row.products.entries()].filter(([id])=>!id.startsWith("discovery-")).sort((a,b)=>b[1]-a[1])[0]?.[0]||"";
     row.favorite=productById(fav)?.name||fav||"—";
     row.aov=row.completed?row.spent/row.completed:0;
-    row.firstPaidAt=row.paidOrders[0]?paidOrderDate(row.paidOrders[0]).toISOString():null;
+    const firstDated=row.paidOrders.find(order=>Number.isFinite(paidOrderDate(order).getTime()));row.firstPaidAt=firstDated?paidOrderDate(firstDated).toISOString():null;
     return row;
   }).sort((a,b)=>new Date(b.lastAt)-new Date(a.lastAt));
 }
@@ -794,14 +807,14 @@ function clearAdminSearchState(){
   if(changed){renderOrders();renderCustomers();renderCatalogAdmin();renderReviews();renderPromos();}
 }
 function activateAdmin2View(name,{updateHash=true}={}){const view=admin2Views.includes(name)?name:"overview";setAdminMobileSearch(false,{clear:true});clearAdminSearchState();activeAdmin2View=view;document.querySelectorAll(".admin2-view").forEach(panel=>panel.hidden=panel.id!==`${view}Tab`);if(view==="marketing"){const releasesPanel=$("#releasesTab");if(releasesPanel)releasesPanel.hidden=false;}document.querySelectorAll("[data-admin-view]").forEach(button=>button.classList.toggle("is-active",button.dataset.adminView===view));const main=$("#admin2Main");if(main){main.scrollTop=0;main.scrollLeft=0;requestAnimationFrame(()=>{main.scrollTop=0;main.scrollLeft=0;});}if(updateHash&&location.hash!==`#${view}`)history.replaceState(null,"",`#${view}`);closeAdmin2MoreMenu();}
-function renderOverview(){const host=$("#overviewKpis");if(!host)return;const now=new Date(),todayPaid=cashReceivedOrders().filter(order=>sameDay(order.paid_at||order.updated_at||order.created_at,now));const last30=cashReceivedOrders().filter(order=>new Date(order.paid_at||order.updated_at||order.created_at)>=daysAgo(29));const paid=cashReceivedOrders(),aov=paid.length?sumAmount(paid)/paid.length:0;const customers=customerRows(),active=activeValueOrders(),waiting=awaitingMoneyOrders();host.innerHTML=[
+function renderOverview(){const host=$("#overviewKpis");if(!host)return;const now=new Date(),todayPaid=cashReceivedOrders().filter(order=>sameDay(paymentReceivedAt(order),now));const last30=cashReceivedOrders().filter(order=>new Date(paymentReceivedAt(order))>=daysAgo(29));const paid=cashReceivedOrders(),aov=paid.length?sumAmount(paid)/paid.length:0;const customers=customerRows(),active=activeValueOrders(),waiting=awaitingMoneyOrders();host.innerHTML=[
   ["Отримано сьогодні",money(sumAmount(todayPaid)),`${todayPaid.length} фактичних оплат`],
   ["Отримано 30 днів",money(sumAmount(last30)),`${last30.length} оплачених замовлень`],
   ["Активні замовлення",money(sumAmount(active)),`${active.length} у роботі`],
   ["Очікуємо оплат",money(sumAmount(waiting)),`${waiting.length} без підтвердження`],
   ["Середній чек",money(aov),"фактично оплачені"],
   ["Repeat-rate",`${Math.round(repeatRate())}%`,`${customers.filter(c=>c.completed>1).length} повторних клієнтів`]
-].map(([l,v,s])=>`<article class="admin2-kpi"><span>${esc(l)}</span><strong>${esc(v)}</strong><small>${esc(s)}</small></article>`).join("");const od=$("#overviewDate");if(od)od.textContent=new Intl.DateTimeFormat("uk-UA",{weekday:"long",day:"numeric",month:"long"}).format(now);renderOverviewAttention();renderOverviewOrders();renderOverviewProducts();renderOverviewPaymentMix();}
+].map(([l,v,s])=>`<article class="admin2-kpi"><span>${esc(l)}</span><strong>${esc(v)}</strong><small>${esc(s)}</small></article>`).join("");const undated=paid.filter(order=>!paymentReceivedAt(order));if(undated.length)host.insertAdjacentHTML("beforeend",`<article class="admin2-kpi"><span>Оплати без дати</span><strong>${money(sumAmount(undated))}</strong><small>${undated.length} замовлень · не включено у звіти за період</small></article>`);const od=$("#overviewDate");if(od)od.textContent=new Intl.DateTimeFormat("uk-UA",{weekday:"long",day:"numeric",month:"long"}).format(now);renderOverviewAttention();renderOverviewOrders();renderOverviewProducts();renderOverviewPaymentMix();}
 function renderOverviewAttention(){const host=$("#overviewAttention");if(!host)return;const items=buildAttentionItems().slice(0,5);host.innerHTML=items.length?items.map(item=>`<div class="admin2-mini-row" data-attention-kind="${esc(item.kind)}" data-attention-id="${esc(item.id||"")}"><div><strong>${esc(item.title)}</strong><span>${esc(item.detail)}</span></div><em>${esc(item.action||"Відкрити")}</em></div>`).join(""):'<div class="admin2-search-empty">Усе спокійно — термінових дій немає.</div>';bindAttentionClicks(host);}
 function renderOverviewOrders(){const host=$("#overviewOrders");if(!host)return;host.innerHTML=orders.slice(0,5).map(order=>`<div class="admin2-mini-row" data-order-open="${esc(order.id)}"><div><strong>${esc(order.client_order_id)} · ${esc(order.customer_name)}</strong><span>${esc(orderItemSummary(order))} · ${shortDate(order.created_at)}</span></div><em>${money(order.total_amount)}</em></div>`).join("")||'<div class="admin2-search-empty">Замовлень ще немає.</div>';host.querySelectorAll("[data-order-open]").forEach(el=>el.onclick=()=>openOrder(el.dataset.orderOpen));}
 function renderOverviewProducts(){const host=$("#overviewTopProducts");if(!host)return;const rows=productSales().slice(0,5),max=Math.max(1,...rows.map(r=>r.qty));host.innerHTML=rows.map(row=>`<div class="admin2-product-bar"><header><strong>${esc(row.product.name)}</strong><span>${row.qty} шт · ${money(row.revenue)}</span></header><i style="--value:${Math.round(row.qty/max*100)}%"></i></div>`).join("")||'<div class="admin2-search-empty">Дані з’являться після продажів.</div>';}
@@ -926,7 +939,7 @@ host.querySelectorAll("[data-payment-order]").forEach(el=>el.onclick=()=>openOrd
 const expenseCategoryLabels={cogs:"Собівартість",packaging:"Пакування",delivery:"Доставка",ads:"Реклама",fees:"Комісії",services:"Сервіси",other:"Інше"};
 function financePeriodBounds(){const value=$("#financePeriod")?.value||"30",end=new Date();end.setHours(23,59,59,999);let start=null,label="За весь час";if(value==="30"){start=daysAgo(29);label="Останні 30 днів";}else if(value==="90"){start=daysAgo(89);label="Останні 90 днів";}else if(value==="month"){start=new Date(end.getFullYear(),end.getMonth(),1);label=new Intl.DateTimeFormat("uk-UA",{month:"long",year:"numeric"}).format(end);}return{start,end,label};}
 function withinPeriod(value,bounds){const d=new Date(value);return Number.isFinite(d.getTime())&&(!bounds.start||d>=bounds.start)&&d<=bounds.end;}
-function financeRows(){const bounds=financePeriodBounds();const revenue=cashReceivedOrders().filter(order=>withinPeriod(order.paid_at||order.payment_modified_at||order.updated_at||order.created_at,bounds));const expenses=vahomeExpenses.filter(row=>withinPeriod(`${row.expense_date}T12:00:00`,bounds));return{bounds,revenue,expenses};}
+function financeRows(){const bounds=financePeriodBounds();const revenue=cashReceivedOrders().filter(order=>withinPeriod(paymentReceivedAt(order),bounds));const expenses=vahomeExpenses.filter(row=>withinPeriod(`${row.expense_date}T12:00:00`,bounds));return{bounds,revenue,expenses};}
 function expenseTotal(rows,categories=[]){return rows.filter(row=>!categories.length||categories.includes(row.category)).reduce((sum,row)=>sum+Number(row.amount||0),0);}
 function renderFinance(){
   const kpis=$("#financeKpis"),pnl=$("#financePnl"),breakdown=$("#financeBreakdown"),list=$("#expenseList");
@@ -983,7 +996,7 @@ function renderAnalytics2(){
   const kpis=$("#analyticsKpis");
   if(!kpis)return;
   const customers=customerRows();
-  const last30=cashReceivedOrders().filter(o=>new Date(o.paid_at||o.updated_at||o.created_at)>=daysAgo(29));
+  const last30=cashReceivedOrders().filter(o=>new Date(paymentReceivedAt(o))>=daysAgo(29));
   const aov=last30.length?sumAmount(last30)/last30.length:0;
   const firstIds=firstPaidOrderIds();
   const newRevenue=sumAmount(last30.filter(order=>firstIds.has(String(order.id))));
@@ -1258,7 +1271,7 @@ async function resolveManualNpCity(value){const p=manualNpParts(),name=String(va
 function resetManualNp(){const p=manualNpParts();manualNpCityController?.abort();manualNpWarehouseController?.abort();clearTimeout(manualNpCityTimer);clearTimeout(manualNpWarehouseTimer);manualNpWarehouseItems=[];if(!p.form)return;p.form.dataset.manualNpCityManual="false";p.form.dataset.manualNpWarehouseManual="false";p.cityRef.value="";p.settlementRef.value="";p.warehouseRef.value="";manualNpCloseAll();if(p.cityHint)p.cityHint.textContent="Перевіряємо місто через Нову пошту…";if(p.warehouseHint)p.warehouseHint.textContent="Після вибору міста завантажимо актуальні відділення.";resolveManualNpCity(p.city.value);}
 function bindManualNovaPoshta(){const p=manualNpParts();if(!p.form||!p.city||!p.warehouse)return;p.city.addEventListener("input",()=>{p.cityRef.value="";p.settlementRef.value="";p.form.dataset.manualNpCityManual="false";p.warehouse.value="";p.warehouseRef.value="";manualNpWarehouseItems=[];if(p.warehouseHint)p.warehouseHint.textContent="Спочатку оберіть місто зі списку.";clearTimeout(manualNpCityTimer);manualNpCityTimer=window.setTimeout(()=>searchManualNpCities(p.city.value),240);});p.city.addEventListener("focus",()=>{if(p.city.value.trim().length>=3&&!p.cityRef.value)searchManualNpCities(p.city.value);});p.warehouse.addEventListener("input",()=>{p.warehouseRef.value="";p.form.dataset.manualNpWarehouseManual="false";const q=p.warehouse.value.trim(),local=manualNpWarehouseMatches(q);if(local.length)showManualNpWarehouses(q,local);clearTimeout(manualNpWarehouseTimer);if(q.length>=2&&local.length<4)manualNpWarehouseTimer=window.setTimeout(()=>loadManualNpWarehouses(q),260);});p.warehouse.addEventListener("focus",()=>{if(p.form.elements.delivery_method?.value!=="nova_poshta_courier")loadManualNpWarehouses(p.warehouse.value.trim());});}
 function toggleManualDeliveryFields(){const form=$("#manualOrderForm");if(!form)return;const courier=form.elements.delivery_method?.value==="nova_poshta_courier";form.querySelectorAll("[data-manual-branch]").forEach(el=>el.hidden=courier);form.querySelectorAll("[data-manual-courier]").forEach(el=>el.hidden=!courier);if(form.elements.delivery_details)form.elements.delivery_details.required=!courier;if(form.elements.courier_street)form.elements.courier_street.required=courier;if(form.elements.courier_house)form.elements.courier_house.required=courier;const p=manualNpParts();if(courier)manualNpClose(p.warehouse,p.warehouseList);else if(form.elements.nova_poshta_city_ref?.value&&!form.elements.delivery_details?.value)loadManualNpWarehouses("");}
-function resetManualOrder(){manualItems=[{id:fullSizeProducts()[0]?.id||"signature-relax",quantity:1,selections:[],discoveryConfirmed:false}];const form=$("#manualOrderForm");if(form){form.reset();form.elements.customer_city.value="Полтава";form.elements.source.value="instagram";toggleManualDeliveryFields();resetManualNp();}const lookup=$("#manualCustomerLookup"),matches=$("#manualCustomerMatches");if(lookup)lookup.value="";if(matches){matches.hidden=true;matches.innerHTML="";}renderManualItems();const msg=$("#manualOrderMessage");if(msg)msg.textContent="";}
+function resetManualOrder(){sessionStorage.removeItem("vahome_manual_checkout");manualItems=[{id:fullSizeProducts()[0]?.id||"signature-relax",quantity:1,selections:[],discoveryConfirmed:false}];const form=$("#manualOrderForm");if(form){form.reset();form.elements.customer_city.value="Полтава";form.elements.source.value="instagram";toggleManualDeliveryFields();resetManualNp();}const lookup=$("#manualCustomerLookup"),matches=$("#manualCustomerMatches");if(lookup)lookup.value="";if(matches){matches.hidden=true;matches.innerHTML="";}renderManualItems();const msg=$("#manualOrderMessage");if(msg)msg.textContent="";}
 function renderManualItems(){
   const host=$("#manualItems");if(!host)return;
   host.innerHTML=manualItems.map((row,i)=>{
@@ -1292,7 +1305,8 @@ function renderManualItems(){
   renderManualTotal();
 }
 function renderManualTotal(){const total=manualItems.reduce((s,row)=>s+manualProductPrice(row.id)*Number(row.quantity||1),0);const el=$("#manualOrderTotal");if(el)el.textContent=money(total);}
-async function createManualOrder(event){event.preventDefault();
+let manualOrderSubmitting=false;
+async function createManualOrder(event){event.preventDefault();if(manualOrderSubmitting)return;
 const form=event.currentTarget,msg=$("#manualOrderMessage"),fd=new FormData(form);
 msg.textContent="Створюємо замовлення…";
 const deliveryMethod=String(fd.get("delivery_method")||"nova_poshta_branch");
@@ -1308,7 +1322,7 @@ if(!courier&&!warehouseRef&&form.dataset.manualNpWarehouseManual!=="true"){
   form.elements.delivery_details?.focus();return;
 }
 const body={
-  checkout_request_id:crypto.randomUUID(),
+  
   customer_name:String(fd.get("customer_name")||"").trim(),
   customer_phone:normalizeManualPhone(fd.get("customer_phone")),
   customer_email:String(fd.get("customer_email")||"").trim().toLowerCase(),
@@ -1328,7 +1342,13 @@ const body={
   items:manualItems.map(row=>({id:row.id,quantity:Number(row.quantity||1),selections:Array.isArray(row.selections)?row.selections:[]}))
 };
 const invalidDiscovery=manualItems.find(row=>row.id==="discovery-6"&&((row.selections||[]).length!==6||row.discoveryConfirmed!==true));if(invalidDiscovery){msg.textContent="Для Discovery Set — 6 завершіть вибір шести ароматів.";invalidDiscovery.discoveryConfirmed=false;renderManualItems();return;}const invalidReed=manualItems.find(row=>manualEntry(row.id)?.type==="reeds"&&!reedCompatible(row.id));if(invalidReed){msg.textContent="Запасні палички можна додати лише разом із сумісним дифузором.";return;}
-try{const response=await fetch(`${cfg.url}/functions/v1/create-order`,{method:"POST",headers:{apikey:cfg.publishableKey,Authorization:`Bearer ${cfg.publishableKey}`,"Content-Type":"application/json","X-Request-ID":body.checkout_request_id},body:JSON.stringify(body)});
+const fingerprint=JSON.stringify(body);
+let prior=null;try{prior=JSON.parse(sessionStorage.getItem("vahome_manual_checkout")||"null");}catch(_){}
+body.checkout_request_id=prior?.fingerprint===fingerprint?prior.id:crypto.randomUUID();
+sessionStorage.setItem("vahome_manual_checkout",JSON.stringify({fingerprint,id:body.checkout_request_id}));
+manualOrderSubmitting=true;
+const submitButtons=Array.from(form.querySelectorAll('[type="submit"]'));submitButtons.forEach(button=>button.disabled=true);
+try{const response=await fetchWithTimeout(`${cfg.url}/functions/v1/create-order`,{method:"POST",headers:{apikey:cfg.publishableKey,Authorization:`Bearer ${cfg.publishableKey}`,"Content-Type":"application/json","X-Request-ID":body.checkout_request_id},body:JSON.stringify(body)});
 const result=await response.json().catch(()=>({}));
 if(!response.ok)throw new Error(result.error||`HTTP_${response.status}`);
 if(result.order?.client_order_id){const source=String(fd.get("source")||"admin");await sb.from("orders").update({source}).eq("client_order_id",result.order.client_order_id);}
@@ -1339,7 +1359,7 @@ setTimeout(()=>$("#manualOrderDialog").close(),700);
 await loadAll();
 activateAdmin2View("orders");
 }catch(error){msg.textContent=`Помилка: ${error.message}`;
-}}
+}finally{manualOrderSubmitting=false;submitButtons.forEach(button=>button.disabled=false);}}
 
 
 function closeAdmin2Selects(except=null){
@@ -1476,3 +1496,4 @@ async function enterAuthenticatedAdmin(session){
 }
 document.addEventListener("DOMContentLoaded",async()=>{bind();let session=null;try{const result=await sb.auth.getSession();session=result?.data?.session||null;}catch(_){}if(!session)return showLogin();await enterAuthenticatedAdmin(session);});
 })();
+

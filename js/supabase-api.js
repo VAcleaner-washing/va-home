@@ -334,5 +334,6 @@
     }
   }
 
-  window.VAHomeSupabase = { configured, getApprovedReviews, getRecentApprovedReviews, getApprovedRatings, getStoredAuthUser, getAuthenticatedUser, submitReview, getPublicOrderStatus, submitOrder, getPaymentConfig, cardPayment, issueWelcomeCredit, getAccountPaymentDetails, novaPoshtaLookup };
+  window.VAHomeSupabase = { getAccessToken: storedAccessToken, configured, getApprovedReviews, getRecentApprovedReviews, getApprovedRatings, getStoredAuthUser, getAuthenticatedUser, submitReview, getPublicOrderStatus, submitOrder, getPaymentConfig, cardPayment, issueWelcomeCredit, getAccountPaymentDetails, novaPoshtaLookup };
 })();
+

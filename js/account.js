@@ -332,7 +332,7 @@
       const tracking = order.tracking_number
         ? `<a class="account-order__track-button" href="https://novaposhta.ua/tracking/?cargo_number=${encodeURIComponent(order.tracking_number)}" target="_blank" rel="noopener">Відстежити</a>`
         : "";
-      const cardPaymentAction = order.payment_method === "card_online" && !["paid", "refunded"].includes(order.payment_status)
+      const cardPaymentAction = order.payment_method === "card_online" && order.status !== "cancelled" && !["paid", "refunded"].includes(order.payment_status)
         ? `<button class="account-order__pay-card" type="button" data-card-payment="${safeId}">Оплатити карткою</button>`
         : "";
       const bankPaymentAction = order.payment_method === "bank_transfer" && !["paid", "refunded"].includes(order.payment_status) && order.status !== "cancelled"
@@ -966,3 +966,4 @@
     data.session?.user ? await showDashboard(data.session.user) : showAuth();
   });
 })();
+

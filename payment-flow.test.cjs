@@ -12,8 +12,9 @@ async function run(saved, responses) {
   const storage = new Map(saved ? [['vahome_last_order', JSON.stringify(saved)]] : []);
   const calls = [];
   let ready;
+  const timers = [];
   const context = {
-    URL, URLSearchParams, console,
+    URL, URLSearchParams, console, setTimeout: fn => timers.push(fn),
     location: { search: '?payment=return&order=NEW&token=original', href: 'https://example.com/thank-you.html?payment=return&order=NEW&token=original', assign() {} },
     history: { replaceState() {} },
     sessionStorage: { getItem: k => storage.get(k) || null, setItem: (k, v) => storage.set(k, v) },
@@ -23,7 +24,7 @@ async function run(saved, responses) {
   vm.runInNewContext(fs.readFileSync(__dirname + '/js/thank-you.js', 'utf8'), context);
   ready();
   await new Promise(resolve => setImmediate(resolve));
-  return { calls, nodes, order: JSON.parse(storage.get('vahome_last_order')) };
+  return { calls, nodes, timers, order: JSON.parse(storage.get('vahome_last_order')) };
 }
 
 test('Mono return verifies payment without browser order storage', async () => {
@@ -47,4 +48,13 @@ test('retry preserves rotated token for subsequent attempts', async () => {
   assert.equal(result.order.paymentReturnToken, 'rotated');
   await result.nodes.get('retryCardPaymentBtn').onclick();
   assert.equal(result.calls[2].token, 'rotated');
+});
+
+test('pending payment is checked again and polling stops after paid', async () => {
+  const result = await run(null, [{ payment_status: 'pending', payment_url: 'https://example.com/pay' }, { payment_status: 'paid' }]);
+  assert.equal(result.timers.length, 1);
+  await result.timers.shift()();
+  assert.equal(result.calls.length, 2);
+  assert.equal(result.timers.length, 0);
+  assert.match(result.nodes.get('cardPaymentTitle').textContent, /підтверджено/);
 });
