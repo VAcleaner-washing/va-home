@@ -85,12 +85,13 @@
       return;
     }
     try {
-      const result = await window.VAHomeSupabase.cardPayment({ action: "status", order_number: identity.orderNumber, token: identity.token });
+      let result = await window.VAHomeSupabase.cardPayment({ action: "status", order_number: identity.orderNumber, token: identity.token });
       if (result.payment_status === "pending" && !result.payment_url && (order.paymentRetryRequired || result.error_code === "INVOICE_RETRY_REQUIRED")) {
         try {
           const retried = await window.VAHomeSupabase.cardPayment({ action: "retry", order_number: identity.orderNumber, token: identity.token });
-          if (retried.return_token) { order.paymentReturnToken = retried.return_token; saveOrder(order); }
+          if (retried.return_token) { identity.token = retried.return_token; order.paymentReturnToken = retried.return_token; saveOrder(order); }
           if (retried.payment_url) { location.assign(retried.payment_url); return; }
+          result = retried;
         } catch (_) {}
       }
       const view = cardMessage(result.payment_status, result.failure_reason);
@@ -117,7 +118,7 @@
       retry.disabled = true; setText("cardPaymentStatus", "Створюємо нове платіжне посилання…");
       try {
         const result = await window.VAHomeSupabase.cardPayment({ action: "retry", order_number: identity.orderNumber, token: identity.token });
-        if (result.return_token) { order.paymentReturnToken = result.return_token; saveOrder(order); }
+        if (result.return_token) { identity.token = result.return_token; order.paymentReturnToken = result.return_token; saveOrder(order); }
         if (!result.payment_url) throw new Error("NO_PAYMENT_URL");
         location.assign(result.payment_url);
       } catch (_) {
@@ -127,7 +128,12 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    const order = getOrder();
+    let order = getOrder();
+    const identity = queryPaymentIdentity(order);
+    if (identity.isReturn && identity.orderNumber && identity.token &&
+        (!order || (order.orderNumber || order.client_order_id) !== identity.orderNumber)) {
+      order = { orderNumber: identity.orderNumber, paymentMethod: "card_online", paymentReturnToken: identity.token, items: [] };
+    }
     const grid = document.querySelector(".ty-primary-grid");
     const paymentPanel = document.getElementById("paymentPanel");
     const codPanel = document.getElementById("codPanel");
@@ -175,3 +181,4 @@
     if (!order && grid) grid.classList.add("is-single");
   });
 })();
+

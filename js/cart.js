@@ -1393,7 +1393,7 @@
         const returnUrl = new URL("thank-you.html", window.location.href);
         returnUrl.searchParams.set("payment", "pending");
         returnUrl.searchParams.set("order", order.client_order_id);
-        if (result.payment_return_token) returnUrl.searchParams.set("token", result.payment_return_token);
+        if (confirmation.paymentReturnToken) returnUrl.searchParams.set("token", confirmation.paymentReturnToken);
         window.location.assign(returnUrl.toString());
         return;
       }
@@ -1820,3 +1820,4 @@
     initCheckoutForm();
   });
 })();
+
