@@ -745,11 +745,12 @@ function closeAdmin2MoreMenu(){const menu=$("#adminMoreMenu");if(menu)menu.hidde
 function collectionInfo(product){const list=typeof COLLECTIONS!=="undefined"?COLLECTIONS:[];return list.find(row=>row.id===product?.collection)||null;}
 function productPrice(product){return Number(collectionInfo(product)?.price||0);}
 function fullSizeProducts(){return (window.PRODUCTS||[]).filter(product=>product&&product.id&&!String(product.id).startsWith("discovery-")&&!String(product.id).startsWith("reeds-"));}
-function completedOrders(){return orders.filter(order=>effectiveOrderStatus(order)==="completed");}
-function cashReceivedOrders(){return orders.filter(order=>effectiveOrderStatus(order)!=="cancelled"&&String(order.payment_status)==="paid");}
+function isTestOrder(order){return String(order.source||"").toLowerCase()==="test";}
+function completedOrders(){return orders.filter(order=>!isTestOrder(order)&&effectiveOrderStatus(order)==="completed");}
+function cashReceivedOrders(){return orders.filter(order=>!isTestOrder(order)&&effectiveOrderStatus(order)!=="cancelled"&&String(order.payment_status)==="paid");}
 function paidRevenueOrders(){return cashReceivedOrders();}
-function activeValueOrders(){return orders.filter(order=>effectiveOrderStatus(order)!=="cancelled"&&effectiveOrderStatus(order)!=="completed");}
-function awaitingMoneyOrders(){return orders.filter(order=>effectiveOrderStatus(order)!=="cancelled"&&String(order.payment_status)!=="paid"&&order.payment_method!=="cash_on_delivery");}
+function activeValueOrders(){return orders.filter(order=>!isTestOrder(order)&&effectiveOrderStatus(order)!=="cancelled"&&effectiveOrderStatus(order)!=="completed");}
+function awaitingMoneyOrders(){return orders.filter(order=>!isTestOrder(order)&&effectiveOrderStatus(order)!=="cancelled"&&String(order.payment_status)!=="paid"&&order.payment_method!=="cash_on_delivery");}
 function sumAmount(rows){return rows.reduce((sum,row)=>sum+Number(row.total_amount||0),0);}
 function sameDay(value,base=new Date()){const d=new Date(value);return d.getFullYear()===base.getFullYear()&&d.getMonth()===base.getMonth()&&d.getDate()===base.getDate();}
 function daysAgo(days){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-days);return d;}
@@ -760,7 +761,7 @@ function orderHasDiscovery(order){return (Array.isArray(order.items)?order.items
 function orderHasFullSize(order){return (Array.isArray(order.items)?order.items:[]).some(item=>{const id=String(item.id||"");return Boolean(id&&!id.startsWith("discovery-")&&!id.startsWith("reeds-"));});}
 function customerRows(){
   const map=new Map();
-  orders.filter(order=>effectiveOrderStatus(order)!=="cancelled").forEach(order=>{
+  orders.filter(order=>!isTestOrder(order)&&effectiveOrderStatus(order)!=="cancelled").forEach(order=>{
     const key=customerKey(order);
     if(!key)return;
     let row=map.get(key);
@@ -795,7 +796,41 @@ function customerRows(){
   }).sort((a,b)=>new Date(b.lastAt)-new Date(a.lastAt));
 }
 function repeatRate(){const rows=customerRows().filter(row=>row.completed>0);if(!rows.length)return 0;return rows.filter(row=>row.completed>1).length/rows.length*100;}
-function productSales(){const map=new Map(fullSizeProducts().map(p=>[p.id,{product:p,qty:0,revenue:0,orders:0}]));orders.filter(order=>effectiveOrderStatus(order)!=="cancelled").forEach(order=>{for(const item of Array.isArray(order.items)?order.items:[]){const row=map.get(String(item.id||""));if(!row)continue;const q=Number(item.quantity||1);row.qty+=q;row.orders++;row.revenue+=Number(item.line_total||item.unit_price*q||productPrice(row.product)*q);}});return [...map.values()].sort((a,b)=>b.qty-a.qty||b.revenue-a.revenue);}
+// Allocate the actual paid amount across all lines, including Discovery and addons.
+// Largest remainders keep the allocation exact to the kopiyka after order discounts.
+function allocatedOrderItems(order){
+  const items=Array.isArray(order.items)?order.items:[];
+  if(!items.length)return [];
+  const total=Number(order.total_amount);
+  if(!Number.isFinite(total)||total<0)return [];
+  const totalMinor=Math.round(total*100);
+  let weights=items.map(item=>{
+    const quantity=Number(item.quantity||0);
+    const value=item.line_total!=null?Number(item.line_total):Number(item.unit_price||0)*quantity;
+    return Number.isFinite(value)&&value>0?Math.round(value*100):0;
+  });
+  let weightTotal=weights.reduce((sum,value)=>sum+value,0);
+  if(!weightTotal){weights=items.map(item=>Math.max(0,Number(item.quantity)||0));weightTotal=weights.reduce((sum,value)=>sum+value,0);}
+  if(!weightTotal)return [];
+  const parts=weights.map((weight,index)=>{const exact=totalMinor*weight/weightTotal;return{index,minor:Math.floor(exact),remainder:exact-Math.floor(exact)};});
+  let remaining=totalMinor-parts.reduce((sum,part)=>sum+part.minor,0);
+  const ranked=parts.slice().sort((a,b)=>b.remainder-a.remainder||a.index-b.index);
+  for(let i=0;i<remaining;i++)ranked[i%ranked.length].minor++;
+  return parts.map(part=>({item:items[part.index],netMinor:part.minor}));
+}
+function productSales(){
+  const map=new Map(fullSizeProducts().map(product=>[product.id,{product,qty:0,revenue:0,orders:0}]));
+  cashReceivedOrders().forEach(order=>{
+    const seen=new Set();
+    for(const {item,netMinor} of allocatedOrderItems(order)){
+      const row=map.get(String(item.id||"")),quantity=Number(item.quantity||0);
+      if(!row||!Number.isFinite(quantity)||quantity<=0)continue;
+      row.qty+=quantity;row.revenue+=netMinor/100;
+      if(!seen.has(row.product.id)){row.orders++;seen.add(row.product.id);}
+    }
+  });
+  return [...map.values()].filter(row=>row.qty>0).sort((a,b)=>b.qty-a.qty||b.revenue-a.revenue);
+}
 function renderAdmin2(){renderOverview();renderAttention();renderCustomers();renderCatalogAdmin();renderMarketing();renderPayments();renderFinance();renderAnalytics2();renderSettings();syncAdmin2Badges();}
 function syncAdmin2Badges(){const count=buildAttentionItems().length;const a=$("#attentionBadge"),m=$("#mobileAttentionBadge");if(a)a.textContent=count||"";if(m)m.textContent=count||"";}
 function clearAdminSearchState(){
@@ -1020,7 +1055,7 @@ function renderAnalytics2(){
   }
   const discoveryHost=$("#analyticsDiscovery");
   if(discoveryHost)discoveryHost.innerHTML=`<div class="admin2-discovery-conversion"><strong>${Math.round(discovery.rate)}%</strong><span>${discovery.converted} із ${discovery.customers} клієнтів після оплаченого Discovery зробили пізнішу full-size покупку.</span></div>`;
-  const sourceLabels={website:"Сайт",instagram:"Instagram",phone:"Телефон",offline:"Офлайн",admin:"Адмінка",unknown:"Не вказано"};
+  const sourceLabels={test:"Тестове",website:"Сайт",instagram:"Instagram",phone:"Телефон",offline:"Офлайн",admin:"Адмінка",unknown:"Не вказано"};
   const deliveryLabels={nova_poshta_branch:"НП · відділення",nova_poshta_locker:"НП · поштомат",nova_poshta_courier:"НП · кур’єр",pickup:"Самовивіз",unknown:"Не вказано"};
   const paid=cashReceivedOrders();
   renderDimension($("#analyticsSources"),dimensionRows(paid,o=>o.source||"unknown",sourceLabels));
@@ -1351,7 +1386,7 @@ const submitButtons=Array.from(form.querySelectorAll('[type="submit"]'));submitB
 try{const response=await fetchWithTimeout(`${cfg.url}/functions/v1/create-order`,{method:"POST",headers:{apikey:cfg.publishableKey,Authorization:`Bearer ${cfg.publishableKey}`,"Content-Type":"application/json","X-Request-ID":body.checkout_request_id},body:JSON.stringify(body)});
 const result=await response.json().catch(()=>({}));
 if(!response.ok)throw new Error(result.error||`HTTP_${response.status}`);
-if(result.order?.client_order_id){const source=String(fd.get("source")||"admin");await sb.from("orders").update({source}).eq("client_order_id",result.order.client_order_id);}
+if(result.order?.client_order_id){const source=String(fd.get("source")||"admin");const {error:sourceError}=await sb.from("orders").update({source}).eq("client_order_id",result.order.client_order_id);if(sourceError)throw new Error(`Замовлення ${result.order.client_order_id} створено, але джерело не збережено. Повторіть спробу.`);}
 const discount=Number(result.discount_amount||result.order?.discount_amount||0);msg.textContent=result.payment_url?`Замовлення створено${discount?` · знижка ${money(discount)}`:""}. Платіжне посилання скопійовано.`:`Замовлення створено${discount?` · знижка ${money(discount)}`:""}.`;
 if(result.payment_url)copyText(result.payment_url,"Платіжне посилання скопійовано");
 toast("Нове замовлення додано","success");
@@ -1409,7 +1444,22 @@ function setAdminMobileSearch(open,{focus=true,clear=false}={}){
   if(focus&&input)requestAnimationFrame(()=>input.focus({preventScroll:true}));
 }
 
+function initManualViewport(){
+  const dialog=$("#manualOrderDialog"),viewport=window.visualViewport;
+  if(!dialog||!viewport)return;
+  const sync=()=>{
+    if(!dialog.open||window.innerWidth>820)return;
+    const keyboard=viewport.height<window.innerHeight-120;
+    dialog.classList.toggle("has-keyboard",keyboard);
+    dialog.style.setProperty("--manual-visible-height",`${viewport.height}px`);
+    dialog.style.setProperty("--manual-visible-top",`${viewport.offsetTop}px`);
+  };
+  viewport.addEventListener("resize",sync);viewport.addEventListener("scroll",sync);
+  new MutationObserver(sync).observe(dialog,{attributes:true,attributeFilter:["open"]});
+  dialog.addEventListener("close",()=>{dialog.classList.remove("has-keyboard");dialog.style.removeProperty("--manual-visible-height");dialog.style.removeProperty("--manual-visible-top");});
+}
 function bind(){
+  initManualViewport();
   initAdmin2Selects();
   $("#adminMobileSearchTrigger")?.addEventListener("click",()=>{const wrap=$("#adminGlobalSearchWrap");setAdminMobileSearch(!wrap?.classList.contains("is-mobile-open"));});
   document.querySelectorAll("[data-admin-view]").forEach(button=>button.addEventListener("click",()=>activateAdmin2View(button.dataset.adminView)));

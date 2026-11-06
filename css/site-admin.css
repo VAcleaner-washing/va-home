@@ -2837,3 +2837,52 @@ body.admin-body:has(.admin2-expense-dialog[open]) .admin2-main{overflow-y:hidden
   .admin-body #orderDialog .admin-detail--wide{grid-column:auto}
 }
 
+/* Mobile PWA: reserve the navigation's own row instead of painting over content. */
+.admin-mobile-filter-hint{display:none}
+@media(max-width:820px){
+  .admin-body .admin2-workspace{height:calc(100dvh - 66px - env(safe-area-inset-bottom));min-height:0}
+  .admin-body .admin2-main{padding-bottom:20px;scroll-padding-bottom:20px}
+  .admin-body .admin2-mobile-nav{height:calc(66px + env(safe-area-inset-bottom));box-sizing:border-box;background:#0b0907;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+  .admin-body .admin2-mobile-nav::before,.admin-body .admin2-mobile-nav::after{display:none}
+  .admin-body .admin2-mobile-nav .admin2-mobile-new__plus{box-shadow:none}
+  .admin-body .admin2-more-menu{box-shadow:none;background:#13110e}
+  .admin-body .admin-mobile-filter-hint{display:block;margin:0 0 6px;color:#b9afa3;font:500 12px/1.4 Manrope,sans-serif}
+  .admin-body #orderFocusFilters{overflow-x:auto;scrollbar-width:thin;scrollbar-color:#9c7a47 #242018;padding-bottom:6px;scroll-padding-inline:8px}
+  .admin-body #orderFocusFilters::-webkit-scrollbar{height:3px}
+  .admin-body #orderFocusFilters::-webkit-scrollbar-thumb{background:#9c7a47;border-radius:3px}
+  .admin-body #orderFocusFilters::-webkit-scrollbar-track{background:#242018}
+  /* Status counts repeat the quick filters and the status picker on this screen. */
+  .admin-body #ordersStats{display:none}
+  .admin-body .admin-order-card__head{padding:10px 12px 6px}
+  .admin-body .admin-order-card__head .admin-card__title{font-size:14px;line-height:1.4}
+  .admin-body .admin-order-card__head .admin-card__meta{font-size:12px;line-height:1.4;margin:3px 0 0}
+  .admin-body .admin-order-card__customer{display:grid;gap:3px;padding:6px 12px}
+  .admin-body .admin-order-card__customer strong,.admin-body .admin-order-card__customer span{margin:0;line-height:1.4}
+  .admin-body .admin-order-card__product{padding:6px 12px}
+  .admin-body .admin-order-card__states{padding:6px 12px 10px}
+  .admin-body .admin-order-card__footer{padding:8px 12px;gap:8px}
+  .admin-body .admin-order-card__footer:has(.admin-quick-status:empty) .admin-quick-status{display:none}
+  .admin-body .admin2-manual-shell>header{padding:calc(env(safe-area-inset-top) + 12px) 64px 12px 16px;box-shadow:none;background:#0d0b08}
+  .admin-body .admin2-manual-shell h2{font:600 23px/1.25 Manrope,sans-serif;letter-spacing:-.02em}
+  .admin-body .admin2-manual-shell>header .eyebrow{font-size:10px;margin-bottom:5px}
+  .admin-body .admin2-manual-shell header p:last-child{font-size:12px;line-height:1.4;margin-top:5px;color:#b9afa3}
+  .admin-body .admin2-manual-scroll{padding:14px 16px 20px;scroll-padding:14px 0 20px}
+  .admin-body .admin2-manual-grid{gap:12px;margin-bottom:12px}
+  .admin-body .admin2-manual-shell label{font:500 13px/1.45 Manrope,sans-serif;color:#c8beb1;gap:6px}
+  .admin-body .admin2-manual-shell input,.admin-body .admin2-manual-shell select{height:46px;min-height:46px;font:400 16px/1.35 Manrope,sans-serif;padding:10px 12px;border-radius:9px}
+  .admin-body .admin2-manual-shell input[type=checkbox]{height:auto;min-height:0}
+  .admin-body .admin2-manual-shell textarea{min-height:80px;font:400 16px/1.4 Manrope,sans-serif;padding:10px 12px;border-radius:9px}
+  .admin-body .admin2-manual-shell .admin2-field-hint{font-size:12px;line-height:1.4;color:#ada294}
+  .admin-body .admin2-manual-shell h3{font:600 17px/1.3 Manrope,sans-serif}
+  .admin-body .admin2-manual-shell footer{padding:10px 16px calc(10px + env(safe-area-inset-bottom));box-shadow:none;background:#0d0b08}
+  .admin-body .admin2-manual-shell footer .btn{height:46px;min-height:46px;font-size:12px;letter-spacing:0;border-radius:8px}
+  .admin-body .admin2-manual-shell footer strong{font:700 21px/1.3 Manrope,sans-serif}
+  .admin-body .admin2-manual-shell footer span{font-size:12px}
+  .admin-body #manualOrderDialog{top:var(--manual-visible-top,0px);bottom:auto;height:var(--manual-visible-height,100dvh);min-height:0;max-height:var(--manual-visible-height,100dvh)}
+  .admin-body #manualOrderDialog.has-keyboard> .admin2-manual-shell>header{padding-top:10px}
+  .admin-body #manualOrderDialog.has-keyboard footer{grid-template-columns:1fr;padding:8px 16px}
+  .admin-body #manualOrderDialog.has-keyboard footer>div,.admin-body #manualOrderDialog.has-keyboard footer .btn-secondary{display:none}
+  body.admin-body:has(#manualOrderDialog[open]) .admin2-mobile-nav,
+  body.admin-body:has(#manualOrderDialog[open]) .admin2-more-menu{display:none}
+}
+
