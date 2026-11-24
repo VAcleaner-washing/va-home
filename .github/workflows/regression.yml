@@ -1,0 +1,100 @@
+name: VA HOME regression
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: regression-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  baseline:
+    name: ${{ matrix.check }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - check: node-regressions
+            script: .github/scripts/run-regressions.cjs
+          - check: release-contract
+            script: .github/scripts/check-release-contract.cjs
+    steps:
+      - name: Start job timer
+        run: echo "CI_STARTED_MS=$(date +%s%3N)" >> "$GITHUB_ENV"
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.22.3'
+          package-manager-cache: false
+      - name: Run read-only verification
+        run: node "${{ matrix.script }}"
+      - name: Prove failure detection in disposable copies
+        env:
+          CHECK_SCRIPT: ${{ matrix.script }}
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const os = require('node:os');
+          const path = require('node:path');
+          const assert = require('node:assert/strict');
+          const { spawnSync } = require('node:child_process');
+          const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'va-ci-proof-'));
+          try {
+            fs.cpSync(process.cwd(), tmp, { recursive: true, filter: src => path.basename(src) !== '.git' });
+            const regression = process.env.CHECK_SCRIPT.endsWith('run-regressions.cjs');
+            const file = path.join(tmp, regression ? 'admin-regressions.test.cjs' : 'release.json');
+            const original = fs.readFileSync(file, 'utf8');
+            const cases = regression ? ['assertion', 'empty-suite', 'missing-suite'] : ['version-mismatch', 'invalid-json'];
+            for (const test of cases) {
+              fs.writeFileSync(file, original);
+              if (test === 'assertion') {
+                const changed = original.replace('assert.equal(result.data.length,502)', 'assert.equal(result.data.length,503)');
+                assert.notEqual(changed, original, 'Failure fixture must actually change an assertion');
+                fs.writeFileSync(file, changed);
+              } else if (test === 'empty-suite') fs.writeFileSync(file, '');
+              else if (test === 'missing-suite') fs.unlinkSync(file);
+              else if (test === 'version-mismatch') {
+                const release = JSON.parse(original); release.version = '0.0.0';
+                fs.writeFileSync(file, JSON.stringify(release));
+              } else fs.writeFileSync(file, '{');
+              const result = spawnSync(process.execPath, [path.join(tmp, process.env.CHECK_SCRIPT)], { cwd: tmp, encoding: 'utf8', timeout: 120000 });
+              assert.ifError(result.error);
+              assert.equal(result.signal, null, 'Timeout/crash is not a controlled failure proof');
+              assert.equal(result.status, 1, `${test}: gate must reject the fixture`);
+              if (test === 'assertion') assert.match(result.stdout, /not ok/, 'Must observe the failed test, not merely a discovery error');
+              console.log(`PASS: gate rejected ${test} (exit 1)`);
+            }
+          } finally { fs.rmSync(tmp, { recursive: true, force: true }); }
+          NODE
+      - name: Record job elapsed time
+        if: always()
+        env:
+          CHECK_NAME: ${{ matrix.check }}
+          CHECK_STATUS: ${{ job.status }}
+          RUN_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const elapsed = Date.now() - Number(process.env.CI_STARTED_MS);
+          const report = {
+            check: process.env.CHECK_NAME,
+            status: process.env.CHECK_STATUS,
+            elapsed_ms: Number.isFinite(elapsed) ? elapsed : null,
+            head: process.env.RUN_HEAD,
+            tested_revision: process.env.GITHUB_SHA,
+            run: process.env.GITHUB_RUN_ID,
+            attempt: process.env.GITHUB_RUN_ATTEMPT,
+          };
+          console.log(JSON.stringify(report));
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, '\n```json\n' + JSON.stringify(report, null, 2) + '\n```\n');
+          NODE
