@@ -19,3 +19,14 @@ Effort: S≈0.5–2 дні, M≈3–5 днів, L≈1–2 тижні за ная
 | G11 C normal | E01: dependency/reproducibility governance needs review | evaluate pinning/security maintenance strategy | medium compatibility / S–M / medium | frontend/backend owner, G05 | reproducible artifacts, auth/offline regressions pass, dependency checks cover actual delivery method |
 
 Tool decisions map to these contracts: G05 QA/CI, G08 design, G09 monitoring, G06/G10 analytics/growth, G11 supply chain. Не встановлювати інструмент без конкретної потреби, owner, privacy review та cost approval. Повний список — [Tooling](../../TOOLING.md).
+
+## Review clarification: baseline та expanded G05 dependencies
+
+Таблиця G01–G11 вище збережена без вилучення ризиків, dependencies або Acceptance Criteria. Це additive уточнення порядку, не waiver і не закриття finding.
+
+- G05 baseline (existing Node regression + minimal release-contract gate) залежить від G01 scope/release decision та approved runtime, **не від завершення G02**. G01/G05 bootstrap передує functional backend/payment modernization. Це усуває початкову неоднозначність спільної Dependencies cell.
+- G05 expanded backend integration залежить від G02 reproducible source/isolated fixtures та G04 access-contract readiness; payment integration також від G03 private contract review і bank sandbox. Read-only G02/G03/G04 review не заблокований CI; відповідні functional changes — заблоковані до baseline та risk-specific gates.
+- G03/G04/G06–G11 зберігають свої AC/ризики/owners та додають baseline G01/G05 як prerequisite **для functional implementation**. Готовність relevant expanded gates потрібна перед corresponding behavior change, а не довільне виконання лише наприкінці roadmap.
+- G05 operational AC доповнено [метриками процесу](QA-CICD.md#engineering-process-effectiveness) та [точним bootstrap scope](FIRST-IMPLEMENTATION-PR.md). Ні 19 mocks, ні швидкий CI не закривають sandbox/device/isolation/restore перевірок.
+
+Порядок review/merge без duplication — [Integration Plan](INTEGRATION-PLAN.md). Приватні докази та незалежний verdict — [Independent Review checklist](INDEPENDENT-REVIEW.md). Невиконані перевірки залишаються pending/blocked; plan approval не перетворює їх на passed.

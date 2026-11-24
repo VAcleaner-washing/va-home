@@ -27,3 +27,9 @@
 - GA4/GSC/ad dashboards, field CWV, business ROI, restore drill: не перевірено.
 
 Невідомі значення не трактуються як нуль, неуспішні перевірки не приховані. Повний evidence package збережено локально й не включено до git export. Review публічної історії обмежено новими комітами та їх reachable additions порівняно з поточним main; existing main history не переписується.
+
+## Independent Review corrections — documentation verification
+
+2026-11-24: current main та heads PR #1/#2 повторно перевірено; встановлено три shared add/add paths у Spec/Tooling/Roadmap. Це source/history read-only check, не повторний production audit. План integration, private evidence checklist, minimal first-PR scope і process metrics додані як proposed contracts. Initial 19-test/8-render observations лишаються історичними; runtime тести в цьому docs-only correction повторно не запускалися.
+
+Self-review documentation checks: docs-only diff, relative links/anchors, preservation G01–G11 table rows/risks/dependencies/AC, pending verification statuses, confidentiality та new-history scope перевіряються перед push. Independent verdict і future CI/failure demos/sandbox/device/restore checks залишаються pending; точний manifest — [IR01–IR14](INDEPENDENT-REVIEW.md). Жодного confidential evidence transfer у цій задачі не виконано.

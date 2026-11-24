@@ -22,12 +22,17 @@ VA HOME — production e-commerce зі static storefront, окремою адм�
 - [UX/UI & Design System Assessment](UX-DESIGN.md)
 - [Evidence та межі перевірок](EVIDENCE.md)
 - [Security & Confidentiality Review](SECURITY-CONFIDENTIALITY-REVIEW.md)
+- [PR integration та canonical ownership](INTEGRATION-PLAN.md)
+- [Independent Review: evidence checklist / private handoff](INDEPENDENT-REVIEW.md)
+- [Scope першого implementation PR — ще не розпочато](FIRST-IMPLEMENTATION-PR.md)
 - [Professional Tooling Assessment](../../TOOLING.md)
 - [System Spec](../../VAHOME-SYSTEM-SPEC.md)
 - [Запропонований план модернізації](../../DEVELOPMENT-ROADMAP.md)
 
 ## Рішення та межі
 
-Зберегти HTML/CSS/vanilla JS, Supabase, GitHub і наявні Node tests. Послідовність: release control → backend reproducibility та payment/access verification → CI і recovery monitoring → достовірні метрики → цільові UX/performance/growth покращення. Нові сервіси й dependencies не встановлювалися.
+Зберегти HTML/CSS/vanilla JS, Supabase, GitHub і наявні Node tests. Послідовність: minimal regression CI + release gates → backend reproducibility та expanded payment/access gates → recovery monitoring → достовірні метрики → цільові UX/performance/growth покращення. Нові сервіси й dependencies не встановлювалися.
 
 [PR #1](https://github.com/VAcleaner-washing/va-home/pull/1) зі стандартом залишається окремим і не зливається в межах цього завдання. Цей пакет починається від main, без комітів повного аудиту чи PR #1. PR лишається Draft; наступний етап — Independent Review і затвердження плану. Production deployment не запускається.
+
+Review corrections 2026-11-24: shared-path conflict у PR #1/#2 зафіксований; G01–G11 contracts збережені; baseline CI передує functional modernization. Процесні метрики канонічно у [QA assessment](QA-CICD.md#engineering-process-effectiveness). Цей correction є відповіддю на review, а не незалежним verdict або approval implementation.
